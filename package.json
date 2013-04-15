@@ -1,0 +1,45 @@
+{
+  "name": "sib-colombia-dataportal-explorer",
+  "version": "0.0.1",
+  "private": true,
+  "author": "Valentinilla <valegrajales@gmail.com>",
+  "description": "Simple web application for gbif dataportal map data exploration",
+  "contributors": [ 
+    {
+      "name": "Daniel Amariles",
+      "email": "damariles@humboldt.org.co"
+    },
+    {
+      "name": "Oscar Duque",
+      "email": "oduque@humboldt.org.co"
+    }
+  ],
+  "scripts": {
+    "start": "node app.js"
+  },
+  "keywords": [
+    "sib-colombia",
+    "data-portal",
+    "sib-colombia-data-portal",
+    "sib-map-explorer"
+  ],
+  "dependencies": {
+    "express": "3.1.2",
+    "jade": "*",
+    "request": "2.16.6",
+    "async": "0.2.7",
+    "socket.io": "0.9.14",
+    "leaflet": "0.5.1",
+    "leaflet-markercluster": "0.2.0",
+    "mysql": "2.0.0-alpha7",
+    "mocha": "1.9.0",
+    "underscore": "1.4.4",
+    "jQuery": "1.7.4",
+    "stylus": "0.32.1",
+    "knockout": "2.3.0pre"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=0.10.4"
+  }
+}
