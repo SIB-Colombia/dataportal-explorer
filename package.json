@@ -34,9 +34,8 @@
     "mysql": "2.0.0-alpha7",
     "mocha": "1.9.0",
     "underscore": "1.4.4",
-    "jQuery": "1.7.4",
-    "stylus": "0.32.1",
-    "knockout": "2.3.0pre"
+    "stylus": "*",
+    "browserify": "*"
   },
   "license": "MIT",
   "engines": {

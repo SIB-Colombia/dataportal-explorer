@@ -1,8 +1,354 @@
+@import url("http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,400,300");
+@import url("http://fonts.googleapis.com/css?family=Economica:400,700,400italic,700italic");
+/* Heredados diseño Carlos Cubillos */
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font-size: 80%;
+  color: #333;
+  background: #f2eee3 url("../images/noise1.png") repeat 0 0;
+  font-family: 'Open sans', Helvetica, Verdana, Helvetica, Arial;
+  text-align: left;
+  padding: 0;
+  margin: 0;
 }
-
-a {
-  color: #00B7FF;
+h4 {
+  font-size: 1.4em;
 }
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Economica', Helvetica, Arial, sans-serif;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+}
+p {
+  line-height: 1.3em;
+  margin: 10px 0 10px 0;
+}
+#container {
+  padding: 0px;
+  max-width: 1300px;
+  min-width: 1024px;
+  margin: 0 auto;
+}
+#container #topmenu {
+  margin: -50px 19px 0 0;
+  font-size: 1.8em;
+  font-family: 'Economica', Arial, Helvetica, sans-serif;
+  text-transform: uppercase;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+  width: 700px;
+  text-align: right;
+  position: relative;
+  z-index: 500;
+  float: right;
+  padding: 0;
+  color: #fff;
+}
+#container #topmenu ul {
+  margin: 0;
+  padding: 0;
+  width: 700px;
+}
+#container #topmenu ul li {
+  display: inline-block;
+  list-style: none;
+  padding-left: 6px;
+  background: none repeat scroll 0 0 rgba(255,255,255,0.3);
+  padding: 0;
+  text-align: right;
+  line-height: 1.3em;
+}
+#container #topmenu a {
+  border: 0;
+  color: #2288c9;
+  padding: 0 5px;
+}
+#container #topmenu a:hover,
+#container #topmenu a input[type=submit]:hover {
+  -webkit-transition: all 600ms ease;
+  -moz-transition: all 600ms ease;
+  -ms-transition: all 600ms ease;
+  -o-transition: all 600ms ease;
+  transition: all 600ms ease;
+  border: 0;
+  opacity: 0.6;
+  background: #2288c9;
+  color: #fff;
+}
+#container #topmenu a:link {
+  border-bottom: 0px dashed transparent;
+  text-decoration: none;
+}
+#header {
+  margin: 0;
+  padding: 20px 25px;
+  background-image: url("../images/flower_top.png"), url("../images/shadow_top.png");
+  background-repeat: no-repeat, no-repeat;
+  background-position: center -40px, bottom center;
+}
+#quickSearch {
+  float: right;
+  margin: -20px 0 0 0;
+  padding: 10px;
+  text-align: right;
+  background-color: #1888c9;
+  -webkit-border-radius: 0 0 20px 20px;
+  border-radius: 0 0 20px 20px;
+}
+#quickSearch fieldset,
+#quickSearch form {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+#quickSearch #query {
+  margin: 0px;
+  padding: 7px;
+  width: 340px;
+  font-size: 1em;
+  -webkit-border-radius: 15px;
+  border-radius: 15px;
+  background-color: #fff f;
+  background: rgba(255,255,255,0.8);
+  border: 0px;
+  -webkit-box-shadow: inset 3px 3px 2px 0px rgba(0,0,0,0.2);
+  box-shadow: inset 3px 3px 2px 0px rgba(0,0,0,0.2);
+}
+#quickSearch #go {
+  display: inline-block;
+  margin: 2px 0 0 -35px;
+  padding: 13px;
+  color: #fff;
+  text-decoration: none;
+  border: 0;
+  position: absolute;
+  background: url("../images/lupa.png") no-repeat center center;
+}
+fieldset {
+  border: 0px;
+  margin: 10px 0;
+  -webkit-border-radius: 20px;
+  border-radius: 20px;
+  padding: 20px;
+}
+/* Fin diseño heredado Carlos Cubillos */
+/* Estilos area contenido mapa */
+.container-fluid {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+#pane {
+  position: relative;
+  top: 0px;
+  bottom: 0px;
+  right: 0px;
+  width: 100%;
+}
+#mapa {
+  width: 100%;
+  padding: 0px;
+  height: 600px;
+}
+.leaflet-control-layers-expanded {
+  height: 300px;
+  overflow-y: scroll;
+}
+/* Fin estilos area contenido mapa */
+/* Estilos ventana filtro de búsqueda */
+#filterZone {
+  position: absolute;
+  left: 50px;
+  top: 20px;
+  z-index: 10000;
+  width: 340px;
+}
+#filterZone .filterBox {
+  margin-right: 0px;
+  margin-top: 0px;
+}
+#filterZone #top-filterZone {
+  height: 30px;
+  background-color: rgba(231,231,231,0.7);
+  border-radius: 5px 5px 0px 0px;
+  background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJod…BoZWlnaHQ9IjEiIGZpbGw9InVybCgjZ3JhZC11Y2dnLWdlbmVyYXRlZCkiIC8+Cjwvc3ZnPg==);
+  background: -moz-linear-gradient(top, rgba(255,255,255,0.7) 0%, rgba(230,230,230,0.7) 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(255,255,255,0.7)), color-stop(100%, rgba(230,230,230,0.7)));
+  background: -webkit-linear-gradient(top, rgba(255,255,255,0.7) 0%, rgba(230,230,230,0.7) 100%);
+  background: -o-linear-gradient(top, rgba(255,255,255,0.7) 0%, rgba(230,230,230,0.7) 100%);
+  background: -ms-linear-gradient(top, rgba(255,255,255,0.7) 0%, rgba(230,230,230,0.7) 100%);
+  background: linear-gradient(to bottom, rgba(255,255,255,0.7) 0%, rgba(230,230,230,0.7) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#b3ffffff',endColorstr='#b3e6e6e6',GradientType=0);
+}
+#filterZone #top-filterZone .title-window {
+  float: left;
+  padding-left: 15px;
+  padding-top: 3px;
+  cursor: move;
+}
+#filterZone #top-filterZone .minimize-maximize-button {
+  float: right;
+  height: 30px;
+  width: 30px;
+  border-left-color: #ccc;
+  border-left-style: solid;
+  border-left-width: 1px;
+}
+#filterZone.open #top-filterZone .minimize-maximize-button {
+  background-color: #e6e6e6;
+/* IE9 SVG, needs conditional override of 'filter' to 'none' */
+  background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2U1ZTVlNSIgc3RvcC1vcGFjaXR5PSIwLjciLz4KICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2NlY2VjZSIgc3RvcC1vcGFjaXR5PSIwLjciLz4KICA8L2xpbmVhckdyYWRpZW50PgogIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9InVybCgjZ3JhZC11Y2dnLWdlbmVyYXRlZCkiIC8+Cjwvc3ZnPg==);
+  background: -moz-linear-gradient(top, rgba(229,229,229,0.7) 0%, rgba(206,206,206,0.7) 100%);
+/* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(229,229,229,0.7)), color-stop(100%, rgba(206,206,206,0.7)));
+/* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, rgba(229,229,229,0.7) 0%, rgba(206,206,206,0.7) 100%);
+/* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, rgba(229,229,229,0.7) 0%, rgba(206,206,206,0.7) 100%);
+/* Opera 11.10+ */
+  background: -ms-linear-gradient(top, rgba(229,229,229,0.7) 0%, rgba(206,206,206,0.7) 100%);
+/* IE10+ */
+  background: linear-gradient(to bottom, rgba(229,229,229,0.7) 0%, rgba(206,206,206,0.7) 100%);
+/* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#b3e5e5e5', endColorstr='#b3cecece',GradientType=0);
+  -webkit-box-shadow: inset 0 2px 4px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.05);
+  -moz-box-shadow: inset 0 2px 4px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.05);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.05);
+}
+.round {
+  background-color: rgba(231,231,231,0.7);
+  border: 1px solid #a8a7a5;
+  border-radius: 5px 5px 5px 5px;
+}
+.caret {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  vertical-align: top;
+  border-top: 4px solid #000;
+  border-right: 4px solid transparent;
+  border-left: 4px solid transparent;
+  content: "";
+  margin-top: 12px;
+  margin-left: 10px;
+}
+h4#addSearchFilter,
+h4#currentSearch {
+  margin: 0px 0 5px 0px;
+  padding: 0;
+}
+/* Internet Explorer 9 gradient compatibility */
+.gradient {
+  filter: none;
+}
+#filtersContainer {
+  display: block;
+}
+#filtersContainer #explorerFiltersAndEditor {
+  padding: 10px 20px 10px 20px;
+}
+#filtersContainer #explorerFiltersAndEditor #filterEditorPane {
+  width: auto;
+  vertical-align: top;
+}
+#filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter select,
+#filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter input {
+  font-size: 13px;
+  font-family: 'Open sans', Helvetica, Verdana, Helvetica, Arial;
+}
+#filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter span.type {
+  margin-right: 10px;
+}
+#filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter span.type select {
+  width: 180px;
+}
+#filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter span.predicate select {
+  width: 100px;
+}
+#filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter span.value {
+  margin-bottom: 1em;
+}
+#filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter span.value input {
+  width: 260px;
+}
+#filtersContainer #explorerFiltersAndEditor #filterEditorPane #selectedFilterHelp {
+  width: auto;
+  font-size: 90%;
+  margin-right: 15px;
+}
+#filtersContainer #explorerFiltersAndEditor #filterEditorPane #selectedFilterHelp .taxonomyFilterHelp {
+  height: auto;
+  background: url("/images/icons/idea_1.png") no-repeat center left;
+  padding-left: 55px;
+  color: #333;
+}
+#filtersContainer #explorerFiltersAndEditor #filterEditorPane #selectedFilterHelp p:first-child {
+  color: #595045;
+  font-weight: bold;
+}
+#filtersContainer #explorerFiltersAndEditor #filterEditorPane #filterWizard {
+  float: left;
+  margin-right: 10px;
+  min-height: 150px;
+}
+#filtersContainer #explorerFiltersAndEditor #constructedFiltersPane {
+  width: 300px;
+  min-width: 250px;
+}
+#filtersContainer #explorerFiltersAndEditor #constructedFiltersPane #constructedFilters {
+  height: 100%;
+  vertical-align: top;
+  padding: 20px;
+  background-color: rgba(239,107,45,0.3);
+  -webkit-border-radius: 20px;
+  border-radius: 20px;
+}
+#filtersContainer #explorerFiltersAndEditor #constructedFiltersPane #constructedFilters h4#currentSearch {
+  margin: 0px 0 5px 0px;
+  padding: 0;
+}
+#filtersContainer #explorerFiltersAndEditor #constructedFiltersPane #constructedFilters p {
+  color: #595045;
+}
+#filtersContainer #explorerFiltersAndEditor #constructedFiltersPane #constructedFilters p.emptySearch {
+  margin: 10px 0px 10px 0px;
+}
+#filtersContainer #explorerFiltersAndEditor #constructedFiltersPane #constructedFilters ul {
+  padding: 6px 12px;
+  margin-top: 5px;
+  color: #000;
+  list-style: none;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+}
+#filtersContainer #explorerFiltersAndEditor #constructedFiltersPane #constructedFilters ul.taxonomy {
+  background-color: rgba(104,60,12,0.2);
+  margin: 0px;
+}
+.btn-add-filter {
+  color: #fff;
+  background-color: #683c0c;
+  background-image: -moz-linear-gradient(top, #b36e23, #683c0c);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#b36e23), to(#683c0c));
+  background-image: -webkit-linear-gradient(top, #b36e23, #683c0c);
+  background-image: -o-linear-gradient(top, #b36e23, #683c0c);
+  background-image: linear-gradient(to bottom, #b36e23, #683c0c);
+  text-shadow: 0 1px 1px rgba(0,0,0,0.75);
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  margin-top: 8px;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+.btn-add-filter:hover {
+  color: #fff;
+  background-color: #683c0c;
+  background-image: -moz-linear-gradient(top, #b36e23, #683c0c);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#b36e23), to(#683c0c));
+  background-image: -webkit-linear-gradient(top, #b36e23, #683c0c);
+  background-image: -o-linear-gradient(top, #b36e23, #683c0c);
+  background-image: linear-gradient(to bottom, #b36e23, #683c0c);
+  text-shadow: 0 1px 1px rgba(0,0,0,0.75);
+}
+/* Fin estilos ventana filtro de búsqueda */

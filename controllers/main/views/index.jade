@@ -1,0 +1,37 @@
+extends ../../../layouts/layout
+
+block content
+	.container-fluid
+		.row-fluid
+			#pane
+				#mapa
+				#filterZone.open
+					include filterWindow
+		h1= title
+		p Welcome to #{title}
+	include mapascripts
+	script
+		var markers = new L.MarkerClusterGroup(/*{ disableClusteringAtZoom: 15 }*/);
+		var occurrences = !{data};
+		$.each(occurrences, function(i, occurrence) {
+			var marker = new L.Marker(new L.LatLng(occurrence.latitude, occurrence.longitude), { title: occurrence.canonical + ' (' + occurrence.num_occurrences + ')' });
+			marker.bindPopup(occurrence.canonical + ' ' + occurrence.num_occurrences);
+			markers.addLayer(marker);
+			//console.log(occurrence.id);
+		});
+		/*var seen = [];
+		var json = JSON.stringify(markers, function(key, val) {
+			if (typeof val == "object") {
+				if (seen.indexOf(val) >= 0)
+					return;
+				seen.push(val);
+			}
+			return val
+		});*/
+
+		/*var sopas = map.addLayer(markers);*/
+
+		var anotherLayers = {
+			'Puntos densidad': map.addLayer(markers)
+		}
+		L.control.layers(anotherLayers).addTo(map);
