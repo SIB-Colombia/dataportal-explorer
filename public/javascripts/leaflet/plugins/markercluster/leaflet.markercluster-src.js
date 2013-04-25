@@ -332,13 +332,13 @@ L.MarkerClusterGroup = L.FeatureGroup.extend({
 			this._generateInitialClusters();
 		}
 
-		/*for (var i = 0, l = this._needsClustering.length; i < l; i++) {
+		for (var i = 0, l = this._needsClustering.length; i < l; i++) {
 			var layer = this._needsClustering[i];
 			if (layer.__parent) {
 				continue;
 			}
-			this._addLayer(layer, this._maxZoom);
-		}*/
+			//this._addLayer(layer, this._maxZoom);
+		}
 		this._needsClustering = [];
 
 		/*this._map.on('zoomend', this._zoomEnd, this);

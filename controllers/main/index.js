@@ -20,7 +20,7 @@ exports.index = function(req, res){
 			//console.log(latLong);
 			//console.log(JSON.stringify(latLong));
 			var marker = markercluster.marker(markercluster.latLng(rows[i].latitude, rows[i].longitude), { title: rows[i].canonical + ' (' + rows[i].num_occurrences + ')' });
-			//marker.bindPopup(rows[i].canonical + ' (' + rows[i].num_occurrences + ')');
+			marker.bindPopup(rows[i].canonical + ' (' + rows[i].num_occurrences + ')');
 			//console.log(marker);
 			//var seen = [];
 			//var json = JSON.stringify(marker, function(key, val) {
@@ -33,6 +33,7 @@ exports.index = function(req, res){
 			//});
 			//console.log(json);
 			cluster.addLayer(marker);
+
 			//console.log(cluster);
 		}
 		//var myCars=new Array("Saab",23,"BMW");
@@ -42,7 +43,11 @@ exports.index = function(req, res){
 		
 		//console.log(cluster);
 
-		res.render('index', { title: 'Explorador - Portal de datos SIB Colombia', data: JSON.stringify(rows) });
+		res.set('Content-Type', 'text/html');
+		//res.send(new Buffer('some html' + cluster));
+		//res.send(cluster);
+		res.locals.cluster = cluster;
+		/*res.render('index', { title: 'Explorador - Portal de datos SIB Colombia', data: JSON.stringify(rows) });*/
 	});
 	dbWrapper.closeConnection();
 	//res.render('index', { title: 'Explorador - Portal de datos SIB Colombia' });
