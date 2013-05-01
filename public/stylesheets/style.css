@@ -156,11 +156,27 @@ fieldset {
   overflow-y: scroll;
 }
 /* Fin estilos area contenido mapa */
+/* Estilos tab area y tab buttons para elegir vistas */
+#map-filter-area .tabbable .nav {
+  margin-bottom: 0px;
+  margin-right: 15px;
+}
+#map-filter-area #actual-search-stats-data {
+  float: left;
+  font-size: 1.3em;
+  line-height: 30px;
+  margin-left: 20px;
+  font-weight: bold;
+}
+#map-filter-area #actual-search-stats-data .subtitle {
+  font-size: 0.8em;
+  font-weight: normal;
+}
 /* Estilos ventana filtro de búsqueda */
 #filterZone {
   position: absolute;
   left: 50px;
-  top: 20px;
+  top: 200px;
   z-index: 10000;
   width: 340px;
 }

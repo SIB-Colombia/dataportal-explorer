@@ -48,6 +48,7 @@ L.MarkerClusterGroup = L.FeatureGroup.extend({
 
 		this._inZoomAnimation = 0;
 		this._needsClustering = [];
+		this._needsRemoving = []; //Markers removed while we aren't on the map need to be kept track of
 		//The bounds of the currently shown area (from _getExpandedVisibleBounds) Updated on zoom/move
 		this._currentShownBounds = null;
 	},
@@ -57,9 +58,7 @@ L.MarkerClusterGroup = L.FeatureGroup.extend({
 		if (layer instanceof L.LayerGroup) {
 			var array = [];
 			for (var i in layer._layers) {
-				if (layer._layers.hasOwnProperty(i)) {
-					array.push(layer._layers[i]);
-				}
+				array.push(layer._layers[i]);
 			}
 			return this.addLayers(array);
 		}
@@ -70,7 +69,6 @@ L.MarkerClusterGroup = L.FeatureGroup.extend({
 		}
 
 		if (this.hasLayer(layer)) {
-			console.log("This has layer es true");
 			return this;
 		}
 
@@ -104,7 +102,9 @@ L.MarkerClusterGroup = L.FeatureGroup.extend({
 	removeLayer: function (layer) {
 
 		if (!this._map) {
-			this._arraySplice(this._needsClustering, layer);
+			if (!this._arraySplice(this._needsClustering, layer) && this.hasLayer(layer)) {
+				this._needsRemoving.push(layer);
+			}
 			return this;
 		}
 
@@ -157,11 +157,9 @@ L.MarkerClusterGroup = L.FeatureGroup.extend({
 
 		//Update the icons of all those visible clusters that were affected
 		for (i in this._layers) {
-			if (this._layers.hasOwnProperty(i)) {
-				m = this._layers[i];
-				if (m instanceof L.MarkerCluster && m._iconNeedsUpdate) {
-					m._updateIcon();
-				}
+			m = this._layers[i];
+			if (m instanceof L.MarkerCluster && m._iconNeedsUpdate) {
+				m._updateIcon();
 			}
 		}
 
@@ -200,11 +198,9 @@ L.MarkerClusterGroup = L.FeatureGroup.extend({
 		this._topClusterLevel._recursivelyAddChildrenToMap(null, this._zoom, this._currentShownBounds);
 
 		for (i in this._layers) {
-			if (this._layers.hasOwnProperty(i)) {
-				m = this._layers[i];
-				if (m instanceof L.MarkerCluster) {
-					m._updateIcon();
-				}
+			m = this._layers[i];
+			if (m instanceof L.MarkerCluster) {
+				m._updateIcon();
 			}
 		}
 
@@ -222,15 +218,13 @@ L.MarkerClusterGroup = L.FeatureGroup.extend({
 			delete this._gridUnclustered;
 		}
 
-		if (this._unspiderfy) {
-			this._unspiderfy();
+		if (this._noanimationUnspiderfy) {
+			this._noanimationUnspiderfy();
 		}
 
 		//Remove all the visible layers
 		for (var i in this._layers) {
-			if (this._layers.hasOwnProperty(i)) {
-				L.FeatureGroup.prototype.removeLayer.call(this, this._layers[i]);
-			}
+			L.FeatureGroup.prototype.removeLayer.call(this, this._layers[i]);
 		}
 
 		this.eachLayer(function (marker) {
@@ -274,12 +268,22 @@ L.MarkerClusterGroup = L.FeatureGroup.extend({
 
 	//Returns true if the given layer is in this MarkerClusterGroup
 	hasLayer: function (layer) {
-		if (this._needsClustering.length > 0) {
-			var anArray = this._needsClustering;
-			for (var i = anArray.length - 1; i >= 0; i--) {
-				if (anArray[i] === layer) {
-					return true;
-				}
+		if (layer._noHas) {
+			return false;
+		}
+
+		var i, anArray = this._needsClustering;
+
+		for (i = anArray.length - 1; i >= 0; i--) {
+			if (anArray[i] === layer) {
+				return true;
+			}
+		}
+
+		anArray = this._needsRemoving;
+		for (i = anArray.length - 1; i >= 0; i--) {
+			if (anArray[i] === layer) {
+				return false;
 			}
 		}
 
@@ -327,38 +331,47 @@ L.MarkerClusterGroup = L.FeatureGroup.extend({
 	//Overrides FeatureGroup.onAdd
 	onAdd: function (map) {
 		this._map = map;
+		var i, l, layer;
 
 		if (!this._gridClusters) {
 			this._generateInitialClusters();
 		}
 
-		for (var i = 0, l = this._needsClustering.length; i < l; i++) {
-			var layer = this._needsClustering[i];
+		for (i = 0, l = this._needsRemoving.length; i < l; i++) {
+			layer = this._needsRemoving[i];
+			this._removeLayer(layer);
+		}
+		this._needsRemoving = [];
+
+		for (i = 0, l = this._needsClustering.length; i < l; i++) {
+			layer = this._needsClustering[i];
 			if (layer.__parent) {
 				continue;
 			}
-			//this._addLayer(layer, this._maxZoom);
+			this._addLayer(layer, this._maxZoom);
 		}
 		this._needsClustering = [];
 
-		/*this._map.on('zoomend', this._zoomEnd, this);
+
+		this._map.on('zoomend', this._zoomEnd, this);
 		this._map.on('moveend', this._moveEnd, this);
 
 		if (this._spiderfierOnAdd) { //TODO FIXME: Not sure how to have spiderfier add something on here nicely
 			this._spiderfierOnAdd();
 		}
 
-		this._bindEvents();*/
+		this._bindEvents();
 
 
 		//Actually add our markers to the map:
 
 		//Remember the current zoom level and bounds
-		//this._zoom = this._map.getZoom();
-		//this._currentShownBounds = this._getExpandedVisibleBounds();
+		this._zoom = this._map.getZoom();
+		this._currentShownBounds = this._getExpandedVisibleBounds();
 
 		//Make things appear on the map
-		//this._topClusterLevel._recursivelyAddChildrenToMap(null, this._zoom, this._currentShownBounds);
+
+		this._topClusterLevel._recursivelyAddChildrenToMap(null, this._zoom, this._currentShownBounds);
 	},
 
 	//Overrides FeatureGroup.onRemove
@@ -377,9 +390,7 @@ L.MarkerClusterGroup = L.FeatureGroup.extend({
 
 		//Clean up all the layers we added to the map
 		for (var i in this._layers) {
-			if (this._layers.hasOwnProperty(i)) {
-				L.FeatureGroup.prototype.removeLayer.call(this, this._layers[i]);
-			}
+			L.FeatureGroup.prototype.removeLayer.call(this, this._layers[i]);
 		}
 
 		this._map = null;
@@ -391,7 +402,7 @@ L.MarkerClusterGroup = L.FeatureGroup.extend({
 		for (var i = anArray.length - 1; i >= 0; i--) {
 			if (anArray[i] === obj) {
 				anArray.splice(i, 1);
-				return;
+				return true;
 			}
 		}
 	},
@@ -591,21 +602,16 @@ L.MarkerClusterGroup = L.FeatureGroup.extend({
 		this._gridClusters = {};
 		this._gridUnclustered = {};
 
-		console.log("MaxZoom: " + this._maxZoom);
-
-		//Set up DistanceGrids for each zoo
-		//m
+		//Set up DistanceGrids for each zoom
 		for (var zoom = maxZoom; zoom >= 0; zoom--) {
-			console.log(zoom);
 			this._gridClusters[zoom] = new L.DistanceGrid(radius);
-			console.log("_gridClusters[zoom]: " + this._gridClusters[zoom]);
-			console.log(this._gridClusters[zoom]);
 			this._gridUnclustered[zoom] = new L.DistanceGrid(radius);
-			console.log("_gridUnclustered[zoom]: " + this._gridUnclustered[zoom]);
-			console.log(this._gridUnclustered[zoom]);
 		}
 
+		//console.log(this._topClusterLevel);
+		//console.log(this);
 		this._topClusterLevel = new L.MarkerCluster(this, -1);
+		//console.log(this._topClusterLevel);
 	},
 
 	//Zoom: Zoom to start adding at (Pass this._maxZoom to start at the bottom)
@@ -801,12 +807,10 @@ L.MarkerClusterGroup.include(!L.DomUtil.TRANSITION ? {
 		me._topClusterLevel._recursivelyBecomeVisible(bounds, newZoomLevel);
 		//TODO Maybe? Update markers in _recursivelyBecomeVisible
 		for (j in me._layers) {
-			if (me._layers.hasOwnProperty(j)) {
-				n = me._layers[j];
+			n = me._layers[j];
 
-				if (!(n instanceof L.MarkerCluster) && n._icon) {
-					n.setOpacity(1);
-				}
+			if (!(n instanceof L.MarkerCluster) && n._icon) {
+				n.setOpacity(1);
 			}
 		}
 
@@ -987,6 +991,8 @@ L.MarkerCluster = L.Marker.extend({
 		this._iconNeedsUpdate = true;
 		this._expandBounds(new1);
 
+		//console.log("Es instancia");
+		//console.log(new1 instanceof L.MarkerCluster);
 		if (new1 instanceof L.MarkerCluster) {
 			if (!isNotificationFromChild) {
 				this._childClusters.push(new1);
@@ -1041,7 +1047,9 @@ L.MarkerCluster = L.Marker.extend({
 			this._backupLatlng = this._latlng;
 			this.setLatLng(startPos);
 		}
+		this._noHas = true;
 		L.FeatureGroup.prototype.addLayer.call(this._group, this);
+		delete this._noHas;
 	},
 
 	_recursivelyAnimateChildrenIn: function (bounds, center, maxZoom) {
@@ -1120,7 +1128,9 @@ L.MarkerCluster = L.Marker.extend({
 						nm.setOpacity(0);
 					}
 
+					nm._noHas = true;
 					L.FeatureGroup.prototype.addLayer.call(c._group, nm);
+					delete nm._noHas;
 				}
 			},
 			function (c) {
@@ -1177,7 +1187,9 @@ L.MarkerCluster = L.Marker.extend({
 				for (i = c._childClusters.length - 1; i >= 0; i--) {
 					m = c._childClusters[i];
 					if (!exceptBounds || !exceptBounds.contains(m._latlng)) {
-						L.FeatureGroup.prototype.removeLayer.call(c._group, m);
+						if (!L.FeatureGroup.prototype.hasLayer || L.FeatureGroup.prototype.hasLayer.call(c._group, m)) {
+							L.FeatureGroup.prototype.removeLayer.call(c._group, m);
+						}
 						m.setOpacity(1);
 					}
 				}
@@ -1308,20 +1320,16 @@ L.DistanceGrid.prototype = {
 		    grid = this._grid;
 
 		for (i in grid) {
-			if (grid.hasOwnProperty(i)) {
-				row = grid[i];
+			row = grid[i];
 
-				for (j in row) {
-					if (row.hasOwnProperty(j)) {
-						cell = row[j];
+			for (j in row) {
+				cell = row[j];
 
-						for (k = 0, len = cell.length; k < len; k++) {
-							removed = fn.call(context, cell[k]);
-							if (removed) {
-								k--;
-								len--;
-							}
-						}
+				for (k = 0, len = cell.length; k < len; k++) {
+					removed = fn.call(context, cell[k]);
+					if (removed) {
+						k--;
+						len--;
 					}
 				}
 			}
@@ -1581,6 +1589,31 @@ L.MarkerCluster.include({
 			legLength += this._2PI * lengthFactor / angle;
 		}
 		return res;
+	},
+
+	_noanimationUnspiderfy: function () {
+		var group = this._group,
+			map = group._map,
+			childMarkers = this.getAllChildMarkers(),
+			m, i;
+
+		this.setOpacity(1);
+		for (i = childMarkers.length - 1; i >= 0; i--) {
+			m = childMarkers[i];
+
+			L.FeatureGroup.prototype.removeLayer.call(group, m);
+
+			if (m._preSpiderfyLatlng) {
+				m.setLatLng(m._preSpiderfyLatlng);
+				delete m._preSpiderfyLatlng;
+			}
+			m.setZIndexOffset(0);
+
+			if (m._spiderLeg) {
+				map.removeLayer(m._spiderLeg);
+				delete m._spiderLeg;
+			}
+		}
 	}
 });
 
@@ -1611,24 +1644,7 @@ L.MarkerCluster.include(!L.DomUtil.TRANSITION ? {
 	},
 
 	_animationUnspiderfy: function () {
-		var group = this._group,
-			map = group._map,
-			childMarkers = this.getAllChildMarkers(),
-			m, i;
-
-		this.setOpacity(1);
-		for (i = childMarkers.length - 1; i >= 0; i--) {
-			m = childMarkers[i];
-
-			L.FeatureGroup.prototype.removeLayer.call(group, m);
-
-			m.setLatLng(m._preSpiderfyLatlng);
-			delete m._preSpiderfyLatlng;
-			m.setZIndexOffset(0);
-
-			map.removeLayer(m._spiderLeg);
-			delete m._spiderLeg;
-		}
+		this._noanimationUnspiderfy();
 	}
 } : {
 	//Animated versions here
@@ -1650,7 +1666,9 @@ L.MarkerCluster.include(!L.DomUtil.TRANSITION ? {
 			m.setZIndexOffset(1000000); //Make these appear on top of EVERYTHING
 			m.setOpacity(0);
 
+			m._noHas = true;
 			L.FeatureGroup.prototype.addLayer.call(group, m);
+			delete m._noHas;
 
 			m._setPos(thisLayerPos);
 		}
@@ -1871,6 +1889,12 @@ L.MarkerClusterGroup.include({
 	_unspiderfy: function (zoomDetails) {
 		if (this._spiderfied) {
 			this._spiderfied.unspiderfy(zoomDetails);
+		}
+	},
+
+	_noanimationUnspiderfy: function () {
+		if (this._spiderfied) {
+			this._spiderfied._noanimationUnspiderfy();
 		}
 	},
 

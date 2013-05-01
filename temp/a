@@ -1,0 +1,69 @@
+script
+		//var markers = new L.MarkerClusterGroup(/*{ disableClusteringAtZoom: 15 }*/);
+		/*var occurrences = !{data};
+		$.each(occurrences, function(i, occurrence) {
+			var marker = new L.Marker(new L.LatLng(occurrence.latitude, occurrence.longitude), { title: occurrence.canonical + ' (' + occurrence.num_occurrences + ')' });
+			marker.bindPopup(occurrence.canonical + ' ' + occurrence.num_occurrences);
+			markers.addLayer(marker);
+		});*/
+		/*var seen = [];
+		var json = JSON.stringify(markers, function(key, val) {
+			if (typeof val == "object") {
+				if (seen.indexOf(val) >= 0)
+					return;
+				seen.push(val);
+			}
+			return val
+		});*/
+
+		/*var sopas = map.addLayer(markers);*/
+
+		/*var anotherLayers = {
+			'Puntos densidad': map.addLayer(markers)
+		}
+		L.control.layers(anotherLayers).addTo(map);*/
+
+res.render('index', { title: 'Explorador - Portal de datos SIB Colombia', data: JSON.stringify(rows) });
+
+
+dbWrapper.initConnection();
+	dbWrapper.getAllGeoOccurrenceData(function(rows) {
+		//res.writeHead(200, {'Content-Type':'application/json'});
+		//res.write(JSON.stringify(rows));
+		//res.end();
+		//var sopas = 'sopas';
+		//var cluster = markercluster.markerClusterGroup();
+		var cluster = serverCluster.markerClusterGroup();
+		for (var i = 0; i < rows.length; i++) {
+			//occurrence = rows[i];
+			//console.log(latLong);
+			//console.log(JSON.stringify(latLong));
+			var marker = serverCluster.marker(serverCluster.latLng(rows[i].latitude, rows[i].longitude), { title: rows[i].canonical + ' (' + rows[i].num_occurrences + ')' });
+			marker.bindPopup(rows[i].canonical + ' (' + rows[i].num_occurrences + ')');
+			var finalCluster = cluster.createCluster();
+			//console.log(marker);
+			//var seen = [];
+			//var json = JSON.stringify(marker, function(key, val) {
+			//	if (typeof val 
+			//		if (seen.indexOf(val) >= 0)
+			//			return;
+			//		seen.push(val);
+			//	}
+			//	return val;
+			//});
+			//console.log(json);
+			cluster.addLayer(marker);
+
+			//console.log(cluster);
+		}
+		//var myCars=new Array("Saab",23,"BMW");
+		//console.log(myCars);
+		//
+		//var latlong = new cluster.L.LatLng(occurrence.latitude, occurrence.longitude)
+		
+		//console.log(cluster);
+
+		res.render('index', { title: 'Explorador - Portal de datos SIB Colombia' });
+	});
+	dbWrapper.closeConnection();
+	//res.render('index', { title: 'Explorador - Portal de datos SIB Colombia' });

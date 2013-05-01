@@ -6,9 +6,24 @@ var express = require('express')
   , routes = require('./routes')
   , user = require('./routes/user')
   , http = require('http')
+  , fs = require('fs')
   , path = require('path');
 
 var app = express();
+
+// Load configuration
+var env = process.env.NODE_ENV || 'development'
+  , config = require('./config/config')[env]
+  , mongoose = require('mongoose')
+
+// Bootstrap db connection
+mongoose.connect(config.db)
+
+// Bootstrap models
+var models_path = __dirname + '/app/models'
+fs.readdirSync(models_path).forEach(function (file) {
+  require(models_path+'/'+file)
+})
 
 // all environments
 app.set('port', process.env.PORT || 3000);

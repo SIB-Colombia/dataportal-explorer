@@ -15,7 +15,8 @@
     }
   ],
   "scripts": {
-    "start": "node app.js"
+    "start": ".\\node_modules\\.bin\\nodemon app.js",
+    "test": "set NODE_ENV=test; ./node_modules/.bin/mocha --reporter spec test/test-*.js"
   },
   "keywords": [
     "sib-colombia",
@@ -27,6 +28,7 @@
     "express": "3.1.2",
     "jade": "*",
     "request": "2.16.6",
+    "mongoose": "latest",
     "async": "0.2.7",
     "socket.io": "0.9.14",
     "leaflet": "0.5.1",
@@ -36,6 +38,12 @@
     "underscore": "1.4.4",
     "stylus": "*",
     "browserify": "*"
+  },
+  "devDependencies": {
+    "supertest": "latest",
+    "should": "latest",
+    "mocha": "latest",
+    "nodemon": "latest"
   },
   "license": "MIT",
   "engines": {

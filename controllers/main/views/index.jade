@@ -3,12 +3,25 @@ extends ../../../layouts/layout
 block content
 	.container-fluid
 		.row-fluid
-			#pane
-				#mapa
-				#filterZone.open
-					include filterWindow
-		h1= title
-		p Welcome to #{title}
+			section#map-filter-area
+				.tabbable
+					ul.nav.nav-pills
+						#actual-search-stats-data
+							span.title Total 287.427 registros 
+								span.subtitle (mostrando 147.212 georeferenciados)
+						li.pull-right
+							a(href='#tab2', data-toggle='tab') Vista tabla
+						li.active.pull-right
+							a(href='#tab1', data-toggle='tab') Vista mapa
+					#filterZone.open
+						include filterWindow
+					.tab-content
+						.tab-pane.active(id='tab1')
+							#pane
+								#mapa
+						.tab-pane(id='tab2')
+							h1= title
+							p Welcome to #{title}
 	include mapascripts
 	script
 		var markers = new L.MarkerClusterGroup(/*{ disableClusteringAtZoom: 15 }*/);
@@ -17,7 +30,6 @@ block content
 			var marker = new L.Marker(new L.LatLng(occurrence.latitude, occurrence.longitude), { title: occurrence.canonical + ' (' + occurrence.num_occurrences + ')' });
 			marker.bindPopup(occurrence.canonical + ' ' + occurrence.num_occurrences);
 			markers.addLayer(marker);
-			//console.log(occurrence.id);
 		});
 		/*var seen = [];
 		var json = JSON.stringify(markers, function(key, val) {
