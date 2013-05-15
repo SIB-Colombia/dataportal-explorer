@@ -131,22 +131,22 @@ fieldset
 .leaflet-control-layers-expanded
 	height 300px
 	overflow-y scroll
+	-webkit-overflow-scrolling touch
 /* Fin estilos area contenido mapa */
 
 /* Estilos tab area y tab buttons para elegir vistas */
 #map-filter-area
 	.tabbable
 		.nav
-			margin-bottom 0px
-			margin-right 15px
+			margin-bottom 3px
+			border-bottom 1px #bbbbbb solid
+			margin-left 20px
+			margin-right 20px
 	#actual-search-stats-data
 		float left
-		font-size 1.3em
+		font-size 1.1em
 		line-height 30px
-		margin-left 20px
-		font-weight bold
 		.subtitle
-			font-size 0.8em
 			font-weight normal
 
 /* Estilos ventana filtro de búsqueda */
@@ -221,6 +221,64 @@ h4#currentSearch
 /* Internet Explorer 9 gradient compatibility */
 .gradient
 	filter none
+#filtersContainerHelp
+	background-color rgba(231, 231, 231, 0.8)
+	position absolute
+	left 340px
+	top 30px
+	right -300px
+	#topFiltersContainerHelp
+		background-color rgba(231, 231, 231, 0.8)
+		padding-top 5px
+		padding-right 5px
+		padding-left 5px
+		height 30px
+		a.close-icon-filter-help
+			float right
+			&:hover
+				cursor pointer
+	#contentFiltersContainerHelp
+		background-color rgba(231, 231, 231, 0.8)
+		height 500px
+		overflow hidden
+		.mCSB_container
+			background-color rgb(175, 175, 175)
+		.contentFiltersContainerHelpContainer
+			padding-left 5px
+		.item
+			min-height 18px
+			padding-bottom 8px
+			padding-top 8px
+			padding-left 15px
+			border-bottom 1px rgb(177, 177, 177) solid
+			border-top 1px rgb(177, 177, 177) solid
+			background-color #ebebeb
+			margin-top -1px
+			float left
+			&:hover
+				background-color #683C0C
+				color white
+			span
+				float left
+				width 190px
+				padding-right 5px
+				text-overflow ellipsis
+				overflow-x hidden
+			em
+				float right
+				width 50px
+			a
+				float right
+				width 20px
+				padding-right 5px
+		table
+			tr
+				td
+					padding 5px
+				&:hover
+					td
+						background-color #683C0C
+						color white
 #filtersContainer
 	display block
 	#explorerFiltersAndEditor
@@ -243,6 +301,17 @@ h4#currentSearch
 					margin-bottom 1em
 					input
 						width 260px
+					select.daySelect
+						width 55px
+						padding 5px
+					select.monthSelect
+						width 110px
+						padding 5px
+					input.yearInput
+						width 100px
+						padding 5px
+						margin-left 5px
+						margin-bottom 10px
 			#selectedFilterHelp
 				width auto
 				font-size 90%
@@ -283,9 +352,12 @@ h4#currentSearch
 					list-style none
 					-webkit-border-radius 10px
 					border-radius 10px
-					&.taxonomy
+					&.filterItem
 						background-color rgba(104, 60, 12, 0.2)
 						margin 0px
+						margin-bottom 5px
+						img
+							padding-left 5px
 .btn-add-filter
 	color rgb(255, 255, 255)
 	background-color #683C0C
@@ -310,3 +382,77 @@ h4#currentSearch
 		background-image linear-gradient(to bottom,#B36E23,#683C0C)
 		text-shadow 0 1px 1px rgba(0,0,0,0.75)
 /* Fin estilos ventana filtro de búsqueda */
+
+/* Estilos de apoyo */
+.loading
+	background-image url("/images/loading/ajax-loader.gif")
+	background-position center center
+	background-repeat no-repeat
+	opacity .5
+	-moz-opacity .5
+.hide-element
+	visibility hidden
+/* Fin de estilos de apoyo */
+
+/* Estilos ventana detalles registro biológico */
+#occurrenceDetail
+	background-color rgba(231, 231, 231, 0.8)
+	position absolute
+	left 340px
+	top 30px
+	right -450px
+	#topOccurrenceDetail
+		background-color rgba(231, 231, 231, 0.8)
+		padding-top 5px
+		padding-right 5px
+		padding-left 5px
+		height 30px
+		a.close-icon-filter-help
+			float right
+			&:hover
+				cursor pointer
+	#occurrenceDetailContainer
+		background-color rgba(231, 231, 231, 0.8)
+		height 500px
+		overflow hidden
+		.contentOccurrenceD
+		etailContainer
+			padding-left 5px
+			.occurrence
+				padding-left 15px
+				padding-right 15px
+				h2
+					margin-top 0px
+					font-size 2.3em
+				dl
+					margin 0 0 18px 0
+					padding 0
+					&.previewTaxon
+						color #666666
+						dt
+							font-weight normal
+						dt, dd
+							display inline
+						dd
+							span
+								color #22241e
+								font-weight bold
+							&:after
+								content " › "
+								margin 0px
+					&.preview-data
+						float left
+						width 100%
+						dt
+							clear both
+							float left
+							font-weight bold
+							margin-right 18px
+							padding 3px 0
+							width 33%
+						dd
+							float right
+							margin 0
+							padding 3px 0
+							width 60%
+/* Fin estilos ventana detalles registro biológico */

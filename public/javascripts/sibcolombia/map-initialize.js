@@ -9,11 +9,13 @@ $(".minimize-maximize-button").click(function() {
 		$("#filterZone").addClass("open");
 	}
 	$("#filtersContainer").slideToggle();
+	$("#filtersContainerHelp").css({display: 'none'});
+
 });
 
-$("#mapa").height($(window).height()-$("#header").height()-50);
+$("#mapa").height($(window).height()-$("#header").height()-85);
 $(window).resize(function(){
-	$("#mapa").height($(window).height()-$("#header").height()-50);
+	$("#mapa").height($(window).height()-$("#header").height()-85);
 });
 
 var cmAttr = 'Map data &copy; 2011 OpenStreetMap contributors, Imagery &copy; 2011 CloudMade';
@@ -85,5 +87,3 @@ var map = L.map('mapa', {
 });
 	
 L.control.layers(baseLayers).addTo(map);
-
-console.log("hola");

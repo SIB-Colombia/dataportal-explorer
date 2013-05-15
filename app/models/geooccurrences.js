@@ -5,9 +5,10 @@
 var mongoose = require('mongoose')
   , Schema = mongoose.Schema
 
-var OccurrenceSchema = new Schema( {
-	occurrenceID: {type: Number},
+var GeoOccurrenceSchema = new Schema( {
+	id: {type: Number},
 	canonical: {type: String, default: '', trim: true},
+	num_occurrences: {type: Number},
 	latitude: {type: Number},
 	longitude: {type: Number},
 	data_provider_id: {type: Number},
@@ -37,14 +38,7 @@ var OccurrenceSchema = new Schema( {
 	month: {type: Number},
 	occurrence_date: {type: Date},
 	altitude_metres: {type: Number},
-	depth_centimetres: {type: Number},
-	kingdom: {type: String, trim: true},
-	phylum: {type: String, trim: true},
-	taxonClass: {type: String, trim: true},
-	order_rank: {type: String, trim: true},
-	family: {type: String, trim: true},
-	genus: {type: String, trim: true},
-	species: {type: String, trim: true}
-}, { collection: 'occurrences' })
+	depth_centimetres: {type: Number}
+}, { collection: 'geooccurrences' })
 
-mongoose.model('Occurrence', OccurrenceSchema)
+mongoose.model('GeoOccurrence', GeoOccurrenceSchema)

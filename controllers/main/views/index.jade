@@ -1,14 +1,21 @@
 extends ../../../layouts/layout
 
 block content
+	script
+		var totalOccurrences = !{totalOccurrences}
+		var totalGeoOccurrences = !{totalGeoOccurrences}
 	.container-fluid
 		.row-fluid
 			section#map-filter-area
 				.tabbable
 					ul.nav.nav-pills
 						#actual-search-stats-data
-							span.title Total 287.427 registros 
-								span.subtitle (mostrando 147.212 georeferenciados)
+							span.title Resultados 
+								strong(data-bind="text: totalOccurrences")
+								|  registros 
+								span.subtitle (
+									span(data-bind="text: totalGeoOccurrences")
+									|  georeferenciados)
 						li.pull-right
 							a(href='#tab2', data-toggle='tab') Vista tabla
 						li.active.pull-right
@@ -23,27 +30,3 @@ block content
 							h1= title
 							p Welcome to #{title}
 	include mapascripts
-	script
-		var markers = new L.MarkerClusterGroup(/*{ disableClusteringAtZoom: 15 }*/);
-		var occurrences = !{data};
-		$.each(occurrences, function(i, occurrence) {
-			var marker = new L.Marker(new L.LatLng(occurrence.latitude, occurrence.longitude), { title: occurrence.canonical + ' (' + occurrence.num_occurrences + ')' });
-			marker.bindPopup(occurrence.canonical + ' ' + occurrence.num_occurrences);
-			markers.addLayer(marker);
-		});
-		/*var seen = [];
-		var json = JSON.stringify(markers, function(key, val) {
-			if (typeof val == "object") {
-				if (seen.indexOf(val) >= 0)
-					return;
-				seen.push(val);
-			}
-			return val
-		});*/
-
-		/*var sopas = map.addLayer(markers);*/
-
-		var anotherLayers = {
-			'Puntos densidad': map.addLayer(markers)
-		}
-		L.control.layers(anotherLayers).addTo(map);

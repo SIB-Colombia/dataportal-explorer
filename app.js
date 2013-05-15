@@ -26,9 +26,11 @@ fs.readdirSync(models_path).forEach(function (file) {
 })
 
 // all environments
+process.env.MONGODB_DB_CONNECT_URL = config.db
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
+app.set('jsonp callback', true );
 app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
@@ -45,8 +47,7 @@ if ('development' == app.get('env')) {
 // load controllers
 require('./lib/boot')(app, { verbose: !module.parent });
 
-/*app.get('/', routes.index);
-app.get('/users', user.list);*/
+/*app.get('/', routes.index);*/
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

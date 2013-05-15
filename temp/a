@@ -67,3 +67,23 @@ dbWrapper.initConnection();
 	});
 	dbWrapper.closeConnection();
 	//res.render('index', { title: 'Explorador - Portal de datos SIB Colombia' });
+
+	// Sinatra inspired MVC backend framework
+	// High order functions and common patterns for asynchronous code
+	// Robust, expressive, and feature-rich CSS superset
+	// Jade template engine
+	// A library for promises (CommonJS/Promises/A,B,D)
+	// Driver for mysql without asynchronous support
+	// Native driver for MongoDB document database
+	// MongoDB (ODM) hey! not ORM Because its'n relational!
+	// Multi-transport (console, file, network) async logging library
+	// All browser WebSockets specification support. Socket.io degrades to XHR in old browsers.
+	// JavaScript library for mobile-friendly interactive maps.
+	// Provides Beautiful Animated Marker Clustering functionality for Leaflet
+	// JavaScript's functional programming helper library
+	// Browser-side require() like node
+
+	// Super-agent driven library for testing HTTP servers
+	// Test framework agnostic BDD (Behavior Driven Development) style assertions
+	// Simple test framework
+	// Simple monitor script for use during development of a node.js app

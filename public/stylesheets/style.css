@@ -154,22 +154,22 @@ fieldset {
 .leaflet-control-layers-expanded {
   height: 300px;
   overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
 }
 /* Fin estilos area contenido mapa */
 /* Estilos tab area y tab buttons para elegir vistas */
 #map-filter-area .tabbable .nav {
-  margin-bottom: 0px;
-  margin-right: 15px;
+  margin-bottom: 3px;
+  border-bottom: 1px #bbb solid;
+  margin-left: 20px;
+  margin-right: 20px;
 }
 #map-filter-area #actual-search-stats-data {
   float: left;
-  font-size: 1.3em;
+  font-size: 1.1em;
   line-height: 30px;
-  margin-left: 20px;
-  font-weight: bold;
 }
 #map-filter-area #actual-search-stats-data .subtitle {
-  font-size: 0.8em;
   font-weight: normal;
 }
 /* Estilos ventana filtro de búsqueda */
@@ -258,6 +258,75 @@ h4#currentSearch {
 .gradient {
   filter: none;
 }
+#filtersContainerHelp {
+  background-color: rgba(231,231,231,0.8);
+  position: absolute;
+  left: 340px;
+  top: 30px;
+  right: -300px;
+}
+#filtersContainerHelp #topFiltersContainerHelp {
+  background-color: rgba(231,231,231,0.8);
+  padding-top: 5px;
+  padding-right: 5px;
+  padding-left: 5px;
+  height: 30px;
+}
+#filtersContainerHelp #topFiltersContainerHelp a.close-icon-filter-help {
+  float: right;
+}
+#filtersContainerHelp #topFiltersContainerHelp a.close-icon-filter-help:hover {
+  cursor: pointer;
+}
+#filtersContainerHelp #contentFiltersContainerHelp {
+  background-color: rgba(231,231,231,0.8);
+  height: 500px;
+  overflow: hidden;
+}
+#filtersContainerHelp #contentFiltersContainerHelp .mCSB_container {
+  background-color: #afafaf;
+}
+#filtersContainerHelp #contentFiltersContainerHelp .contentFiltersContainerHelpContainer {
+  padding-left: 5px;
+}
+#filtersContainerHelp #contentFiltersContainerHelp .item {
+  min-height: 18px;
+  padding-bottom: 8px;
+  padding-top: 8px;
+  padding-left: 15px;
+  border-bottom: 1px #b1b1b1 solid;
+  border-top: 1px #b1b1b1 solid;
+  background-color: #ebebeb;
+  margin-top: -1px;
+  float: left;
+}
+#filtersContainerHelp #contentFiltersContainerHelp .item:hover {
+  background-color: #683c0c;
+  color: #fff;
+}
+#filtersContainerHelp #contentFiltersContainerHelp .item span {
+  float: left;
+  width: 190px;
+  padding-right: 5px;
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+}
+#filtersContainerHelp #contentFiltersContainerHelp .item em {
+  float: right;
+  width: 50px;
+}
+#filtersContainerHelp #contentFiltersContainerHelp .item a {
+  float: right;
+  width: 20px;
+  padding-right: 5px;
+}
+#filtersContainerHelp #contentFiltersContainerHelp table tr td {
+  padding: 5px;
+}
+#filtersContainerHelp #contentFiltersContainerHelp table tr:hover td {
+  background-color: #683c0c;
+  color: #fff;
+}
 #filtersContainer {
   display: block;
 }
@@ -287,6 +356,20 @@ h4#currentSearch {
 }
 #filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter span.value input {
   width: 260px;
+}
+#filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter span.value select.daySelect {
+  width: 55px;
+  padding: 5px;
+}
+#filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter span.value select.monthSelect {
+  width: 110px;
+  padding: 5px;
+}
+#filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter span.value input.yearInput {
+  width: 100px;
+  padding: 5px;
+  margin-left: 5px;
+  margin-bottom: 10px;
 }
 #filtersContainer #explorerFiltersAndEditor #filterEditorPane #selectedFilterHelp {
   width: auto;
@@ -338,9 +421,13 @@ h4#currentSearch {
   -webkit-border-radius: 10px;
   border-radius: 10px;
 }
-#filtersContainer #explorerFiltersAndEditor #constructedFiltersPane #constructedFilters ul.taxonomy {
+#filtersContainer #explorerFiltersAndEditor #constructedFiltersPane #constructedFilters ul.filterItem {
   background-color: rgba(104,60,12,0.2);
   margin: 0px;
+  margin-bottom: 5px;
+}
+#filtersContainer #explorerFiltersAndEditor #constructedFiltersPane #constructedFilters ul.filterItem img {
+  padding-left: 5px;
 }
 .btn-add-filter {
   color: #fff;
@@ -368,3 +455,106 @@ h4#currentSearch {
   text-shadow: 0 1px 1px rgba(0,0,0,0.75);
 }
 /* Fin estilos ventana filtro de búsqueda */
+/* Estilos de apoyo */
+.loading {
+  background-image: url("/images/loading/ajax-loader.gif");
+  background-position: center center;
+  background-repeat: no-repeat;
+  opacity: 0.5;
+  -moz-opacity: 0.5;
+}
+.hide-element {
+  visibility: hidden;
+}
+/* Fin de estilos de apoyo */
+/* Estilos ventana detalles registro biológico */
+#occurrenceDetail {
+  background-color: rgba(231,231,231,0.8);
+  position: absolute;
+  left: 340px;
+  top: 30px;
+  right: -450px;
+}
+#occurrenceDetail #topOccurrenceDetail {
+  background-color: rgba(231,231,231,0.8);
+  padding-top: 5px;
+  padding-right: 5px;
+  padding-left: 5px;
+  height: 30px;
+}
+#occurrenceDetail #topOccurrenceDetail a.close-icon-filter-help {
+  float: right;
+}
+#occurrenceDetail #topOccurrenceDetail a.close-icon-filter-help:hover {
+  cursor: pointer;
+}
+#occurrenceDetail #occurrenceDetailContainer {
+  background-color: rgba(231,231,231,0.8);
+  height: 500px;
+  overflow: hidden;
+}
+#occurrenceDetail #occurrenceDetailContainer .contentOccurrenceD,
+#occurrenceDetail #occurrenceDetailContainer etailContainer {
+  padding-left: 5px;
+}
+#occurrenceDetail #occurrenceDetailContainer .contentOccurrenceD .occurrence,
+#occurrenceDetail #occurrenceDetailContainer etailContainer .occurrence {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+#occurrenceDetail #occurrenceDetailContainer .contentOccurrenceD .occurrence h2,
+#occurrenceDetail #occurrenceDetailContainer etailContainer .occurrence h2 {
+  margin-top: 0px;
+  font-size: 2.3em;
+}
+#occurrenceDetail #occurrenceDetailContainer .contentOccurrenceD .occurrence dl,
+#occurrenceDetail #occurrenceDetailContainer etailContainer .occurrence dl {
+  margin: 0 0 18px 0;
+  padding: 0;
+}
+#occurrenceDetail #occurrenceDetailContainer .contentOccurrenceD .occurrence dl.previewTaxon,
+#occurrenceDetail #occurrenceDetailContainer etailContainer .occurrence dl.previewTaxon {
+  color: #666;
+}
+#occurrenceDetail #occurrenceDetailContainer .contentOccurrenceD .occurrence dl.previewTaxon dt,
+#occurrenceDetail #occurrenceDetailContainer etailContainer .occurrence dl.previewTaxon dt {
+  font-weight: normal;
+}
+#occurrenceDetail #occurrenceDetailContainer .contentOccurrenceD .occurrence dl.previewTaxon dt,
+#occurrenceDetail #occurrenceDetailContainer etailContainer .occurrence dl.previewTaxon dt,
+#occurrenceDetail #occurrenceDetailContainer .contentOccurrenceD .occurrence dl.previewTaxon dd,
+#occurrenceDetail #occurrenceDetailContainer etailContainer .occurrence dl.previewTaxon dd {
+  display: inline;
+}
+#occurrenceDetail #occurrenceDetailContainer .contentOccurrenceD .occurrence dl.previewTaxon dd span,
+#occurrenceDetail #occurrenceDetailContainer etailContainer .occurrence dl.previewTaxon dd span {
+  color: #22241e;
+  font-weight: bold;
+}
+#occurrenceDetail #occurrenceDetailContainer .contentOccurrenceD .occurrence dl.previewTaxon dd:after,
+#occurrenceDetail #occurrenceDetailContainer etailContainer .occurrence dl.previewTaxon dd:after {
+  content: " › ";
+  margin: 0px;
+}
+#occurrenceDetail #occurrenceDetailContainer .contentOccurrenceD .occurrence dl.preview-data,
+#occurrenceDetail #occurrenceDetailContainer etailContainer .occurrence dl.preview-data {
+  float: left;
+  width: 100%;
+}
+#occurrenceDetail #occurrenceDetailContainer .contentOccurrenceD .occurrence dl.preview-data dt,
+#occurrenceDetail #occurrenceDetailContainer etailContainer .occurrence dl.preview-data dt {
+  clear: both;
+  float: left;
+  font-weight: bold;
+  margin-right: 18px;
+  padding: 3px 0;
+  width: 33%;
+}
+#occurrenceDetail #occurrenceDetailContainer .contentOccurrenceD .occurrence dl.preview-data dd,
+#occurrenceDetail #occurrenceDetailContainer etailContainer .occurrence dl.preview-data dd {
+  float: right;
+  margin: 0;
+  padding: 3px 0;
+  width: 60%;
+}
+/* Fin estilos ventana detalles registro biológico */
