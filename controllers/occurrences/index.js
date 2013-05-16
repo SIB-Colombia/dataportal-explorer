@@ -343,3 +343,11 @@ exports.searchDetailsOccurrences = function(req, res) {
 		res.jsonp(occurrences)
 	})
 }
+
+exports.searchInitialOccurrences = function(req, res) {
+	GeoOccurrence.find().select('id canonical num_occurrences latitude longitude').limit(20000).exec(function (err, geooccurrences) {
+		if(err)
+			res.send("Error getting initial geo occurrence data.")
+		res.jsonp(geooccurrences)
+	})
+}

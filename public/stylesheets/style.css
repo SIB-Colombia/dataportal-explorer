@@ -493,56 +493,44 @@ h4#currentSearch {
   height: 500px;
   overflow: hidden;
 }
-#occurrenceDetail #occurrenceDetailContainer .contentOccurrenceD,
-#occurrenceDetail #occurrenceDetailContainer etailContainer {
+#occurrenceDetail #occurrenceDetailContainer .contentOccurrenceDetailContainer {
   padding-left: 5px;
 }
-#occurrenceDetail #occurrenceDetailContainer .contentOccurrenceD .occurrence,
-#occurrenceDetail #occurrenceDetailContainer etailContainer .occurrence {
+#occurrenceDetail #occurrenceDetailContainer .contentOccurrenceDetailContainer .occurrence {
   padding-left: 15px;
   padding-right: 15px;
 }
-#occurrenceDetail #occurrenceDetailContainer .contentOccurrenceD .occurrence h2,
-#occurrenceDetail #occurrenceDetailContainer etailContainer .occurrence h2 {
+#occurrenceDetail #occurrenceDetailContainer .contentOccurrenceDetailContainer .occurrence h2 {
   margin-top: 0px;
   font-size: 2.3em;
 }
-#occurrenceDetail #occurrenceDetailContainer .contentOccurrenceD .occurrence dl,
-#occurrenceDetail #occurrenceDetailContainer etailContainer .occurrence dl {
+#occurrenceDetail #occurrenceDetailContainer .contentOccurrenceDetailContainer .occurrence dl {
   margin: 0 0 18px 0;
   padding: 0;
 }
-#occurrenceDetail #occurrenceDetailContainer .contentOccurrenceD .occurrence dl.previewTaxon,
-#occurrenceDetail #occurrenceDetailContainer etailContainer .occurrence dl.previewTaxon {
+#occurrenceDetail #occurrenceDetailContainer .contentOccurrenceDetailContainer .occurrence dl.previewTaxon {
   color: #666;
 }
-#occurrenceDetail #occurrenceDetailContainer .contentOccurrenceD .occurrence dl.previewTaxon dt,
-#occurrenceDetail #occurrenceDetailContainer etailContainer .occurrence dl.previewTaxon dt {
+#occurrenceDetail #occurrenceDetailContainer .contentOccurrenceDetailContainer .occurrence dl.previewTaxon dt {
   font-weight: normal;
 }
-#occurrenceDetail #occurrenceDetailContainer .contentOccurrenceD .occurrence dl.previewTaxon dt,
-#occurrenceDetail #occurrenceDetailContainer etailContainer .occurrence dl.previewTaxon dt,
-#occurrenceDetail #occurrenceDetailContainer .contentOccurrenceD .occurrence dl.previewTaxon dd,
-#occurrenceDetail #occurrenceDetailContainer etailContainer .occurrence dl.previewTaxon dd {
+#occurrenceDetail #occurrenceDetailContainer .contentOccurrenceDetailContainer .occurrence dl.previewTaxon dt,
+#occurrenceDetail #occurrenceDetailContainer .contentOccurrenceDetailContainer .occurrence dl.previewTaxon dd {
   display: inline;
 }
-#occurrenceDetail #occurrenceDetailContainer .contentOccurrenceD .occurrence dl.previewTaxon dd span,
-#occurrenceDetail #occurrenceDetailContainer etailContainer .occurrence dl.previewTaxon dd span {
+#occurrenceDetail #occurrenceDetailContainer .contentOccurrenceDetailContainer .occurrence dl.previewTaxon dd span {
   color: #22241e;
   font-weight: bold;
 }
-#occurrenceDetail #occurrenceDetailContainer .contentOccurrenceD .occurrence dl.previewTaxon dd:after,
-#occurrenceDetail #occurrenceDetailContainer etailContainer .occurrence dl.previewTaxon dd:after {
+#occurrenceDetail #occurrenceDetailContainer .contentOccurrenceDetailContainer .occurrence dl.previewTaxon dd:after {
   content: " › ";
   margin: 0px;
 }
-#occurrenceDetail #occurrenceDetailContainer .contentOccurrenceD .occurrence dl.preview-data,
-#occurrenceDetail #occurrenceDetailContainer etailContainer .occurrence dl.preview-data {
+#occurrenceDetail #occurrenceDetailContainer .contentOccurrenceDetailContainer .occurrence dl.preview-data {
   float: left;
   width: 100%;
 }
-#occurrenceDetail #occurrenceDetailContainer .contentOccurrenceD .occurrence dl.preview-data dt,
-#occurrenceDetail #occurrenceDetailContainer etailContainer .occurrence dl.preview-data dt {
+#occurrenceDetail #occurrenceDetailContainer .contentOccurrenceDetailContainer .occurrence dl.preview-data dt {
   clear: both;
   float: left;
   font-weight: bold;
@@ -550,8 +538,7 @@ h4#currentSearch {
   padding: 3px 0;
   width: 33%;
 }
-#occurrenceDetail #occurrenceDetailContainer .contentOccurrenceD .occurrence dl.preview-data dd,
-#occurrenceDetail #occurrenceDetailContainer etailContainer .occurrence dl.preview-data dd {
+#occurrenceDetail #occurrenceDetailContainer .contentOccurrenceDetailContainer .occurrence dl.preview-data dd {
   float: right;
   margin: 0;
   padding: 3px 0;

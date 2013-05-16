@@ -299,6 +299,7 @@ function FilterSelected(data) {
 function OccurrenceSearchViewModel() {
 	// Data
 	var self = this
+	var markers = new L.MarkerClusterGroup()
 	// Help variables
 	self.firstScrollRun = true
 	self.detailsFirstScrollRun = true
@@ -369,6 +370,49 @@ function OccurrenceSearchViewModel() {
 	// Selected department filter name
 	self.dropDownCoordinateStateText = ko.computed(function() {
 		return $("#dropDownCoordinateState option[value='" + self.selectedCoordinateState() + "']").text()
+	})
+
+	$.getJSON("/occurrences/list", function(allData) {
+		$.each(allData, function(i, occurrence) {
+			var marker = new L.Marker(new L.LatLng(occurrence.latitude, occurrence.longitude), { title: occurrence.canonical})
+			marker.bindPopup(occurrence.canonical + ' ' + occurrence.num_occurrences)
+			markers.addLayer(marker)
+		})
+		markers.on('click', function (a) {
+			if(a.layer._preSpiderfyLatlng) {
+				var latitude = a.layer._preSpiderfyLatlng.lat
+				var longitude = a.layer._preSpiderfyLatlng.lng
+			} else {
+				var latitude = a.layer.getLatLng().lat
+				var longitude = a.layer.getLatLng().lng
+			}
+			$.getJSON("/occurrences/details/search?canonical="+a.layer.options.title+"&latitude="+latitude+"&longitude="+longitude, function(allData) {
+				var mappedOccurrences = $.map(allData, function(item) {
+					return new Occurrence(item)
+				})
+				self.occurrencesDetails(mappedOccurrences)
+				self.disableFilterHelp()
+				if($("#occurrenceDetail").is(':hidden')) {
+					$("#occurrenceDetail").animate({width: 'toggle'}, 500, "swing", function() {
+						if(self.detailsFirstScrollRun) {
+							$("#occurrenceDetailContainer").mCustomScrollbar({
+								theme:"dark"
+							})
+							self.detailsFirstScrollRun = false
+						} else {
+							$("#occurrenceDetailContainer").mCustomScrollbar("update")
+						}
+					})
+				} else {
+					$("#occurrenceDetailContainer").mCustomScrollbar("update")
+				}
+				//$("#contentFiltersContainerHelp").mCustomScrollbar("update")
+			})
+		})
+		var anotherLayers = {
+			'Puntos densidad': map.addLayer(markers)
+		}
+		L.control.layers(anotherLayers).addTo(map)
 	})
 
 	// Operations
@@ -707,7 +751,6 @@ function OccurrenceSearchViewModel() {
 				$(".tab-content").removeClass("hide-element");
 			},
 			success: function(returnedData) {
-				var markers = new L.MarkerClusterGroup()
 				markers.clearLayers()
 				var totalGeoOccurrences = 0;
 				$.each(returnedData, function(i, geooccurrence) {
