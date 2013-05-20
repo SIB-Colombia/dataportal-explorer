@@ -462,6 +462,10 @@ function OccurrenceSearchViewModel() {
 		self.selectedCountriesIDs.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: self.selectedCountry(), textName: self.dropDownCountryText()}))
 		self.totalFilters(self.totalFilters()+1)
 	}
+	self.addCountryIDFromHelp = function(selectedFilter) {
+		self.selectedCountriesIDs.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.isoCountryCode, textName: selectedFilter.countryName}))
+		self.totalFilters(self.totalFilters()+1)
+	}
 	// Removes Country filter
 	self.removeCountryID = function(selectedFilter) { 
 		self.selectedCountriesIDs.remove(selectedFilter)
@@ -470,6 +474,10 @@ function OccurrenceSearchViewModel() {
 	// Add Department filter
 	self.addDepartmentID = function() {
 		self.selectedDepartmentsIDs.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: self.selectedDepartment(), textName: self.dropDownDepartmentText()}))
+		self.totalFilters(self.totalFilters()+1)
+	}
+	self.addDepartmentIDFromHelp = function(selectedFilter) {
+		self.selectedDepartmentsIDs.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.isoDepartmentCode, textName: selectedFilter.departmentName}))
 		self.totalFilters(self.totalFilters()+1)
 	}
 	// Removes Department filter

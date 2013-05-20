@@ -158,14 +158,14 @@ block filterWindow
 				.contentFiltersContainerHelpContainer(data-bind="foreach: resumeCountries, visible: resumeCountries().length > 0 && selectedSubject() == 5")
 					.item
 						span(data-bind="html: countryNameWithBold")
-						a(href='#', title='Adicionar este filtro', data-bind='')
+						a(href='#', title='Adicionar este filtro', data-bind='click: $parent.addCountryIDFromHelp')
 							img(alt='Quitar este filtro', src='/images/icons/redplus.png')
 						em(data-bind="text: occurrences")
 				// Departments resume data
 				.contentFiltersContainerHelpContainer(data-bind="foreach: resumeDepartments, visible: resumeDepartments().length > 0 && selectedSubject() == 38")
 					.item
 						span(data-bind="html: departmentNameWithBold")
-						a(href='#', title='Adicionar este filtro', data-bind='')
+						a(href='#', title='Adicionar este filtro', data-bind='click: $parent.addDepartmentIDFromHelp')
 							img(alt='Quitar este filtro', src='/images/icons/redplus.png')
 						em(data-bind="text: occurrences")
 		#filtersContainer
