@@ -40,6 +40,167 @@ var openStreetMapCycle = L.tileLayer(osmUrlCycle, {attribution: osmCycleAttrib})
 var openMapQuest = L.tileLayer(mapQuest, {attribution: osmCycleAttrib, type: 'osm', subdomains: '1234'});
 var minimal = L.tileLayer(cmUrl, {styleId: 997, attribution: cmAttr});
 var midnight = L.tileLayer(cmUrl, {styleId: 999,   attribution: cmAttr});
+
+// Servicio WMS del INVEMAR del Mapa Ecosistemas Continentales Costeros y Marinos 1:500.000 MECCM500k 
+var invemarEcoregiones = L.tileLayer.wms("http://gis.invemar.org.co/arcgis/services/MECCM/1_TM_MECCM500k_EcosistemasMarinoCosteros/MapServer/WMSServer", 
+	{
+		layers: 'Ecorregiones',
+		format: 'image/png',
+		transparent: true,
+		attribution: "Fuente: Invemar - Colombia"
+	}
+);
+var invemarAreaRegimenComun = L.tileLayer.wms("http://gis.invemar.org.co/arcgis/services/MECCM/1_TM_MECCM500k_EcosistemasMarinoCosteros/MapServer/WMSServer", 
+	{
+		layers: 'Área de régimen común',
+		format: 'image/png',
+		transparent: true,
+		attribution: "Fuente: Invemar - Colombia"
+	}
+);
+var invemarLimiteDepartamental = L.tileLayer.wms("http://gis.invemar.org.co/arcgis/services/MECCM/1_TM_MECCM500k_EcosistemasMarinoCosteros/MapServer/WMSServer", 
+	{
+		layers: 'Límite departamental',
+		format: 'image/png',
+		transparent: true,
+		attribution: "Fuente: Invemar - Colombia"
+	}
+);
+var invemarEcozonas = L.tileLayer.wms("http://gis.invemar.org.co/arcgis/services/MECCM/1_TM_MECCM500k_EcosistemasMarinoCosteros/MapServer/WMSServer", 
+	{
+		layers: 'Ecozonas',
+		format: 'image/png',
+		transparent: true,
+		attribution: "Fuente: Invemar - Colombia"
+	}
+);
+var invemarEcosistemasCosteros = L.tileLayer.wms("http://gis.invemar.org.co/arcgis/services/MECCM/1_TM_MECCM500k_EcosistemasMarinoCosteros/MapServer/WMSServer", 
+	{
+		layers: 'Ecosistemas Costeros',
+		format: 'image/png',
+		transparent: true,
+		attribution: "Fuente: Invemar - Colombia"
+	}
+);
+
+// WMS Server GeoSIB
+var humboldtComplejosParamos = L.tileLayer.wms("http://hermes.humboldt.org.co/visoruniversal2010/php/amfphp/services/com/gkudos/WmsService.php", 
+	{
+		layers: 'ComplejosParamos2012',
+		format: 'image/png',
+		transparent: true,
+		attribution: "Fuente: Instituto Alexander Von Humboldt - Colombia",
+		srs: 'EPSG:4326',
+	}
+);
+var humboldtGrilla = L.tileLayer.wms("http://hermes.humboldt.org.co/visoruniversal2010/php/amfphp/services/com/gkudos/WmsService.php", 
+	{
+		layers: 'Grilla',
+		format: 'image/png',
+		transparent: true,
+		attribution: "Fuente: Instituto Alexander Von Humboldt - Colombia",
+		srs: 'EPSG:4326',
+	}
+);
+var humboldtEmbalses = L.tileLayer.wms("http://hermes.humboldt.org.co/visoruniversal2010/php/amfphp/services/com/gkudos/WmsService.php", 
+	{
+		layers: 'embalse',
+		format: 'image/png',
+		transparent: true,
+		attribution: "Fuente: Instituto Alexander Von Humboldt - Colombia",
+		srs: 'EPSG:4326',
+	}
+);
+var humboldtAreasProtegidasRunap = L.tileLayer.wms("http://hermes.humboldt.org.co/visoruniversal2010/php/amfphp/services/com/gkudos/WmsService.php", 
+	{
+		layers: 'AreasProtegidas_RUNAP',
+		format: 'image/png',
+		transparent: true,
+		attribution: "Fuente: Instituto Alexander Von Humboldt - Colombia",
+		srs: 'EPSG:4326',
+	}
+);
+var humboldtLagunas = L.tileLayer.wms("http://hermes.humboldt.org.co/visoruniversal2010/php/amfphp/services/com/gkudos/WmsService.php", 
+	{
+		layers: 'laguna',
+		format: 'image/png',
+		transparent: true,
+		attribution: "Fuente: Instituto Alexander Von Humboldt - Colombia",
+		srs: 'EPSG:4326',
+	}
+);
+var humboldtCentrosPoblados = L.tileLayer.wms("http://hermes.humboldt.org.co/visoruniversal2010/php/amfphp/services/com/gkudos/WmsService.php", 
+	{
+		layers: 'centros_poblados',
+		format: 'image/png',
+		transparent: true,
+		attribution: "Fuente: Instituto Alexander Von Humboldt - Colombia",
+		srs: 'EPSG:4326',
+	}
+);
+var humboldtCuencasHidrograficas = L.tileLayer.wms("http://hermes.humboldt.org.co/visoruniversal2010/php/amfphp/services/com/gkudos/WmsService.php", 
+	{
+		layers: 'cuencas_hidrograficas',
+		format: 'image/png',
+		transparent: true,
+		attribution: "Fuente: Instituto Alexander Von Humboldt - Colombia",
+		srs: 'EPSG:4326',
+	}
+);
+var humboldtCars = L.tileLayer.wms("http://hermes.humboldt.org.co/visoruniversal2010/php/amfphp/services/com/gkudos/WmsService.php", 
+	{
+		layers: 'Jurisdiccion_CARs',
+		format: 'image/png',
+		transparent: true,
+		attribution: "Fuente: Instituto Alexander Von Humboldt - Colombia",
+		srs: 'EPSG:4326',
+	}
+);
+var humboldtParquesNacionalesNaturales = L.tileLayer.wms("http://hermes.humboldt.org.co/visoruniversal2010/php/amfphp/services/com/gkudos/WmsService.php", 
+	{
+		layers: 'ParquesNacionalesNaturales',
+		format: 'image/png',
+		transparent: true,
+		attribution: "Fuente: Instituto Alexander Von Humboldt - Colombia",
+		srs: 'EPSG:4326',
+	}
+);
+var humboldtAicas = L.tileLayer.wms("http://hermes.humboldt.org.co/visoruniversal2010/php/amfphp/services/com/gkudos/WmsService.php", 
+	{
+		layers: 'aicas',
+		format: 'image/png',
+		transparent: true,
+		attribution: "Fuente: Instituto Alexander Von Humboldt - Colombia",
+		srs: 'EPSG:4326',
+	}
+);
+var humboldtEcosistemasGenerales = L.tileLayer.wms("http://hermes.humboldt.org.co/visoruniversal2010/php/amfphp/services/com/gkudos/WmsService.php", 
+	{
+		layers: 'ecosistemas_generales',
+		format: 'image/png',
+		transparent: true,
+		attribution: "Fuente: Instituto Alexander Von Humboldt - Colombia",
+		srs: 'EPSG:4326',
+	}
+);
+var humboldtResguardosIndigenas = L.tileLayer.wms("http://hermes.humboldt.org.co/visoruniversal2010/php/amfphp/services/com/gkudos/WmsService.php", 
+	{
+		layers: 'resguardos_indigenas',
+		format: 'image/png',
+		transparent: true,
+		attribution: "Fuente: Instituto Alexander Von Humboldt - Colombia",
+		srs: 'EPSG:4326',
+	}
+);
+var humboldtComunidadesAfro = L.tileLayer.wms("http://hermes.humboldt.org.co/visoruniversal2010/php/amfphp/services/com/gkudos/WmsService.php", 
+	{
+		layers: 'comunidades_negras',
+		format: 'image/png',
+		transparent: true,
+		attribution: "Fuente: Instituto Alexander Von Humboldt - Colombia",
+		srs: 'EPSG:4326',
+	}
+);
 	
 var baseLayers = {
 	'Google terreno': googleTerrain,
@@ -84,6 +245,29 @@ var map = L.map('mapa', {
 	center: [4.781505, -79.804687],
 	zoom: 6,
 	layers: [googleTerrain],
+	crs: L.CRS.EPSG4326,
 });
+
+var wmsLayers = {
+	'Invemar: Ecorregiones': invemarEcoregiones,
+	'Invemar: Ecozonas': invemarEcozonas,
+	'Invemar: Ecosistemas costeros': invemarEcosistemasCosteros,
+	'Invemar: Área de régimen común': invemarAreaRegimenComun,
+	'Invemar: Límite departamental': invemarLimiteDepartamental,
+	'IAVH: Complejos páramos': humboldtComplejosParamos,
+	'IAVH: Grilla': humboldtGrilla,
+	'IAVH: Embalses': humboldtEmbalses,
+	'IAVH: Áreas protegidas - RUNAP': humboldtAreasProtegidasRunap,
+	'IAVH: Lagunas': humboldtLagunas,
+	'IAVH: Centros poblados': humboldtCentrosPoblados,
+	'IAVH: Cuencas hidrográficas': humboldtCuencasHidrograficas,
+	'IAVH: Jurisdicciones CAR': humboldtCars,
+	'IAVH: Parques nacionales naturales': humboldtParquesNacionalesNaturales,
+	'IAVH: AICAS': humboldtAicas,
+	'IAVH: Ecosistemas generales': humboldtEcosistemasGenerales,
+	'IAVH: Resguardos indígenas': humboldtResguardosIndigenas,
+	'IAVH: Comunidades afrodescendientes': humboldtComunidadesAfro,
+}
 	
-L.control.layers(baseLayers).addTo(map);
+baseAndFirstOverlays = L.control.layers(baseLayers).addTo(map)
+L.control.layers({}, wmsLayers).addTo(map)

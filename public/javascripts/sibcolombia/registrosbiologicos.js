@@ -409,10 +409,12 @@ function OccurrenceSearchViewModel() {
 				//$("#contentFiltersContainerHelp").mCustomScrollbar("update")
 			})
 		})
+
 		var anotherLayers = {
 			'Puntos densidad': map.addLayer(markers)
 		}
-		L.control.layers(anotherLayers).addTo(map)
+		baseAndFirstOverlays.addOverlay(markers, 'Puntos densidad')
+		//L.control.layers({}, anotherLayers).addTo(map)
 	})
 
 	// Operations
