@@ -1,0 +1,1088 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"bac",
+				"background-color"
+			],
+			[
+				"td",
+				"text-decoration"
+			],
+			[
+				"tex",
+				"text-shadow"
+			],
+			[
+				"ba",
+				"bgz:a	background-size:auto"
+			],
+			[
+				"text",
+				"text-transform"
+			],
+			[
+				"font",
+				"font-weight"
+			],
+			[
+				"fon",
+				"font-family"
+			],
+			[
+				"mar",
+				"margin"
+			],
+			[
+				"pa",
+				"padding"
+			],
+			[
+				"borde",
+				"border-top"
+			],
+			[
+				"ma",
+				"margin"
+			],
+			[
+				"inli",
+				"inline-block"
+			],
+			[
+				"no",
+				"no-repeat"
+			],
+			[
+				"b",
+				"border-image"
+			],
+			[
+				"min",
+				"min-width"
+			],
+			[
+				"di",
+				"display"
+			],
+			[
+				"import",
+				"important"
+			],
+			[
+				"inl",
+				"inline-block"
+			],
+			[
+				"bor",
+				"border-right"
+			],
+			[
+				"im",
+				"important"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "controllers/main/views/index.jade",
+			"settings":
+			{
+				"buffer_size": 862,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "layouts/layout.jade",
+			"settings":
+			{
+				"buffer_size": 1086,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "layouts/includes/footer.jade",
+			"settings":
+			{
+				"buffer_size": 500,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "layouts/includes/header.jade",
+			"settings":
+			{
+				"buffer_size": 2403,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "public/stylesheets/style.styl",
+			"settings":
+			{
+				"buffer_size": 12379,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/Users/disenho/Documents/SiB/sib-dataportal/portal-web/src/main/webapp/skins/standard/speciesGlobal.css",
+			"settings":
+			{
+				"buffer_size": 19576,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "public/stylesheets/leaflet/leaflet.css",
+			"settings":
+			{
+				"buffer_size": 9338,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "public/stylesheets/leaflet/leaflet.ie.css",
+			"settings":
+			{
+				"buffer_size": 1172,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"selected_items":
+		[
+			[
+				"packa",
+				"Package Control: Install Package"
+			],
+			[
+				"pack",
+				"Package Control: Install Package"
+			],
+			[
+				"pacga",
+				"Package Control: Install Package"
+			],
+			[
+				"pa",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 521.0
+	},
+	"console":
+	{
+		"height": 125.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Users/disenho/Documents/SiB/dataportal-explorer/controllers/main/views/filterWindow.jade",
+		"/Users/disenho/Documents/SiB/dataportal-explorer/public/stylesheets/leaflet/leaflet.ie.css",
+		"/Users/disenho/Documents/SiB/sib-dataportal/.gitignore",
+		"/Users/disenho/Documents/SiB/dataportal-explorer/public/stylesheets/style.styl",
+		"/Users/disenho/Documents/SiB/dataportal-explorer/layouts/layout.jade",
+		"/Users/disenho/Documents/SiB/dataportal-explorer/package.json",
+		"/Users/disenho/Library/Application Support/Sublime Text 2/Packages/User/Preferences.sublime-settings",
+		"/Users/disenho/Library/Application Support/Sublime Text 2/Packages/Default/Preferences.sublime-settings",
+		"/Users/disenho/Library/Application Support/Sublime Text 2/Packages/SideBarEnhancements/messages/11.13.2012.1305.0.txt",
+		"/Users/disenho/Documents/SiB/sib-dataportal/portal-web/src/main/webapp/WEB-INF/jsp/menu/topMenu.jsp",
+		"/Users/disenho/Documents/SiB/sib-dataportal/portal-web/src/main/webapp/common/footer.jsp",
+		"/Users/disenho/Documents/SiB/sib-dataportal/portal-web/src/main/webapp/common/frontPageFooter.jsp",
+		"/Users/disenho/Documents/SiB/sib-dataportal/portal-web/src/main/webapp/WEB-INF/jsp/frontPageHeader.jsp",
+		"/Users/disenho/Documents/SiB/sib-dataportal/portal-web/src/main/webapp/WEB-INF/jsp/publisher/introduction.jsp",
+		"/Users/disenho/Documents/SiB/sib-dataportal/portal-web/src/main/webapp/WEB-INF/jsp/taxonomy/introduction.jsp",
+		"/Users/disenho/Documents/SiB/sib-dataportal/portal-web/src/main/webapp/WEB-INF/jsp/dataset/introduction.jsp",
+		"/Users/disenho/Documents/SiB/sib-dataportal/portal-web/src/main/webapp/WEB-INF/jsp/geography/introduction.jsp",
+		"/Users/disenho/Documents/SiB/sib-dataportal/portal-web/src/main/webapp/WEB-INF/jsp/geography/overviewMapWithLinks.jsp",
+		"/Users/disenho/Documents/SiB/sib-dataportal/portal-web/src/main/webapp/WEB-INF/jsp/department/overviewMapWithLinks.jsp",
+		"/Users/disenho/Documents/SiB/sib-dataportal/portal-web/src/main/webapp/stylesheet/fonts/DINOT-Medium.svg",
+		"/Users/disenho/Documents/SiB/sib-dataportal/portal-web/src/main/webapp/WEB-INF/jsp/header.jsp",
+		"/Users/disenho/Documents/SiB/sib-dataportal/portal-web/src/main/webapp/common/headcontent.jsp",
+		"/Users/disenho/Documents/SiB/sib-dataportal/portal-web/src/main/webapp/WEB-INF/jsp/headcontent.jsp",
+		"/Users/disenho/Documents/SiB/sib-dataportal/portal-web/src/main/webapp/WEB-INF/classes/messages_es.properties",
+		"/Users/disenho/Documents/SiB/sib-dataportal/portal-web/src/main/webapp/webservices/en/introduction.jsp",
+		"/Users/disenho/Documents/SiB/sib-dataportal/portal-web/src/main/webapp/WEB-INF/classes/messages.properties",
+		"/Users/disenho/Documents/SiB/sib-dataportal/portal-web/src/main/webapp/WEB-INF/tiles-def.xml",
+		"/Users/disenho/Documents/SiB/sib-dataportal/portal-web/src/main/webapp/skins/standard/global.css",
+		"/Users/disenho/Documents/SiB/sib-dataportal/portal-web/src/main/webapp/WEB-INF/datasetDispatcher-servlet.xml",
+		"/Users/disenho/Documents/SiB/sib-dataportal/portal-web/src/main/webapp/images/colombiaMap.png",
+		"/Users/disenho/Documents/SiB/sib-dataportal/portal-web/src/main/webapp/home.html"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 95.0,
+		"where_history":
+		[
+			"",
+			"/Users/disenho/Documents/SiB/sib-dataportal/portal-web/src/main/webapp",
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"btn-add-filter",
+			"text-shad",
+			"constructedFilters",
+			"h4",
+			"top-filterZone",
+			"h4",
+			"filterZone",
+			"top",
+			"filtersContainer",
+			"filterbox",
+			".round",
+			"filterbox",
+			"border",
+			".leaflet-control-layers-toggle",
+			"leaflet-control",
+			"nav",
+			"  ",
+			":",
+			";",
+			":",
+			"; ",
+			"header",
+			"{",
+			"}",
+			"header",
+			"HEADER",
+			"#container",
+			"/portal-web/skins",
+			"</a>",
+			"<a href",
+			"<img ",
+			"\"",
+			"http",
+			">\n",
+			"search",
+			">\n",
+			"\"quicksearch",
+			"quicksearch",
+			"trans",
+			"menu",
+			"\"quicksearch",
+			"quicksearch",
+			"search",
+			"search_icon",
+			"ico_porta",
+			"ico_",
+			".search",
+			"quickSearch",
+			"\"quickSearch\"",
+			"search",
+			"globalOverviewLinks",
+			"header",
+			"menu",
+			"transi",
+			"ico_",
+			"pin",
+			"small",
+			";\n",
+			"h4",
+			"headerç",
+			"header",
+			"footer section div:nth-child(2)",
+			"footer",
+			"#geographypane > a:last-child",
+			"#geographypane span",
+			"#taxonomypane span, #datasetpane span, #geographypane span, #publisherpane span",
+			"header",
+			"share_icons",
+			"panes h1",
+			".panes_div > div:nth-of-type(1) a, .panes_div a div p",
+			"#taxonomypane span, #datasetpane span, #geographypane span, #publisherpane span",
+			"after",
+			"shadow_top",
+			"#taxonomypane span, #datasetpane span, #geographypane span, #publisherpane span",
+			".panes_div > div:nth-of-type(1)",
+			"#geographypane span",
+			"#panes",
+			"#geographypane",
+			".panes_div",
+			"#taxonomypane span",
+			"#taxonomypane span, #datasetpane span, #geographypane span, #publisherpane span",
+			"h3",
+			"departamen",
+			"Información de la especie registrada en cada departamento",
+			" Información de la especie registrada en cada departamento",
+			" Información de la especie registrada en cada departamento,",
+			"los publicadores",
+			"Información de los publicadores y conjuntos de datos que comparten datos a través de la red del SIB Colombia, incluyendo información breve de los recursos de datos de ",
+			"los publicadores",
+			"publicador",
+			".panes_div > div:nth-of-type(1) a",
+			".panes_div div",
+			"#panes h3",
+			"#publisherpane div",
+			".panes_div > div:nth-of-type(1)",
+			"#datasetpane div",
+			"div",
+			"footer section:nth-child(2) span p",
+			"footer",
+			"shadow",
+			"</li>",
+			"shadow",
+			"shdow",
+			"shadow",
+			"href",
+			"herf",
+			"p",
+			"footer",
+			"=\"footer",
+			"class=\"footer",
+			"=\"footer",
+			"footer",
+			"#footer",
+			"herita",
+			"heritage",
+			"cortes",
+			"imagenes",
+			"imá",
+			"small",
+			"facebook",
+			"aside",
+			"cifras",
+			"#geographypane",
+			".panes_div",
+			"#geographypane",
+			"#panes a",
+			"geographypane",
+			"hr"
+		],
+		"highlight": true,
+		"in_selection": true,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"footer"
+		],
+		"reverse": true,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 4,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "controllers/main/views/index.jade",
+					"settings":
+					{
+						"buffer_size": 862,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								614,
+								614
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close"
+							],
+							"syntax": "Packages/Jade/Syntaxes/Jade.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "layouts/layout.jade",
+					"settings":
+					{
+						"buffer_size": 1086,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1027,
+								1035
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close"
+							],
+							"syntax": "Packages/Jade/Syntaxes/Jade.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "layouts/includes/footer.jade",
+					"settings":
+					{
+						"buffer_size": 500,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								178,
+								178
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close"
+							],
+							"syntax": "Packages/Jade/Syntaxes/Jade.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "layouts/includes/header.jade",
+					"settings":
+					{
+						"buffer_size": 2403,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1265,
+								1265
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close"
+							],
+							"syntax": "Packages/Jade/Syntaxes/Jade.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "public/stylesheets/style.styl",
+					"settings":
+					{
+						"buffer_size": 12379,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3405,
+								3405
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close"
+							],
+							"syntax": "Packages/Stylus/Stylus.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 2068.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "/Users/disenho/Documents/SiB/sib-dataportal/portal-web/src/main/webapp/skins/standard/speciesGlobal.css",
+					"settings":
+					{
+						"buffer_size": 19576,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close"
+							],
+							"syntax": "Packages/CSS/CSS.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 2647.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "public/stylesheets/leaflet/leaflet.css",
+					"settings":
+					{
+						"buffer_size": 9338,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								925,
+								925
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close"
+							],
+							"syntax": "Packages/CSS/CSS.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "public/stylesheets/leaflet/leaflet.ie.css",
+					"settings":
+					{
+						"buffer_size": 1172,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								766,
+								766
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close"
+							],
+							"syntax": "Packages/CSS/CSS.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 6.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 34.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"replace":
+	{
+		"height": 64.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"introductio",
+				"WEB-INF/jsp/dataset/introduction.jsp"
+			],
+			[
+				"messa",
+				"WEB-INF/classes/messages_es.properties"
+			],
+			[
+				"topme",
+				"WEB-INF/jsp/menu/topMenu.jsp"
+			],
+			[
+				"header",
+				"WEB-INF/jsp/frontPageHeader.jsp"
+			],
+			[
+				"search",
+				"WEB-INF/jsp/blanketSearch.jsp"
+			],
+			[
+				"main",
+				"layouts/mainLayout.jsp"
+			],
+			[
+				"gbif",
+				"skins/shared/gbifmap.css"
+			],
+			[
+				"div",
+				"stylesheet/fonts/DINOT-Medium.svg"
+			],
+			[
+				"headc",
+				"WEB-INF/jsp/headcontent.jsp"
+			],
+			[
+				"heade",
+				"common/headcontent.jsp"
+			],
+			[
+				"intro",
+				"WEB-INF/jsp/publisher/introduction.jsp"
+			],
+			[
+				"introduct",
+				"WEB-INF/jsp/taxonomy/introduction.jsp"
+			],
+			[
+				"introduction.jsp",
+				"webservices/en/introduction.jsp"
+			],
+			[
+				"mess",
+				"WEB-INF/classes/messages_es.properties"
+			],
+			[
+				"introd",
+				"WEB-INF/jsp/geography/introduction.jsp"
+			],
+			[
+				"panes",
+				"WEB-INF/jsp/panes.jsp"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 235.0,
+	"status_bar_visible": true
+}

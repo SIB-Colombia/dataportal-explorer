@@ -33,7 +33,7 @@
 
 .leaflet-control-zoom,
 .leaflet-control-layers {
-	border: 3px solid #999;
+	/*border: 3px solid #999;*/
 	}
 .leaflet-control-zoom a {
 	background-color: #eee;

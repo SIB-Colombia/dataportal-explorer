@@ -1,48 +1,56 @@
 block header
-	#container
-		#header
-			a(href='http://data.sibcolombia.net/', title='Portal de datos SiB Colombia')
-				img(src='http://data.sibcolombia.net/skins/standard/images/logo.png', width='350', height='104', alt='PORTAL DE DATOS SIB COLOMBIA')
-			a(href='http://www.sibcolombia.net/', title='Ir a la página principal de SIB Colombia', target='_blank', style='float:right; margin:-20px 20px 0 20px;')
-				img(src='http://data.sibcolombia.net/skins/standard/images/btn_sib.png', width='197', height='51', alt='Vínculo a la página web del SIB Colombia')
-			#quickSearch
-				form(name='quickSearchForm', method='get', onsubmit='return submitQuickSearch(false);', action='http://data.sibcolombia.net/search/blanketSearch.htm')
-					fieldset
-						input(id='query', name='keyword', placeholder='especies, conjuntos de datos o departamentos', autosave='gbif.blanketsearch', results='5', tabindex='1')
-						a(href='javascript:submitFromLinkQuickSearch();', id='go')
-							// Buscar
-				| <script type="text/javascript">
-				| 	document.getElementById("query").focus();
 
-				| 	function submitQuickSearch(formSubmit){
-				| 		//check for empty value
-				| 		var textValue = document.getElementById('query').value;
-				| 		if(textValue!=null && textValue.length>0){
-				| 			if(formSubmit)
-				| 				document.quickSearchForm.submit();
-				| 			return true;
-				| 		}
-				| 		return false;
-				| 	}
+		header.sib
+			div
+				a.logo(href='http://data.sibcolombia.net')
+					img(src='/images/standard/logo_dataportal.png', alt='PORTAL DE DATOS SIB COLOMBIA')
 
-				| 	function submitFromLinkQuickSearch(){
-				| 		//check for empty value
-				| 		var textValue = document.getElementById('query').value;
-				| 		if(textValue!=null && textValue.length>0){
-				| 			document.quickSearchForm.submit();
-				| 		}
-				| 	}
-				| </script>
-		block top-menu
-		#topmenu
-			ul
-				li
-					a(href='http://data.sibcolombia.net/') Principal
-				li
+				#quickSearch
+					form(name='quickSearchForm', method='get', onsubmit='return submitQuickSearch(false);', action='http://data.sibcolombia.net/search/blanketSearch.htm')
+						fieldset
+							input(id='query', name='keyword', placeholder='especies, conjuntos de datos o departamentos', autosave='gbif.blanketsearch', results='5', tabindex='1')
+							a(href='javascript:submitFromLinkQuickSearch();', id='go')
+								// Buscar
+					| <script type="text/javascript">
+					| 	document.getElementById("query").focus();
+
+					| 	function submitQuickSearch(formSubmit){
+					| 		//check for empty value
+					| 		var textValue = document.getElementById('query').value;
+					| 		if(textValue!=null && textValue.length>0){
+					| 			if(formSubmit)
+					| 				document.quickSearchForm.submit();
+					| 			return true;
+					| 		}
+					| 		return false;
+					| 	}
+
+					| 	function submitFromLinkQuickSearch(){
+					| 		//check for empty value
+					| 		var textValue = document.getElementById('query').value;
+					| 		if(textValue!=null && textValue.length>0){
+					| 			document.quickSearchForm.submit();
+					| 		}
+					| 	}
+					| </script>
+				block top-menu
+				nav
+					//a(href='http://data.sibcolombia.net/') Principal
 					a(href='http://data.sibcolombia.net/especies/', title='Búsqueda de un taxón dentro de una clasificación') Especies
-				li
 					a(href='http://data.sibcolombia.net/conjuntos/', title='Búsqueda de un recurso de datos o publicador de datos.') Conjuntos de datos
-				li
-					a(href='http://data.sibcolombia.net/departamentos/', title='Seleccione un departamento en Colombia.') Departamentos
-				li
-					a(href='http://data.sibcolombia.net/busqueda/', title='Búsqueda de registros biológicos') Búsqueda avanzada
+					a(href='http://data.sibcolombia.net/departamentos/', title='Seleccione un departamento en Colombia.') Explorador geográfico
+					a(href='http://data.sibcolombia.net/publicadores/', title='Búsqueda de registros biológicos') Publicadores
+
+					div.share_icons
+						a(href='')
+							img(src="/images/standard/ico_search.png")
+						span
+						a(href='http://www.sibcolombia.net', title='Ir a la página principal de SIB Colombia', target='_blank')
+							img(src='images/standard/ico_portal.png', alt='Vínculo a la página web del SIB Colombia')
+						span
+						a(href='http://www.twitter.com/sibcolombia', target='_blank', title='Sib Colombia en Twitter')
+							img(src='images/standard/ico_twitter.png', alt='')
+						a(href='https://www.facebook.com/SibColombia', target='_blank', title='Sib Colombia en Facebook')
+							img(src='images/standard/ico_fb.png', alt='')
+						a(href='http://www.youtube.com/sibcolombia', target='_blank', alt='Sib Colombia en Youtube')
+							img(src='images/standard/ico_youtube.png')
