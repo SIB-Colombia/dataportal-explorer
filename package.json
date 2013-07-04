@@ -15,7 +15,7 @@
     }
   ],
   "scripts": {
-    "start": "./node_modules/.bin/nodemon app.js",
+    "start": ".\\node_modules\\.bin\\nodemon app.js",
     "test": "set NODE_ENV=test; ./node_modules/.bin/mocha --reporter spec test/test-*.js"
   },
   "keywords": [

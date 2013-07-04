@@ -13,9 +13,9 @@ $(".minimize-maximize-button").click(function() {
 
 });
 
-$("#mapa").height($(window).height()-$("#header").height()-85);
+$("#mapa").height($(window).height()-$("#header").height()-53);
 $(window).resize(function(){
-	$("#mapa").height($(window).height()-$("#header").height()-85);
+	$("#mapa").height($(window).height()-$("#header").height()-53);
 });
 
 var cmAttr = 'Map data &copy; 2011 OpenStreetMap contributors, Imagery &copy; 2011 CloudMade';
