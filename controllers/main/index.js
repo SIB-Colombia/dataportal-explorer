@@ -2,9 +2,12 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose')
+  , mongodb = require('mongodb')
   , MongoClient = require('mongodb').MongoClient
   , Occurrence = mongoose.model('Occurrence')
+  , OccurrenceES = mongoose.model('OccurrenceES')
   , GeoOccurrence = mongoose.model('GeoOccurrence')
+  , GeoOccurrenceES = mongoose.model('GeoOccurrenceES')
   , GeneralIndicator = mongoose.model('GeneralIndicator')
   , CanonicalGroup = mongoose.model('CanonicalGroup')
   , KingdomGroup = mongoose.model('KingdomGroup')
@@ -27,15 +30,195 @@ var dbWrapper = require("../../lib/dbUtils");
 var serverCluster = require("../../lib/servercluster");
 var markercluster = require("../../lib/markercluster");
 
+var inspect = require('util').inspect;
+var Client = require('mariasql');
+
+var occurrencesES = require("../../app/models/elasticsearch/occurrencesModel");
+
+exports.convertFromMysqlToMongoDB = function(req, res) {
+	var c = new Client();
+	c.connect({
+		host: '127.0.0.1',
+		user: 'root',
+		password: 'h4s1p8k2',
+		db: 'dataportal'
+	});
+
+	c.on('connect', function() {
+		console.log('Client connected');
+	})
+	.on('error', function(err) {
+		console.log('Client error: ' + err);
+	})
+	.on('close', function(hadError) {
+		console.log('Client closed');
+	});
+
+	/*MongoClient.connect(process.env.MONGODB_DB_CONNECT_URL, function(error, db) {
+		if (error) console.log(error);
+		db.createCollection("occurrences_es", function(err, collection) {
+			c.query('SELECT * FROM ocurrence_record_denormalized order by id limit 100000 offset 600000')
+				.on('result', function(result) {
+					result.on('row', function(row) {
+						var document = {id:row.id, canonical:row.canonical, location: {lat: row.latitude, lon: row.longitude}, data_provider_id: row.data_provider_id, data_provider_name: row.data_provider_name, data_resource_id: row.data_resource_id, data_resource_name: row.data_resource_name, rights: row.rights, institution_code_id: row.institution_code_id, institution_code: row.institution_code, collection_code_id: row.collection_code_id, collection_code: row.collection_code, catalogue_number_id: row.catalogue_number_id, catalogue_number: row.catalogue_number, citation: row.citation, created: row.created, modified: row.modified, kingdom_concept_id: row.kingdom_concept_id, phylum_concept_id: row.phylum_concept_id,class_concept_id: row.class_concept_id, order_concept_id: row.order_concept_id, family_concept_id: row.family_concept_id, genus_concept_id: row.genus_concept_id, species_concept_id: row.species_concept_id, iso_country_code: row.iso_country_code, iso_department_code: row.iso_department_code, year: row.year, month: row.month, occurrence_date: row.occurrence_date, altitude_metres: row.altitude_metres, depth_centimetres: row.depth_centimetres, kingdom: row.kingdom, phylum: row.phylum, taxonClass: row.class, order_rank: row.order_rank, family: row.family, genus: row.genus, species: row.species};
+						collection.insert(document, function(err, records) {
+							if (err) throw err;
+						})
+						//var occurrenceES = new OccurrenceES({id:row.id, canonical:row.canonical, location: {lat: row.latitude, lon: row.longitude}, data_provider_id: row.data_provider_id, data_provider_name: row.data_provider_name, data_resource_id: row.data_resource_id, data_resource_name: row.data_resource_name, rights: row.rights, institution_code_id: row.institution_code_id, institution_code: row.institution_code, collection_code_id: row.collection_code_id, collection_code: row.collection_code, catalogue_number_id: row.catalogue_number_id, catalogue_number: row.catalogue_number, citation: row.citation, created: row.created, modified: row.modified, kingdom_concept_id: row.kingdom_concept_id, class_concept_id: row.class_concept_id, order_concept_id: row.order_concept_id, family_concept_id: row.family_concept_id, genus_concept_id: row.genus_concept_id, species_concept_id: row.species_concept_id, iso_country_code: row.iso_country_code, iso_department_code: row.iso_department_code, year: row.year, month: row.month, occurrence_date: row.occurrence_date, altitude_metres: row.altitude_metres, depth_centimetres: row.depth_centimetres, kingdom: row.kingdom, phylum: row.phylum, class: row.class, order_rank: row.order_rank, family: row.family, genus: row.genus, species: row.species});
+						//occurrenceES.save();
+						//console.log('Result row: ' + inspect(row));
+					})
+					.on('error', function(err) {
+						console.log('Result error: ' + inspect(err));
+					})
+					.on('end', function(info) {
+						console.log('Result finished successfully');
+					});
+				})
+				.on('end', function() {
+					console.log('Done with all results');
+				});
+		});
+	});*/
+
+	/*MongoClient.connect(process.env.MONGODB_DB_CONNECT_URL, function(error, db) {
+		if (error) console.log(error);
+		db.createCollection("occurrences", function(err, collection) {
+			c.query('SELECT * FROM ocurrence_record_denormalized order by id limit 100000 offset 600000')
+				.on('result', function(result) {
+					result.on('row', function(row) {
+						var document = {id:row.id, canonical:row.canonical, latitude:row.latitude, longitude: row.longitude, data_provider_id: row.data_provider_id, data_provider_name: row.data_provider_name, data_resource_id: row.data_resource_id, data_resource_name: row.data_resource_name, rights: row.rights, institution_code_id: row.institution_code_id, institution_code: row.institution_code, collection_code_id: row.collection_code_id, collection_code: row.collection_code, catalogue_number_id: row.catalogue_number_id, catalogue_number: row.catalogue_number, citation: row.citation, created: row.created, modified: row.modified, kingdom_concept_id: row.kingdom_concept_id, phylum_concept_id: row.phylum_concept_id,class_concept_id: row.class_concept_id, order_concept_id: row.order_concept_id, family_concept_id: row.family_concept_id, genus_concept_id: row.genus_concept_id, species_concept_id: row.species_concept_id, iso_country_code: row.iso_country_code, iso_department_code: row.iso_department_code, year: row.year, month: row.month, occurrence_date: row.occurrence_date, altitude_metres: row.altitude_metres, depth_centimetres: row.depth_centimetres, kingdom: row.kingdom, phylum: row.phylum, taxonClass: row.class, order_rank: row.order_rank, family: row.family, genus: row.genus, species: row.species};
+						collection.insert(document, function(err, records) {
+							if (err) throw err;
+						})
+					})
+					.on('error', function(err) {
+						console.log('Result error: ' + inspect(err));
+					})
+					.on('end', function(info) {
+						console.log('Result finished successfully');
+					});
+				})
+				.on('end', function() {
+					console.log('Done with all results');
+				});
+		});
+	});*/
+
+	/*MongoClient.connect(process.env.MONGODB_DB_CONNECT_URL, function(error, db) {
+		if (error) console.log(error);
+		db.createCollection("geooccurrences", function(err, collection) {
+			c.query('SELECT * FROM geo_ocurrence_record_denormalized order by id')
+				.on('result', function(result) {
+					result.on('row', function(row) {
+						var document = {id:row.id, canonical:row.canonical, num_occurrences:row.num_occurrences, latitude:row.latitude, longitude:row.longitude, data_provider_id:row.data_provider_id, data_provider_name:row.data_provider_name, data_resource_id:row.data_resource_id, data_resource_name:row.data_resource_name, rights:row.rights, institution_code_id:row.institution_code_id, institution_code:row.institution_code, collection_code_id:row.collection_code_id, collection_code:row.collection_code, catalogue_number_id:row.catalogue_number_id, catalogue_number:row.catalogue_number, citation:row.citation, created:row.created, modified:row.modified, kingdom_concept_id:row.kingdom_concept_id, phylum_concept_id:row.phylum_concept_id, class_concept_id:row.class_concept_id, order_concept_id:row.order_concept_id, family_concept_id:row.family_concept_id, genus_concept_id:row.genus_concept_id, species_concept_id:row.species_concept_id, iso_country_code:row.iso_country_code, iso_department_code:row.iso_department_code, year:row.year, month:row.month, occurrence_date:row.occurrence_date, altitude_metres:row.altitude_metres, depth_centimetres:row.depth_centimetres, kingdom:row.kingdom, phylum:row.phylum, taxonClass:row.class, order_rank:row.order_rank, family:row.family, genus:row.genus, species:row.species};
+						collection.insert(document, function(err, records) {
+							if (err) throw err;
+						})
+					})
+					.on('error', function(err) {
+						console.log('Result error: ' + inspect(err));
+					})
+					.on('end', function(info) {
+						console.log('Result finished successfully');
+					});
+				})
+				.on('end', function() {
+					console.log('Done with all results');
+				});
+		});
+	});*/
+
+	/*MongoClient.connect(process.env.MONGODB_DB_CONNECT_URL, function(error, db) {
+		if (error) console.log(error);
+		db.createCollection("geooccurrences_es", function(err, collection) {
+			c.query('SELECT * FROM geo_ocurrence_record_denormalized order by id')
+				.on('result', function(result) {
+					result.on('row', function(row) {
+						var document = {id:row.id, canonical:row.canonical, num_occurrences:row.num_occurrences, location: {lat:row.latitude, lon:row.longitude}, data_provider_id:row.data_provider_id, data_provider_name:row.data_provider_name, data_resource_id:row.data_resource_id, data_resource_name:row.data_resource_name, rights:row.rights, institution_code_id:row.institution_code_id, institution_code:row.institution_code, collection_code_id:row.collection_code_id, collection_code:row.collection_code, catalogue_number_id:row.catalogue_number_id, catalogue_number:row.catalogue_number, citation:row.citation, created:row.created, modified:row.modified, kingdom_concept_id:row.kingdom_concept_id, phylum_concept_id:row.phylum_concept_id, class_concept_id:row.class_concept_id, order_concept_id:row.order_concept_id, family_concept_id:row.family_concept_id, genus_concept_id:row.genus_concept_id, species_concept_id:row.species_concept_id, iso_country_code:row.iso_country_code, iso_department_code:row.iso_department_code, year:row.year, month:row.month, occurrence_date:row.occurrence_date, altitude_metres:row.altitude_metres, depth_centimetres:row.depth_centimetres, kingdom:row.kingdom, phylum:row.phylum, taxonClass:row.class, order_rank:row.order_rank, family:row.family, genus:row.genus, species:row.species};
+						collection.insert(document, function(err, records) {
+							if (err) throw err;
+						})
+					})
+					.on('error', function(err) {
+						console.log('Result error: ' + inspect(err));
+					})
+					.on('end', function(info) {
+						console.log('Result finished successfully');
+					});
+				})
+				.on('end', function() {
+					console.log('Done with all results');
+				});
+		});
+	});*/
+
+	//c.end();
+	res.send("MongoDB Database updated");
+};
+
+/*var mysql = require('mysql-libmysqlclient')
+  , conn
+  , result
+  , row
+  , rows;
+
+var host = "localhost"
+  , user = "root"
+  , password = "h4s1p8k2"
+  , database = "dataportal";
+
+exports.convertFromMysqlToMongoDB = function(req, res) {
+	conn = mysql.createConnectionSync();
+	conn.initSync();
+	//conn.connectSync(host, user, password, database);
+	conn.setOptionSync("MYSQL_SET_CHARSET_NAME", "utf8");
+	conn.realConnectSync(host, user, password, database);
+	if (!conn.connectedSync()) {
+		res.send("Connection error " + conn.connectErrno + ": " + conn.connectError);
+		process.exit(1);
+	}
+	conn.query("SELECT * FROM ocurrence_record_denormalized limit 10;", function (error, result) {
+		if (error) {
+			throw error;
+		}
+		result.fetchAll(function (error, rows) {
+			if (error) {
+				throw error;
+			}
+			console.log("Rows in table '" + database + ".ocurrence_record_denormalized':");
+			for (var i = 0; i < rows.length; i++) {
+				console.log(rows[i].citation);
+				var occurrenceES = new OccurrenceES({id:rows[i].id, canonical:rows[i].canonical, location: {lat: rows[i].latitude, lon: rows[i].longitude}, data_provider_id: rows[i].data_provider_id, data_provider_name: rows[i].data_provider_name, data_resource_id: rows[i].data_resource_id, data_resource_name: rows[i].data_resource_name, rights: rows[i].rights, institution_code_id: rows[i].institution_code_id, institution_code: rows[i].institution_code, collection_code_id: rows[i].collection_code_id, collection_code: rows[i].collection_code, catalogue_number_id: rows[i].catalogue_number_id, catalogue_number: rows[i].catalogue_number, citation: rows[i].citation, created: rows[i].created, modified: rows[i].modified, kingdom_concept_id: rows[i].kingdom_concept_id, class_concept_id: rows[i].class_concept_id, order_concept_id: rows[i].order_concept_id, family_concept_id: rows[i].family_concept_id, genus_concept_id: rows[i].genus_concept_id, species_concept_id: rows[i].species_concept_id, iso_country_code: rows[i].iso_country_code, iso_department_code: rows[i].iso_department_code, year: rows[i].year, month: rows[i].month, occurrence_date: rows[i].occurrence_date, altitude_metres: rows[i].altitude_metres, depth_centimetres: rows[i].depth_centimetres, kingdom: rows[i].kingdom, phylum: rows[i].phylum, class: rows[i].class, order_rank: rows[i].order_rank, family: rows[i].family, genus: rows[i].genus, species: rows[i].species})
+				occurrenceES.save()
+			}
+		});
+	});
+	process.on('exit', function () {
+		conn.closeSync();
+	});
+	res.send("MongoDB Database updated")
+};*/
+
 exports.updatemongodb = function(req, res) {
 	// Clear occurrences collection
 	/*mongoose.connection.collections['occurrences'].drop(function(err) {
 		console.log('collection occurrences dropped')
 		mongoose.disconnect()
 	})*/
+	// Clear occurrences collection
+	/*mongoose.connection.collections['occurrences_es'].drop(function(err) {
+		console.log('collection occurrences_es dropped')
+		mongoose.disconnect()
+	})*/
 	// Clear geooccurrences collection
 	/*mongoose.connection.collections['geooccurrences'].drop(function(err) {
 		console.log('collection geooccurrences dropped')
+		mongoose.disconnect()
+	})*/
+	// Clear geooccurrences_es collection
+	/*mongoose.connection.collections['geooccurrences_es'].drop(function(err) {
+		console.log('collection geooccurrences_es dropped')
 		mongoose.disconnect()
 	})*/
 	// Clear stats collection
@@ -124,6 +307,10 @@ exports.updatemongodb = function(req, res) {
 	/*dbWrapper.convertOccurrences(function(result) {
 		console.log(result)
 	})*/
+	// Generate occurrences_es data
+	dbWrapper.convertOccurrencesES(function(result) {
+		console.log(result)
+	})
 	// Generate geooccurrences data
 	/*dbWrapper.convertGeoOccurrences(function(rows) {
 		console.log(rows.length)
@@ -134,6 +321,24 @@ exports.updatemongodb = function(req, res) {
 				console.log("Created geooccurrences collection")
 				for (var i = 0; i < rows.length; i++) {
 					var document = {id: rows[i].id, canonical: rows[i].canonical, num_occurrences: rows[i].num_occurrences, latitude: rows[i].latitude, longitude: rows[i].longitude, data_provider_id: rows[i].data_provider_id, data_provider_name: rows[i].data_provider_name, data_resource_id: rows[i].data_resource_id, data_resource_name: rows[i].data_resource_name, rights: rows[i].rights, institution_code_id: rows[i].institution_code_id, institution_code: rows[i].institution_code, collection_code_id: rows[i].collection_code_id, collection_code: rows[i].collection_code, catalogue_number_id: rows[i].catalogue_number_id, catalogue_number: rows[i].catalogue_number, citation: rows[i].citation, created: rows[i].created, modified: rows[i].modified, kingdom_concept_id: rows[i].kingdom_concept_id, class_concept_id: rows[i].class_concept_id, order_concept_id: rows[i].order_concept_id, family_concept_id: rows[i].family_concept_id, genus_concept_id: rows[i].genus_concept_id, species_concept_id: rows[i].species_concept_id, iso_country_code: rows[i].iso_country_code, iso_department_code: rows[i].iso_department_code, year: rows[i].year, month: rows[i].month, occurrence_date: rows[i].occurrence_date, altitude_metres: rows[i].altitude_metres, depth_centimetres: rows[i].depth_centimetres, kingdom: rows[i].kingdom, phylum: rows[i].phylum, class: rows[i].class, order_rank: rows[i].order_rank, family: rows[i].family, genus: rows[i].genus, species: rows[i].species}
+					collection.insert(document, function(err, records) {
+						if (err) console.log(err)
+					})
+				}
+				console.log("Conversión finalizada")
+			})
+		})
+	})*/
+	// Generate geooccurrences_es data
+	/*dbWrapper.convertGeoOccurrences(function(rows) {
+		console.log(rows.length)
+		MongoClient.connect(process.env.MONGODB_DB_CONNECT_URL, function(err, db) {
+			if (err) console.log(err)
+			db.createCollection("geooccurrences_es", function(err, collection) {
+				if (err) console.log(err)
+				console.log("Created geooccurrences_es collection")
+				for (var i = 0; i < rows.length; i++) {
+					var document = {id: rows[i].id, canonical: rows[i].canonical, num_occurrences: rows[i].num_occurrences, location: {lat: rows[i].latitude, lon: rows[i].longitude}, data_provider_id: rows[i].data_provider_id, data_provider_name: rows[i].data_provider_name, data_resource_id: rows[i].data_resource_id, data_resource_name: rows[i].data_resource_name, rights: rows[i].rights, institution_code_id: rows[i].institution_code_id, institution_code: rows[i].institution_code, collection_code_id: rows[i].collection_code_id, collection_code: rows[i].collection_code, catalogue_number_id: rows[i].catalogue_number_id, catalogue_number: rows[i].catalogue_number, citation: rows[i].citation, created: rows[i].created, modified: rows[i].modified, kingdom_concept_id: rows[i].kingdom_concept_id, class_concept_id: rows[i].class_concept_id, order_concept_id: rows[i].order_concept_id, family_concept_id: rows[i].family_concept_id, genus_concept_id: rows[i].genus_concept_id, species_concept_id: rows[i].species_concept_id, iso_country_code: rows[i].iso_country_code, iso_department_code: rows[i].iso_department_code, year: rows[i].year, month: rows[i].month, occurrence_date: rows[i].occurrence_date, altitude_metres: rows[i].altitude_metres, depth_centimetres: rows[i].depth_centimetres, kingdom: rows[i].kingdom, phylum: rows[i].phylum, class: rows[i].class, order_rank: rows[i].order_rank, family: rows[i].family, genus: rows[i].genus, species: rows[i].species}
 					collection.insert(document, function(err, records) {
 						if (err) console.log(err)
 					})
@@ -323,16 +528,20 @@ exports.index = function(req, res) {
 						callback(null, indicator.value)
 					}
 				)
-			},
+			}
 			/*data: function(callback) {
+				occurrences = occurrencesES.getOccurrences();
+				occurrences.exec(function(err, data){
+					callback(null, data);
+				})
 				GeoOccurrence.find().select('id canonical num_occurrences latitude longitude').limit(30000).exec(function (err, geooccurrences) {
 					callback(null, geooccurrences)
 				})
 			}*/
 		}, function(err, result) {
 			if(err)
-				res.send(handleError(err))
-			//res.render('index', { title: 'Explorador - Portal de datos SIB Colombia', totalOccurrences: result.totalOccurrences, totalGeoOccurrences: result.totalGeoOccurrences/*, data: JSON.stringify(result.data*/) });
+				res.send(handleError(err));
+			//res.render('index', { title: 'Explorador - Portal de datos SIB Colombia', totalOccurrences: result.totalOccurrences, totalGeoOccurrences: result.totalGeoOccurrences/*, data: JSON.stringify(result.data*/), tableData: result.data });
 			res.render('index', { title: 'Explorador - Portal de datos SIB Colombia', totalOccurrences: result.totalOccurrences, totalGeoOccurrences: result.totalGeoOccurrences });
 		}
 	)

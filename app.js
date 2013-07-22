@@ -14,19 +14,20 @@ var app = express();
 // Load configuration
 var env = process.env.NODE_ENV || 'development'
   , config = require('./config/config')[env]
-  , mongoose = require('mongoose')
+  , mongoose = require('mongoose');
 
 // Bootstrap db connection
-mongoose.connect(config.db)
+mongoose.connect(config.db);
 
 // Bootstrap models
-var models_path = __dirname + '/app/models'
+var models_path = __dirname + '/app/models/mongodb';
 fs.readdirSync(models_path).forEach(function (file) {
-  require(models_path+'/'+file)
+  require(models_path+'/'+file);
 })
 
 // all environments
-process.env.MONGODB_DB_CONNECT_URL = config.db
+process.env.MONGODB_DB_CONNECT_URL = config.db;
+process.env.ELASTICSEARCH_SERVER_OPTIONS = config.elasticSearchServer;
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');

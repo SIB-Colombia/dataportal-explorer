@@ -18,6 +18,8 @@ var mongoose = require('mongoose')
   , Occurrence = mongoose.model('Occurrence')
   , HelpSearchText = mongoose.model('HelpSearchText')
 
+var occurrencesES = require("../../app/models/elasticsearch/occurrencesModel");
+
 // Resume Canonical Name data JSON response
 exports.searchResumeScientificName = function(req, res) {
 	CanonicalGroup.find().sort('-occurrences').select('canonical occurrences').limit(20).exec(function (err, resume) {
@@ -266,7 +268,7 @@ exports.searchSearchHelpTextByName = function(req, res) {
 }
 
 // Search occurrences
-exports.searchOccurrences = function(req, res) {
+exports.searchGeoOccurrences = function(req, res) {
 	var data = req.body
 	var scientificNames = []
 	var taxonNames = []
@@ -336,18 +338,34 @@ exports.searchOccurrences = function(req, res) {
 	})
 }
 
-exports.searchDetailsOccurrences = function(req, res) {
-	Occurrence.find({canonical: req.query.canonical, latitude: req.query.latitude, longitude: req.query.longitude}).select('occurrenceID canonical latitude longitude data_provider_id data_provider_name data_resource_id data_resource_name institution_code_id institution_code collection_code_id collection_code catalogue_number_id catalogue_number created occurrence_date iso_country_code iso_department_code altitude_metres depth_centimetres kingdom phylum occurrenceClass order_rank family genus species').exec(function (err, occurrences) {
+exports.searchDetailsGeoOccurrences = function(req, res) {
+	Occurrence.find({canonical: req.query.canonical, latitude: req.query.latitude, longitude: req.query.longitude}).select('id canonical latitude longitude data_provider_id data_provider_name data_resource_id data_resource_name institution_code_id institution_code collection_code_id collection_code catalogue_number_id catalogue_number created occurrence_date iso_country_code iso_department_code altitude_metres depth_centimetres kingdom phylum taxonClass order_rank family genus species').exec(function (err, occurrences) {
 		if(err)
-			res.send("Error getting search occurrence details data.")
-		res.jsonp(occurrences)
-	})
+			res.send("Error getting search occurrence details data.");
+		res.jsonp(occurrences);
+	});
 }
 
 exports.searchInitialOccurrences = function(req, res) {
 	GeoOccurrence.find().select('id canonical num_occurrences latitude longitude').limit(20000).exec(function (err, geooccurrences) {
 		if(err)
+			res.send("Error getting initial geo occurrence data.");
+		res.jsonp(geooccurrences);
+	});
+}
+
+/*exports.searchAllOccurrences = function(req, res) {
+	GeoOccurrence.find().select('id canonical num_occurrences latitude longitude').exec(function (err, geooccurrences) {
+		if(err)
 			res.send("Error getting initial geo occurrence data.")
 		res.jsonp(geooccurrences)
 	})
+}*/
+
+exports.searchInitialPagedDataOccurrences = function(req, res) {
+	console.log(req.query);
+	occurrences = occurrencesES.getOccurrencesWithFilter(req.query);
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
+	});
 }
