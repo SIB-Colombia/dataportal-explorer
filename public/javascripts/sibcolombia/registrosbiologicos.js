@@ -7,42 +7,55 @@ function Filter(data) {
 }
 
 function Occurrence(data) {
-	this.occurrenceID = data.occurrenceID
-	this.canonical = data.canonical
-	this.latitude = data.latitude
-	this.longitude = data.longitude
-	this.data_provider_id = data.data_provider_id
-	this.data_provider_name = data.data_provider_name
-	this.data_resource_id = data.data_resource_id
-	this.data_resource_name = data.data_resource_name
-	this.institution_code_id = data.institution_code_id
-	this.institution_code = data.institution_code
-	this.collection_code_id = data.collection_code_id
-	this.collection_code = data.collection_code
-	this.catalogue_number_id = data.catalogue_number_id
-	this.created = data.created
-	this.occurrence_date = data.occurrence_date
-	this.iso_country_code = data.iso_country_code
-	this.iso_department_code = data.iso_department_code
-	this.altitude_metres = data.altitude_metres
-	this.depth_centimetres = data.depth_centimetres
-	this.kingdom = data.kingdom
-	this.phylum = data.phylum
-	this.taxonClass = data.taxonClass
-	this.order_rank = data.order_rank
-	this.family = data.family
-	this.genus = data.genus
-	this.species = data.species
+	this.id = data.id;
+	this.canonical = data.canonical;
+	this.latitude = data.latitude;
+	this.longitude = data.longitude;
+	this.data_provider_id = data.data_provider_id;
+	this.data_provider_name = data.data_provider_name;
+	this.data_resource_id = data.data_resource_id;
+	this.data_resource_name = data.data_resource_name;
+	this.institution_code_id = data.institution_code_id;
+	this.institution_code = data.institution_code;
+	this.collection_code_id = data.collection_code_id;
+	this.collection_code = data.collection_code;
+	this.catalogue_number_id = data.catalogue_number_id;
+	this.catalogue_number = data.catalogue_number;
+	this.created = data.created;
+	this.occurrence_date = data.occurrence_date;
+	this.iso_country_code = data.iso_country_code;
+	this.iso_department_code = data.iso_department_code;
+	this.altitude_metres = data.altitude_metres;
+	this.depth_centimetres = data.depth_centimetres;
+	this.kingdom = data.kingdom;
+	this.phylum = data.phylum;
+	this.taxonClass = data.taxonClass;
+	this.order_rank = data.order_rank;
+	this.family = data.family;
+	this.genus = data.genus;
+	this.species = data.species;
 
 	this.url = ko.computed(function() {
-		return "http://data.sibcolombia.net/occurrences/"+this.occurrenceID
-	}, this)
+		return "http://data.sibcolombia.net/occurrences/"+this.id;
+	}, this);
 
 	this.fullSpecieName = ko.computed(function() {
 		if(this.species)
-			return this.genus+" "+this.species
-		return ""
-	}, this)
+			return this.genus+" "+this.species;
+		return "";
+	}, this);
+
+	this.location = ko.computed(function() {
+		if(this.latitude)
+			return "Lat: "+this.latitude+", Lon: "+this.longitude;
+		return "";
+	}, this);
+
+	this.canonicalWithURL = ko.computed(function() {
+		if(this.canonical)
+			return "<a href=\"http://data.sibcolombia.net/occurrences/"+this.id+"\">"+this.canonical+"</a>";
+		return "";
+	}, this);
 }
 
 // ScientificName resume
@@ -298,7 +311,108 @@ function FilterSelected(data) {
 
 function OccurrenceSearchViewModel() {
 	// Data
-	var self = this
+	var self = this;
+
+	/*self.gridItems = ko.observableArray();
+
+	$.each(initialGridOccurrences.hits.hits, function(i, occurrence) {
+		self.gridItems.push(new Occurrence({occurrenceID: occurrence.fields.id, canonical: occurrence.fields.canonical, data_resource_name: occurrence.fields.data_resource_name, institution_code: occurrence.fields.institution_code, collection_code: occurrence.fields.collection_code, catalogue_number: occurrence.fields.catalogue_number, created: occurrence.fields.created, latitude: occurrence.fields.location.lat, longitude: occurrence.fields.location.lon, iso_country_code: occurrence.fields.iso_country_code}));
+		//console.log(occurrence.fields.canonical);
+	});*/
+
+	self.gridOptions = {
+		data: false,
+		//data: self.gridItems,
+		//schema: { data: self.gridItems, total: initialGridOccurrences.hits.total },
+		dataSource: {
+			type: "jsonp",
+			serverPaging: true,
+			serverSorting: true,
+			serverFiltering: true,
+			allowUnsort: true,
+			//height: 500,
+			pageSize: 20,
+			transport: {
+				read: { 
+					url: "/occurrences/PagedData",
+					type: "GET",
+					dataType: "jsonp",
+					contentType: "application/json; charset=utf-8"
+				}
+			},
+			schema: {
+				data: function(data) {
+					self.gridItems = ko.observableArray();
+					$.each(data.hits.hits, function(i, occurrence) {
+						self.gridItems.push(new Occurrence({id: occurrence.fields.id, canonical: occurrence.fields.canonical, data_resource_name: occurrence.fields.data_resource_name, institution_code: occurrence.fields.institution_code, collection_code: occurrence.fields.collection_code, catalogue_number: occurrence.fields.catalogue_number, created: occurrence.fields.created, latitude: occurrence.fields.location.lat, longitude: occurrence.fields.location.lon, iso_country_code: occurrence.fields.iso_country_code}));
+					});
+					return self.gridItems();
+				},
+				total: function(data) {
+					return data.hits.total;
+				}
+			}
+			//schema: { data: "data", total: "totalOccurrences" }
+		},
+		filterable: {
+			messages: {
+				info: "Filtrar con condición: ",
+				and: "y",
+				or: "o",
+				filter: "Aplicar filtro",
+				clear: "Quitar filtro"
+			},
+			operators: {
+				string: {
+					eq: "Igual a",
+					neq: "No igual a",
+					contains: "Contiene",
+					doesnotcontain: "No contiene",
+					startswith: "Comienza con",
+					endswith: "Termina con"
+				}
+			}
+		},
+		height: 500,
+		reorderable: true,
+		resizable: true,
+		pageable: {
+			pageSize: 20,
+			pageSizes: [20, 30, 50, 100],
+			buttonCount: 5,
+			input: true,
+			messages: {
+				display: "{0}-{1} de {2} registros biológicos",
+				empty: "No hay registros biológicos",
+				page: "Página",
+				of: "de {0}",
+				itemsPerPage: "registros biológicos por página",
+				first: "Primera página",
+				last: "Última página",
+				next: "Siguiente página",
+				previous: "Anterior página"
+			}
+		},
+		sortable: true,
+		groupable: {
+			messages: {
+				empty: "Arrastre un encabezado de calumna a esta zona para agrupar por dicha columna."
+			}
+		},
+		scrollable: true,
+		columns: [
+			{ field: "id", title: "ID", width: "5%" },
+			{ field: "canonical", title: "Nombre científico", width: "13%",  template: '<a target="_blank" href="http://data.sibcolombia.net/occurrences/#=id#">#=canonical#</a>' },
+			{ field: "data_resource_name", title: "Recurso de datos", width: "18%" },
+			{ field: "institution_code", title: "Código de la institución", width: "15%" },
+			{ field: "collection_code", title: "Código de la colección", width: "13%" },
+			{ field: "catalogue_number", title: "Número del catálogo", width: "13%" },
+			{ field: "created", title: "Fecha", width: "10%", filterable: false },
+			{ field: "location()", title: "Coordenadas", width: "9%", filterable: false, sortable: false },
+			{ field: "iso_country_code", title: "País", width: "5%", sortable: true }
+		]
+    };
+
 	var markers = new L.MarkerClusterGroup()
 	// Help variables
 	self.firstScrollRun = true
