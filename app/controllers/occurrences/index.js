@@ -18,7 +18,7 @@ var mongoose = require('mongoose')
   , Occurrence = mongoose.model('Occurrence')
   , HelpSearchText = mongoose.model('HelpSearchText')
 
-var occurrencesES = require("../../app/models/elasticsearch/occurrencesModel");
+var occurrencesES = require("../../models/elasticsearch/occurrencesModel");
 
 // Resume Canonical Name data JSON response
 exports.searchResumeScientificName = function(req, res) {

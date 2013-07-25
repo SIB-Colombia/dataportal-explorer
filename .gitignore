@@ -9,6 +9,7 @@ lib-cov
 explorador.sublime-project
 explorador.sublime-workspace
 temp/
+logs/
 npm-debug.log
 
 pids

@@ -25,7 +25,7 @@
     "sib-map-explorer"
   ],
   "dependencies": {
-    "express": "latest",
+    "express": "3.x.x",
     "async": "latest",
     "stylus": "latest",
     "jade": "latest",

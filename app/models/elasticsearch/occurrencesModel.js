@@ -1,15 +1,3 @@
-ElasticSearchClient = require('elasticsearchclient');
-
-var serverOptions = {
-	hosts: [{
-		host: 'localhost',
-		port: 9200,
-		secure: false
-	}]
-};
-
-var elasticSearchClient = new ElasticSearchClient(serverOptions);
-
 exports.getOccurrences = function() {
 	qryObj = {
 		"fields": ["id", "canonical", "data_resource_name", "institution_code", "collection_code", "catalogue_number", "created", "modified", "location", "country_name", "department_name"],

@@ -1,8 +1,7 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose')
-  , mongodb = require('mongodb')
+var mongodb = require('mongodb')
   , MongoClient = require('mongodb').MongoClient
   , Occurrence = mongoose.model('Occurrence')
   , OccurrenceES = mongoose.model('OccurrenceES')
@@ -26,14 +25,17 @@ var mongoose = require('mongoose')
   , HelpSearchText = mongoose.model('HelpSearchText')
   , async = require('async')
 
-var dbWrapper = require("../../lib/dbUtils");
-var serverCluster = require("../../lib/servercluster");
-var markercluster = require("../../lib/markercluster");
+var dbWrapper = require("../../../lib/dbUtils");
+var serverCluster = require("../../../lib/servercluster");
+var markercluster = require("../../../lib/markercluster");
 
 var inspect = require('util').inspect;
 var Client = require('mariasql');
 
-var occurrencesES = require("../../app/models/elasticsearch/occurrencesModel");
+var occurrencesES = require("../../models/elasticsearch/occurrencesModel");
+
+exports.name = 'main';
+exports.engine = 'jade';
 
 exports.convertFromMysqlToMongoDB = function(req, res) {
 	var c = new Client();
