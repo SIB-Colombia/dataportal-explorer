@@ -25,6 +25,8 @@ function Occurrence(data) {
 	this.occurrence_date = data.occurrence_date;
 	this.iso_country_code = data.iso_country_code;
 	this.iso_department_code = data.iso_department_code;
+	this.country_name = data.country_name;
+	this.department_name = data.department_name;
 	this.altitude_metres = data.altitude_metres;
 	this.depth_centimetres = data.depth_centimetres;
 	this.kingdom = data.kingdom;
@@ -313,12 +315,6 @@ function OccurrenceSearchViewModel() {
 	// Data
 	var self = this;
 
-	/*self.gridItems = ko.observableArray();
-
-	$.each(initialGridOccurrences.hits.hits, function(i, occurrence) {
-		self.gridItems.push(new Occurrence({occurrenceID: occurrence.fields.id, canonical: occurrence.fields.canonical, data_resource_name: occurrence.fields.data_resource_name, institution_code: occurrence.fields.institution_code, collection_code: occurrence.fields.collection_code, catalogue_number: occurrence.fields.catalogue_number, created: occurrence.fields.created, latitude: occurrence.fields.location.lat, longitude: occurrence.fields.location.lon, iso_country_code: occurrence.fields.iso_country_code}));
-		//console.log(occurrence.fields.canonical);
-	});*/
 
 	self.gridOptions = {
 		data: false,
@@ -344,7 +340,7 @@ function OccurrenceSearchViewModel() {
 				data: function(data) {
 					self.gridItems = ko.observableArray();
 					$.each(data.hits.hits, function(i, occurrence) {
-						self.gridItems.push(new Occurrence({id: occurrence.fields.id, canonical: occurrence.fields.canonical, data_resource_name: occurrence.fields.data_resource_name, institution_code: occurrence.fields.institution_code, collection_code: occurrence.fields.collection_code, catalogue_number: occurrence.fields.catalogue_number, created: occurrence.fields.created, latitude: occurrence.fields.location.lat, longitude: occurrence.fields.location.lon, iso_country_code: occurrence.fields.iso_country_code}));
+						self.gridItems.push(new Occurrence({id: occurrence.fields.id, canonical: occurrence.fields.canonical, data_resource_name: occurrence.fields.data_resource_name, institution_code: occurrence.fields.institution_code, collection_code: occurrence.fields.collection_code, catalogue_number: occurrence.fields.catalogue_number, created: occurrence.fields.created, latitude: occurrence.fields.location.lat, longitude: occurrence.fields.location.lon, country_name: occurrence.fields.country_name, department_name: occurrence.fields.department_name}));
 					});
 					return self.gridItems();
 				},
@@ -373,7 +369,7 @@ function OccurrenceSearchViewModel() {
 				}
 			}
 		},
-		height: 500,
+		//height: 500,
 		reorderable: true,
 		resizable: true,
 		pageable: {
@@ -403,13 +399,14 @@ function OccurrenceSearchViewModel() {
 		columns: [
 			{ field: "id", title: "ID", width: "5%" },
 			{ field: "canonical", title: "Nombre científico", width: "13%",  template: '<a target="_blank" href="http://data.sibcolombia.net/occurrences/#=id#">#=canonical#</a>' },
-			{ field: "data_resource_name", title: "Recurso de datos", width: "18%" },
-			{ field: "institution_code", title: "Código de la institución", width: "15%" },
-			{ field: "collection_code", title: "Código de la colección", width: "13%" },
-			{ field: "catalogue_number", title: "Número del catálogo", width: "13%" },
-			{ field: "created", title: "Fecha", width: "10%", filterable: false },
+			{ field: "data_resource_name", title: "Recurso de datos", width: "16%" },
+			{ field: "institution_code", title: "Cód. de la institución", width: "14%" },
+			{ field: "collection_code", title: "Cód. de la colección", width: "12%" },
+			{ field: "catalogue_number", title: "Núm. del catálogo", width: "12%" },
+			{ field: "created", title: "Fecha", width: "8%", filterable: false },
 			{ field: "location()", title: "Coordenadas", width: "9%", filterable: false, sortable: false },
-			{ field: "iso_country_code", title: "País", width: "5%", sortable: true }
+			{ field: "country_name", title: "País", width: "5%", sortable: true },
+			{ field: "department_name", title: "Dept.", width: "8%", sortable: true }
 		]
     };
 

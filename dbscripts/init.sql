@@ -1,9 +1,9 @@
 -- ----------------------------
--- Table structure for `geo_ocurrence_record_denormalized`
+-- Table structure for `geo_occurrence_record_denormalized`
 -- ----------------------------
-DROP TABLE IF EXISTS `geo_ocurrence_record_denormalized`;
+DROP TABLE IF EXISTS `geo_occurrence_record_denormalized`;
 
-CREATE TABLE geo_ocurrence_record_denormalized
+CREATE TABLE geo_occurrence_record_denormalized
 AS (SELECT
 occurrence_record.id,
 taxon_name.canonical,
@@ -37,14 +37,7 @@ occurrence_record.`year`,
 occurrence_record.`month`,
 occurrence_record.occurrence_date,
 occurrence_record.altitude_metres,
-occurrence_record.depth_centimetres,
-raw_occurrence_record.kingdom,
-raw_occurrence_record.phylum,
-raw_occurrence_record.class,
-raw_occurrence_record.order_rank,
-raw_occurrence_record.family,
-raw_occurrence_record.genus,
-raw_occurrence_record.species
+occurrence_record.depth_centimetres
 FROM
 occurrence_record
 INNER JOIN taxon_name ON occurrence_record.taxon_name_id = taxon_name.id
@@ -53,7 +46,6 @@ INNER JOIN data_resource ON occurrence_record.data_resource_id = data_resource.i
 INNER JOIN institution_code ON occurrence_record.institution_code_id = institution_code.id
 INNER JOIN collection_code ON occurrence_record.collection_code_id = collection_code.id
 INNER JOIN catalogue_number ON occurrence_record.catalogue_number_id = catalogue_number.id
-INNER JOIN raw_occurrence_record ON occurrence_record.id = raw_occurrence_record.id
 WHERE
 occurrence_record.deleted IS NULL AND
 occurrence_record.latitude IS NOT NULL AND
@@ -70,14 +62,27 @@ occurrence_record.family_concept_id,
 occurrence_record.genus_concept_id,
 occurrence_record.species_concept_id);
 
-alter table geo_ocurrence_record_denormalized add primary key(id);
+alter table geo_occurrence_record_denormalized add primary key(id);
+ALTER TABLE geo_occurrence_record_denormalized ADD country_name VARCHAR(255);
+ALTER TABLE geo_occurrence_record_denormalized ADD department_name VARCHAR(255);
+
+UPDATE geo_occurrence_record_denormalized 
+INNER JOIN country_name 
+ON geo_occurrence_record_denormalized.iso_country_code = country_name.iso_country_code 
+AND country_name.locale = 'en' 
+SET geo_occurrence_record_denormalized.country_name = country_name.name;
+
+UPDATE geo_occurrence_record_denormalized 
+INNER JOIN department 
+ON geo_occurrence_record_denormalized.iso_department_code = department.iso_department_code
+SET geo_occurrence_record_denormalized.department_name = department.department_name;
 
 -- ----------------------------
--- Table structure for `ocurrence_record_denormalized`
+-- Table structure for `occurrence_record_denormalized`
 -- ----------------------------
-DROP TABLE IF EXISTS `ocurrence_record_denormalized`;
+DROP TABLE IF EXISTS `occurrence_record_denormalized`;
 
-CREATE TABLE ocurrence_record_denormalized
+CREATE TABLE occurrence_record_denormalized
 AS (SELECT
 occurrence_record.id,
 taxon_name.canonical,
@@ -110,14 +115,7 @@ occurrence_record.`year`,
 occurrence_record.`month`,
 occurrence_record.occurrence_date,
 occurrence_record.altitude_metres,
-occurrence_record.depth_centimetres,
-raw_occurrence_record.kingdom,
-raw_occurrence_record.phylum,
-raw_occurrence_record.class,
-raw_occurrence_record.order_rank,
-raw_occurrence_record.family,
-raw_occurrence_record.genus,
-raw_occurrence_record.species
+occurrence_record.depth_centimetres
 FROM
 occurrence_record
 INNER JOIN taxon_name ON occurrence_record.taxon_name_id = taxon_name.id
@@ -126,8 +124,76 @@ INNER JOIN data_resource ON occurrence_record.data_resource_id = data_resource.i
 INNER JOIN institution_code ON occurrence_record.institution_code_id = institution_code.id
 INNER JOIN collection_code ON occurrence_record.collection_code_id = collection_code.id
 INNER JOIN catalogue_number ON occurrence_record.catalogue_number_id = catalogue_number.id
-INNER JOIN raw_occurrence_record ON occurrence_record.id = raw_occurrence_record.id
 WHERE
 occurrence_record.deleted IS NULL);
 
-alter table ocurrence_record_denormalized add primary key(id);
+alter table occurrence_record_denormalized add primary key(id);
+ALTER TABLE occurrence_record_denormalized ADD kingdom VARCHAR(255);
+ALTER TABLE occurrence_record_denormalized ADD phylum VARCHAR(255);
+ALTER TABLE occurrence_record_denormalized ADD class VARCHAR(255);
+ALTER TABLE occurrence_record_denormalized ADD order_rank VARCHAR(255);
+ALTER TABLE occurrence_record_denormalized ADD family VARCHAR(255);
+ALTER TABLE occurrence_record_denormalized ADD genus VARCHAR(255);
+ALTER TABLE occurrence_record_denormalized ADD species VARCHAR(255);
+ALTER TABLE occurrence_record_denormalized ADD country_name VARCHAR(255);
+ALTER TABLE occurrence_record_denormalized ADD department_name VARCHAR(255);
+
+UPDATE occurrence_record_denormalized
+INNER JOIN taxon_concept 
+ON occurrence_record_denormalized.kingdom_concept_id = taxon_concept.id
+INNER JOIN taxon_name 
+ON taxon_concept.taxon_name_id = taxon_name.id
+SET occurrence_record_denormalized.kingdom = taxon_name.canonical;
+
+UPDATE occurrence_record_denormalized
+INNER JOIN taxon_concept 
+ON occurrence_record_denormalized.phylum_concept_id = taxon_concept.id
+INNER JOIN taxon_name 
+ON taxon_concept.taxon_name_id = taxon_name.id
+SET occurrence_record_denormalized.phylum = taxon_name.canonical;
+
+UPDATE occurrence_record_denormalized
+INNER JOIN taxon_concept 
+ON occurrence_record_denormalized.class_concept_id = taxon_concept.id
+INNER JOIN taxon_name 
+ON taxon_concept.taxon_name_id = taxon_name.id
+SET occurrence_record_denormalized.class = taxon_name.canonical;
+
+UPDATE occurrence_record_denormalized
+INNER JOIN taxon_concept 
+ON occurrence_record_denormalized.order_concept_id = taxon_concept.id
+INNER JOIN taxon_name 
+ON taxon_concept.taxon_name_id = taxon_name.id
+SET occurrence_record_denormalized.order_rank = taxon_name.canonical;
+
+UPDATE occurrence_record_denormalized
+INNER JOIN taxon_concept 
+ON occurrence_record_denormalized.family_concept_id = taxon_concept.id
+INNER JOIN taxon_name 
+ON taxon_concept.taxon_name_id = taxon_name.id
+SET occurrence_record_denormalized.family = taxon_name.canonical;
+
+UPDATE occurrence_record_denormalized
+INNER JOIN taxon_concept 
+ON occurrence_record_denormalized.genus_concept_id = taxon_concept.id
+INNER JOIN taxon_name 
+ON taxon_concept.taxon_name_id = taxon_name.id
+SET occurrence_record_denormalized.genus = taxon_name.canonical;
+
+UPDATE occurrence_record_denormalized
+INNER JOIN taxon_concept 
+ON occurrence_record_denormalized.species_concept_id = taxon_concept.id
+INNER JOIN taxon_name 
+ON taxon_concept.taxon_name_id = taxon_name.id
+SET occurrence_record_denormalized.species = taxon_name.canonical;
+
+UPDATE occurrence_record_denormalized 
+INNER JOIN country_name 
+ON occurrence_record_denormalized.iso_country_code = country_name.iso_country_code 
+AND country_name.locale = 'en' 
+SET occurrence_record_denormalized.country_name = country_name.name;
+
+UPDATE occurrence_record_denormalized 
+INNER JOIN department 
+ON occurrence_record_denormalized.iso_department_code = department.iso_department_code
+SET occurrence_record_denormalized.department_name = department.department_name;

@@ -14,10 +14,11 @@ $(".minimize-maximize-button").click(function() {
 	$("#filtersContainerHelp").css({display: 'none'});
 
 });
-
-$("#mapa").height($(window).height()-$("#header").height()-53);
+$("#mapa").height($(window).height()-$("header").height());
 $(window).resize(function(){
-	$("#mapa").height($(window).height()-$("#header").height()-53);
+	$("#mapa").height($(window).height()-$("header").height());
+	$("#reportGrid").height($(window).height()-$("header").height()-$("#actual-search-stats-data").height()-60);
+	$("#reportGrid .k-grid-content").height($(window).height()-$("header").height()-$("#actual-search-stats-data").height()-60-91);
 });
 
 var cmAttr = 'Map data &copy; 2011 OpenStreetMap contributors, Imagery &copy; 2011 CloudMade';

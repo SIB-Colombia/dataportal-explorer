@@ -12,7 +12,7 @@ var elasticSearchClient = new ElasticSearchClient(serverOptions);
 
 exports.getOccurrences = function() {
 	qryObj = {
-		"fields": ["id", "canonical", "data_resource_name", "institution_code", "collection_code", "catalogue_number", "created", "modified", "location", "iso_country_code"],
+		"fields": ["id", "canonical", "data_resource_name", "institution_code", "collection_code", "catalogue_number", "created", "modified", "location", "country_name", "department_name"],
 		"from": 0,
 		"size" : 20,
 		"sort": [ { "canonical.untouched": "asc" } ],
@@ -27,7 +27,7 @@ exports.getOccurrences = function() {
 
 exports.getOccurrencesWithFilter = function(conditions) {
 	var qryObj = {};
-	qryObj["fields"] = ["id", "canonical", "data_resource_name", "institution_code", "collection_code", "catalogue_number", "created", "modified", "location", "iso_country_code"];
+	qryObj["fields"] = ["id", "canonical", "data_resource_name", "institution_code", "collection_code", "catalogue_number", "created", "modified", "location", "country_name", "department_name"];
 	qryObj["query"] = {"match_all" : {}};
 	qryObj["from"] = (conditions.page-1)*conditions.pageSize;
 	qryObj["size"] = conditions.pageSize;

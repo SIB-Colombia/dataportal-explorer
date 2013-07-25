@@ -27,6 +27,8 @@ block content
 							#filterZone.open
 								include filterWindow
 						.tab-pane(id='tab2')
+							#filterZoneTable
+								include filterTableWindow
 							#reportGrid(data-bind="kendoGrid: gridOptions")
 							//script.
 							//	var initialGridOccurrences = !{tableData};

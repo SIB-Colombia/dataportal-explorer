@@ -10,3 +10,11 @@ block footer
 			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
 			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 		})();
+
+		$('a[data-toggle="tab"]').on('shown', function (e) {
+			// Map Height
+			$("#mapa").height($(window).height()-$("header").height());
+			// Table view height
+			$("#reportGrid").height($(window).height()-$("header").height()-$("#actual-search-stats-data").height()-60);
+			$("#reportGrid .k-grid-content").height($(window).height()-$("header").height()-$("#actual-search-stats-data").height()-60-91);
+		});
