@@ -1,6 +1,6 @@
 {
   "name": "sib-colombia-dataportal-explorer",
-  "version": "0.1",
+  "version": "0.1.0",
   "private": true,
   "author": "Valentinilla <valegrajales@gmail.com>",
   "description": "Web application for SIB Colombia dataportal map data exploration",
