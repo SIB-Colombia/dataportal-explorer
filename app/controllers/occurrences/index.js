@@ -363,7 +363,9 @@ exports.searchInitialOccurrences = function(req, res) {
 }*/
 
 exports.searchInitialPagedDataOccurrences = function(req, res) {
-	console.log(req.query);
+	//console.log(req.query);
+	//console.log(req.query.filter);
+	//console.log(req.query.filter.logic);
 	occurrences = occurrencesES.getOccurrencesWithFilter(req.query);
 	occurrences.exec(function(err, data){
 		res.jsonp(JSON.parse(data));
