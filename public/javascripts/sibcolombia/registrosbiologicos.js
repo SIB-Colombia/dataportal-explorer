@@ -342,6 +342,7 @@ function OccurrenceSearchViewModel() {
 					$.each(data.hits.hits, function(i, occurrence) {
 						self.gridItems.push(new Occurrence({id: occurrence.fields.id, canonical: occurrence.fields.canonical, data_resource_name: occurrence.fields.data_resource_name, institution_code: occurrence.fields.institution_code, collection_code: occurrence.fields.collection_code, catalogue_number: occurrence.fields.catalogue_number, created: occurrence.fields.created, latitude: occurrence.fields.location.lat, longitude: occurrence.fields.location.lon, country_name: occurrence.fields.country_name, department_name: occurrence.fields.department_name}));
 					});
+					self.totalOccurrences(data.hits.total);
 					return self.gridItems();
 				},
 				total: function(data) {
@@ -360,10 +361,10 @@ function OccurrenceSearchViewModel() {
 			},
 			operators: {
 				string: {
-					eq: "Igual a",
-					neq: "No igual a",
 					contains: "Contiene",
 					doesnotcontain: "No contiene",
+					eq: "Igual a",
+					neq: "No igual a",
 					startswith: "Comienza con",
 					endswith: "Termina con"
 				}
@@ -397,7 +398,7 @@ function OccurrenceSearchViewModel() {
 		},
 		scrollable: true,
 		columns: [
-			{ field: "id", title: "ID", width: "5%" },
+			{ field: "id", title: "ID", width: "5%", filterable: {operators: {string: {eq: "Igual a", neq: "No igual a"}}} },
 			{ field: "canonical", title: "Nombre científico", width: "13%",  template: '<a target="_blank" href="http://data.sibcolombia.net/occurrences/#=id#">#=canonical#</a>' },
 			{ field: "data_resource_name", title: "Recurso de datos", width: "16%" },
 			{ field: "institution_code", title: "Cód. de la institución", width: "14%" },

@@ -21,7 +21,7 @@ exports.getOccurrencesWithFilter = function(conditions) {
 	  , logic2;
 	qryObj["fields"] = ["id", "canonical", "data_resource_name", "institution_code", "collection_code", "catalogue_number", "created", "modified", "location", "country_name", "department_name"];
 	
-	if(typeof conditions.filter != 'undefined' && typeof conditions.filter.filters != 'undefined') {
+	if((typeof conditions.filter != 'undefined') && (typeof conditions.filter.filters != 'undefined')) {
 		qryObj["query"] = {};
 		qryObj["query"]["bool"] = {};
 		qryObj["query"]["bool"]["must"] = [];
@@ -109,6 +109,10 @@ exports.getOccurrencesWithFilter = function(conditions) {
 					logic2[counter]["wildcard"] = {};
 					logic2[counter]["wildcard"][conditions.filter.filters[counter].filters[1].field+".exactWords"] = "*"+conditions.filter.filters[counter].filters[1].value.toLowerCase();
 				}
+				console.log("Must interno");
+				console.log(logic[counter]["bool"]["must"]);
+				console.log("Should interno");
+				console.log(logic[counter]["bool"]["should"]);
 			} else {
 				// External condition of single logic operator
 				if(conditions.filter.filters[counter].operator == 'eq' || conditions.filter.filters[counter].operator == 'neq') {
@@ -117,11 +121,19 @@ exports.getOccurrencesWithFilter = function(conditions) {
 						logic[counter]["bool"] = {};
 						logic[counter]["bool"]["must_not"] = {};
 						logic[counter]["bool"]["must_not"]["term"] = {};
-						logic[counter]["bool"]["must_not"]["term"][conditions.filter.filters[counter].field+".exactWords"] = conditions.filter.filters[counter].value.toLowerCase();
+						if(conditions.filter.filters[counter].field == 'id') {
+							logic[counter]["bool"]["must_not"]["term"][conditions.filter.filters[counter].field] = conditions.filter.filters[counter].value.toLowerCase();
+						} else {
+							logic[counter]["bool"]["must_not"]["term"][conditions.filter.filters[counter].field+".exactWords"] = conditions.filter.filters[counter].value.toLowerCase();
+						}
 					} else {
 						logic[counter] = {};
 						logic[counter]["term"] = {};
-						logic[counter]["term"][conditions.filter.filters[counter].field+".exactWords"] = conditions.filter.filters[counter].value.toLowerCase();
+						if(conditions.filter.filters[counter].field == 'id') {
+							logic[counter]["term"][conditions.filter.filters[counter].field] = conditions.filter.filters[counter].value.toLowerCase();
+						} else {
+							logic[counter]["term"][conditions.filter.filters[counter].field+".exactWords"] = conditions.filter.filters[counter].value.toLowerCase();
+						}
 					}
 				} else if(conditions.filter.filters[counter].operator == 'contains' || conditions.filter.filters[counter].operator == 'doesnotcontain') {
 					if(conditions.filter.filters[counter].operator == 'doesnotcontain') {
@@ -146,6 +158,10 @@ exports.getOccurrencesWithFilter = function(conditions) {
 				}
 			}
 		}
+		console.log("Must");
+		console.log(qryObj["query"]["bool"]["must"]);
+		console.log("Should");
+		console.log(qryObj["query"]["bool"]["should"]);
 	}
 	/*qryObj["query"] = {
 		"constant_score": {
@@ -176,7 +192,7 @@ exports.getOccurrencesWithFilter = function(conditions) {
 		qryObj["sort"] = [ { "canonical.untouched": "asc" } ];
 	}
 
-	//console.log(qryObj);
+	console.log(qryObj);
 	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
 	return mySearchCall;	
 };
