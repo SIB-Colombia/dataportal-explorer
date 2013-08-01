@@ -263,6 +263,7 @@ var map = L.map('mapa', {
 	zoom: 6,
 	layers: [googleTerrain],
 	crs: L.CRS.EPSG4326,
+	fullscreenControl: true
 });
 
 var wmsLayers = {

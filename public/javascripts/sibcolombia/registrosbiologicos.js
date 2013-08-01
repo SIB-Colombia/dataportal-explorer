@@ -36,6 +36,7 @@ function Occurrence(data) {
 	this.family = data.family;
 	this.genus = data.genus;
 	this.species = data.species;
+	this.basis_of_record_name_spanish = data.basis_of_record_name_spanish;
 
 	this.url = ko.computed(function() {
 		return "http://data.sibcolombia.net/occurrences/"+this.id;
@@ -340,13 +341,27 @@ function OccurrenceSearchViewModel() {
 				data: function(data) {
 					self.gridItems = ko.observableArray();
 					$.each(data.hits.hits, function(i, occurrence) {
-						self.gridItems.push(new Occurrence({id: occurrence.fields.id, canonical: occurrence.fields.canonical, data_resource_name: occurrence.fields.data_resource_name, institution_code: occurrence.fields.institution_code, collection_code: occurrence.fields.collection_code, catalogue_number: occurrence.fields.catalogue_number, created: occurrence.fields.created, latitude: occurrence.fields.location.lat, longitude: occurrence.fields.location.lon, country_name: occurrence.fields.country_name, department_name: occurrence.fields.department_name}));
+						self.gridItems.push(new Occurrence({id: occurrence.fields.id, canonical: occurrence.fields.canonical, data_resource_name: occurrence.fields.data_resource_name, institution_code: occurrence.fields.institution_code, collection_code: occurrence.fields.collection_code, catalogue_number: occurrence.fields.catalogue_number, created: occurrence.fields.created, latitude: occurrence.fields.location.lat, longitude: occurrence.fields.location.lon, country_name: occurrence.fields.country_name, department_name: occurrence.fields.department_name, basis_of_record_name_spanish: occurrence.fields.basis_of_record_name_spanish}));
 					});
 					self.totalOccurrences(data.hits.total);
 					return self.gridItems();
 				},
 				total: function(data) {
 					return data.hits.total;
+				},
+				model: {
+					fields: {
+						id: {type: "string"},
+						canonical: {type: "string"},
+						data_resource_name: {type: "string"},
+						institution_code: {type: "string"},
+						collection_code: {type: "string"},
+						catalogue_number: {type: "string"},
+						basis_of_record_name_spanish: {type: "string"},
+						created: {type: "date"},
+						country_name: {type: "string"},
+						department_name: {type: "string"}
+					}
 				}
 			}
 			//schema: { data: "data", total: "totalOccurrences" }
@@ -367,6 +382,14 @@ function OccurrenceSearchViewModel() {
 					neq: "No igual a",
 					startswith: "Comienza con",
 					endswith: "Termina con"
+				},
+				date: {
+					eq: "Igual a",
+					neq: "No igual a",
+					gte: "Después o igual a",
+					lte: "Antes o igual a",
+					gt: "Después de",
+					lt: "Antes de"
 				}
 			}
 		},
@@ -400,15 +423,23 @@ function OccurrenceSearchViewModel() {
 		columns: [
 			{ field: "id", title: "ID", width: "5%", filterable: {operators: {string: {eq: "Igual a", neq: "No igual a"}}} },
 			{ field: "canonical", title: "Nombre científico", width: "13%",  template: '<a target="_blank" href="http://data.sibcolombia.net/occurrences/#=id#">#=canonical#</a>' },
-			{ field: "data_resource_name", title: "Recurso de datos", width: "16%" },
-			{ field: "institution_code", title: "Cód. de la institución", width: "14%" },
-			{ field: "collection_code", title: "Cód. de la colección", width: "12%" },
-			{ field: "catalogue_number", title: "Núm. del catálogo", width: "12%" },
-			{ field: "created", title: "Fecha", width: "8%", filterable: false },
+			{ field: "data_resource_name", title: "Recurso de datos", width: "13%" },
+			{ field: "institution_code", title: "Cód. institución", width: "11%" },
+			{ field: "collection_code", title: "Cód. colección", width: "10%" },
+			{ field: "catalogue_number", title: "Núm. catálogo", width: "10%" },
+			{ field: "basis_of_record_name_spanish", title: "Base registro", width: "10%" },
+			{ field: "created", title: "Fecha", width: "8%", format: "{0:yyyy-MM-dd HH:mm:ss}", filterable: {ui: dateTimeEditor} },
 			{ field: "location()", title: "Coordenadas", width: "9%", filterable: false, sortable: false },
 			{ field: "country_name", title: "País", width: "5%", sortable: true },
 			{ field: "department_name", title: "Dept.", width: "8%", sortable: true }
 		]
+    };
+
+    function dateTimeEditor(element) {
+    	element.kendoDateTimePicker({
+    		format:"yyyy-MM-dd HH:mm:ss",
+    		timeFormat:"HH:mm:ss"
+    	});
     };
 
 	var markers = new L.MarkerClusterGroup()

@@ -19,7 +19,7 @@ exports.getOccurrencesWithFilter = function(conditions) {
 	  , condition2 = {};
 	var logic
 	  , logic2;
-	qryObj["fields"] = ["id", "canonical", "data_resource_name", "institution_code", "collection_code", "catalogue_number", "created", "modified", "location", "country_name", "department_name"];
+	qryObj["fields"] = ["id", "canonical", "data_resource_name", "institution_code", "collection_code", "catalogue_number", "created", "modified", "location", "country_name", "department_name", "basis_of_record_name_spanish"];
 	
 	if((typeof conditions.filter != 'undefined') && (typeof conditions.filter.filters != 'undefined')) {
 		qryObj["query"] = {};
