@@ -1,6 +1,8 @@
+var moment = require('moment');
+
 exports.getOccurrences = function() {
 	qryObj = {
-		"fields": ["id", "canonical", "data_resource_name", "institution_code", "collection_code", "catalogue_number", "created", "modified", "location", "country_name", "department_name"],
+		"fields": ["id", "canonical", "data_resource_name", "institution_code", "collection_code", "catalogue_number", "occurrence_date", "modified", "location", "country_name", "department_name", "basis_of_record_name_spanish"],
 		"from": 0,
 		"size" : 20,
 		"sort": [ { "canonical.untouched": "asc" } ],
@@ -19,17 +21,21 @@ exports.getOccurrencesWithFilter = function(conditions) {
 	  , condition2 = {};
 	var logic
 	  , logic2;
-	qryObj["fields"] = ["id", "canonical", "data_resource_name", "institution_code", "collection_code", "catalogue_number", "created", "modified", "location", "country_name", "department_name", "basis_of_record_name_spanish"];
+	var haveQuery = false;
+	var countFilter = 0;
+	qryObj["fields"] = ["id", "canonical", "data_resource_name", "institution_code", "collection_code", "catalogue_number", "occurrence_date", "modified", "location", "country_name", "department_name", "basis_of_record_name_spanish"];
 	
 	if((typeof conditions.filter != 'undefined') && (typeof conditions.filter.filters != 'undefined')) {
 		qryObj["query"] = {};
-		qryObj["query"]["bool"] = {};
-		qryObj["query"]["bool"]["must"] = [];
-		qryObj["query"]["bool"]["should"] = [];
+		qryObj["query"]["filtered"] = {};
+		qryObj["query"]["filtered"]["query"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"] = [];
+		qryObj["query"]["filtered"]["query"]["bool"]["should"] = [];
 		if(conditions.filter.logic == 'and') {
-			logic = qryObj["query"]["bool"]["must"];
+			logic = qryObj["query"]["filtered"]["query"]["bool"]["must"];
 		} else if(conditions.filter.logic == 'or') {
-			logic = qryObj["query"]["bool"]["should"];
+			logic = qryObj["query"]["filtered"]["query"]["bool"]["should"];
 		}
 		for (var counter in conditions.filter.filters) {
 			if(typeof conditions.filter.filters[counter].filters != 'undefined') {
@@ -44,18 +50,54 @@ exports.getOccurrencesWithFilter = function(conditions) {
 					logic2 = logic[counter]["bool"]["should"];
 				}
 				if(conditions.filter.filters[counter].filters[0].operator == 'eq' || conditions.filter.filters[counter].filters[0].operator == 'neq') {
-					if(conditions.filter.filters[counter].filters[0].operator == 'neq') {
-						logic2[0] = {};
-						logic2[0]["bool"] = {};
-						logic2[0]["bool"]["must_not"] = {};
-						logic2[0]["bool"]["must_not"]["term"] = {};
-						logic2[0]["bool"]["must_not"]["term"][conditions.filter.filters[counter].filters[0].field+".exactWords"] = conditions.filter.filters[counter].filters[0].value.toLowerCase();
+					if(conditions.filter.filters[counter].filters[0].field == 'occurrence_date') {
+						var date = moment(conditions.filter.filters[counter].filters[0].value);
+						if(typeof qryObj["query"]["filtered"]["filter"] == 'undefined') {
+							qryObj["query"]["filtered"]["filter"] = {};
+							qryObj["query"]["filtered"]["filter"]["bool"] = {};
+							qryObj["query"]["filtered"]["filter"]["bool"]["must"] = [];
+							qryObj["query"]["filtered"]["filter"]["bool"]["must_not"] = [];
+							qryObj["query"]["filtered"]["filter"]["bool"]["should"] = [];
+						}
+						if(conditions.filter.filters[counter].filters[0].operator == 'neq') {
+							qryObj["query"]["filtered"]["filter"]["bool"]["must_not"][countFilter] = {};
+							qryObj["query"]["filtered"]["filter"]["bool"]["must_not"][countFilter]["numeric_range"] = {};
+							qryObj["query"]["filtered"]["filter"]["bool"]["must_not"][countFilter]["numeric_range"]["occurrence_date"] = {};
+							qryObj["query"]["filtered"]["filter"]["bool"]["must_not"][countFilter]["numeric_range"]["occurrence_date"]['gte'] = date.format('YYYY-MM-DD');
+							qryObj["query"]["filtered"]["filter"]["bool"]["must_not"][countFilter]["numeric_range"]["occurrence_date"]['lte'] = date.format('YYYY-MM-DD');
+							countFilter++;
+						} else {
+							qryObj["query"]["filtered"]["filter"]["bool"]["must"][countFilter] = {};
+							qryObj["query"]["filtered"]["filter"]["bool"]["must"][countFilter]["numeric_range"] = {};
+							qryObj["query"]["filtered"]["filter"]["bool"]["must"][countFilter]["numeric_range"]["occurrence_date"] = {};
+							qryObj["query"]["filtered"]["filter"]["bool"]["must"][countFilter]["numeric_range"]["occurrence_date"]['gte'] = date.format('YYYY-MM-DD');
+							qryObj["query"]["filtered"]["filter"]["bool"]["must"][countFilter]["numeric_range"]["occurrence_date"]['lte'] = date.format('YYYY-MM-DD');
+							countFilter++;
+						}
 					} else {
-						logic2[0] = {};
-						logic2[0]["term"] = {};
-						logic2[0]["term"][conditions.filter.filters[counter].filters[0].field+".exactWords"] = conditions.filter.filters[counter].filters[0].value.toLowerCase();
+						haveQuery = true;
+						if(conditions.filter.filters[counter].filters[0].operator == 'neq') {
+							logic2[0] = {};
+							logic2[0]["bool"] = {};
+							logic2[0]["bool"]["must_not"] = {};
+							logic2[0]["bool"]["must_not"]["term"] = {};
+							if(conditions.filter.filters[counter].filters[0].field == 'id') {
+								logic2[0]["bool"]["must_not"]["term"][conditions.filter.filters[counter].filters[0].field] = conditions.filter.filters[counter].filters[0].value.toLowerCase();
+							} else {
+								logic2[0]["bool"]["must_not"]["term"][conditions.filter.filters[counter].filters[0].field+".exactWords"] = conditions.filter.filters[counter].filters[0].value.toLowerCase();
+							}
+						} else {
+							logic2[0] = {};
+							logic2[0]["term"] = {};
+							if(conditions.filter.filters[counter].filters[0].field == 'id') {
+								logic2[0]["term"][conditions.filter.filters[counter].filters[0].field] = conditions.filter.filters[counter].filters[0].value.toLowerCase();
+							} else {
+								logic2[0]["term"][conditions.filter.filters[counter].filters[0].field+".exactWords"] = conditions.filter.filters[counter].filters[0].value.toLowerCase();
+							}
+						}
 					}
 				} else if(conditions.filter.filters[counter].filters[0].operator == 'contains' || conditions.filter.filters[counter].filters[0].operator == 'doesnotcontain') {
+					haveQuery = true;
 					if(conditions.filter.filters[counter].filters[0].operator == 'doesnotcontain') {
 						logic2[0] = {};
 						logic2[0]["bool"] = {};
@@ -68,27 +110,86 @@ exports.getOccurrencesWithFilter = function(conditions) {
 						logic2[0]["wildcard"][conditions.filter.filters[counter].filters[0].field+".exactWords"] = "*"+conditions.filter.filters[counter].filters[0].value.toLowerCase()+"*";
 					}
 				} else if(conditions.filter.filters[counter].filters[0].operator == 'startswith') {
+					haveQuery = true;
 					logic2[counter] = {};
 					logic2[counter]["wildcard"] = {};
 					logic2[counter]["wildcard"][conditions.filter.filters[counter].filters[0].field+".exactWords"] = conditions.filter.filters[counter].filters[0].value.toLowerCase()+"*";
 				} else if(conditions.filter.filters[counter].filters[0].operator == 'endswith') {
+					haveQuery = true;
 					logic2[counter] = {};
 					logic2[counter]["wildcard"] = {};
 					logic2[counter]["wildcard"][conditions.filter.filters[counter].filters[0].field+".exactWords"] = "*"+conditions.filter.filters[counter].filters[0].value.toLowerCase();
+				} else if(conditions.filter.filters[counter].filters[0].operator == 'gt' || conditions.filter.filters[counter].filters[0].operator == 'gte' || conditions.filter.filters[counter].filters[0].operator == 'lt' || conditions.filter.filters[counter].filters[0].operator == 'lte') {
+					var date = moment(conditions.filter.filters[counter].filters[0].value);
+					if(typeof qryObj["query"]["filtered"]["filter"] == 'undefined') {
+						qryObj["query"]["filtered"]["filter"] = {};
+						qryObj["query"]["filtered"]["filter"]["bool"] = {};
+						qryObj["query"]["filtered"]["filter"]["bool"]["must"] = [];
+						qryObj["query"]["filtered"]["filter"]["bool"]["must_not"] = [];
+						qryObj["query"]["filtered"]["filter"]["bool"]["should"] = [];
+					}
+					if(conditions.filter.filters[counter].logic == 'and') {
+						qryObj["query"]["filtered"]["filter"]["bool"]["must"][countFilter] = {};
+						qryObj["query"]["filtered"]["filter"]["bool"]["must"][countFilter]["numeric_range"] = {};
+						qryObj["query"]["filtered"]["filter"]["bool"]["must"][countFilter]["numeric_range"]["occurrence_date"] = {};
+						qryObj["query"]["filtered"]["filter"]["bool"]["must"][countFilter]["numeric_range"]["occurrence_date"][conditions.filter.filters[counter].filters[0].operator] = date.format('YYYY-MM-DD');
+					} else if(conditions.filter.filters[counter].logic == 'or') {
+						qryObj["query"]["filtered"]["filter"]["bool"]["should"][countFilter] = {};
+						qryObj["query"]["filtered"]["filter"]["bool"]["should"][countFilter]["numeric_range"] = {};
+						qryObj["query"]["filtered"]["filter"]["bool"]["should"][countFilter]["numeric_range"]["occurrence_date"] = {};
+						qryObj["query"]["filtered"]["filter"]["bool"]["should"][countFilter]["numeric_range"]["occurrence_date"][conditions.filter.filters[counter].filters[0].operator] = date.format('YYYY-MM-DD');
+					}
+					countFilter++;
 				}
 				if(conditions.filter.filters[counter].filters[1].operator == 'eq' || conditions.filter.filters[counter].filters[1].operator == 'neq') {
-					if(conditions.filter.filters[counter].filters[1].operator == 'neq') {
-						logic2[1] = {};
-						logic2[1]["bool"] = {};
-						logic2[1]["bool"]["must_not"] = {};
-						logic2[1]["bool"]["must_not"]["term"] = {};
-						logic2[1]["bool"]["must_not"]["term"][conditions.filter.filters[counter].filters[1].field+".exactWords"] = conditions.filter.filters[counter].filters[1].value.toLowerCase();
+					if(conditions.filter.filters[counter].filters[1].field == 'occurrence_date') {
+						var date = moment(conditions.filter.filters[counter].filters[1].value);
+						if(typeof qryObj["query"]["filtered"]["filter"] == 'undefined') {
+							qryObj["query"]["filtered"]["filter"] = {};
+							qryObj["query"]["filtered"]["filter"]["bool"] = {};
+							qryObj["query"]["filtered"]["filter"]["bool"]["must"] = [];
+							qryObj["query"]["filtered"]["filter"]["bool"]["must_not"] = [];
+							qryObj["query"]["filtered"]["filter"]["bool"]["should"] = [];
+						}
+						if(conditions.filter.filters[counter].filters[1].operator == 'neq') {
+							qryObj["query"]["filtered"]["filter"]["bool"]["must_not"][countFilter] = {};
+							qryObj["query"]["filtered"]["filter"]["bool"]["must_not"][countFilter]["numeric_range"] = {};
+							qryObj["query"]["filtered"]["filter"]["bool"]["must_not"][countFilter]["numeric_range"]["occurrence_date"] = {};
+							qryObj["query"]["filtered"]["filter"]["bool"]["must_not"][countFilter]["numeric_range"]["occurrence_date"]['gte'] = date.format('YYYY-MM-DD');
+							qryObj["query"]["filtered"]["filter"]["bool"]["must_not"][countFilter]["numeric_range"]["occurrence_date"]['lte'] = date.format('YYYY-MM-DD');
+							countFilter++;
+						} else {
+							qryObj["query"]["filtered"]["filter"]["bool"]["must"][countFilter] = {};
+							qryObj["query"]["filtered"]["filter"]["bool"]["must"][countFilter]["numeric_range"] = {};
+							qryObj["query"]["filtered"]["filter"]["bool"]["must"][countFilter]["numeric_range"]["occurrence_date"] = {};
+							qryObj["query"]["filtered"]["filter"]["bool"]["must"][countFilter]["numeric_range"]["occurrence_date"]['gte'] = date.format('YYYY-MM-DD');
+							qryObj["query"]["filtered"]["filter"]["bool"]["must"][countFilter]["numeric_range"]["occurrence_date"]['lte'] = date.format('YYYY-MM-DD');
+							countFilter++;
+						}
 					} else {
-						logic2[1] = {};
-						logic2[1]["term"] = {};
-						logic2[1]["term"][conditions.filter.filters[counter].filters[1].field+".exactWords"] = conditions.filter.filters[counter].filters[1].value.toLowerCase();
+						haveQuery = true;
+						if(conditions.filter.filters[counter].filters[1].operator == 'neq') {
+							logic2[1] = {};
+							logic2[1]["bool"] = {};
+							logic2[1]["bool"]["must_not"] = {};
+							logic2[1]["bool"]["must_not"]["term"] = {};
+							if(conditions.filter.filters[counter].filters[1].field == 'id') {
+								logic2[1]["bool"]["must_not"]["term"][conditions.filter.filters[counter].filters[1].field] = conditions.filter.filters[counter].filters[1].value.toLowerCase();
+							} else {
+								logic2[1]["bool"]["must_not"]["term"][conditions.filter.filters[counter].filters[1].field+".exactWords"] = conditions.filter.filters[counter].filters[1].value.toLowerCase();
+							}
+						} else {
+							logic2[1] = {};
+							logic2[1]["term"] = {};
+							if(conditions.filter.filters[counter].filters[1].field == 'id') {
+								logic2[1]["term"][conditions.filter.filters[counter].filters[1].field] = conditions.filter.filters[counter].filters[1].value.toLowerCase();
+							} else {
+								logic2[1]["term"][conditions.filter.filters[counter].filters[1].field+".exactWords"] = conditions.filter.filters[counter].filters[1].value.toLowerCase();
+							}
+						}
 					}
 				} else if(conditions.filter.filters[counter].filters[1].operator == 'contains' || conditions.filter.filters[counter].filters[1].operator == 'doesnotcontain') {
+					haveQuery = true;
 					if(conditions.filter.filters[counter].filters[1].operator == 'doesnotcontain') {
 						logic2[1] = {};
 						logic2[1]["bool"] = {};
@@ -101,13 +202,36 @@ exports.getOccurrencesWithFilter = function(conditions) {
 						logic2[1]["wildcard"][conditions.filter.filters[counter].filters[1].field+".exactWords"] = "*"+conditions.filter.filters[counter].filters[1].value.toLowerCase()+"*";
 					}
 				} else if(conditions.filter.filters[counter].filters[1].operator == 'startswith') {
+					haveQuery = true;
 					logic2[counter] = {};
 					logic2[counter]["wildcard"] = {};
 					logic2[counter]["wildcard"][conditions.filter.filters[counter].filters[1].field+".exactWords"] = conditions.filter.filters[counter].filters[1].value.toLowerCase()+"*";
 				} else if(conditions.filter.filters[counter].filters[1].operator == 'endswith') {
+					haveQuery = true;
 					logic2[counter] = {};
 					logic2[counter]["wildcard"] = {};
 					logic2[counter]["wildcard"][conditions.filter.filters[counter].filters[1].field+".exactWords"] = "*"+conditions.filter.filters[counter].filters[1].value.toLowerCase();
+				} else if(conditions.filter.filters[counter].filters[1].operator == 'gt' || conditions.filter.filters[counter].filters[1].operator == 'gte' || conditions.filter.filters[counter].filters[1].operator == 'lt' || conditions.filter.filters[counter].filters[1].operator == 'lte') {
+					var date = moment(conditions.filter.filters[counter].filters[1].value);
+					if(typeof qryObj["query"]["filtered"]["filter"] == 'undefined') {
+						qryObj["query"]["filtered"]["filter"] = {};
+						qryObj["query"]["filtered"]["filter"]["bool"] = {};
+						qryObj["query"]["filtered"]["filter"]["bool"]["must"] = [];
+						qryObj["query"]["filtered"]["filter"]["bool"]["must_not"] = [];
+						qryObj["query"]["filtered"]["filter"]["bool"]["should"] = [];
+					}
+					if(conditions.filter.filters[counter].logic == 'and') {
+						qryObj["query"]["filtered"]["filter"]["bool"]["must"][countFilter] = {};
+						qryObj["query"]["filtered"]["filter"]["bool"]["must"][countFilter]["numeric_range"] = {};
+						qryObj["query"]["filtered"]["filter"]["bool"]["must"][countFilter]["numeric_range"]["occurrence_date"] = {};
+						qryObj["query"]["filtered"]["filter"]["bool"]["must"][countFilter]["numeric_range"]["occurrence_date"][conditions.filter.filters[counter].filters[1].operator] = date.format('YYYY-MM-DD');
+					} else if(conditions.filter.filters[counter].logic == 'or') {
+						qryObj["query"]["filtered"]["filter"]["bool"]["should"][countFilter] = {};
+						qryObj["query"]["filtered"]["filter"]["bool"]["should"][countFilter]["numeric_range"] = {};
+						qryObj["query"]["filtered"]["filter"]["bool"]["should"][countFilter]["numeric_range"]["occurrence_date"] = {};
+						qryObj["query"]["filtered"]["filter"]["bool"]["should"][countFilter]["numeric_range"]["occurrence_date"][conditions.filter.filters[counter].filters[1].operator] = date.format('YYYY-MM-DD');
+					}
+					countFilter++;
 				}
 				console.log("Must interno");
 				console.log(logic[counter]["bool"]["must"]);
@@ -115,53 +239,107 @@ exports.getOccurrencesWithFilter = function(conditions) {
 				console.log(logic[counter]["bool"]["should"]);
 			} else {
 				// External condition of single logic operator
+				console.log(conditions.filter.filters[counter].operator);
+				
 				if(conditions.filter.filters[counter].operator == 'eq' || conditions.filter.filters[counter].operator == 'neq') {
-					if(conditions.filter.filters[counter].operator == 'neq') {
-						logic[counter] = {};
-						logic[counter]["bool"] = {};
-						logic[counter]["bool"]["must_not"] = {};
-						logic[counter]["bool"]["must_not"]["term"] = {};
-						if(conditions.filter.filters[counter].field == 'id') {
-							logic[counter]["bool"]["must_not"]["term"][conditions.filter.filters[counter].field] = conditions.filter.filters[counter].value.toLowerCase();
+					if(conditions.filter.filters[counter].field == 'occurrence_date') {
+						var date = moment(conditions.filter.filters[counter].value);
+						if(typeof qryObj["query"]["filtered"]["filter"] == 'undefined') {
+							qryObj["query"]["filtered"]["filter"] = {};
+							qryObj["query"]["filtered"]["filter"]["bool"] = {};
+							qryObj["query"]["filtered"]["filter"]["bool"]["must"] = [];
+							qryObj["query"]["filtered"]["filter"]["bool"]["must_not"] = [];
+							qryObj["query"]["filtered"]["filter"]["bool"]["should"] = [];
+						}
+						if(conditions.filter.filters[counter].operator == 'neq') {
+							qryObj["query"]["filtered"]["filter"]["bool"]["must_not"][countFilter] = {};
+							qryObj["query"]["filtered"]["filter"]["bool"]["must_not"][countFilter]["numeric_range"] = {};
+							qryObj["query"]["filtered"]["filter"]["bool"]["must_not"][countFilter]["numeric_range"]["occurrence_date"] = {};
+							qryObj["query"]["filtered"]["filter"]["bool"]["must_not"][countFilter]["numeric_range"]["occurrence_date"]['gte'] = date.format('YYYY-MM-DD');
+							qryObj["query"]["filtered"]["filter"]["bool"]["must_not"][countFilter]["numeric_range"]["occurrence_date"]['lte'] = date.format('YYYY-MM-DD');
+							countFilter++;
 						} else {
-							logic[counter]["bool"]["must_not"]["term"][conditions.filter.filters[counter].field+".exactWords"] = conditions.filter.filters[counter].value.toLowerCase();
+							qryObj["query"]["filtered"]["filter"]["bool"]["must"][countFilter] = {};
+							qryObj["query"]["filtered"]["filter"]["bool"]["must"][countFilter]["numeric_range"] = {};
+							qryObj["query"]["filtered"]["filter"]["bool"]["must"][countFilter]["numeric_range"]["occurrence_date"] = {};
+							qryObj["query"]["filtered"]["filter"]["bool"]["must"][countFilter]["numeric_range"]["occurrence_date"]['gte'] = date.format('YYYY-MM-DD');
+							qryObj["query"]["filtered"]["filter"]["bool"]["must"][countFilter]["numeric_range"]["occurrence_date"]['lte'] = date.format('YYYY-MM-DD');
+							countFilter++;
 						}
 					} else {
+						haveQuery = true;
 						logic[counter] = {};
-						logic[counter]["term"] = {};
-						if(conditions.filter.filters[counter].field == 'id') {
-							logic[counter]["term"][conditions.filter.filters[counter].field] = conditions.filter.filters[counter].value.toLowerCase();
+						if(conditions.filter.filters[counter].operator == 'neq') {
+							logic[counter]["bool"] = {};
+							logic[counter]["bool"]["must_not"] = {};
+							logic[counter]["bool"]["must_not"]["term"] = {};
+							if(conditions.filter.filters[counter].field == 'id') {
+								logic[counter]["bool"]["must_not"]["term"][conditions.filter.filters[counter].field] = conditions.filter.filters[counter].value.toLowerCase();
+							} else {
+								logic[counter]["bool"]["must_not"]["term"][conditions.filter.filters[counter].field+".exactWords"] = conditions.filter.filters[counter].value.toLowerCase();
+							}
 						} else {
-							logic[counter]["term"][conditions.filter.filters[counter].field+".exactWords"] = conditions.filter.filters[counter].value.toLowerCase();
+							logic[counter]["term"] = {};
+							if(conditions.filter.filters[counter].field == 'id') {
+								logic[counter]["term"][conditions.filter.filters[counter].field] = conditions.filter.filters[counter].value.toLowerCase();
+							} else {
+								logic[counter]["term"][conditions.filter.filters[counter].field+".exactWords"] = conditions.filter.filters[counter].value.toLowerCase();
+							}
 						}
 					}
 				} else if(conditions.filter.filters[counter].operator == 'contains' || conditions.filter.filters[counter].operator == 'doesnotcontain') {
+					haveQuery = true;
+					logic[counter] = {};
 					if(conditions.filter.filters[counter].operator == 'doesnotcontain') {
-						logic[counter] = {};
-						logic[counter]["bool"] = {};
 						logic[counter]["bool"]["must_not"] = {};
 						logic[counter]["bool"]["must_not"]["wildcard"] = {};
 						logic[counter]["bool"]["must_not"]["wildcard"][conditions.filter.filters[counter].field+".exactWords"] = "*"+conditions.filter.filters[counter].value.toLowerCase()+"*";
 					} else {
-						logic[counter] = {};
 						logic[counter]["wildcard"] = {};
 						logic[counter]["wildcard"][conditions.filter.filters[counter].field+".exactWords"] = "*"+conditions.filter.filters[counter].value.toLowerCase()+"*";
 					}
 				} else if(conditions.filter.filters[counter].operator == 'startswith') {
+					haveQuery = true;
 					logic[counter] = {};
 					logic[counter]["wildcard"] = {};
 					logic[counter]["wildcard"][conditions.filter.filters[counter].field+".exactWords"] = conditions.filter.filters[counter].value.toLowerCase()+"*";
 				} else if(conditions.filter.filters[counter].operator == 'endswith') {
+					haveQuery = true;
 					logic[counter] = {};
 					logic[counter]["wildcard"] = {};
 					logic[counter]["wildcard"][conditions.filter.filters[counter].field+".exactWords"] = "*"+conditions.filter.filters[counter].value.toLowerCase();
+				} else if(conditions.filter.filters[counter].operator == 'gt' || conditions.filter.filters[counter].operator == 'gte' || conditions.filter.filters[counter].operator == 'lt' || conditions.filter.filters[counter].operator == 'lte') {
+					var date = moment(conditions.filter.filters[counter].value);
+					if(typeof qryObj["query"]["filtered"]["filter"] == 'undefined') {
+						qryObj["query"]["filtered"]["filter"] = {};
+						qryObj["query"]["filtered"]["filter"]["bool"] = {};
+						qryObj["query"]["filtered"]["filter"]["bool"]["must"] = [];
+						qryObj["query"]["filtered"]["filter"]["bool"]["must_not"] = [];
+						qryObj["query"]["filtered"]["filter"]["bool"]["should"] = [];
+					}
+					if(conditions.filter.logic == 'and') {
+						qryObj["query"]["filtered"]["filter"]["bool"]["must"][countFilter] = {};
+						qryObj["query"]["filtered"]["filter"]["bool"]["must"][countFilter]["numeric_range"] = {};
+						qryObj["query"]["filtered"]["filter"]["bool"]["must"][countFilter]["numeric_range"]["occurrence_date"] = {};
+						qryObj["query"]["filtered"]["filter"]["bool"]["must"][countFilter]["numeric_range"]["occurrence_date"][conditions.filter.filters[counter].operator] = date.format('YYYY-MM-DD');
+					} else if(conditions.filter.logic == 'or') {
+						qryObj["query"]["filtered"]["filter"]["bool"]["should"][countFilter] = {};
+						qryObj["query"]["filtered"]["filter"]["bool"]["should"][countFilter]["numeric_range"] = {};
+						qryObj["query"]["filtered"]["filter"]["bool"]["should"][countFilter]["numeric_range"]["occurrence_date"] = {};
+						qryObj["query"]["filtered"]["filter"]["bool"]["should"][countFilter]["numeric_range"]["occurrence_date"][conditions.filter.filters[counter].operator] = date.format('YYYY-MM-DD');
+					}
+					countFilter++;
 				}
 			}
 		}
 		console.log("Must");
-		console.log(qryObj["query"]["bool"]["must"]);
+		console.log(qryObj["query"]["filtered"]["query"]["bool"]["must"]);
 		console.log("Should");
-		console.log(qryObj["query"]["bool"]["should"]);
+		console.log(qryObj["query"]["filtered"]["query"]["bool"]["should"]);
+		if(haveQuery == false) {
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][0] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][0]["match_all"] = {};
+		}
 	}
 	/*qryObj["query"] = {
 		"constant_score": {
@@ -178,7 +356,7 @@ exports.getOccurrencesWithFilter = function(conditions) {
 		for (var i in conditions.sort) {
 			qryObj["sort"] = [];
 			qryObj["sort"][i] = {};
-			if(conditions.sort[i].field == "id" || conditions.sort[i].field == "created") {
+			if(conditions.sort[i].field == "id" || conditions.sort[i].field == "occurrence_date") {
 				if(conditions.sort[i].field == "id") {
 					qryObj["sort"][i]["id"] = conditions.sort[i].dir;
 				} else {

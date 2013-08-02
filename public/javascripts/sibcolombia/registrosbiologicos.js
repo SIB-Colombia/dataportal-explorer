@@ -341,7 +341,7 @@ function OccurrenceSearchViewModel() {
 				data: function(data) {
 					self.gridItems = ko.observableArray();
 					$.each(data.hits.hits, function(i, occurrence) {
-						self.gridItems.push(new Occurrence({id: occurrence.fields.id, canonical: occurrence.fields.canonical, data_resource_name: occurrence.fields.data_resource_name, institution_code: occurrence.fields.institution_code, collection_code: occurrence.fields.collection_code, catalogue_number: occurrence.fields.catalogue_number, created: occurrence.fields.created, latitude: occurrence.fields.location.lat, longitude: occurrence.fields.location.lon, country_name: occurrence.fields.country_name, department_name: occurrence.fields.department_name, basis_of_record_name_spanish: occurrence.fields.basis_of_record_name_spanish}));
+						self.gridItems.push(new Occurrence({id: occurrence.fields.id, canonical: occurrence.fields.canonical, data_resource_name: occurrence.fields.data_resource_name, institution_code: occurrence.fields.institution_code, collection_code: occurrence.fields.collection_code, catalogue_number: occurrence.fields.catalogue_number, occurrence_date: occurrence.fields.occurrence_date, latitude: occurrence.fields.location.lat, longitude: occurrence.fields.location.lon, country_name: occurrence.fields.country_name, department_name: occurrence.fields.department_name, basis_of_record_name_spanish: occurrence.fields.basis_of_record_name_spanish}));
 					});
 					self.totalOccurrences(data.hits.total);
 					return self.gridItems();
@@ -358,7 +358,7 @@ function OccurrenceSearchViewModel() {
 						collection_code: {type: "string"},
 						catalogue_number: {type: "string"},
 						basis_of_record_name_spanish: {type: "string"},
-						created: {type: "date"},
+						occurrence_date: {type: "date", format: "{0:yyyy-MM-dd}"},
 						country_name: {type: "string"},
 						department_name: {type: "string"}
 					}
@@ -368,9 +368,9 @@ function OccurrenceSearchViewModel() {
 		},
 		filterable: {
 			messages: {
-				info: "Filtrar con condición: ",
-				and: "y",
 				or: "o",
+				and: "y",
+				info: "Filtrar con condición:",
 				filter: "Aplicar filtro",
 				clear: "Quitar filtro"
 			},
@@ -428,7 +428,7 @@ function OccurrenceSearchViewModel() {
 			{ field: "collection_code", title: "Cód. colección", width: "10%" },
 			{ field: "catalogue_number", title: "Núm. catálogo", width: "10%" },
 			{ field: "basis_of_record_name_spanish", title: "Base registro", width: "10%" },
-			{ field: "created", title: "Fecha", width: "8%", format: "{0:yyyy-MM-dd HH:mm:ss}", filterable: {ui: dateTimeEditor} },
+			{ field: "occurrence_date", title: "Fecha", width: "8%", template: '#= kendo.toString(occurrence_date, "yyyy-MM-dd") #', filterable: {ui: dateTimeEditor} },
 			{ field: "location()", title: "Coordenadas", width: "9%", filterable: false, sortable: false },
 			{ field: "country_name", title: "País", width: "5%", sortable: true },
 			{ field: "department_name", title: "Dept.", width: "8%", sortable: true }
@@ -436,9 +436,10 @@ function OccurrenceSearchViewModel() {
     };
 
     function dateTimeEditor(element) {
-    	element.kendoDateTimePicker({
-    		format:"yyyy-MM-dd HH:mm:ss",
-    		timeFormat:"HH:mm:ss"
+    	element.kendoDatePicker({
+    		format:"yyyy-MM-dd",
+    		min: new Date(1000, 0, 1),
+    		max: new Date(10000, 0, 1)
     	});
     };
 

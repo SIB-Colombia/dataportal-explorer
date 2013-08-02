@@ -36,12 +36,9 @@
     "mariasql": "latest",
     "mongodb": "latest",
     "mongoose": "latest",
+    "moment": "latest",
     "winston": "latest",
-    "socket.io": "latest",
-    "leaflet": "latest",
-    "leaflet-markercluster": "latest",
-    "underscore": "latest",
-    "browserify": "*"
+    "underscore": "latest"
   },
   "devDependencies": {
     "supertest": "latest",
