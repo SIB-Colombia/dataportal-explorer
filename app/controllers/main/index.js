@@ -56,7 +56,7 @@ exports.convertFromMysqlToMongoDB = function(req, res) {
 		console.log('Client closed');
 	});
 
-	/*MongoClient.connect('mongodb://localhost/sibexplorer_dev', function(error, db) {
+	MongoClient.connect('mongodb://localhost/sibexplorer_dev', function(error, db) {
 		if (error) console.log(error);
 		db.createCollection("occurrences", function(err, collection) {
 			c.query('SELECT * FROM occurrence_record_denormalized order by id limit 100000 offset 600000')
@@ -78,7 +78,7 @@ exports.convertFromMysqlToMongoDB = function(req, res) {
 					console.log('Done with all results');
 				});
 		});
-	});*/
+	});
 
 	/*MongoClient.connect('mongodb://localhost/sibexplorer_dev', function(error, db) {
 		if (error) console.log(error);

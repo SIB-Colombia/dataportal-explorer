@@ -427,9 +427,9 @@ function OccurrenceSearchViewModel() {
 			{ field: "institution_code", title: "Cód. institución", width: "11%" },
 			{ field: "collection_code", title: "Cód. colección", width: "10%" },
 			{ field: "catalogue_number", title: "Núm. catálogo", width: "10%" },
-			{ field: "basis_of_record_name_spanish", title: "Base registro", width: "10%" },
+			{ field: "basis_of_record_name_spanish", title: "Base registro", width: "10%", filterable: {ui: basisOfRecordFilter} },
 			{ field: "occurrence_date", title: "Fecha", width: "8%", template: '#= kendo.toString(occurrence_date, "yyyy-MM-dd") #', filterable: {ui: dateTimeEditor} },
-			{ field: "location()", title: "Coordenadas", width: "9%", filterable: false, sortable: false },
+			{ field: "location()", title: "Coordenadas", width: "9%", sortable: false },
 			{ field: "country_name", title: "País", width: "5%", sortable: true },
 			{ field: "department_name", title: "Dept.", width: "8%", sortable: true }
 		]
@@ -440,6 +440,37 @@ function OccurrenceSearchViewModel() {
     		format:"yyyy-MM-dd",
     		min: new Date(1000, 0, 1),
     		max: new Date(10000, 0, 1)
+    	});
+    };
+
+    function basisOfRecordFilter(element) {
+    	var data = [
+    		{ text: "Desconocido", value: "desconocido" },
+    		{ text: "Espécimen", value: "espécimen" },
+    		{ text: "Espécimen Fosilizado", value: "espécimen fosilizado" },
+    		{ text: "Espécimen Preservado", value: "espécimen preservado" },
+    		{ text: "Espécimen Vivo", value: "espécimen vivo" },
+    		{ text: "Fosil", value: "fosil" },
+    		{ text: "Germoplasmo", value: "germoplasmo" },
+    		{ text: "Grabación de Sonido", value: "grabación de sonido" },
+    		{ text: "Imagen en Movimiento", value: "imagen en movimiento" },
+    		{ text: "Imagen Fija", value: "imagen fija" },
+    		{ text: "Lista legislativa", value: "lista legislativa" },
+    		{ text: "Lista regional", value: "lista regional" },
+    		{ text: "Literatura", value: "literatura" },
+    		{ text: "Nomenclaturador", value: "nomenclaturador" },
+    		{ text: "Observación", value: "observación" },
+    		{ text: "Observación con Máquina", value: "observación con máquina" },
+    		{ text: "Observación Humana", value: "observación humana" },
+    		{ text: "Otro Espécimen", value: "otro espécimen" },
+    		{ text: "Taxonomía", value: "taxonomía" },
+    		{ text: "Viviendo", value: "viviendo" }
+    	];
+    	element.kendoDropDownList({
+    		dataTextField: "text",
+    		dataValueField: "value",
+    		dataSource: data,
+    		optionLabel: "-- Seleccione --"
     	});
     };
 
