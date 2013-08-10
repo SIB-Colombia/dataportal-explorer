@@ -291,6 +291,7 @@ exports.getOccurrencesWithFilter = function(conditions) {
 					haveQuery = true;
 					logic[counter] = {};
 					if(conditions.filter.filters[counter].operator == 'doesnotcontain') {
+						logic[counter]["bool"] = {};
 						logic[counter]["bool"]["must_not"] = {};
 						logic[counter]["bool"]["must_not"]["wildcard"] = {};
 						logic[counter]["bool"]["must_not"]["wildcard"][conditions.filter.filters[counter].field+".exactWords"] = "*"+conditions.filter.filters[counter].value.toLowerCase()+"*";
