@@ -429,8 +429,8 @@ function OccurrenceSearchViewModel() {
 			{ field: "catalogue_number", title: "Núm. catálogo", width: "10%" },
 			{ field: "basis_of_record_name_spanish", title: "Base registro", width: "10%", filterable: {ui: basisOfRecordFilter} },
 			{ field: "occurrence_date", title: "Fecha", width: "8%", template: '#= kendo.toString(occurrence_date, "yyyy-MM-dd") #', filterable: {ui: dateTimeEditor} },
-			{ field: "location()", title: "Coordenadas", width: "9%", sortable: false },
-			{ field: "country_name", title: "País", width: "5%", sortable: true },
+			{ field: "location()", title: "Coordenadas", width: "8%", sortable: false },
+			{ field: "country_name", title: "País", width: "6%", sortable: true },
 			{ field: "department_name", title: "Dept.", width: "8%", sortable: true }
 		]
     };

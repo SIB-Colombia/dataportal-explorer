@@ -37,6 +37,39 @@ var occurrencesES = require("../../models/elasticsearch/occurrencesModel");
 exports.name = 'main';
 exports.engine = 'jade';
 
+toBoundingBoxCell = function(cellId) {
+	var longitude = (cellId % 360) - 180;
+    var latitude = -90;
+    if (cellId > 0) {
+      latitude = Math.floor(cellId / 360) - 90;
+    }
+    var locationCellId = {lat: latitude, lon: longitude};
+    return locationCellId;
+};
+
+toBoundingBoxCentiCell = function(cellId, centiCellId) {
+	var longitudeX10 = 10 * ((cellId % 360) - 180);
+    var latitudeX10 = -900;
+    if (cellId > 0) {
+      latitudeX10 = 10 * (Math.floor(cellId / 360) - 90);
+    }
+
+    var longOffset = (centiCellId % 10);
+    var latOffset = 0;
+    if (centiCellId > 0) {
+    	latOffset = (centiCellId / 10);
+    }
+
+    var minLatitude = (latitudeX10 + latOffset) / 10;
+    minLatitude = Math.floor(minLatitude * 10 ) / 10;
+    var minLongitude = (longitudeX10 + longOffset) / 10;
+    minLongitude = Math.floor(minLongitude * 10 ) / 10;
+    var maxLatitude = (latitudeX10 + latOffset + 1) / 10;
+    var maxlongitude = (longitudeX10 + longOffset + 1) / 10;
+    var locationCentiCellId = {lat: minLatitude, lon: minLongitude};
+    return locationCentiCellId;
+};
+
 exports.convertFromMysqlToMongoDB = function(req, res) {
 	var c = new Client();
 	c.connect({
@@ -56,13 +89,15 @@ exports.convertFromMysqlToMongoDB = function(req, res) {
 		console.log('Client closed');
 	});
 
-	MongoClient.connect('mongodb://localhost/sibexplorer_dev', function(error, db) {
+	/*MongoClient.connect('mongodb://localhost/sibexplorer_dev', function(error, db) {
 		if (error) console.log(error);
 		db.createCollection("occurrences", function(err, collection) {
 			c.query('SELECT * FROM occurrence_record_denormalized order by id limit 100000 offset 600000')
 				.on('result', function(result) {
 					result.on('row', function(row) {
-						var document = {id:row.id, canonical:row.canonical, latitude:row.latitude, longitude:row.longitude, data_provider_id: row.data_provider_id, data_provider_name: row.data_provider_name, data_resource_id: row.data_resource_id, data_resource_name: row.data_resource_name, rights: row.rights, institution_code_id: row.institution_code_id, institution_code: row.institution_code, collection_code_id: row.collection_code_id, collection_code: row.collection_code, catalogue_number_id: row.catalogue_number_id, catalogue_number: row.catalogue_number, citation: row.citation, created: row.created, modified: row.modified, kingdom_concept_id: row.kingdom_concept_id, phylum_concept_id: row.phylum_concept_id,class_concept_id: row.class_concept_id, order_concept_id: row.order_concept_id, family_concept_id: row.family_concept_id, genus_concept_id: row.genus_concept_id, species_concept_id: row.species_concept_id, iso_country_code: row.iso_country_code, iso_department_code: row.iso_department_code, year: row.year, month: row.month, occurrence_date: row.occurrence_date, altitude_metres: row.altitude_metres, depth_centimetres: row.depth_centimetres, kingdom: row.kingdom, phylum: row.phylum, taxonClass: row.class, order_rank: row.order_rank, family: row.family, genus: row.genus, species: row.species, country_name: row.country_name, department_name: row.department_name, basis_of_record_id: row.basis_of_record_id, basis_of_record_name: row.basis_of_record_name, basis_of_record_name_spanish: row.basis_of_record_name_spanish};
+						var locationCellId = toBoundingBoxCell(row.cell_id);
+						var locationCentiCellId = toBoundingBoxCentiCell(row.cell_id, row.centi_cell_id);
+						var document = {id:row.id, canonical:row.canonical, latitude:row.latitude, longitude:row.longitude, cell_id: row.cell_id, centi_cell_id: row.centi_cell_id, mod360_cell_id: row.mod360_cell_id, location_cell: locationCellId, location_centi_cell: locationCentiCellId, data_provider_id: row.data_provider_id, data_provider_name: row.data_provider_name, data_resource_id: row.data_resource_id, data_resource_name: row.data_resource_name, rights: row.rights, institution_code_id: row.institution_code_id, institution_code: row.institution_code, collection_code_id: row.collection_code_id, collection_code: row.collection_code, catalogue_number_id: row.catalogue_number_id, catalogue_number: row.catalogue_number, citation: row.citation, created: row.created, modified: row.modified, kingdom_concept_id: row.kingdom_concept_id, phylum_concept_id: row.phylum_concept_id,class_concept_id: row.class_concept_id, order_concept_id: row.order_concept_id, family_concept_id: row.family_concept_id, genus_concept_id: row.genus_concept_id, species_concept_id: row.species_concept_id, iso_country_code: row.iso_country_code, iso_department_code: row.iso_department_code, year: row.year, month: row.month, occurrence_date: row.occurrence_date, altitude_metres: row.altitude_metres, depth_centimetres: row.depth_centimetres, kingdom: row.kingdom, phylum: row.phylum, taxonClass: row.class, order_rank: row.order_rank, family: row.family, genus: row.genus, species: row.species, country_name: row.country_name, department_name: row.department_name, basis_of_record_id: row.basis_of_record_id, basis_of_record_name: row.basis_of_record_name, basis_of_record_name_spanish: row.basis_of_record_name_spanish};
 						collection.insert(document, function(err, records) {
 							if (err) throw err;
 						})
@@ -78,7 +113,7 @@ exports.convertFromMysqlToMongoDB = function(req, res) {
 					console.log('Done with all results');
 				});
 		});
-	});
+	});*/
 
 	/*MongoClient.connect('mongodb://localhost/sibexplorer_dev', function(error, db) {
 		if (error) console.log(error);
@@ -86,7 +121,9 @@ exports.convertFromMysqlToMongoDB = function(req, res) {
 			c.query('SELECT * FROM occurrence_record_denormalized order by id limit 100000 offset 600000')
 				.on('result', function(result) {
 					result.on('row', function(row) {
-						var document = {id:row.id, canonical:row.canonical, location: {lat: row.latitude, lon: row.longitude}, data_provider_id: row.data_provider_id, data_provider_name: row.data_provider_name, data_resource_id: row.data_resource_id, data_resource_name: row.data_resource_name, rights: row.rights, institution_code_id: row.institution_code_id, institution_code: row.institution_code, collection_code_id: row.collection_code_id, collection_code: row.collection_code, catalogue_number_id: row.catalogue_number_id, catalogue_number: row.catalogue_number, citation: row.citation, created: row.created, modified: row.modified, kingdom_concept_id: row.kingdom_concept_id, phylum_concept_id: row.phylum_concept_id,class_concept_id: row.class_concept_id, order_concept_id: row.order_concept_id, family_concept_id: row.family_concept_id, genus_concept_id: row.genus_concept_id, species_concept_id: row.species_concept_id, iso_country_code: row.iso_country_code, iso_department_code: row.iso_department_code, year: row.year, month: row.month, occurrence_date: row.occurrence_date, altitude_metres: row.altitude_metres, depth_centimetres: row.depth_centimetres, kingdom: row.kingdom, phylum: row.phylum, taxonClass: row.class, order_rank: row.order_rank, family: row.family, genus: row.genus, species: row.species, country_name: row.country_name, department_name: row.department_name, basis_of_record_id: row.basis_of_record_id, basis_of_record_name: row.basis_of_record_name, basis_of_record_name_spanish: row.basis_of_record_name_spanish};
+						var locationCellId = toBoundingBoxCell(row.cell_id);
+						var locationCentiCellId = toBoundingBoxCentiCell(row.cell_id, row.centi_cell_id);
+						var document = {id:row.id, canonical:row.canonical, location: {lat: row.latitude, lon: row.longitude}, cell_id: row.cell_id, centi_cell_id: row.centi_cell_id, mod360_cell_id: row.mod360_cell_id, location_cell: locationCellId, location_centi_cell: locationCentiCellId, data_provider_id: row.data_provider_id, data_provider_name: row.data_provider_name, data_resource_id: row.data_resource_id, data_resource_name: row.data_resource_name, rights: row.rights, institution_code_id: row.institution_code_id, institution_code: row.institution_code, collection_code_id: row.collection_code_id, collection_code: row.collection_code, catalogue_number_id: row.catalogue_number_id, catalogue_number: row.catalogue_number, citation: row.citation, created: row.created, modified: row.modified, kingdom_concept_id: row.kingdom_concept_id, phylum_concept_id: row.phylum_concept_id,class_concept_id: row.class_concept_id, order_concept_id: row.order_concept_id, family_concept_id: row.family_concept_id, genus_concept_id: row.genus_concept_id, species_concept_id: row.species_concept_id, iso_country_code: row.iso_country_code, iso_department_code: row.iso_department_code, year: row.year, month: row.month, occurrence_date: row.occurrence_date, altitude_metres: row.altitude_metres, depth_centimetres: row.depth_centimetres, kingdom: row.kingdom, phylum: row.phylum, taxonClass: row.class, order_rank: row.order_rank, family: row.family, genus: row.genus, species: row.species, country_name: row.country_name, department_name: row.department_name, basis_of_record_id: row.basis_of_record_id, basis_of_record_name: row.basis_of_record_name, basis_of_record_name_spanish: row.basis_of_record_name_spanish};
 						collection.insert(document, function(err, records) {
 							if (err) throw err;
 						})
@@ -113,7 +150,9 @@ exports.convertFromMysqlToMongoDB = function(req, res) {
 			c.query('SELECT * FROM geo_occurrence_record_denormalized order by id')
 				.on('result', function(result) {
 					result.on('row', function(row) {
-						var document = {id:row.id, canonical:row.canonical, num_occurrences:row.num_occurrences, latitude:row.latitude, longitude:row.longitude, data_provider_id:row.data_provider_id, data_provider_name:row.data_provider_name, data_resource_id:row.data_resource_id, data_resource_name:row.data_resource_name, rights:row.rights, institution_code_id:row.institution_code_id, institution_code:row.institution_code, collection_code_id:row.collection_code_id, collection_code:row.collection_code, catalogue_number_id:row.catalogue_number_id, catalogue_number:row.catalogue_number, citation:row.citation, created:row.created, modified:row.modified, kingdom_concept_id:row.kingdom_concept_id, phylum_concept_id:row.phylum_concept_id, class_concept_id:row.class_concept_id, order_concept_id:row.order_concept_id, family_concept_id:row.family_concept_id, genus_concept_id:row.genus_concept_id, species_concept_id:row.species_concept_id, iso_country_code:row.iso_country_code, iso_department_code:row.iso_department_code, year:row.year, month:row.month, occurrence_date:row.occurrence_date, altitude_metres:row.altitude_metres, depth_centimetres:row.depth_centimetres, country_name: row.country_name, department_name: row.department_name};
+						var locationCellId = toBoundingBoxCell(row.cell_id);
+						var locationCentiCellId = toBoundingBoxCentiCell(row.cell_id, row.centi_cell_id);
+						var document = {id:row.id, canonical:row.canonical, num_occurrences:row.num_occurrences, latitude:row.latitude, longitude:row.longitude, cell_id: row.cell_id, centi_cell_id: row.centi_cell_id, mod360_cell_id: row.mod360_cell_id, location_cell: locationCellId, location_centi_cell: locationCentiCellId, data_provider_id:row.data_provider_id, data_provider_name:row.data_provider_name, data_resource_id:row.data_resource_id, data_resource_name:row.data_resource_name, rights:row.rights, institution_code_id:row.institution_code_id, institution_code:row.institution_code, collection_code_id:row.collection_code_id, collection_code:row.collection_code, catalogue_number_id:row.catalogue_number_id, catalogue_number:row.catalogue_number, citation:row.citation, created:row.created, modified:row.modified, kingdom_concept_id:row.kingdom_concept_id, phylum_concept_id:row.phylum_concept_id, class_concept_id:row.class_concept_id, order_concept_id:row.order_concept_id, family_concept_id:row.family_concept_id, genus_concept_id:row.genus_concept_id, species_concept_id:row.species_concept_id, iso_country_code:row.iso_country_code, iso_department_code:row.iso_department_code, year:row.year, month:row.month, occurrence_date:row.occurrence_date, altitude_metres:row.altitude_metres, depth_centimetres:row.depth_centimetres, country_name: row.country_name, department_name: row.department_name};
 						collection.insert(document, function(err, records) {
 							if (err) throw err;
 						})
@@ -137,7 +176,60 @@ exports.convertFromMysqlToMongoDB = function(req, res) {
 			c.query('SELECT * FROM geo_occurrence_record_denormalized order by id')
 				.on('result', function(result) {
 					result.on('row', function(row) {
-						var document = {id:row.id, canonical:row.canonical, num_occurrences:row.num_occurrences, location: {lat:row.latitude, lon:row.longitude}, data_provider_id:row.data_provider_id, data_provider_name:row.data_provider_name, data_resource_id:row.data_resource_id, data_resource_name:row.data_resource_name, rights:row.rights, institution_code_id:row.institution_code_id, institution_code:row.institution_code, collection_code_id:row.collection_code_id, collection_code:row.collection_code, catalogue_number_id:row.catalogue_number_id, catalogue_number:row.catalogue_number, citation:row.citation, created:row.created, modified:row.modified, kingdom_concept_id:row.kingdom_concept_id, phylum_concept_id:row.phylum_concept_id, class_concept_id:row.class_concept_id, order_concept_id:row.order_concept_id, family_concept_id:row.family_concept_id, genus_concept_id:row.genus_concept_id, species_concept_id:row.species_concept_id, iso_country_code:row.iso_country_code, iso_department_code:row.iso_department_code, year:row.year, month:row.month, occurrence_date:row.occurrence_date, altitude_metres:row.altitude_metres, depth_centimetres:row.depth_centimetres, country_name: row.country_name, department_name: row.department_name};
+						var locationCellId = toBoundingBoxCell(row.cell_id);
+						var locationCentiCellId = toBoundingBoxCentiCell(row.cell_id, row.centi_cell_id);
+						var document = {id:row.id, canonical:row.canonical, num_occurrences:row.num_occurrences, location: {lat:row.latitude, lon:row.longitude}, cell_id: row.cell_id, centi_cell_id: row.centi_cell_id, mod360_cell_id: row.mod360_cell_id, location_cell: locationCellId, location_centi_cell: locationCentiCellId, data_provider_id:row.data_provider_id, data_provider_name:row.data_provider_name, data_resource_id:row.data_resource_id, data_resource_name:row.data_resource_name, rights:row.rights, institution_code_id:row.institution_code_id, institution_code:row.institution_code, collection_code_id:row.collection_code_id, collection_code:row.collection_code, catalogue_number_id:row.catalogue_number_id, catalogue_number:row.catalogue_number, citation:row.citation, created:row.created, modified:row.modified, kingdom_concept_id:row.kingdom_concept_id, phylum_concept_id:row.phylum_concept_id, class_concept_id:row.class_concept_id, order_concept_id:row.order_concept_id, family_concept_id:row.family_concept_id, genus_concept_id:row.genus_concept_id, species_concept_id:row.species_concept_id, iso_country_code:row.iso_country_code, iso_department_code:row.iso_department_code, year:row.year, month:row.month, occurrence_date:row.occurrence_date, altitude_metres:row.altitude_metres, depth_centimetres:row.depth_centimetres, country_name: row.country_name, department_name: row.department_name};
+						collection.insert(document, function(err, records) {
+							if (err) throw err;
+						})
+					})
+					.on('error', function(err) {
+						console.log('Result error: ' + inspect(err));
+					})
+					.on('end', function(info) {
+						console.log('Result finished successfully');
+					});
+				})
+				.on('end', function() {
+					console.log('Done with all results');
+				});
+		});
+	});*/
+
+	/*MongoClient.connect('mongodb://localhost/sibexplorer_dev', function(error, db) {
+		if (error) console.log(error);
+		db.createCollection("cell_density", function(err, collection) {
+			c.query('SELECT * FROM cell_density order by type')
+				.on('result', function(result) {
+					result.on('row', function(row) {
+						var locationCellId = toBoundingBoxCell(row.cell_id);
+						var document = {type: row.type, entity_id: row.entity_id, cell_id: row.cell_id, location_cell: locationCellId, count: row.count};
+						collection.insert(document, function(err, records) {
+							if (err) throw err;
+						})
+					})
+					.on('error', function(err) {
+						console.log('Result error: ' + inspect(err));
+					})
+					.on('end', function(info) {
+						console.log('Result finished successfully');
+					});
+				})
+				.on('end', function() {
+					console.log('Done with all results');
+				});
+		});
+	});*/
+
+	/*MongoClient.connect('mongodb://localhost/sibexplorer_dev', function(error, db) {
+		if (error) console.log(error);
+		db.createCollection("centi_cell_density", function(err, collection) {
+			c.query('SELECT * FROM centi_cell_density order by type')
+				.on('result', function(result) {
+					result.on('row', function(row) {
+						var locationCellId = toBoundingBoxCell(row.cell_id);
+						var locationCentiCellId = toBoundingBoxCentiCell(row.cell_id, row.centi_cell_id);
+						var document = {type: row.type, entity_id: row.entity_id, cell_id: row.cell_id, centi_cell_id: row.centi_cell_id, location_cell: locationCellId, location_centi_cell: locationCentiCellId, count: row.count};
 						collection.insert(document, function(err, records) {
 							if (err) throw err;
 						})
