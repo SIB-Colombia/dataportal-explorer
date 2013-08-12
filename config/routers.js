@@ -37,6 +37,15 @@ module.exports = function(parent, options) {
 					method = 'get';
 					path = '/';
 					break;
+				// Cases for distribution cells
+				case 'listInitialDistributionOneDegree':
+					method = 'get';
+					path = '/' + name + '/onedegree/list';
+					break;
+				case 'listInitialDistributionCentiDegree':
+					method = 'get';
+					path = '/' + name + '/centidegree/list';
+					break;
 				/*case 'show':
 					method = 'get';
 					path = '/' + name + '/:' + name + '_id';

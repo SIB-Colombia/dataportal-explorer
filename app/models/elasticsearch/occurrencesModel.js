@@ -15,6 +15,60 @@ exports.getOccurrences = function() {
 	return mySearchCall;
 };
 
+exports.getDistributionsOneDegree = function() {
+	qryObj = {
+		"fields": ["cell_id", "location_cell", "count"],
+		"size": 10000000,
+		"query": {
+			"filtered" : {
+				"query" : {
+					"match_all" : {}
+				},
+				"filter": {
+					"term": {"type": "0"}
+				}
+            }
+        },
+        "facets": {
+        	"stats": {
+        		"statistical": {
+        			"field": "count"
+        		}
+        	}
+        }
+	};
+
+	mySearchCall = elasticSearchClient.search('sibexplorer', 'cell_density', qryObj);
+	return mySearchCall;
+};
+
+exports.getDistributionsCentiDegree = function() {
+	qryObj = {
+		"fields": ["cell_id", "centi_cell_id", "location_centi_cell", "count"],
+		"size": 10000000,
+		"query": {
+			"filtered" : {
+				"query" : {
+					"match_all" : {}
+				},
+				"filter": {
+					"term": {"type": "0"}
+				}
+            }
+        },
+        "facets": {
+        	"stats": {
+        		"statistical": {
+        			"field": "count"
+        		}
+        	}
+        }
+	};
+
+	mySearchCall = elasticSearchClient.search('sibexplorer', 'centi_cell_density', qryObj);
+	return mySearchCall;
+};
+
 exports.getOccurrencesWithFilter = function(conditions) {
 	var qryObj = {};
 	var condition1 = {}

@@ -560,7 +560,7 @@ exports.updatemongodb = function(req, res) {
 }
 
 exports.index = function(req, res) {
-	async.parallel(
+	/*async.parallel(
 		{
 			totalOccurrences: function(callback) {
 				GeneralIndicator.findOne({'name': 'Total occurrences'}, 'value', function(err, indicator) {
@@ -578,7 +578,7 @@ exports.index = function(req, res) {
 					}
 				)
 			}
-			/*data: function(callback) {
+			data: function(callback) {
 				occurrences = occurrencesES.getOccurrences();
 				occurrences.exec(function(err, data){
 					callback(null, data);
@@ -586,14 +586,15 @@ exports.index = function(req, res) {
 				GeoOccurrence.find().select('id canonical num_occurrences latitude longitude').limit(30000).exec(function (err, geooccurrences) {
 					callback(null, geooccurrences)
 				})
-			}*/
+			}
 		}, function(err, result) {
 			if(err)
 				res.send(handleError(err));
-			//res.render('index', { title: 'Explorador - Portal de datos SIB Colombia', totalOccurrences: result.totalOccurrences, totalGeoOccurrences: result.totalGeoOccurrences/*, data: JSON.stringify(result.data*/), tableData: result.data });
+			//res.render('index', { title: 'Explorador - Portal de datos SIB Colombia', totalOccurrences: result.totalOccurrences, totalGeoOccurrences: result.totalGeoOccurrences, data: JSON.stringify(result.data), tableData: result.data });
 			res.render('index', { title: 'Explorador - Portal de datos SIB Colombia', totalOccurrences: result.totalOccurrences, totalGeoOccurrences: result.totalGeoOccurrences });
 		}
-	)
+	)*/
+	res.render('index', { title: 'Explorador - Portal de datos SIB Colombia' });
 	//dbWrapper.initConnection();
 	//dbWrapper.getAllGeoOccurrenceData(function(rows) {
 		//res.writeHead(200, {'Content-Type':'application/json'});

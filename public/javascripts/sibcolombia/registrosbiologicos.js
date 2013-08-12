@@ -482,8 +482,10 @@ function OccurrenceSearchViewModel() {
 	self.totalFilters = ko.observable(0)
 
 	// Basic stats data
-	self.totalOccurrences = ko.observable(totalOccurrences)
-	self.totalGeoOccurrences = ko.observable(totalGeoOccurrences)
+	//self.totalOccurrences = ko.observable(totalOccurrences)
+	//self.totalGeoOccurrences = ko.observable(totalGeoOccurrences)
+	self.totalOccurrences = ko.observable();
+	self.totalGeoOccurrences = ko.observable();
 
 	// Arrays for resume help windows
 	self.resumeScientificNames = ko.observableArray([])
@@ -547,7 +549,7 @@ function OccurrenceSearchViewModel() {
 		return $("#dropDownCoordinateState option[value='" + self.selectedCoordinateState() + "']").text()
 	})
 
-	$.getJSON("/occurrences/list", function(allData) {
+	/*$.getJSON("/occurrences/list", function(allData) {
 		$.each(allData, function(i, occurrence) {
 			var marker = new L.Marker(new L.LatLng(occurrence.latitude, occurrence.longitude), { title: occurrence.canonical})
 			marker.bindPopup(occurrence.canonical + ' ' + occurrence.num_occurrences)
@@ -590,7 +592,64 @@ function OccurrenceSearchViewModel() {
 		}
 		baseAndFirstOverlays.addOverlay(markers, 'Puntos densidad')
 		//L.control.layers({}, anotherLayers).addTo(map)
-	})
+	})*/
+
+	// Initialize default cell density distribution (one degree)
+	var densityCells = new L.FeatureGroup();
+	var densityCells2 = new L.FeatureGroup();
+	$.getJSON("/distribution/onedegree/list", function(allData) {
+		$.each(allData.hits.hits, function(i, cell) {
+			var bounds = [[cell.fields.location_cell.lat, cell.fields.location_cell.lon], [cell.fields.location_cell.lat+1, cell.fields.location_cell.lon+1]];
+			var color = "#ff7800";
+			if (cell.fields.count > 0 && cell.fields.count < 10) {
+				color = "#FFFF00";
+			} else if(cell.fields.count > 9 && cell.fields.count < 100) {
+				color = "#FFCC00";
+			} else if(cell.fields.count > 99 && cell.fields.count < 1000) {
+				color = "#FF9900";
+			} else if(cell.fields.count > 999 && cell.fields.count < 10000) {
+				color = "#FF6600";
+			} else if(cell.fields.count > 9999 && cell.fields.count < 100000) {
+				color = "#FF3300";
+			} else if(cell.fields.count > 99999) {
+				color = "#CC0000";
+			}
+			var densityCell = new L.rectangle(bounds, {color: color, weight: 1, fill: true, fillOpacity: 0.5});
+			densityCells.addLayer(densityCell);
+		});
+
+		var anotherLayers = {
+			'Distribución 1 grado': map.addLayer(densityCells)
+		};
+		baseAndFirstOverlays.addOverlay(densityCells, 'Distribución 1 grado');
+	});
+
+	$.getJSON("/distribution/centidegree/list", function(allData) {
+		$.each(allData.hits.hits, function(i, cell) {
+			var bounds = [[cell.fields.location_centi_cell.lat, cell.fields.location_centi_cell.lon], [cell.fields.location_centi_cell.lat+0.1, cell.fields.location_centi_cell.lon+0.1]];
+			var color = "#ff7800";
+			if (cell.fields.count > 0 && cell.fields.count < 10) {
+				color = "#FFFF00";
+			} else if(cell.fields.count > 9 && cell.fields.count < 100) {
+				color = "#FFCC00";
+			} else if(cell.fields.count > 99 && cell.fields.count < 1000) {
+				color = "#FF9900";
+			} else if(cell.fields.count > 999 && cell.fields.count < 10000) {
+				color = "#FF6600";
+			} else if(cell.fields.count > 9999 && cell.fields.count < 100000) {
+				color = "#FF3300";
+			} else if(cell.fields.count > 99999) {
+				color = "#CC0000";
+			}
+			var densityCell = new L.rectangle(bounds, {color: color, weight: 1, fill: true, fillOpacity: 0.5});
+			densityCells2.addLayer(densityCell);
+		});
+
+		var anotherLayers = {
+			'Distribución 0.1 grado': map.addLayer(densityCells2)
+		};
+		baseAndFirstOverlays.addOverlay(densityCells2, 'Distribución 0.1 grado');
+	});
 
 	// Operations
 	// Add ScientificName filter
@@ -1154,6 +1213,9 @@ function OccurrenceSearchViewModel() {
 			self.helpSearchText(allData.text)
 		})
 	}
+
+	// Testing adding poligon
+
 
 	// Initialize default markercluster layer
 	/*var markers = new L.MarkerClusterGroup()

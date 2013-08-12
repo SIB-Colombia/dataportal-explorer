@@ -262,9 +262,9 @@ var map = L.map('mapa', {
 	center: [4.781505, -79.804687],
 	zoom: 6,
 	layers: [googleTerrain],
-	crs: L.CRS.EPSG4326,
 	fullscreenControl: true
 });
+//crs: L.CRS.EPSG4326,
 
 var wmsLayers = {
 	'Invemar: Ecorregiones': invemarEcoregiones,
@@ -384,7 +384,7 @@ function _initDensityMap(key, type) {
     });
 };
 
-_initDensityMap("CO", "PUBLISHING_COUNTRY");
+//_initDensityMap("CO", "PUBLISHING_COUNTRY");
 	
 baseAndFirstOverlays = L.control.layers(baseLayers, overlays).addTo(map)
-L.control.layers({}, wmsLayers).addTo(map)
+L.control.layers({}, wmsLayers).addTo(map);
