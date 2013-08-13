@@ -606,6 +606,8 @@ h4#currentSearch {
 #filtersContainer #explorerFiltersAndEditor #filterEditorPane {
   width: auto;
   vertical-align: top;
+}
+#filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter {
   padding: 0px 20px;
 }
 #filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter select,
@@ -646,6 +648,7 @@ h4#currentSearch {
   width: auto;
   font-size: 90%;
   margin-right: 15px;
+  padding: 0px 20px;
 }
 #filtersContainer #explorerFiltersAndEditor #filterEditorPane #selectedFilterHelp .taxonomyFilterHelp {
   height: auto;
@@ -711,6 +714,35 @@ h4#currentSearch {
 }
 #filtersContainer #explorerFiltersAndEditor #constructedFiltersPane #constructedFilters ul.filterItem img {
   padding-left: 5px;
+}
+#filtersContainer #explorerFiltersAndEditor #densityButtonsPane {
+  width: 100%;
+}
+#filtersContainer #explorerFiltersAndEditor #densityButtonsPane .btn-primary {
+  background-color: #589cd1;
+  background-image: -moz-linear-gradient(top, #589cd1, #3c7099);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#589cd1), to(#3c7099));
+  background-image: -webkit-linear-gradient(top, #589cd1, #3c7099);
+  background-image: -o-linear-gradient(top, #589cd1, #3c7099);
+  background-image: linear-gradient(to bottom, #589cd1, #3c7099);
+}
+#filtersContainer #explorerFiltersAndEditor #densityButtonsPane .btn-primary:hover,
+#filtersContainer #explorerFiltersAndEditor #densityButtonsPane .btn-primary:focus {
+  background-color: #589cd1;
+  background-image: linear-gradient(to bottom, #589cd1, #589cd1);
+}
+#filtersContainer #explorerFiltersAndEditor #densityButtonsPane .btn-primary.active {
+  background-color: #589cd1;
+  background-image: linear-gradient(to bottom, #589cd1, #589cd1);
+}
+#filtersContainer #explorerFiltersAndEditor #densityButtonsPane #densityButtons {
+  height: 100%;
+  vertical-align: top;
+  padding-left: 30px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: #115b96;
+  color: #fff;
 }
 .btn-add-filter {
   color: #fff;

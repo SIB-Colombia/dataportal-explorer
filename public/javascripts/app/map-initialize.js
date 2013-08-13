@@ -386,5 +386,6 @@ function _initDensityMap(key, type) {
 
 //_initDensityMap("CO", "PUBLISHING_COUNTRY");
 	
-baseAndFirstOverlays = L.control.layers(baseLayers, overlays).addTo(map)
+baseAndFirstOverlays = L.control.layers(baseLayers, overlays).addTo(map);
 L.control.layers({}, wmsLayers).addTo(map);
+map.addControl(new L.Control.Scale());
