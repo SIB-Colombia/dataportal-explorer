@@ -13,16 +13,25 @@ requirejs.config({
         jqueryUI: 'jquery-ui/jquery-ui-1.10.3.custom.min',
         leaflet: 'leaflet/leaflet',
         leafletProviders: 'leaflet/plugins/leaflet-providers',
-        leafletControlFullScreen: 'leaflet/plugins/fullscreen/Control.FullScreen'
+        leafletControlFullScreen: 'leaflet/plugins/fullscreen/Control.FullScreen',
+        leafletGoogleTiles: 'leaflet/plugins/layer/tile/Google',
+        leafletBingTiles: 'leaflet/plugins/layer/tile/Bing',
+        bootstrap: 'bootstrap/bootstrap.min',
+        kendo: 'kendo/kendo.web.min',
+        kendoSpanishCulture: 'kendo/cultures/kendo.culture.es-CO.min',
+        knockout: 'knockout/knockout-2.3.0',
+        knockoutKendoUI: 'knockout-kendoui/knockout-kendo.min',
+        customScrollBar: 'custom-scrollbar/jquery.mCustomScrollbar.min',
+        customScrollBarMouseWheel: 'custom-scrollbar/jquery.mousewheel.min'
     }
 });
 
-requirejs(["googleMaps"]);
-requirejs(["jquery"]);
-requirejs(["jqueryUI"]);
-requirejs(["leaflet"]);
-requirejs(["leafletProviders"]);
-requirejs(["leafletControlFullScreen"]);
+//requirejs(["googleMaps"]);
+//requirejs(["jquery"]);
+//requirejs(["jqueryUI"]);
+//requirejs(["leaflet"]);
+//requirejs(["leafletProviders"]);
+//requirejs(["leafletControlFullScreen"]);
 
 // Load the main app module to start the app
 requirejs(["app/main"]);
