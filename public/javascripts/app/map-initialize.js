@@ -225,7 +225,7 @@ require(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTile
 		"Acetate": L.tileLayer.provider('Acetate.all')
 	};
 	
-	var map = L.map('mapa', {
+	map = L.map('mapa', {
 		center: [4.781505, -79.804687],
 		zoom: 6,
 		layers: [googleTerrain],
@@ -264,4 +264,5 @@ require(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTile
 	baseAndFirstOverlays = L.control.layers(baseLayers, overlays).addTo(map);
 	L.control.layers({}, wmsLayers).addTo(map);
 	map.addControl(new L.Control.Scale());
+
 });

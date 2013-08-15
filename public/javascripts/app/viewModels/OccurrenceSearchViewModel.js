@@ -1,4 +1,4 @@
-define(["knockout", "underscore", "app/models/baseViewModel", "app/models/occurrence", "knockoutKendoUI"], function(ko, _, BaseViewModel, Occurrence) {
+define(["knockout", "underscore", "app/models/baseViewModel", "app/models/occurrence", "knockoutKendoUI", "Leaflet"], function(ko, _, BaseViewModel, Occurrence) {
 	var OccurrenceSearchViewModel = function() {
 		var self = this;
 
@@ -70,6 +70,8 @@ define(["knockout", "underscore", "app/models/baseViewModel", "app/models/occurr
 	_.extend(OccurrenceSearchViewModel.prototype, BaseViewModel.prototype, {
 		initialize: function() {
 			this.loadGridData();
+			//this.loadCellDensityOneDegree();
+			this.loadCellDensityPointOneDegree();
 		},
 		loadGridData: function() {
 			var self = this;
@@ -224,6 +226,70 @@ define(["knockout", "underscore", "app/models/baseViewModel", "app/models/occurr
 					optionLabel: "-- Seleccione --"
 				});
 			}
+		},
+		loadCellDensityOneDegree: function() {
+			var self = this;
+			// Initialize default cell density distribution (one degree)
+			var densityCellsOneDegree = new L.FeatureGroup();
+			$.getJSON("/distribution/onedegree/list", function(allData) {
+				$.each(allData.hits.hits, function(i, cell) {
+					var bounds = [[cell.fields.location_cell.lat, cell.fields.location_cell.lon], [cell.fields.location_cell.lat+1, cell.fields.location_cell.lon+1]];
+					var color = "#ff7800";
+					if (cell.fields.count > 0 && cell.fields.count < 10) {
+						color = "#FFFF00";
+					} else if(cell.fields.count > 9 && cell.fields.count < 100) {
+						color = "#FFCC00";
+					} else if(cell.fields.count > 99 && cell.fields.count < 1000) {
+						color = "#FF9900";
+					} else if(cell.fields.count > 999 && cell.fields.count < 10000) {
+						color = "#FF6600";
+					} else if(cell.fields.count > 9999 && cell.fields.count < 100000) {
+						color = "#FF3300";
+					} else if(cell.fields.count > 99999) {
+						color = "#CC0000";
+					}
+					var densityCell = new L.rectangle(bounds, {color: color, weight: 1, fill: true, fillOpacity: 0.5});
+					densityCell.on('mouseover', function (a) {
+						a.target.bindPopup("<strong>No. registros: </strong>" + cell.fields.count + "</br></br><strong>Ubicación:</strong></br>[" + cell.fields.location_cell.lat + ", " + cell.fields.location_cell.lon + "] [" + (cell.fields.location_cell.lat+1) + ", " + (cell.fields.location_cell.lon+1) + "]").openPopup();
+					});
+					densityCellsOneDegree.addLayer(densityCell);
+				});
+				self.totalGeoOccurrences(allData.facets.stats.total);
+				//$("#oneDegreeButton").button('toggle');
+				map.addLayer(densityCellsOneDegree);
+			});
+		},
+		loadCellDensityPointOneDegree: function() {
+			var self = this;
+			// Initialize default cell density distribution (one degree)
+			var densityCellsPointOneDegree = new L.FeatureGroup();
+			$.getJSON("/distribution/centidegree/list", function(allData) {
+				$.each(allData.hits.hits, function(i, cell) {
+					var bounds = [[cell.fields.location_centi_cell.lat, cell.fields.location_centi_cell.lon], [cell.fields.location_centi_cell.lat+0.1, cell.fields.location_centi_cell.lon+0.1]];
+					var color = "#ff7800";
+					if (cell.fields.count > 0 && cell.fields.count < 10) {
+						color = "#FFFF00";
+					} else if(cell.fields.count > 9 && cell.fields.count < 100) {
+						color = "#FFCC00";
+					} else if(cell.fields.count > 99 && cell.fields.count < 1000) {
+						color = "#FF9900";
+					} else if(cell.fields.count > 999 && cell.fields.count < 10000) {
+						color = "#FF6600";
+					} else if(cell.fields.count > 9999 && cell.fields.count < 100000) {
+						color = "#FF3300";
+					} else if(cell.fields.count > 99999) {
+						color = "#CC0000";
+					}
+					var densityCell = new L.rectangle(bounds, {color: color, weight: 1, fill: true, fillOpacity: 0.5});
+					densityCell.on('mouseover', function (a) {
+						a.target.bindPopup("<strong>No. registros: </strong>" + cell.fields.count + "</br></br><strong>Ubicación:</strong></br>[" + cell.fields.location_centi_cell.lat + ", " + cell.fields.location_centi_cell.lon + "] [" + (((cell.fields.location_centi_cell.lat*10)+1)/10) + ", " + (((cell.fields.location_centi_cell.lon*10)+1)/10) + "]").openPopup();
+					});
+					densityCellsPointOneDegree.addLayer(densityCell);
+				});
+				self.totalGeoOccurrences(allData.facets.stats.total);
+				//$("#oneDegreeButton").button('toggle');
+				map.addLayer(densityCellsPointOneDegree);
+			});
 		},
 		disableOccurrencesDetail: function() {
 			if(!$("#occurrenceDetail").is(':hidden')) {

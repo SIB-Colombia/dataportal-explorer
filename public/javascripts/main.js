@@ -50,7 +50,7 @@ requirejs.config({
 });
 
 // Initialize leaflet map with layers and overlays
-requirejs(["app/map-initialize"]);
+//requirejs(["app/map-initialize"]);
 
 // Load the main app module to start the app
 requirejs(["app/main"]);
