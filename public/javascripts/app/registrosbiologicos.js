@@ -15,7 +15,7 @@ function OccurrenceSearchViewModel() {
 			//height: 500,
 			pageSize: 20,
 			transport: {
-				read: { 
+				read: {
 					url: "/occurrences/PagedData",
 					type: "GET",
 					dataType: "jsonp",

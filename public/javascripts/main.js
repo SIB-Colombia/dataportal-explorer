@@ -10,6 +10,7 @@ requirejs.config({
         'app': '../app',
         'jquery': 'jquery/jquery-1.10.2.min',
         'jqueryUI': 'jquery-ui/jquery-ui-1.10.3.custom.min',
+        'underscore': 'underscore/underscore-min',
         'Leaflet': 'leaflet/leaflet',
         'LeafletProviders': 'leaflet/plugins/leaflet-providers',
         'LeafletControlFullScreen': 'leaflet/plugins/fullscreen/Control.FullScreen',
@@ -19,7 +20,9 @@ requirejs.config({
         'knockout': 'knockout/knockout-2.3.0',
         'knockoutKendoUI': 'knockout-kendoui/knockout-kendo.min',
         'customScrollBar': 'custom-scrollbar/jquery.mCustomScrollbar.min',
-        'customScrollBarMouseWheel': 'custom-scrollbar/jquery.mousewheel.min'
+        'customScrollBarMouseWheel': 'custom-scrollbar/jquery.mousewheel.min',
+        'kendo': 'kendo/kendo.web.min',
+        'kendoGrid': 'kendo/kendo.grid.min'
     },
     shim: {
         'Leaflet': {
@@ -39,6 +42,9 @@ requirejs.config({
         },
         "bootstrap": {
             deps: ["jquery"]
+        },
+        "underscore": {
+            exports: "_"
         }
     }
 });
