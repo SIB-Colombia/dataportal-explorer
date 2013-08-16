@@ -46,6 +46,10 @@ module.exports = function(parent, options) {
 					method = 'get';
 					path = '/' + name + '/centidegree/list';
 					break;
+				case 'getDistributionStatsOneDegree':
+					method = 'get';
+					path = '/' + name + '/onedegree/stats/:' + '_cellid';
+					break;
 				/*case 'show':
 					method = 'get';
 					path = '/' + name + '/:' + name + '_id';

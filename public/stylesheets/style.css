@@ -738,11 +738,15 @@ h4#currentSearch {
 #filtersContainer #explorerFiltersAndEditor #densityButtonsPane #densityButtons {
   height: 100%;
   vertical-align: top;
-  padding-left: 30px;
+  padding-left: 10px;
   padding-top: 10px;
   padding-bottom: 10px;
   background-color: #115b96;
   color: #fff;
+}
+#filtersContainer #explorerFiltersAndEditor #densityButtonsPane #densityButtons .btn-small {
+  padding-left: 6px;
+  padding-right: 6px;
 }
 .btn-add-filter {
   color: #fff;

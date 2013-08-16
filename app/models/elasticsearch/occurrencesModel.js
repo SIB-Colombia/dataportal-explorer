@@ -30,12 +30,12 @@ exports.getDistributionsOneDegree = function() {
             }
         },
         "facets": {
-        	"stats": {
-        		"statistical": {
-        			"field": "count"
-        		}
-        	}
-        }
+			"stats": {
+				"statistical": {
+					"field": "count"
+				}
+			}
+		}
 	};
 
 	mySearchCall = elasticSearchClient.search('sibexplorer', 'cell_density', qryObj);
@@ -57,15 +57,93 @@ exports.getDistributionsCentiDegree = function() {
             }
         },
         "facets": {
-        	"stats": {
-        		"statistical": {
-        			"field": "count"
-        		}
-        	}
-        }
+			"stats": {
+				"statistical": {
+					"field": "count"
+				}
+			}
+		}
 	};
 
 	mySearchCall = elasticSearchClient.search('sibexplorer', 'centi_cell_density', qryObj);
+	return mySearchCall;
+};
+
+// Returns cell stats for one degree
+exports.getStatsOccurrencesOneDegree = function(cellid) {
+	qryObj = {
+		"fields": ["id"],
+		"size": 0,
+		"query": {
+			"filtered" : {
+				"query" : {
+					"match_all" : {}
+				}
+			}
+		},
+		"facets": {
+			"canonical": {
+				"terms": {
+					"field": "canonical.untouched",
+					"size" : 10
+				}
+			},
+			"kingdom": {
+				"terms": {
+					"field": "kingdom.untouched",
+					"size" : 10
+				}
+			},
+			"phylum": {
+				"terms": {
+					"field": "phylum.untouched",
+					"size" : 10
+				}
+			},
+			"taxonClass": {
+				"terms": {
+					"field": "taxonClass.untouched",
+					"size" : 10
+				}
+			},
+			"order_rank": {
+				"terms": {
+					"field": "order_rank.untouched",
+					"size" : 10
+				}
+			},
+			"family": {
+				"terms": {
+					"field": "family.untouched",
+					"size" : 10
+				}
+			},
+			"genus": {
+				"terms": {
+					"field": "genus.untouched",
+					"size" : 10
+				}
+			},
+			"data_provider_name": {
+				"terms": {
+					"field": "data_provider_name.untouched",
+					"size" : 10
+				}
+			},
+			"data_resource_name": {
+				"terms": {
+					"field": "data_resource_name.untouched",
+					"size" : 10
+				}
+			}
+		}
+	};
+	qryObj["query"]["filtered"]["filter"] = {};
+	qryObj["query"]["filtered"]["filter"]["term"] = {};
+	qryObj["query"]["filtered"]["filter"]["term"]["cell_id"] = cellid;
+
+
+	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
 	return mySearchCall;
 };
 

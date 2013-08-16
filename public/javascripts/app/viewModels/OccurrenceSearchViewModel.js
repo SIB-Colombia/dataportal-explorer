@@ -1,6 +1,8 @@
 define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map-initialize", "app/models/occurrence", "knockoutKendoUI", "Leaflet", "jqueryUI", "bootstrap"], function($, ko, _, BaseViewModel, map, Occurrence) {
 	var OccurrenceSearchViewModel = function() {
 		var self = this;
+		self.densityCellsOneDegree = new L.FeatureGroup();
+		self.densityCellsPointOneDegree = new L.FeatureGroup();
 
 		// Grid table data
 		self.gridItems = [];
@@ -70,11 +72,11 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		BaseViewModel.apply( this, arguments );
 	};
 
-	_.extend(OccurrenceSearchViewModel.prototype, BaseViewModel.prototype, {
+	_.extend(OccurrenceSearchViewModel.prototype, BaseViewModel.prototype, self.densityCellsOneDegree, {
 		initialize: function() {
 			this.loadGridData();
 			this.loadCellDensityOneDegree();
-			//this.loadCellDensityPointOneDegree();
+			this.loadCellDensityPointOneDegree();
 		},
 		loadGridData: function() {
 			var self = this;
@@ -128,8 +130,8 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 						or: "o",
 						and: "y",
 						info: "Filtrar con condición:",
-						filter: "Aplicar filtro",
-						clear: "Quitar filtro"
+						filter: "Aplicar filtros",
+						clear: "Quitar filtros"
 					},
 					operators: {
 						string: {
@@ -233,7 +235,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		loadCellDensityOneDegree: function() {
 			var self = this;
 			// Initialize default cell density distribution (one degree)
-			var densityCellsOneDegree = new L.FeatureGroup();
+			map.addLayer(self.densityCellsOneDegree());
 			$.getJSON("/distribution/onedegree/list", function(allData) {
 				$.each(allData.hits.hits, function(i, cell) {
 					var bounds = [[cell.fields.location_cell.lat, cell.fields.location_cell.lon], [cell.fields.location_cell.lat+1, cell.fields.location_cell.lon+1]];
@@ -251,16 +253,19 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					} else if(cell.fields.count > 99999) {
 						color = "#CC0000";
 					}
-					var densityCell = new L.rectangle(bounds, {color: color, weight: 1, fill: true, fillOpacity: 0.5});
-					densityCell.on('mouseover', function (a) {
+					var densityCell = new L.rectangle(bounds, {color: color, weight: 1, fill: true, fillOpacity: 0.5, cellID: cell.fields.cell_id});
+					densityCell.on('click', function (a) {
 						a.target.bindPopup("<strong>No. registros: </strong>" + cell.fields.count + "</br></br><strong>Ubicación:</strong></br>[" + cell.fields.location_cell.lat + ", " + cell.fields.location_cell.lon + "] [" + (cell.fields.location_cell.lat+1) + ", " + (cell.fields.location_cell.lon+1) + "]").openPopup();
 					});
-					densityCellsOneDegree.addLayer(densityCell);
+					self.densityCellsOneDegree().addLayer(densityCell);
 				});
 				self.totalGeoOccurrences(allData.facets.stats.total);
-				map.addLayer(densityCellsOneDegree);
-				$("#oneDegreeButton").button('toggle');
+				$("#oneDegree").button('toggle');
 				self.currentActiveDistribution("oneDegree");
+
+				self.densityCellsOneDegree().on('click', function (a) {
+					console.log(a.layer.options.cellID);
+				});
 			});
 		},
 		loadCellDensityPointOneDegree: function() {
@@ -285,14 +290,11 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 						color = "#CC0000";
 					}
 					var densityCell = new L.rectangle(bounds, {color: color, weight: 1, fill: true, fillOpacity: 0.5});
-					densityCell.on('mouseover', function (a) {
+					densityCell.on('click', function (a) {
 						a.target.bindPopup("<strong>No. registros: </strong>" + cell.fields.count + "</br></br><strong>Ubicación:</strong></br>[" + cell.fields.location_centi_cell.lat + ", " + cell.fields.location_centi_cell.lon + "] [" + (((cell.fields.location_centi_cell.lat*10)+1)/10) + ", " + (((cell.fields.location_centi_cell.lon*10)+1)/10) + "]").openPopup();
 					});
-					densityCellsPointOneDegree.addLayer(densityCell);
+					self.densityCellsPointOneDegree().addLayer(densityCell);
 				});
-				self.totalGeoOccurrences(allData.facets.stats.total);
-				//$("#oneDegreeButton").button('toggle');
-				map.addLayer(densityCellsPointOneDegree);
 			});
 		},
 		disableOccurrencesDetail: function() {
@@ -536,35 +538,36 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			});
 		},
 		toggleDistribution: function(data, event) {
-			console.log(data);
-			console.log(event);
-		},
-		initializeFloatingWindowsAndResize: function() {
-			// Enable floating windows for search floating window
-			$(function() {
-				$("#filterZone").draggable({handle: "#top-filterZone"});
-			});
+			var self = this;
 
-			// Enable min/max button for search floating window
-			$(".minimize-maximize-button").click(function() {
-				if($("#filtersContainer").is(':visible')) {
-					$("#filterZone").removeClass("open");
-				} else {
-					$("#filterZone").addClass("open");
+			if(self.currentActiveDistribution() != "none") {
+				// Disable current active button
+				switch(self.currentActiveDistribution()) {
+					case "oneDegree":
+						map.removeLayer(self.densityCellsOneDegree());
+						break;
+					case "pointOneDegree":
+						map.removeLayer(self.densityCellsPointOneDegree());
+						break;
 				}
-				$("#filtersContainer").slideToggle();
-				$("#filtersContainerHelp").css({display: 'none'});
-			});
-
-			// Set map initial height
-			$("#mapa").height($(window).height()-$("header").height());
-
-			// Change map and table grid height when windows resize
-			$(window).resize(function(){
-				$("#mapa").height($(window).height()-$("header").height());
-				$("#reportGrid").height($(window).height()-$("header").height()-$("#actual-search-stats-data").height()-60);
-				$("#reportGrid .k-grid-content").height($(window).height()-$("header").height()-$("#actual-search-stats-data").height()-60-91);
-			});
+			}
+			
+			if(self.currentActiveDistribution() != event.srcElement.id) {
+				$("#"+self.currentActiveDistribution()).button('toggle');
+				switch(event.srcElement.id) {
+					case "oneDegree":
+						map.addLayer(self.densityCellsOneDegree());
+						self.currentActiveDistribution("oneDegree");
+						break;
+					case "pointOneDegree":
+						map.addLayer(self.densityCellsPointOneDegree());
+						self.currentActiveDistribution("pointOneDegree");
+						break;
+				}
+				$(event.srcElement.id).button('toggle');
+			} else {
+				self.currentActiveDistribution("none");
+			}
 		}
 	});
 

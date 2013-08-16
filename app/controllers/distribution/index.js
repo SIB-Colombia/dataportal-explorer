@@ -13,3 +13,10 @@ exports.listInitialDistributionCentiDegree = function(req, res) {
 		res.jsonp(JSON.parse(data));
 	});
 };
+
+exports.getDistributionStatsOneDegree = function(req, res) {
+	occurrences = occurrencesES.getStatsOccurrencesOneDegree(req.params._cellid);
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
+	});
+};
