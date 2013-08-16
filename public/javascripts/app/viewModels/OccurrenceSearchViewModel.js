@@ -1,9 +1,12 @@
-define(["knockout", "underscore", "app/models/baseViewModel", "app/models/occurrence", "knockoutKendoUI", "Leaflet"], function(ko, _, BaseViewModel, Occurrence) {
+define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map-initialize", "app/models/occurrence", "knockoutKendoUI", "Leaflet", "jqueryUI", "bootstrap"], function($, ko, _, BaseViewModel, map, Occurrence) {
 	var OccurrenceSearchViewModel = function() {
 		var self = this;
 
 		// Grid table data
 		self.gridItems = [];
+
+		// Active distribution
+		self.currentActiveDistribution = "none";
 
 		// Help variables
 		self.firstScrollRun = true;
@@ -70,8 +73,8 @@ define(["knockout", "underscore", "app/models/baseViewModel", "app/models/occurr
 	_.extend(OccurrenceSearchViewModel.prototype, BaseViewModel.prototype, {
 		initialize: function() {
 			this.loadGridData();
-			//this.loadCellDensityOneDegree();
-			this.loadCellDensityPointOneDegree();
+			this.loadCellDensityOneDegree();
+			//this.loadCellDensityPointOneDegree();
 		},
 		loadGridData: function() {
 			var self = this;
@@ -255,8 +258,9 @@ define(["knockout", "underscore", "app/models/baseViewModel", "app/models/occurr
 					densityCellsOneDegree.addLayer(densityCell);
 				});
 				self.totalGeoOccurrences(allData.facets.stats.total);
-				//$("#oneDegreeButton").button('toggle');
 				map.addLayer(densityCellsOneDegree);
+				$("#oneDegreeButton").button('toggle');
+				self.currentActiveDistribution("oneDegree");
 			});
 		},
 		loadCellDensityPointOneDegree: function() {
@@ -534,6 +538,33 @@ define(["knockout", "underscore", "app/models/baseViewModel", "app/models/occurr
 		toggleDistribution: function(data, event) {
 			console.log(data);
 			console.log(event);
+		},
+		initializeFloatingWindowsAndResize: function() {
+			// Enable floating windows for search floating window
+			$(function() {
+				$("#filterZone").draggable({handle: "#top-filterZone"});
+			});
+
+			// Enable min/max button for search floating window
+			$(".minimize-maximize-button").click(function() {
+				if($("#filtersContainer").is(':visible')) {
+					$("#filterZone").removeClass("open");
+				} else {
+					$("#filterZone").addClass("open");
+				}
+				$("#filtersContainer").slideToggle();
+				$("#filtersContainerHelp").css({display: 'none'});
+			});
+
+			// Set map initial height
+			$("#mapa").height($(window).height()-$("header").height());
+
+			// Change map and table grid height when windows resize
+			$(window).resize(function(){
+				$("#mapa").height($(window).height()-$("header").height());
+				$("#reportGrid").height($(window).height()-$("header").height()-$("#actual-search-stats-data").height()-60);
+				$("#reportGrid .k-grid-content").height($(window).height()-$("header").height()-$("#actual-search-stats-data").height()-60-91);
+			});
 		}
 	});
 

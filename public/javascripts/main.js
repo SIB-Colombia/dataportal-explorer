@@ -49,8 +49,24 @@ requirejs.config({
     }
 });
 
-// Initialize leaflet map with layers and overlays
-//requirejs(["app/map-initialize"]);
-
 // Load the main app module to start the app
-requirejs(["app/main"]);
+require(["app/main"], function() {
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-1418857-10']);
+    _gaq.push(['_setDomainName', 'sibcolombia.net']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+
+    $('a[data-toggle="tab"]').on('shown', function (e) {
+        // Map Height
+        $("#mapa").height($(window).height()-$("header").height());
+        // Table view height
+        $("#reportGrid").height($(window).height()-$("header").height()-$("#actual-search-stats-data").height()-60);
+        $("#reportGrid .k-grid-content").height($(window).height()-$("header").height()-$("#actual-search-stats-data").height()-60-91);
+    });
+});

@@ -1,32 +1,9 @@
-require(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles", "LeafletProviders", "LeafletControlFullScreen"], function($) {
+define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles", "LeafletProviders", "LeafletControlFullScreen"], function($) {
 	//console.log(kendo);
 	//kendo.culture("es-CO");
 
-	// Enable floating windows for search floating window
-	$(function() {
-		$("#filterZone").draggable({handle: "#top-filterZone"});
-	});
-
-	// Enable min/max button for search floating window
-	$(".minimize-maximize-button").click(function() {
-		if($("#filtersContainer").is(':visible')) {
-			$("#filterZone").removeClass("open");
-		} else {
-			$("#filterZone").addClass("open");
-		}
-		$("#filtersContainer").slideToggle();
-		$("#filtersContainerHelp").css({display: 'none'});
-	});
-
 	// Set map initial height
 	$("#mapa").height($(window).height()-$("header").height());
-
-	// Change map and table grid height when windows resize
-	$(window).resize(function(){
-		$("#mapa").height($(window).height()-$("header").height());
-		$("#reportGrid").height($(window).height()-$("header").height()-$("#actual-search-stats-data").height()-60);
-		$("#reportGrid .k-grid-content").height($(window).height()-$("header").height()-$("#actual-search-stats-data").height()-60-91);
-	});
 
 	// General map data info layers
 	var cmAttr = 'Map data &copy; 2011 OpenStreetMap contributors, Imagery &copy; 2011 CloudMade';
@@ -225,7 +202,7 @@ require(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTile
 		"Acetate": L.tileLayer.provider('Acetate.all')
 	};
 	
-	map = L.map('mapa', {
+	var map = L.map('mapa', {
 		center: [4.781505, -79.804687],
 		zoom: 6,
 		layers: [googleTerrain],
@@ -265,4 +242,31 @@ require(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTile
 	L.control.layers({}, wmsLayers).addTo(map);
 	map.addControl(new L.Control.Scale());
 
+	// Enable floating windows for search floating window
+	$(function() {
+		$("#filterZone").draggable({handle: "#top-filterZone", axis: 'xy', containment : [0,0]});
+	});
+
+	// Enable min/max button for search floating window
+	$(".minimize-maximize-button").click(function() {
+		if($("#filtersContainer").is(':visible')) {
+			$("#filterZone").removeClass("open");
+		} else {
+			$("#filterZone").addClass("open");
+		}
+		$("#filtersContainer").slideToggle();
+		$("#filtersContainerHelp").css({display: 'none'});
+	});
+
+	// Set map initial height
+	$("#mapa").height($(window).height()-$("header").height());
+
+	// Change map and table grid height when windows resize
+	$(window).resize(function(){
+		$("#mapa").height($(window).height()-$("header").height());
+		$("#reportGrid").height($(window).height()-$("header").height()-$("#actual-search-stats-data").height()-60);
+		$("#reportGrid .k-grid-content").height($(window).height()-$("header").height()-$("#actual-search-stats-data").height()-60-91);
+	});
+
+	return map;
 });
