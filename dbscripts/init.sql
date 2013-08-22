@@ -11,7 +11,7 @@ CREATE TABLE geo_occurrence_record_denormalized
 AS (SELECT
 occurrence_record.id,
 taxon_name.canonical,
-count(*) AS num_occurrences,
+Count(*) AS num_occurrences,
 occurrence_record.latitude,
 occurrence_record.longitude,
 occurrence_record.cell_id,
@@ -39,9 +39,11 @@ occurrence_record.family_concept_id,
 occurrence_record.genus_concept_id,
 occurrence_record.species_concept_id,
 occurrence_record.iso_country_code,
+country_name.`name` AS country_name,
 occurrence_record.iso_department_code,
+department.department_name AS department_name,
 occurrence_record.basis_of_record AS basis_of_record_id,
-lookup_basis_of_record.`br_value` AS basis_of_record_name,
+lookup_basis_of_record.br_value AS basis_of_record_name,
 occurrence_record.`year`,
 occurrence_record.`month`,
 occurrence_record.occurrence_date,
@@ -56,6 +58,8 @@ INNER JOIN institution_code ON occurrence_record.institution_code_id = instituti
 INNER JOIN collection_code ON occurrence_record.collection_code_id = collection_code.id
 INNER JOIN catalogue_number ON occurrence_record.catalogue_number_id = catalogue_number.id
 INNER JOIN lookup_basis_of_record ON occurrence_record.basis_of_record = lookup_basis_of_record.br_key
+LEFT JOIN country_name ON occurrence_record.iso_country_code = country_name.iso_country_code
+LEFT JOIN department ON occurrence_record.iso_department_code = department.iso_department_code
 WHERE
 occurrence_record.centi_cell_id is not null AND
 occurrence_record.geospatial_issue=0 AND
@@ -77,25 +81,6 @@ occurrence_record.species_concept_id);
 
 select concat('Including primary key in table geo_occurrence_record_denormalized: ', now()) as debug;
 alter table geo_occurrence_record_denormalized add primary key(id);
-
-select concat('Adding country name column in table geo_occurrence_record_denormalized: ', now()) as debug;
-ALTER TABLE geo_occurrence_record_denormalized ADD country_name VARCHAR(255);
-
-select concat('Adding department name column in table geo_occurrence_record_denormalized: ', now()) as debug;
-ALTER TABLE geo_occurrence_record_denormalized ADD department_name VARCHAR(255);
-
-select concat('Filling country names in table geo_occurrence_record_denormalized: ', now()) as debug;
-UPDATE geo_occurrence_record_denormalized 
-INNER JOIN country_name 
-ON geo_occurrence_record_denormalized.iso_country_code = country_name.iso_country_code 
-AND country_name.locale = 'en' 
-SET geo_occurrence_record_denormalized.country_name = country_name.name;
-
-select concat('Filling department names in table geo_occurrence_record_denormalized: ', now()) as debug;
-UPDATE geo_occurrence_record_denormalized 
-INNER JOIN department 
-ON geo_occurrence_record_denormalized.iso_department_code = department.iso_department_code
-SET geo_occurrence_record_denormalized.department_name = department.department_name;
 
 -- ----------------------------
 -- Table structure for `occurrence_record_denormalized`
@@ -129,14 +114,22 @@ data_resource.citation,
 data_resource.created,
 data_resource.modified,
 occurrence_record.kingdom_concept_id,
+taxon_name_kingdom.canonical AS kingdom,
 occurrence_record.phylum_concept_id,
+taxon_name_phylum.canonical AS phylum,
 occurrence_record.class_concept_id,
+taxon_name_class.canonical AS class,
 occurrence_record.order_concept_id,
+taxon_name_order.canonical AS order_rank,
 occurrence_record.family_concept_id,
+taxon_name_family.canonical AS family,
 occurrence_record.genus_concept_id,
+taxon_name_genus.canonical AS genus,
 occurrence_record.species_concept_id,
+taxon_name_species.canonical AS species,
 occurrence_record.iso_country_code,
 occurrence_record.iso_department_code,
+department.department_name AS department_name,
 occurrence_record.basis_of_record AS basis_of_record_id,
 lookup_basis_of_record.`br_value` AS basis_of_record_name,
 occurrence_record.`year`,
@@ -153,110 +146,39 @@ INNER JOIN institution_code ON occurrence_record.institution_code_id = instituti
 INNER JOIN collection_code ON occurrence_record.collection_code_id = collection_code.id
 INNER JOIN catalogue_number ON occurrence_record.catalogue_number_id = catalogue_number.id
 INNER JOIN lookup_basis_of_record ON occurrence_record.basis_of_record = lookup_basis_of_record.br_key
+LEFT JOIN department ON occurrence_record.iso_department_code = department.iso_department_code
+LEFT JOIN taxon_concept AS taxon_concept_kingdom ON occurrence_record.kingdom_concept_id = taxon_concept_kingdom.id
+LEFT JOIN taxon_name AS taxon_name_kingdom ON taxon_concept_kingdom.taxon_name_id = taxon_name_kingdom.id
+LEFT JOIN taxon_concept AS taxon_concept_phylum ON occurrence_record.phylum_concept_id = taxon_concept_phylum.id
+LEFT JOIN taxon_name AS taxon_name_phylum ON taxon_concept_phylum.taxon_name_id = taxon_name_phylum.id
+LEFT JOIN taxon_concept AS taxon_concept_class ON occurrence_record.class_concept_id = taxon_concept_class.id
+LEFT JOIN taxon_name AS taxon_name_class ON taxon_concept_class.taxon_name_id = taxon_name_class.id
+LEFT JOIN taxon_concept AS taxon_concept_order ON occurrence_record.order_concept_id = taxon_concept_order.id
+LEFT JOIN taxon_name AS taxon_name_order ON taxon_concept_order.taxon_name_id = taxon_name_order.id
+LEFT JOIN taxon_concept AS taxon_concept_family ON occurrence_record.family_concept_id = taxon_concept_family.id
+LEFT JOIN taxon_name AS taxon_name_family ON taxon_concept_family.taxon_name_id = taxon_name_family.id
+LEFT JOIN taxon_concept AS taxon_concept_genus ON occurrence_record.genus_concept_id = taxon_concept_genus.id
+LEFT JOIN taxon_name AS taxon_name_genus ON taxon_concept_genus.taxon_name_id = taxon_name_genus.id
+LEFT JOIN taxon_concept AS taxon_concept_species ON occurrence_record.species_concept_id = taxon_concept_species.id
+LEFT JOIN taxon_name AS taxon_name_species ON taxon_concept_species.taxon_name_id = taxon_name_species.id
 WHERE
 occurrence_record.deleted IS NULL);
 
 select concat('Including primary key in table occurrence_record_denormalized: ', now()) as debug;
 alter table occurrence_record_denormalized add primary key(id);
 
-select concat('Adding kingdom name column in table occurrence_record_denormalized: ', now()) as debug;
-ALTER TABLE occurrence_record_denormalized ADD kingdom VARCHAR(255);
-
-select concat('Adding phylum name column in table occurrence_record_denormalized: ', now()) as debug;
-ALTER TABLE occurrence_record_denormalized ADD phylum VARCHAR(255);
-
-select concat('Adding class name column in table occurrence_record_denormalized: ', now()) as debug;
-ALTER TABLE occurrence_record_denormalized ADD class VARCHAR(255);
-
-select concat('Adding order_rank name column in table occurrence_record_denormalized: ', now()) as debug;
-ALTER TABLE occurrence_record_denormalized ADD order_rank VARCHAR(255);
-
-select concat('Adding family name column in table occurrence_record_denormalized: ', now()) as debug;
-ALTER TABLE occurrence_record_denormalized ADD family VARCHAR(255);
-
-select concat('Adding genus name column in table occurrence_record_denormalized: ', now()) as debug;
-ALTER TABLE occurrence_record_denormalized ADD genus VARCHAR(255);
-
-select concat('Adding species name column in table occurrence_record_denormalized: ', now()) as debug;
-ALTER TABLE occurrence_record_denormalized ADD species VARCHAR(255);
-
 select concat('Adding country name column in table occurrence_record_denormalized: ', now()) as debug;
 ALTER TABLE occurrence_record_denormalized ADD country_name VARCHAR(255);
-
-select concat('Adding department name column in table occurrence_record_denormalized: ', now()) as debug;
-ALTER TABLE occurrence_record_denormalized ADD department_name VARCHAR(255);
-
-select concat('Adding basis of record name column in table occurrence_record_denormalized: ', now()) as debug;
-ALTER TABLE occurrence_record_denormalized ADD basis_of_record_name_spanish VARCHAR(255);
-
-select concat('Filling kingdom names in table occurrence_record_denormalized: ', now()) as debug;
-UPDATE occurrence_record_denormalized
-INNER JOIN taxon_concept 
-ON occurrence_record_denormalized.kingdom_concept_id = taxon_concept.id
-INNER JOIN taxon_name 
-ON taxon_concept.taxon_name_id = taxon_name.id
-SET occurrence_record_denormalized.kingdom = taxon_name.canonical;
-
-select concat('Filling phylum names in table occurrence_record_denormalized: ', now()) as debug;
-UPDATE occurrence_record_denormalized
-INNER JOIN taxon_concept 
-ON occurrence_record_denormalized.phylum_concept_id = taxon_concept.id
-INNER JOIN taxon_name 
-ON taxon_concept.taxon_name_id = taxon_name.id
-SET occurrence_record_denormalized.phylum = taxon_name.canonical;
-
-select concat('Filling class names in table occurrence_record_denormalized: ', now()) as debug;
-UPDATE occurrence_record_denormalized
-INNER JOIN taxon_concept 
-ON occurrence_record_denormalized.class_concept_id = taxon_concept.id
-INNER JOIN taxon_name 
-ON taxon_concept.taxon_name_id = taxon_name.id
-SET occurrence_record_denormalized.class = taxon_name.canonical;
-
-select concat('Filling order_rank names in table occurrence_record_denormalized: ', now()) as debug;
-UPDATE occurrence_record_denormalized
-INNER JOIN taxon_concept 
-ON occurrence_record_denormalized.order_concept_id = taxon_concept.id
-INNER JOIN taxon_name 
-ON taxon_concept.taxon_name_id = taxon_name.id
-SET occurrence_record_denormalized.order_rank = taxon_name.canonical;
-
-select concat('Filling family names in table occurrence_record_denormalized: ', now()) as debug;
-UPDATE occurrence_record_denormalized
-INNER JOIN taxon_concept 
-ON occurrence_record_denormalized.family_concept_id = taxon_concept.id
-INNER JOIN taxon_name 
-ON taxon_concept.taxon_name_id = taxon_name.id
-SET occurrence_record_denormalized.family = taxon_name.canonical;
-
-select concat('Filling genus names in table occurrence_record_denormalized: ', now()) as debug;
-UPDATE occurrence_record_denormalized
-INNER JOIN taxon_concept 
-ON occurrence_record_denormalized.genus_concept_id = taxon_concept.id
-INNER JOIN taxon_name 
-ON taxon_concept.taxon_name_id = taxon_name.id
-SET occurrence_record_denormalized.genus = taxon_name.canonical;
-
-select concat('Filling species names in table occurrence_record_denormalized: ', now()) as debug;
-UPDATE occurrence_record_denormalized
-INNER JOIN taxon_concept 
-ON occurrence_record_denormalized.species_concept_id = taxon_concept.id
-INNER JOIN taxon_name 
-ON taxon_concept.taxon_name_id = taxon_name.id
-SET occurrence_record_denormalized.species = taxon_name.canonical;
 
 select concat('Filling country names in table occurrence_record_denormalized: ', now()) as debug;
 UPDATE occurrence_record_denormalized 
 INNER JOIN country_name 
 ON occurrence_record_denormalized.iso_country_code = country_name.iso_country_code 
-AND country_name.locale = 'en' 
+AND country_name.locale = 'en'
 SET occurrence_record_denormalized.country_name = country_name.name;
 
-select concat('Filling department names in table occurrence_record_denormalized: ', now()) as debug;
-UPDATE occurrence_record_denormalized 
-INNER JOIN department 
-ON occurrence_record_denormalized.iso_department_code = department.iso_department_code
-SET occurrence_record_denormalized.department_name = department.department_name;
+select concat('Adding basis of record name column in table occurrence_record_denormalized: ', now()) as debug;
+ALTER TABLE occurrence_record_denormalized ADD basis_of_record_name_spanish VARCHAR(255);
 
 select concat('Filling name Observación for basis_of_record in table occurrence_record_denormalized: ', now()) as debug;
 UPDATE occurrence_record_denormalized SET basis_of_record_name_spanish = "Observación" where basis_of_record_name = "observation";
