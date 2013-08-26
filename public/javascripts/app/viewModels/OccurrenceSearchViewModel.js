@@ -324,7 +324,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					}
 					var densityCell = new L.rectangle(bounds, {color: color, weight: 1, fill: true, fillOpacity: 0.5});
 					densityCell.on('click', function (a) {
-						a.target.bindPopup("<strong>No. registros: </strong>" + cell.fields.count + "</br></br><strong>Ubicación:</strong></br>[" + cell.fields.location_pointfive_cell.lat + ", " + cell.fields.location_pointfive_cell.lon + "] [" + (((cell.fields.location_pointfive_cell.lat*10)+1)/10) + ", " + (((cell.fields.location_pointfive_cell.lon*10)+1)/10) + "]").openPopup();
+						a.target.bindPopup("<strong>No. registros: </strong>" + cell.fields.count + "</br></br><strong>Ubicación:</strong></br>[" + cell.fields.location_pointfive_cell.lat + ", " + cell.fields.location_pointfive_cell.lon + "] [" + (((cell.fields.location_pointfive_cell.lat*10)+5)/10) + ", " + (((cell.fields.location_pointfive_cell.lon*10)+5)/10) + "]").openPopup();
 					});
 					self.densityCellsPointFiveDegree().addLayer(densityCell);
 				});
@@ -353,7 +353,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					}
 					var densityCell = new L.rectangle(bounds, {color: color, weight: 1, fill: true, fillOpacity: 0.5});
 					densityCell.on('click', function (a) {
-						a.target.bindPopup("<strong>No. registros: </strong>" + cell.fields.count + "</br></br><strong>Ubicación:</strong></br>[" + cell.fields.location_pointtwo_cell.lat + ", " + cell.fields.location_pointtwo_cell.lon + "] [" + (((cell.fields.location_pointtwo_cell.lat*10)+1)/10) + ", " + (((cell.fields.location_pointtwo_cell.lon*10)+1)/10) + "]").openPopup();
+						a.target.bindPopup("<strong>No. registros: </strong>" + cell.fields.count + "</br></br><strong>Ubicación:</strong></br>[" + cell.fields.location_pointtwo_cell.lat + ", " + cell.fields.location_pointtwo_cell.lon + "] [" + (((cell.fields.location_pointtwo_cell.lat*10)+2)/10) + ", " + (((cell.fields.location_pointtwo_cell.lon*10)+2)/10) + "]").openPopup();
 					});
 					self.densityCellsPointTwoDegree().addLayer(densityCell);
 				});
@@ -601,6 +601,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		},
 		toggleDistribution: function(data, event) {
 			var self = this;
+			var target = event.srcElement || event.target;
 
 			if(self.currentActiveDistribution() != "none") {
 				// Disable current active button
@@ -619,10 +620,9 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 						break;
 				}
 			}
-			
-			if(self.currentActiveDistribution() != event.srcElement.id) {
+			if(self.currentActiveDistribution() != target.id) {
 				$("#"+self.currentActiveDistribution()).button('toggle');
-				switch(event.srcElement.id) {
+				switch(target.id) {
 					case "oneDegree":
 						map.addLayer(self.densityCellsOneDegree());
 						self.currentActiveDistribution("oneDegree");
@@ -640,7 +640,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 						self.currentActiveDistribution("pointTwoDegree");
 						break;
 				}
-				$(event.srcElement.id).button('toggle');
+				$(target.id).button('toggle');
 			} else {
 				self.currentActiveDistribution("none");
 			}

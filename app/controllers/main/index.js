@@ -71,43 +71,43 @@ toBoundingBoxCentiCell = function(cellId, centiCellId) {
 };
 
 toBoundingBoxPointFiveCell = function(cellId, pointFiveCellId) {
-	var longitudeX2 = 2 * ((cellId % 360) - 180);
-	var latitudeX2 = -900;
+	var longitudeX10 = 10 * ((cellId % 360) - 180);
+	var latitudeX10 = -900;
 	if (cellId > 0) {
-		latitudeX2 = 2 * (Math.floor(cellId / 360) - 90);
+		latitudeX10 = 10 * (Math.floor(cellId / 360) - 90);
 	}
 
-	var longOffset = (pointFiveCellId % 2);
+	var longOffset = (pointFiveCellId % 10);
 	var latOffset = 0;
 	if (pointFiveCellId > 0) {
-		latOffset = (pointFiveCellId / 2);
+		latOffset = (pointFiveCellId / 10);
 	}
 
-	var minLatitude = (latitudeX2 + latOffset) / 2;
-	minLatitude = Math.floor(minLatitude * 2 ) / 2;
-	var minLongitude = (longitudeX2 + longOffset) / 2;
-	minLongitude = Math.floor(minLongitude * 2 ) / 2;
+	var minLatitude = (latitudeX10 + latOffset) / 10;
+	minLatitude = Math.floor(minLatitude * 10 ) / 10;
+	var minLongitude = (longitudeX10 + longOffset) / 10;
+	minLongitude = Math.floor(minLongitude * 10 ) / 10;
 	var locationPointFiveCellId = {lat: minLatitude, lon: minLongitude};
 	return locationPointFiveCellId;
 };
 
 toBoundingBoxPointTwoCell = function(cellId, pointTwoCellId) {
-	var longitudeX5 = 5 * ((cellId % 360) - 180);
-	var latitudeX5 = -900;
+	var longitudeX10 = 10 * ((cellId % 360) - 180);
+	var latitudeX10 = -900;
 	if (cellId > 0) {
-		latitudeX5 = 5 * (Math.floor(cellId / 360) - 90);
+		latitudeX10 = 10 * (Math.floor(cellId / 360) - 90);
 	}
 
-	var longOffset = (pointTwoCellId % 5);
+	var longOffset = (pointTwoCellId % 10);
 	var latOffset = 0;
 	if (pointTwoCellId > 0) {
-		latOffset = (pointTwoCellId / 5);
+		latOffset = (pointTwoCellId / 10);
 	}
 
-	var minLatitude = (latitudeX5 + latOffset) / 5;
-	minLatitude = Math.floor(minLatitude * 5 ) / 5;
-	var minLongitude = (longitudeX5 + longOffset) / 5;
-	minLongitude = Math.floor(minLongitude * 5 ) / 5;
+	var minLatitude = (latitudeX10 + latOffset) / 10;
+	minLatitude = Math.floor(minLatitude * 10 ) / 10;
+	var minLongitude = (longitudeX10 + longOffset) / 10;
+	minLongitude = Math.floor(minLongitude * 10 ) / 10;
 	var locationPointTwoCellId = {lat: minLatitude, lon: minLongitude};
 	return locationPointTwoCellId;
 };
@@ -121,13 +121,23 @@ toPointFiveCellId = function(latitude, longitude) {
 		var la = Math.abs(Math.floor((latitude * 10000) % 10000));
 		if (latitude < 0)
 			la = 10000 - la;
-		la = Math.floor((la / 1000) % 2);
+		la = Math.floor((la / 1000) % 10);
+		if(la >= 0 && la < 5) {
+			la = 0;
+		} else {
+			la = 5;
+		}
 		var lo = Math.abs(Math.floor((longitude * 10000) % 10000));
 		if (longitude < 0)
 			lo = 10000 - lo;
-		lo = Math.floor((lo / 1000) % 2);
+		lo = Math.floor((lo / 1000) % 10);
+		if(lo >= 0 && lo < 5) {
+			lo = 0;
+		} else {
+			lo = 5;
+		}
 
-		var pointFiveCellId = (la * 2) + lo;
+		var pointFiveCellId = (la * 10) + lo;
 		return Math.abs(pointFiveCellId);
 	}
 };
@@ -141,13 +151,35 @@ toPointTwoCellId = function(latitude, longitude) {
 		var la = Math.abs(Math.floor((latitude * 10000) % 10000));
 		if (latitude < 0)
 			la = 10000 - la;
-		la = Math.floor((la / 1000) % 5);
+		la = Math.floor((la / 1000) % 10);
+		if(la >= 0 && la < 2) {
+			la = 0;
+		} else if(la >= 2 && la < 4) {
+			la = 2;
+		} else if(la >= 4 && la < 6) {
+			la = 4;
+		} else if(la >= 6 && la < 8) {
+			la = 6;
+		} else if(la >= 8) {
+			la = 8;
+		}
 		var lo = Math.abs(Math.floor((longitude * 10000) % 10000));
 		if (longitude < 0)
 			lo = 10000 - lo;
-		lo = Math.floor((lo / 1000) % 5);
+		lo = Math.floor((lo / 1000) % 10);
+		if(lo >= 0 && lo < 2) {
+			lo = 0;
+		} else if(lo >= 2 && lo < 4) {
+			lo = 2;
+		} else if(lo >= 4 && lo < 6) {
+			lo = 4;
+		} else if(lo >= 6 && lo < 8) {
+			lo = 6;
+		} else if(lo >= 8) {
+			lo = 8;
+		}
 
-		var pointTwoCellId = (la * 5) + lo;
+		var pointTwoCellId = (la * 10) + lo;
 		return Math.abs(pointTwoCellId);
 	}
 };
