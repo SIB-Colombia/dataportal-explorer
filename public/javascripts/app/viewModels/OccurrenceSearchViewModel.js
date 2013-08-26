@@ -3,6 +3,8 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		var self = this;
 		self.densityCellsOneDegree = new L.FeatureGroup();
 		self.densityCellsPointOneDegree = new L.FeatureGroup();
+		self.densityCellsPointFiveDegree = new L.FeatureGroup();
+		self.densityCellsPointTwoDegree = new L.FeatureGroup();
 
 		// Grid table data
 		self.gridItems = [];
@@ -77,6 +79,8 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			this.loadGridData();
 			this.loadCellDensityOneDegree();
 			this.loadCellDensityPointOneDegree();
+			this.loadCellDensityPointFiveDegree();
+			this.loadCellDensityPointTwoDegree();
 		},
 		loadGridData: function() {
 			var self = this;
@@ -294,6 +298,64 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 						a.target.bindPopup("<strong>No. registros: </strong>" + cell.fields.count + "</br></br><strong>Ubicación:</strong></br>[" + cell.fields.location_centi_cell.lat + ", " + cell.fields.location_centi_cell.lon + "] [" + (((cell.fields.location_centi_cell.lat*10)+1)/10) + ", " + (((cell.fields.location_centi_cell.lon*10)+1)/10) + "]").openPopup();
 					});
 					self.densityCellsPointOneDegree().addLayer(densityCell);
+				});
+			});
+		},
+		loadCellDensityPointFiveDegree: function() {
+			var self = this;
+			// Initialize default cell density distribution (five degrees)
+			var densityCellsPointFiveDegree = new L.FeatureGroup();
+			$.getJSON("/distribution/pointfivedegree/list", function(allData) {
+				$.each(allData.hits.hits, function(i, cell) {
+					var bounds = [[cell.fields.location_pointfive_cell.lat, cell.fields.location_pointfive_cell.lon], [cell.fields.location_pointfive_cell.lat+0.5, cell.fields.location_pointfive_cell.lon+0.5]];
+					var color = "#ff7800";
+					if (cell.fields.count > 0 && cell.fields.count < 10) {
+						color = "#FFFF00";
+					} else if(cell.fields.count > 9 && cell.fields.count < 100) {
+						color = "#FFCC00";
+					} else if(cell.fields.count > 99 && cell.fields.count < 1000) {
+						color = "#FF9900";
+					} else if(cell.fields.count > 999 && cell.fields.count < 10000) {
+						color = "#FF6600";
+					} else if(cell.fields.count > 9999 && cell.fields.count < 100000) {
+						color = "#FF3300";
+					} else if(cell.fields.count > 99999) {
+						color = "#CC0000";
+					}
+					var densityCell = new L.rectangle(bounds, {color: color, weight: 1, fill: true, fillOpacity: 0.5});
+					densityCell.on('click', function (a) {
+						a.target.bindPopup("<strong>No. registros: </strong>" + cell.fields.count + "</br></br><strong>Ubicación:</strong></br>[" + cell.fields.location_pointfive_cell.lat + ", " + cell.fields.location_pointfive_cell.lon + "] [" + (((cell.fields.location_pointfive_cell.lat*10)+1)/10) + ", " + (((cell.fields.location_pointfive_cell.lon*10)+1)/10) + "]").openPopup();
+					});
+					self.densityCellsPointFiveDegree().addLayer(densityCell);
+				});
+			});
+		},
+		loadCellDensityPointTwoDegree: function() {
+			var self = this;
+			// Initialize default cell density distribution (two degrees)
+			var densityCellsPointTwoDegree = new L.FeatureGroup();
+			$.getJSON("/distribution/pointtwodegree/list", function(allData) {
+				$.each(allData.hits.hits, function(i, cell) {
+					var bounds = [[cell.fields.location_pointtwo_cell.lat, cell.fields.location_pointtwo_cell.lon], [cell.fields.location_pointtwo_cell.lat+0.2, cell.fields.location_pointtwo_cell.lon+0.2]];
+					var color = "#ff7800";
+					if (cell.fields.count > 0 && cell.fields.count < 10) {
+						color = "#FFFF00";
+					} else if(cell.fields.count > 9 && cell.fields.count < 100) {
+						color = "#FFCC00";
+					} else if(cell.fields.count > 99 && cell.fields.count < 1000) {
+						color = "#FF9900";
+					} else if(cell.fields.count > 999 && cell.fields.count < 10000) {
+						color = "#FF6600";
+					} else if(cell.fields.count > 9999 && cell.fields.count < 100000) {
+						color = "#FF3300";
+					} else if(cell.fields.count > 99999) {
+						color = "#CC0000";
+					}
+					var densityCell = new L.rectangle(bounds, {color: color, weight: 1, fill: true, fillOpacity: 0.5});
+					densityCell.on('click', function (a) {
+						a.target.bindPopup("<strong>No. registros: </strong>" + cell.fields.count + "</br></br><strong>Ubicación:</strong></br>[" + cell.fields.location_pointtwo_cell.lat + ", " + cell.fields.location_pointtwo_cell.lon + "] [" + (((cell.fields.location_pointtwo_cell.lat*10)+1)/10) + ", " + (((cell.fields.location_pointtwo_cell.lon*10)+1)/10) + "]").openPopup();
+					});
+					self.densityCellsPointTwoDegree().addLayer(densityCell);
 				});
 			});
 		},
@@ -549,6 +611,12 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					case "pointOneDegree":
 						map.removeLayer(self.densityCellsPointOneDegree());
 						break;
+					case "pointFiveDegree":
+						map.removeLayer(self.densityCellsPointFiveDegree());
+						break;
+					case "pointTwoDegree":
+						map.removeLayer(self.densityCellsPointTwoDegree());
+						break;
 				}
 			}
 			
@@ -562,6 +630,14 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					case "pointOneDegree":
 						map.addLayer(self.densityCellsPointOneDegree());
 						self.currentActiveDistribution("pointOneDegree");
+						break;
+					case "pointFiveDegree":
+						map.addLayer(self.densityCellsPointFiveDegree());
+						self.currentActiveDistribution("pointFiveDegree");
+						break;
+					case "pointTwoDegree":
+						map.addLayer(self.densityCellsPointTwoDegree());
+						self.currentActiveDistribution("pointTwoDegree");
 						break;
 				}
 				$(event.srcElement.id).button('toggle');

@@ -46,6 +46,14 @@ module.exports = function(parent, options) {
 					method = 'get';
 					path = '/' + name + '/centidegree/list';
 					break;
+				case 'listInitialDistributionPointFiveDegree':
+					method = 'get';
+					path = '/' + name + '/pointfivedegree/list';
+					break;
+				case 'listInitialDistributionPointTwoDegree':
+					method = 'get';
+					path = '/' + name + '/pointtwodegree/list';
+					break;
 				case 'getDistributionStatsOneDegree':
 					method = 'get';
 					path = '/' + name + '/onedegree/stats/:' + '_cellid';

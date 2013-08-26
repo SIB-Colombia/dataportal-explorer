@@ -69,6 +69,60 @@ exports.getDistributionsCentiDegree = function() {
 	return mySearchCall;
 };
 
+exports.getDistributionsPointFiveDegree = function() {
+	qryObj = {
+		"fields": ["cell_id", "pointfive_cell_id", "location_pointfive_cell", "count"],
+		"size": 10000000,
+		"query": {
+			"filtered" : {
+				"query" : {
+					"match_all" : {}
+				},
+				"filter": {
+					"term": {"type": "0"}
+				}
+            }
+        },
+        "facets": {
+			"stats": {
+				"statistical": {
+					"field": "count"
+				}
+			}
+		}
+	};
+
+	mySearchCall = elasticSearchClient.search('sibexplorer', 'pointfive_cell_density', qryObj);
+	return mySearchCall;
+};
+
+exports.getDistributionsPointTwoDegree = function() {
+	qryObj = {
+		"fields": ["cell_id", "pointtwo_cell_id", "location_pointtwo_cell", "count"],
+		"size": 10000000,
+		"query": {
+			"filtered" : {
+				"query" : {
+					"match_all" : {}
+				},
+				"filter": {
+					"term": {"type": "0"}
+				}
+            }
+        },
+        "facets": {
+			"stats": {
+				"statistical": {
+					"field": "count"
+				}
+			}
+		}
+	};
+
+	mySearchCall = elasticSearchClient.search('sibexplorer', 'pointtwo_cell_density', qryObj);
+	return mySearchCall;
+};
+
 // Returns cell stats for one degree
 exports.getStatsOccurrencesOneDegree = function(cellid) {
 	qryObj = {

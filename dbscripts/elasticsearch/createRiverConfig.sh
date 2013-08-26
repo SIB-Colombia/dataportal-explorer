@@ -238,6 +238,30 @@ curl -XPUT 'http://localhost:9200/_river/river-mongodb-centi_cell_density/_meta'
     }
 }'
 
+curl -XPUT 'http://localhost:9200/_river/river-mongodb-pointfive_cell_density/_meta' -d '{
+    "type": "mongodb",
+    "mongodb": {
+        "db": "sibexplorer_dev",
+        "collection": "pointfive_cell_density"
+    },
+    "index": {
+        "name": "sibexplorer",
+        "type": "pointfive_cell_density"
+    }
+}'
+
+curl -XPUT 'http://localhost:9200/_river/river-mongodb-pointtwo_cell_density/_meta' -d '{
+    "type": "mongodb",
+    "mongodb": {
+        "db": "sibexplorer_dev",
+        "collection": "pointtwo_cell_density"
+    },
+    "index": {
+        "name": "sibexplorer",
+        "type": "pointtwo_cell_density"
+    }
+}'
+
 # Mapping for geo_distance, geo_bbox, geo_distance_range, geo_polygon and geo_shape support
 curl -XPUT 'http://localhost:9200/sibexplorer/cell_density/_mapping' -d '
 {
@@ -378,6 +402,164 @@ curl -XPUT 'http://localhost:9200/sibexplorer/centi_cell_density/_mapping' -d '
     }
 }'
 
+curl -XPUT 'http://localhost:9200/sibexplorer/pointfive_cell_density/_mapping' -d '
+{
+    "pointfive_cell_density" :  { 
+        "properties": {
+            "type": {
+                "type": "multi_field", 
+                    "fields" : { 
+                        "type": { 
+                            "type": "integer" 
+                        },
+                        "untouched" : {
+                            "type": "string",
+                            "index": "not_analyzed" 
+                        },
+                        "exactWords": {
+                            "type": "string",
+                            "analyzer": "string_lowercase"
+                        }
+                    }
+            },
+            "entity_id": {
+                "type": "multi_field", 
+                    "fields" : { 
+                        "entity_id": { 
+                            "type": "integer" 
+                        },
+                        "untouched" : {
+                            "type": "string",
+                            "index": "not_analyzed" 
+                        },
+                        "exactWords": {
+                            "type": "string",
+                            "analyzer": "string_lowercase"
+                        }
+                    }
+            },
+            "cell_id": {
+                "type": "multi_field", 
+                    "fields" : { 
+                        "cell_id": { 
+                            "type": "integer" 
+                        },
+                        "untouched" : {
+                            "type": "string",
+                            "index": "not_analyzed" 
+                        },
+                        "exactWords": {
+                            "type": "string",
+                            "analyzer": "string_lowercase"
+                        }
+                    }
+            },
+            "pointfive_cell_id": {
+                "type": "multi_field", 
+                    "fields" : { 
+                        "centi_cell_id": { 
+                            "type": "integer" 
+                        },
+                        "untouched" : {
+                            "type": "string",
+                            "index": "not_analyzed" 
+                        },
+                        "exactWords": {
+                            "type": "string",
+                            "analyzer": "string_lowercase"
+                        }
+                    }
+            },
+            "location_cell" : {
+                "type" : "geo_point"
+            },
+            "location_pointfive_cell" : {
+                "type" : "geo_point"
+            },
+            "count": {"type" : "integer"}
+        }
+    }
+}'
+
+curl -XPUT 'http://localhost:9200/sibexplorer/pointtwo_cell_density/_mapping' -d '
+{
+    "pointtwo_cell_density" :  { 
+        "properties": {
+            "type": {
+                "type": "multi_field", 
+                    "fields" : { 
+                        "type": { 
+                            "type": "integer" 
+                        },
+                        "untouched" : {
+                            "type": "string",
+                            "index": "not_analyzed" 
+                        },
+                        "exactWords": {
+                            "type": "string",
+                            "analyzer": "string_lowercase"
+                        }
+                    }
+            },
+            "entity_id": {
+                "type": "multi_field", 
+                    "fields" : { 
+                        "entity_id": { 
+                            "type": "integer" 
+                        },
+                        "untouched" : {
+                            "type": "string",
+                            "index": "not_analyzed" 
+                        },
+                        "exactWords": {
+                            "type": "string",
+                            "analyzer": "string_lowercase"
+                        }
+                    }
+            },
+            "cell_id": {
+                "type": "multi_field", 
+                    "fields" : { 
+                        "cell_id": { 
+                            "type": "integer" 
+                        },
+                        "untouched" : {
+                            "type": "string",
+                            "index": "not_analyzed" 
+                        },
+                        "exactWords": {
+                            "type": "string",
+                            "analyzer": "string_lowercase"
+                        }
+                    }
+            },
+            "pointtwo_cell_id": {
+                "type": "multi_field", 
+                    "fields" : { 
+                        "centi_cell_id": { 
+                            "type": "integer" 
+                        },
+                        "untouched" : {
+                            "type": "string",
+                            "index": "not_analyzed" 
+                        },
+                        "exactWords": {
+                            "type": "string",
+                            "analyzer": "string_lowercase"
+                        }
+                    }
+            },
+            "location_cell" : {
+                "type" : "geo_point"
+            },
+            "location_pointtwo_cell" : {
+                "type" : "geo_point"
+            },
+            "count": {"type" : "integer"}
+        }
+    }
+}'
+
 curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
 {
     "occurrences" :  { 
@@ -435,6 +617,8 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
             "basis_or_record_id": {"type" : "integer"},
             "cell_id": {"type" : "integer"},
             "centi_cell_id": {"type" : "integer"},
+            "pointfive_cell_id": {"type" : "integer"},
+            "pointtwo_cell_id": {"type" : "integer"},
             "mod360_cell_id": {"type" : "integer"},
             "canonical" :  {
                 "type": "multi_field", 
@@ -748,6 +932,12 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
             },
             "location_centi_cell" : {
                 "type" : "geo_point"
+            },
+            "location_pointfive_cell" : {
+                "type" : "geo_point"
+            },
+            "location_pointtwo_cell" : {
+                "type" : "geo_point"
             }
         }
     }
@@ -810,6 +1000,8 @@ curl -XPUT 'http://localhost:9200/sibexplorer/geooccurrences/_mapping' -d '
         	"species_concept_id": {"type" : "integer"},
             "cell_id": {"type" : "integer"},
             "centi_cell_id": {"type" : "integer"},
+            "pointfive_cell_id": {"type" : "integer"},
+            "pointtwo_cell_id": {"type" : "integer"},
             "mod360_cell_id": {"type" : "integer"},
             "canonical" :  {
                 "type": "multi_field", 
@@ -978,6 +1170,12 @@ curl -XPUT 'http://localhost:9200/sibexplorer/geooccurrences/_mapping' -d '
                 "type" : "geo_point"
             },
             "location_centi_cell" : {
+                "type" : "geo_point"
+            },
+            "location_pointfive_cell" : {
+                "type" : "geo_point"
+            },
+            "location_pointtwo_cell" : {
                 "type" : "geo_point"
             }
         }

@@ -220,39 +220,33 @@ exports.convertFromMysqlToMongoDB = function(req, res) {
 	});*/
 
 	/*MongoClient.connect('mongodb://localhost/sibexplorer_dev', function(error, db) {
-		if (error) console.log(error);
+		if (error) console.info(error);
 		db.createCollection("occurrences_es", function(err, collection) {
 			c.query('SELECT * FROM occurrence_record_denormalized order by id limit 100000 offset 600000')
 				.on('result', function(result) {
 					result.on('row', function(row) {
-						var pointFiveCell = null;
-						var pointTwoCell = null;
-						if(row.latitude !== null) {
-							pointFiveCell = toPointFiveCellId(row.latitude, row.longitude);
-							pointTwoCell = toPointTwoCellId(row.latitude, row.longitude);
-						}
 						var locationCellId = toBoundingBoxCell(row.cell_id);
 						var locationCentiCellId = toBoundingBoxCentiCell(row.cell_id, row.centi_cell_id);
-						var locationPointFiveCellId = toBoundingBoxPointFiveCell(row.cell_id, pointFiveCell);
-						var locationPointTwoCellId = toBoundingBoxPointTwoCell(row.cell_id, pointTwoCell);
+						var locationPointFiveCellId = toBoundingBoxPointFiveCell(row.cell_id, row.pointfive_cell_id);
+						var locationPointTwoCellId = toBoundingBoxPointTwoCell(row.cell_id, row.pointtwo_cell_id);
 
-						var document = {id:row.id, canonical:row.canonical, location: {lat: row.latitude, lon: row.longitude}, cell_id: row.cell_id, centi_cell_id: row.centi_cell_id, pointfive_cell_id: pointFiveCell, pointtwo_cell_id: pointTwoCell, mod360_cell_id: row.mod360_cell_id, location_cell: locationCellId, location_centi_cell: locationCentiCellId, location_pointfive_cell: locationPointFiveCellId, location_pointtwo_cell: locationPointTwoCellId, data_provider_id: row.data_provider_id, data_provider_name: row.data_provider_name, data_resource_id: row.data_resource_id, data_resource_name: row.data_resource_name, rights: row.rights, institution_code_id: row.institution_code_id, institution_code: row.institution_code, collection_code_id: row.collection_code_id, collection_code: row.collection_code, catalogue_number_id: row.catalogue_number_id, catalogue_number: row.catalogue_number, citation: row.citation, created: row.created, modified: row.modified, kingdom_concept_id: row.kingdom_concept_id, phylum_concept_id: row.phylum_concept_id,class_concept_id: row.class_concept_id, order_concept_id: row.order_concept_id, family_concept_id: row.family_concept_id, genus_concept_id: row.genus_concept_id, species_concept_id: row.species_concept_id, iso_country_code: row.iso_country_code, iso_department_code: row.iso_department_code, year: row.year, month: row.month, occurrence_date: row.occurrence_date, altitude_metres: row.altitude_metres, depth_centimetres: row.depth_centimetres, kingdom: row.kingdom, phylum: row.phylum, taxonClass: row.class, order_rank: row.order_rank, family: row.family, genus: row.genus, species: row.species, country_name: row.country_name, department_name: row.department_name, basis_of_record_id: row.basis_of_record_id, basis_of_record_name: row.basis_of_record_name, basis_of_record_name_spanish: row.basis_of_record_name_spanish};
+						var document = {id:row.id, canonical:row.canonical, location: {lat: row.latitude, lon: row.longitude}, cell_id: row.cell_id, centi_cell_id: row.centi_cell_id, pointfive_cell_id: row.pointfive_cell_id, pointtwo_cell_id: row.pointtwo_cell_id, mod360_cell_id: row.mod360_cell_id, location_cell: locationCellId, location_centi_cell: locationCentiCellId, location_pointfive_cell: locationPointFiveCellId, location_pointtwo_cell: locationPointTwoCellId, data_provider_id: row.data_provider_id, data_provider_name: row.data_provider_name, data_resource_id: row.data_resource_id, data_resource_name: row.data_resource_name, rights: row.rights, institution_code_id: row.institution_code_id, institution_code: row.institution_code, collection_code_id: row.collection_code_id, collection_code: row.collection_code, catalogue_number_id: row.catalogue_number_id, catalogue_number: row.catalogue_number, citation: row.citation, created: row.created, modified: row.modified, kingdom_concept_id: row.kingdom_concept_id, phylum_concept_id: row.phylum_concept_id,class_concept_id: row.class_concept_id, order_concept_id: row.order_concept_id, family_concept_id: row.family_concept_id, genus_concept_id: row.genus_concept_id, species_concept_id: row.species_concept_id, iso_country_code: row.iso_country_code, iso_department_code: row.iso_department_code, year: row.year, month: row.month, occurrence_date: row.occurrence_date, altitude_metres: row.altitude_metres, depth_centimetres: row.depth_centimetres, kingdom: row.kingdom, phylum: row.phylum, taxonClass: row.class, order_rank: row.order_rank, family: row.family, genus: row.genus, species: row.species, country_name: row.country_name, department_name: row.department_name, basis_of_record_id: row.basis_of_record_id, basis_of_record_name: row.basis_of_record_name, basis_of_record_name_spanish: row.basis_of_record_name_spanish};
 						collection.insert(document, function(err, records) {
 							if (err) throw err;
 						});
 						//var occurrenceES = new OccurrenceES({id:row.id, canonical:row.canonical, location: {lat: row.latitude, lon: row.longitude}, data_provider_id: row.data_provider_id, data_provider_name: row.data_provider_name, data_resource_id: row.data_resource_id, data_resource_name: row.data_resource_name, rights: row.rights, institution_code_id: row.institution_code_id, institution_code: row.institution_code, collection_code_id: row.collection_code_id, collection_code: row.collection_code, catalogue_number_id: row.catalogue_number_id, catalogue_number: row.catalogue_number, citation: row.citation, created: row.created, modified: row.modified, kingdom_concept_id: row.kingdom_concept_id, class_concept_id: row.class_concept_id, order_concept_id: row.order_concept_id, family_concept_id: row.family_concept_id, genus_concept_id: row.genus_concept_id, species_concept_id: row.species_concept_id, iso_country_code: row.iso_country_code, iso_department_code: row.iso_department_code, year: row.year, month: row.month, occurrence_date: row.occurrence_date, altitude_metres: row.altitude_metres, depth_centimetres: row.depth_centimetres, kingdom: row.kingdom, phylum: row.phylum, class: row.class, order_rank: row.order_rank, family: row.family, genus: row.genus, species: row.species});
 						//occurrenceES.save();
-						//console.log('Result row: ' + inspect(row));
+						//console.info('Result row: ' + inspect(row));
 					})
 					.on('error', function(err) {
-						logger.log('Result error: ' + inspect(err));
+						logger.info('Result error: ' + inspect(err));
 					})
 					.on('end', function(info) {
-						logger.log('Result finished successfully');
+						logger.info('Result finished successfully');
 					});
 				})
 				.on('end', function() {
-					logger.log('Done with all results');
+					logger.info('Done with all results');
 				});
 		});
 	});*/
@@ -284,41 +278,35 @@ exports.convertFromMysqlToMongoDB = function(req, res) {
 	});*/
 
 	/*MongoClient.connect('mongodb://localhost/sibexplorer_dev', function(error, db) {
-		if (error) console.log(error);
+		if (error) console.info(error);
 		db.createCollection("geooccurrences_es", function(err, collection) {
 			c.query('SELECT * FROM geo_occurrence_record_denormalized order by id')
 				.on('result', function(result) {
 					result.on('row', function(row) {
-						var pointFiveCell = null;
-						var pointTwoCell = null;
-						if(row.latitude !== null) {
-							pointFiveCell = toPointFiveCellId(row.latitude, row.longitude);
-							pointTwoCell = toPointTwoCellId(row.latitude, row.longitude);
-						}
 						var locationCellId = toBoundingBoxCell(row.cell_id);
 						var locationCentiCellId = toBoundingBoxCentiCell(row.cell_id, row.centi_cell_id);
-						var locationPointFiveCellId = toBoundingBoxPointFiveCell(row.cell_id, pointFiveCell);
-						var locationPointTwoCellId = toBoundingBoxPointTwoCell(row.cell_id, pointTwoCell);
-						var document = {id:row.id, canonical:row.canonical, num_occurrences:row.num_occurrences, location: {lat:row.latitude, lon:row.longitude}, cell_id: row.cell_id, centi_cell_id: row.centi_cell_id, pointfive_cell_id: pointFiveCell, pointtwo_cell_id: pointTwoCell, mod360_cell_id: row.mod360_cell_id, location_cell: locationCellId, location_centi_cell: locationCentiCellId, location_pointfive_cell: locationPointFiveCellId, location_pointtwo_cell: locationPointTwoCellId, data_provider_id:row.data_provider_id, data_provider_name:row.data_provider_name, data_resource_id:row.data_resource_id, data_resource_name:row.data_resource_name, rights:row.rights, institution_code_id:row.institution_code_id, institution_code:row.institution_code, collection_code_id:row.collection_code_id, collection_code:row.collection_code, catalogue_number_id:row.catalogue_number_id, catalogue_number:row.catalogue_number, citation:row.citation, created:row.created, modified:row.modified, kingdom_concept_id:row.kingdom_concept_id, phylum_concept_id:row.phylum_concept_id, class_concept_id:row.class_concept_id, order_concept_id:row.order_concept_id, family_concept_id:row.family_concept_id, genus_concept_id:row.genus_concept_id, species_concept_id:row.species_concept_id, iso_country_code:row.iso_country_code, iso_department_code:row.iso_department_code, year:row.year, month:row.month, occurrence_date:row.occurrence_date, altitude_metres:row.altitude_metres, depth_centimetres:row.depth_centimetres, country_name: row.country_name, department_name: row.department_name};
+						var locationPointFiveCellId = toBoundingBoxPointFiveCell(row.cell_id, row.pointfive_cell_id);
+						var locationPointTwoCellId = toBoundingBoxPointTwoCell(row.cell_id, row.pointtwo_cell_id);
+						var document = {id:row.id, canonical:row.canonical, num_occurrences:row.num_occurrences, location: {lat:row.latitude, lon:row.longitude}, cell_id: row.cell_id, centi_cell_id: row.centi_cell_id, pointfive_cell_id: row.pointfive_cell_id, pointtwo_cell_id: row.pointtwo_cell_id, mod360_cell_id: row.mod360_cell_id, location_cell: locationCellId, location_centi_cell: locationCentiCellId, location_pointfive_cell: locationPointFiveCellId, location_pointtwo_cell: locationPointTwoCellId, data_provider_id:row.data_provider_id, data_provider_name:row.data_provider_name, data_resource_id:row.data_resource_id, data_resource_name:row.data_resource_name, rights:row.rights, institution_code_id:row.institution_code_id, institution_code:row.institution_code, collection_code_id:row.collection_code_id, collection_code:row.collection_code, catalogue_number_id:row.catalogue_number_id, catalogue_number:row.catalogue_number, citation:row.citation, created:row.created, modified:row.modified, kingdom_concept_id:row.kingdom_concept_id, phylum_concept_id:row.phylum_concept_id, class_concept_id:row.class_concept_id, order_concept_id:row.order_concept_id, family_concept_id:row.family_concept_id, genus_concept_id:row.genus_concept_id, species_concept_id:row.species_concept_id, iso_country_code:row.iso_country_code, iso_department_code:row.iso_department_code, year:row.year, month:row.month, occurrence_date:row.occurrence_date, altitude_metres:row.altitude_metres, depth_centimetres:row.depth_centimetres, country_name: row.country_name, department_name: row.department_name};
 						collection.insert(document, function(err, records) {
 							if (err) throw err;
 						});
 					})
 					.on('error', function(err) {
-						console.log('Result error: ' + inspect(err));
+						console.info('Result error: ' + inspect(err));
 					})
 					.on('end', function(info) {
-						console.log('Result finished successfully');
+						console.info('Result finished successfully');
 					});
 				})
 				.on('end', function() {
-					console.log('Done with all results');
+					console.info('Done with all results');
 				});
 		});
 	});*/
 
 	/*MongoClient.connect('mongodb://localhost/sibexplorer_dev', function(error, db) {
-		if (error) console.log(error);
+		if (error) console.info(error);
 		db.createCollection("cell_density", function(err, collection) {
 			c.query('SELECT * FROM cell_density order by type')
 				.on('result', function(result) {
@@ -327,23 +315,75 @@ exports.convertFromMysqlToMongoDB = function(req, res) {
 						var document = {type: row.type, entity_id: row.entity_id, cell_id: row.cell_id, location_cell: locationCellId, count: row.count};
 						collection.insert(document, function(err, records) {
 							if (err) throw err;
-						})
+						});
 					})
 					.on('error', function(err) {
-						console.log('Result error: ' + inspect(err));
+						console.info('Result error: ' + inspect(err));
 					})
 					.on('end', function(info) {
-						console.log('Result finished successfully');
+						console.info('Result finished successfully');
 					});
 				})
 				.on('end', function() {
-					console.log('Done with all results');
+					console.info('Done with all results');
 				});
 		});
 	});*/
 
 	/*MongoClient.connect('mongodb://localhost/sibexplorer_dev', function(error, db) {
-		if (error) console.log(error);
+		if (error) console.info(error);
+		db.createCollection("pointfive_cell_density", function(err, collection) {
+			c.query('SELECT * FROM pointfive_cell_density order by type')
+				.on('result', function(result) {
+					result.on('row', function(row) {
+						var locationCellId = toBoundingBoxCell(row.cell_id);
+						var locationPointFiveCellId = toBoundingBoxPointFiveCell(row.cell_id, row.pointfive_cell_id);
+						var document = {type: row.type, entity_id: row.entity_id, cell_id: row.cell_id, pointfive_cell_id: row.pointfive_cell_id, location_cell: locationCellId, location_pointfive_cell: locationPointFiveCellId, count: row.count};
+						collection.insert(document, function(err, records) {
+							if (err) throw err;
+						});
+					})
+					.on('error', function(err) {
+						console.info('Result error: ' + inspect(err));
+					})
+					.on('end', function(info) {
+						console.info('Result finished successfully');
+					});
+				})
+				.on('end', function() {
+					console.info('Done with all results');
+				});
+		});
+	});*/
+
+	/*MongoClient.connect('mongodb://localhost/sibexplorer_dev', function(error, db) {
+		if (error) console.info(error);
+		db.createCollection("pointtwo_cell_density", function(err, collection) {
+			c.query('SELECT * FROM pointtwo_cell_density order by type')
+				.on('result', function(result) {
+					result.on('row', function(row) {
+						var locationCellId = toBoundingBoxCell(row.cell_id);
+						var locationPointTwoCellId = toBoundingBoxPointTwoCell(row.cell_id, row.pointtwo_cell_id);
+						var document = {type: row.type, entity_id: row.entity_id, cell_id: row.cell_id, pointtwo_cell_id: row.pointtwo_cell_id, location_cell: locationCellId, location_pointtwo_cell: locationPointTwoCellId, count: row.count};
+						collection.insert(document, function(err, records) {
+							if (err) throw err;
+						});
+					})
+					.on('error', function(err) {
+						console.info('Result error: ' + inspect(err));
+					})
+					.on('end', function(info) {
+						console.info('Result finished successfully');
+					});
+				})
+				.on('end', function() {
+					console.info('Done with all results');
+				});
+		});
+	});*/
+
+	/*MongoClient.connect('mongodb://localhost/sibexplorer_dev', function(error, db) {
+		if (error) console.info(error);
 		db.createCollection("centi_cell_density", function(err, collection) {
 			c.query('SELECT * FROM centi_cell_density order by type')
 				.on('result', function(result) {
@@ -353,17 +393,17 @@ exports.convertFromMysqlToMongoDB = function(req, res) {
 						var document = {type: row.type, entity_id: row.entity_id, cell_id: row.cell_id, centi_cell_id: row.centi_cell_id, location_cell: locationCellId, location_centi_cell: locationCentiCellId, count: row.count};
 						collection.insert(document, function(err, records) {
 							if (err) throw err;
-						})
+						});
 					})
 					.on('error', function(err) {
-						console.log('Result error: ' + inspect(err));
+						console.info('Result error: ' + inspect(err));
 					})
 					.on('end', function(info) {
-						console.log('Result finished successfully');
+						console.info('Result finished successfully');
 					});
 				})
 				.on('end', function() {
-					console.log('Done with all results');
+					console.info('Done with all results');
 				});
 		});
 	});*/
@@ -475,7 +515,7 @@ exports.updatemongodb = function(req, res) {
 		mongoose.disconnect()
 	})*/
 
-	dbWrapper.initConnection()
+	dbWrapper.initConnection();
 	// Generate occurrences data
 	/*dbWrapper.convertOccurrences(function(result) {
 		console.log(result)
@@ -519,166 +559,166 @@ exports.updatemongodb = function(req, res) {
 	})*/
 	// Generate total occurrences stats
 	dbWrapper.getCountAllOccurrences(function(rows) {
-		var generalIndicator = new GeneralIndicator({name: "Total occurrences", value: rows[0].total_occurrences})
-		generalIndicator.save()
-		console.log(rows)
-	})
+		var generalIndicator = new GeneralIndicator({name: "Total occurrences", value: rows[0].total_occurrences});
+		generalIndicator.save();
+		console.info(rows);
+	});
 	// Generate total georeferenced occurrences stats
 	dbWrapper.getCountAllGeoreferencedOccurrences(function(rows) {
-		var generalIndicator = new GeneralIndicator({name: "Total georeferenced occurrences", value: rows[0].total_occurrences})
-		generalIndicator.save()
-		console.log(rows)
-	})
+		var generalIndicator = new GeneralIndicator({name: "Total georeferenced occurrences", value: rows[0].total_occurrences});
+		generalIndicator.save();
+		console.info(rows);
+	});
 	// Generate canonical groups data
 	dbWrapper.getCanonicalNameGroups(function(rows) {
 		for (var i = 0; i < rows.length; i++) {
-			var canonicalGroup = new CanonicalGroup({canonical: rows[i].canonical, occurrences: rows[i].Occurrences})
-			canonicalGroup.save()
+			var canonicalGroup = new CanonicalGroup({canonical: rows[i].canonical, occurrences: rows[i].Occurrences});
+			canonicalGroup.save();
 		}
-	})
+	});
 	// Generate kingdom groups data
 	dbWrapper.getKingdomNameGroups(function(rows) {
 		for (var i = 0; i < rows.length; i++) {
-			var kingdomGroup = new KingdomGroup({kingdom: rows[i].kingdom, occurrences: rows[i].occurrences})
-			kingdomGroup.save()
+			var kingdomGroup = new KingdomGroup({kingdom: rows[i].kingdom, occurrences: rows[i].occurrences});
+			kingdomGroup.save();
 		}
-	})
+	});
 	// Generate phylum groups data
 	dbWrapper.getPhylumNameGroups(function(rows) {
 		for (var i = 0; i < rows.length; i++) {
-			var phylumGroup = new PhylumGroup({phylum: rows[i].phylum, occurrences: rows[i].occurrences})
-			phylumGroup.save()
+			var phylumGroup = new PhylumGroup({phylum: rows[i].phylum, occurrences: rows[i].occurrences});
+			phylumGroup.save();
 		}
-	})
+	});
 	// Generate class groups data
 	dbWrapper.getClassNameGroups(function(rows) {
 		for (var i = 0; i < rows.length; i++) {
-			var classGroup = new ClassGroup({nameClass: rows[i].nameClass, occurrences: rows[i].occurrences})
-			classGroup.save()
+			var classGroup = new ClassGroup({nameClass: rows[i].nameClass, occurrences: rows[i].occurrences});
+			classGroup.save();
 		}
-	})
+	});
 	// Generate order_rank groups data
 	dbWrapper.getOrderRankNameGroups(function(rows) {
 		for (var i = 0; i < rows.length; i++) {
-			var orderRankGroup = new OrderRankGroup({order_rank: rows[i].order_rank, occurrences: rows[i].occurrences})
-			orderRankGroup.save()
+			var orderRankGroup = new OrderRankGroup({order_rank: rows[i].order_rank, occurrences: rows[i].occurrences});
+			orderRankGroup.save();
 		}
-	})
+	});
 	// Generate family groups data
 	dbWrapper.getFamilyNameGroups(function(rows) {
 		for (var i = 0; i < rows.length; i++) {
-			var familyGroup = new FamilyGroup({family: rows[i].family, occurrences: rows[i].occurrences})
-			familyGroup.save()
+			var familyGroup = new FamilyGroup({family: rows[i].family, occurrences: rows[i].occurrences});
+			familyGroup.save();
 		}
-	})
+	});
 	// Generate Genus groups data
 	dbWrapper.getGenusNameGroups(function(rows) {
 		for (var i = 0; i < rows.length; i++) {
-			var genusGroup = new GenusGroup({genus: rows[i].genus, occurrences: rows[i].occurrences})
-			genusGroup.save()
+			var genusGroup = new GenusGroup({genus: rows[i].genus, occurrences: rows[i].occurrences});
+			genusGroup.save();
 		}
-	})
+	});
 	// Generate species groups data
 	dbWrapper.getSpeciesNameGroups(function(rows) {
 		for (var i = 0; i < rows.length; i++) {
-			var speciesGroup = new SpeciesGroup({species: rows[i].species, occurrences: rows[i].occurrences})
-			speciesGroup.save()
+			var speciesGroup = new SpeciesGroup({species: rows[i].species, occurrences: rows[i].occurrences});
+			speciesGroup.save();
 		}
-	})
+	});
 	// Generate country occurrences groups data
 	dbWrapper.getCountryNameGroups(function(rows) {
 		for (var i = 0; i < rows.length; i++) {
-			var countriesGroup = new CountriesGroup({countryName: rows[i].countryName, isoCountryCode: rows[i].iso_country_code, occurrences: rows[i].occurrences})
-			countriesGroup.save()
+			var countriesGroup = new CountriesGroup({countryName: rows[i].countryName, isoCountryCode: rows[i].iso_country_code, occurrences: rows[i].occurrences});
+			countriesGroup.save();
 		}
-	})
+	});
 	// Generate departments occurrences groups data
 	dbWrapper.getDepartmentNameGroups(function(rows) {
 		for (var i = 0; i < rows.length; i++) {
-			var departmentsGroup = new DepartmentsGroup({departmentName: rows[i].departmentName, isoDepartmentCode: rows[i].iso_department_code, occurrences: rows[i].occurrences})
-			departmentsGroup.save()
+			var departmentsGroup = new DepartmentsGroup({departmentName: rows[i].departmentName, isoDepartmentCode: rows[i].iso_department_code, occurrences: rows[i].occurrences});
+			departmentsGroup.save();
 		}
-	})
+	});
 	// Generate providers occurrences groups data
 	dbWrapper.getDataProviderNameGroups(function(rows) {
 		for (var i = 0; i < rows.length; i++) {
-			var dataProvidersGroup = new DataProvidersGroup({providerName: rows[i].providerName, providerID: rows[i].providerID, occurrences: rows[i].occurrences})
-			dataProvidersGroup.save()
+			var dataProvidersGroup = new DataProvidersGroup({providerName: rows[i].providerName, providerID: rows[i].providerID, occurrences: rows[i].occurrences});
+			dataProvidersGroup.save();
 		}
-	})
+	});
 	// Generate resources occurrences groups data
 	dbWrapper.getDataResourceNameGroups(function(rows) {
 		for (var i = 0; i < rows.length; i++) {
-			var dataResourcesGroup = new DataResourcesGroup({resourceName: rows[i].resourceName, resourceID: rows[i].resourceID, occurrences: rows[i].occurrences, providerID: rows[i].providerID})
-			dataResourcesGroup.save()
+			var dataResourcesGroup = new DataResourcesGroup({resourceName: rows[i].resourceName, resourceID: rows[i].resourceID, occurrences: rows[i].occurrences, providerID: rows[i].providerID});
+			dataResourcesGroup.save();
 		}
-	})
+	});
 	// Generate institution code groups data
 	dbWrapper.getInstitutionCodeGroups(function(rows) {
 		for (var i = 0; i < rows.length; i++) {
-			var institutionCodeGroup = new InstitutionCodeGroup({institutionCode: rows[i].institutionCode, institutionCodeID: rows[i].institutionCodeID, occurrences: rows[i].occurrences})
-			institutionCodeGroup.save()
+			var institutionCodeGroup = new InstitutionCodeGroup({institutionCode: rows[i].institutionCode, institutionCodeID: rows[i].institutionCodeID, occurrences: rows[i].occurrences});
+			institutionCodeGroup.save();
 		}
-	})
+	});
 	// Generate collection code groups data
 	dbWrapper.getCollectionCodeGroups(function(rows) {
 		for (var i = 0; i < rows.length; i++) {
-			var collectionCodeGroup = new CollectionCodeGroup({collectionCode: rows[i].collectionCode, collectionCodeID: rows[i].collectionCodeID, occurrences: rows[i].occurrences})
-			collectionCodeGroup.save()
+			var collectionCodeGroup = new CollectionCodeGroup({collectionCode: rows[i].collectionCode, collectionCodeID: rows[i].collectionCodeID, occurrences: rows[i].occurrences});
+			collectionCodeGroup.save();
 		}
-	})
+	});
 	// Generate help search data
-	var helpSearchText = new HelpSearchText({subjectName: "canonical", subjectID: 0, text: "<p>Escriba un nombre científico y pulse en Agregar filtro.</p><p>Este filtro devolverá cualquier registro que posea un nombre que concuerde con el identificador dado del organismo, sin importar como está clasificado el organismo.</p>"})
-	helpSearchText.save()
-	helpSearchText = new HelpSearchText({subjectName: "kingdom", subjectID: 100, text: "<p>Escriba un nombre de reino y pulse en Agregar filtro.</p><p>Este filtro devolverá cualquier registro que posea un reino que concuerde con el organismo.</p>"})
-	helpSearchText.save()
-	helpSearchText = new HelpSearchText({subjectName: "phylum", subjectID: 101, text: "<p>Escriba un nombre de filo y pulse en Agregar filtro.</p><p>Este filtro devolverá cualquier registro que posea un filo que concuerde con el organismo.</p>"})
-	helpSearchText.save()
-	helpSearchText = new HelpSearchText({subjectName: "class", subjectID: 102, text: "<p>Escriba un nombre de clase y pulse en Agregar filtro.</p><p>Este filtro devolverá cualquier registro que posea una clase que concuerde con el organismo.</p>"})
-	helpSearchText.save()
-	helpSearchText = new HelpSearchText({subjectName: "order_rank", subjectID: 103, text: "<p>Escriba un nombre de orden y pulse en Agregar filtro.</p><p>Este filtro devolverá cualquier registro que posea un orden que concuerde con el organismo.</p>"})
-	helpSearchText.save()
-	helpSearchText = new HelpSearchText({subjectName: "family", subjectID: 104, text: "<p>Escriba un nombre de familia y pulse en Agregar filtro.</p><p>Este filtro devolverá cualquier registro que posea una familia que concuerde con el organismo.</p>"})
-	helpSearchText.save()
-	helpSearchText = new HelpSearchText({subjectName: "genus", subjectID: 105, text: "<p>Escriba un nombre de género y pulse en Agregar filtro.</p><p>Este filtro devolverá cualquier registro que posea un género que concuerde con el organismo.</p>"})
-	helpSearchText.save()
-	helpSearchText = new HelpSearchText({subjectName: "species", subjectID: 106, text: "<p>Escriba un nombre de especie y pulse en Agregar filtro.</p><p>Este filtro devolverá cualquier registro que posea una especie que concuerde con el organismo.</p>"})
-	helpSearchText.save()
-	helpSearchText = new HelpSearchText({subjectName: "dataproviders", subjectID: 25, text: "<p>Seleccione un publicador de datos de la lista y haga clic en Agregar filtro.</p><p>Este filtro retornará registros de los publicadores especificados.</p>"})
-	helpSearchText.save()
-	helpSearchText = new HelpSearchText({subjectName: "dataresources", subjectID: 24, text: "<p>Seleccione un recurso de datos de la lista y haga clic en Agregar filtro.</p><p>Este filtro retornará registros de los recursos especificados.</p>"})
-	helpSearchText.save()
-	helpSearchText = new HelpSearchText({subjectName: "countries", subjectID: 5, text: "<p>Seleccione un país de la lista y dar clic en Agregar filtro para filtrar su búsqueda a uno o más paises.</p><p>Este filtro retornará registros del país identificado, sin importar si poseen coordenadas; pero note que al agregar un filtro de coordenadas (Bounding box, Latitud o Longitud) limitará los resultados a registros georreferenciados.</p>"})
-	helpSearchText.save()
-	helpSearchText = new HelpSearchText({subjectName: "departments", subjectID: 38, text: "<p>Seleccione un departamento de la lista y oprima en Agregar filtro para acotar su búsqueda a uno o más departamentos.</p><p>Este filtro retorna los registros que pertenecen al departamento, independientemente de si estos tienen o no coordenadas; tenga en cuenta que al adicionar un filtro de coordenadas (Condición de selección, Latitud o Longitud) limitará los resultados a los registros georeferenciados.</p>"})
-	helpSearchText.save()
-	helpSearchText = new HelpSearchText({subjectName: "coordinatesState", subjectID: 28, text: '<p></p><p>Seleccione "incluye coordenadas" para filtrar aquellos registros que no están georreferenciados; alternativamente, seleccione "no incluye coordenadas" para excluir registros georreferenciados. Para ver todos los registros, no utilize este filtro.</p>'})
-	helpSearchText.save()
-	helpSearchText = new HelpSearchText({subjectName: "latitude", subjectID: 1, text: '<p></p><p>Ingrese una latitud en formato decimal (ej. -1.1) y escoja entre "es", "mayor que" y "menor que". Este filtro retornará solo registros georreferenciados que concuerdan con la selección.</p>'})
-	helpSearchText.save()
-	helpSearchText = new HelpSearchText({subjectName: "longitude", subjectID: 2, text: '<p></p><p>Ingrese una longitud en formato decimal (ej. -73.2) y escoja entre "es", "mayor que" y "menor que". Este filtro retornará solo registros georreferenciados que concuerdan con la selección.</p>'})
-	helpSearchText.save()
-	helpSearchText = new HelpSearchText({subjectName: "altitude", subjectID: 34, text: '<p>Ingrese una altitud en metros y escoja entre "es", "mayor que" y "menor que". Este filtro retornará solo registros con un valor de altitud que coincida con la selección. Este filtro sólo es compatible con los valores de números enteros.</p><p>Por favor tenga en cuenta que los valores de altitud subyacentes se supone que se indican en metros por las fuentes originales de datos, pero que no todas las fuentes de datos se ajustan a esta norma todavía. La conversión automática sólo puede ser suministrada en los casos donde se conoce la unidad de medida. Si planea cualquier análisis basado en los valores de altitud, se recomienda ponerse en contacto directamente con los propietarios de los datos relacionados y verificar las unidades de medida utilizadas en sus conjuntos de datos.</p>'})
-	helpSearchText.save()
-	helpSearchText = new HelpSearchText({subjectName: "deep", subjectID: 35, text: '<p>Ingrese una profundidad en metros y escoja entre "es", "mayor que" y "menor que". Este filtro retornará solo registros con un valor de profundidad que coincida con la selección. Este filtro admite valores decimales a 2 decimales.</p><p>Por favor tenga en cuenta que los valores de profundidad subyacentes se supone que se indican en metros por las fuentes originales de datos, pero que no todas las fuentes de datos se ajustan a esta norma todavía. La conversión automática sólo puede ser suministrada en los casos donde se conoce la unidad de medida. Si planea cualquier análisis basado en los valores de profundidad, se recomienda ponerse en contacto directamente con los propietarios de los datos relacionados y verificar las unidades de medida utilizadas en sus conjuntos de datos.</p>'})
-	helpSearchText.save()
-	helpSearchText = new HelpSearchText({subjectName: "occurrenceDate", subjectID: 4, text: '<p></p><p>Seleccione un rango de fecha y haga clic en Agregar filtro.</p>'})
-	helpSearchText.save()
-	helpSearchText = new HelpSearchText({subjectName: "occurrenceYearRange", subjectID: 33, text: '<p></p><p>Seleccione un rango de años y haga clic en Agregar filtro..</p>'})
-	helpSearchText.save()
-	helpSearchText = new HelpSearchText({subjectName: "occurrenceYear", subjectID: 21, text: '<p></p><p>Ingrese un año y haga clic en Agregar filtro. Este filtro retornará registros del año (o años) que concuerdan con la selección.</p>'})
-	helpSearchText.save()
-	helpSearchText = new HelpSearchText({subjectName: "occurrenceMonth", subjectID: 22, text: '<p></p><p>Seleccione un mes de la lista y haga clic en Agregar filtro. Este filtro retornará registros del mes especificado, sin importar el año.</p>'})
-	helpSearchText.save()
-	helpSearchText = new HelpSearchText({subjectName: "institutionCode", subjectID: 12, text: '<p></p><p>Ingrese un código de institución y "es". Este filtro retornará registros con el código de institución dado.</p>'})
-	helpSearchText.save()
-	helpSearchText = new HelpSearchText({subjectName: "collectionCode", subjectID: 13, text: '<p></p><p>Ingrese un código de colección y "es". El filtro retornará registros con el código de colección.</p>'})
-	helpSearchText.save()
-	helpSearchText = new HelpSearchText({subjectName: "catalogNumber", subjectID: 14, text: '<p></p><p>Ingrese un número de catálogo y pulse en Agregar filtro. Este filtro retornará registros con el número de catálogo especificado.</p>'})
-	helpSearchText.save()
-	dbWrapper.closeConnection()
-	res.send("MongoDB Database updated")
-}
+	var helpSearchText = new HelpSearchText({subjectName: "canonical", subjectID: 0, text: "<p>Escriba un nombre científico y pulse en Agregar filtro.</p><p>Este filtro devolverá cualquier registro que posea un nombre que concuerde con el identificador dado del organismo, sin importar como está clasificado el organismo.</p>"});
+	helpSearchText.save();
+	helpSearchText = new HelpSearchText({subjectName: "kingdom", subjectID: 100, text: "<p>Escriba un nombre de reino y pulse en Agregar filtro.</p><p>Este filtro devolverá cualquier registro que posea un reino que concuerde con el organismo.</p>"});
+	helpSearchText.save();
+	helpSearchText = new HelpSearchText({subjectName: "phylum", subjectID: 101, text: "<p>Escriba un nombre de filo y pulse en Agregar filtro.</p><p>Este filtro devolverá cualquier registro que posea un filo que concuerde con el organismo.</p>"});
+	helpSearchText.save();
+	helpSearchText = new HelpSearchText({subjectName: "class", subjectID: 102, text: "<p>Escriba un nombre de clase y pulse en Agregar filtro.</p><p>Este filtro devolverá cualquier registro que posea una clase que concuerde con el organismo.</p>"});
+	helpSearchText.save();
+	helpSearchText = new HelpSearchText({subjectName: "order_rank", subjectID: 103, text: "<p>Escriba un nombre de orden y pulse en Agregar filtro.</p><p>Este filtro devolverá cualquier registro que posea un orden que concuerde con el organismo.</p>"});
+	helpSearchText.save();
+	helpSearchText = new HelpSearchText({subjectName: "family", subjectID: 104, text: "<p>Escriba un nombre de familia y pulse en Agregar filtro.</p><p>Este filtro devolverá cualquier registro que posea una familia que concuerde con el organismo.</p>"});
+	helpSearchText.save();
+	helpSearchText = new HelpSearchText({subjectName: "genus", subjectID: 105, text: "<p>Escriba un nombre de género y pulse en Agregar filtro.</p><p>Este filtro devolverá cualquier registro que posea un género que concuerde con el organismo.</p>"});
+	helpSearchText.save();
+	helpSearchText = new HelpSearchText({subjectName: "species", subjectID: 106, text: "<p>Escriba un nombre de especie y pulse en Agregar filtro.</p><p>Este filtro devolverá cualquier registro que posea una especie que concuerde con el organismo.</p>"});
+	helpSearchText.save();
+	helpSearchText = new HelpSearchText({subjectName: "dataproviders", subjectID: 25, text: "<p>Seleccione un publicador de datos de la lista y haga clic en Agregar filtro.</p><p>Este filtro retornará registros de los publicadores especificados.</p>"});
+	helpSearchText.save();
+	helpSearchText = new HelpSearchText({subjectName: "dataresources", subjectID: 24, text: "<p>Seleccione un recurso de datos de la lista y haga clic en Agregar filtro.</p><p>Este filtro retornará registros de los recursos especificados.</p>"});
+	helpSearchText.save();
+	helpSearchText = new HelpSearchText({subjectName: "countries", subjectID: 5, text: "<p>Seleccione un país de la lista y dar clic en Agregar filtro para filtrar su búsqueda a uno o más paises.</p><p>Este filtro retornará registros del país identificado, sin importar si poseen coordenadas; pero note que al agregar un filtro de coordenadas (Bounding box, Latitud o Longitud) limitará los resultados a registros georreferenciados.</p>"});
+	helpSearchText.save();
+	helpSearchText = new HelpSearchText({subjectName: "departments", subjectID: 38, text: "<p>Seleccione un departamento de la lista y oprima en Agregar filtro para acotar su búsqueda a uno o más departamentos.</p><p>Este filtro retorna los registros que pertenecen al departamento, independientemente de si estos tienen o no coordenadas; tenga en cuenta que al adicionar un filtro de coordenadas (Condición de selección, Latitud o Longitud) limitará los resultados a los registros georeferenciados.</p>"});
+	helpSearchText.save();
+	helpSearchText = new HelpSearchText({subjectName: "coordinatesState", subjectID: 28, text: '<p></p><p>Seleccione "incluye coordenadas" para filtrar aquellos registros que no están georreferenciados; alternativamente, seleccione "no incluye coordenadas" para excluir registros georreferenciados. Para ver todos los registros, no utilize este filtro.</p>'});
+	helpSearchText.save();
+	helpSearchText = new HelpSearchText({subjectName: "latitude", subjectID: 1, text: '<p></p><p>Ingrese una latitud en formato decimal (ej. -1.1) y escoja entre "es", "mayor que" y "menor que". Este filtro retornará solo registros georreferenciados que concuerdan con la selección.</p>'});
+	helpSearchText.save();
+	helpSearchText = new HelpSearchText({subjectName: "longitude", subjectID: 2, text: '<p></p><p>Ingrese una longitud en formato decimal (ej. -73.2) y escoja entre "es", "mayor que" y "menor que". Este filtro retornará solo registros georreferenciados que concuerdan con la selección.</p>'});
+	helpSearchText.save();
+	helpSearchText = new HelpSearchText({subjectName: "altitude", subjectID: 34, text: '<p>Ingrese una altitud en metros y escoja entre "es", "mayor que" y "menor que". Este filtro retornará solo registros con un valor de altitud que coincida con la selección. Este filtro sólo es compatible con los valores de números enteros.</p><p>Por favor tenga en cuenta que los valores de altitud subyacentes se supone que se indican en metros por las fuentes originales de datos, pero que no todas las fuentes de datos se ajustan a esta norma todavía. La conversión automática sólo puede ser suministrada en los casos donde se conoce la unidad de medida. Si planea cualquier análisis basado en los valores de altitud, se recomienda ponerse en contacto directamente con los propietarios de los datos relacionados y verificar las unidades de medida utilizadas en sus conjuntos de datos.</p>'});
+	helpSearchText.save();
+	helpSearchText = new HelpSearchText({subjectName: "deep", subjectID: 35, text: '<p>Ingrese una profundidad en metros y escoja entre "es", "mayor que" y "menor que". Este filtro retornará solo registros con un valor de profundidad que coincida con la selección. Este filtro admite valores decimales a 2 decimales.</p><p>Por favor tenga en cuenta que los valores de profundidad subyacentes se supone que se indican en metros por las fuentes originales de datos, pero que no todas las fuentes de datos se ajustan a esta norma todavía. La conversión automática sólo puede ser suministrada en los casos donde se conoce la unidad de medida. Si planea cualquier análisis basado en los valores de profundidad, se recomienda ponerse en contacto directamente con los propietarios de los datos relacionados y verificar las unidades de medida utilizadas en sus conjuntos de datos.</p>'});
+	helpSearchText.save();
+	helpSearchText = new HelpSearchText({subjectName: "occurrenceDate", subjectID: 4, text: '<p></p><p>Seleccione un rango de fecha y haga clic en Agregar filtro.</p>'});
+	helpSearchText.save();
+	helpSearchText = new HelpSearchText({subjectName: "occurrenceYearRange", subjectID: 33, text: '<p></p><p>Seleccione un rango de años y haga clic en Agregar filtro..</p>'});
+	helpSearchText.save();
+	helpSearchText = new HelpSearchText({subjectName: "occurrenceYear", subjectID: 21, text: '<p></p><p>Ingrese un año y haga clic en Agregar filtro. Este filtro retornará registros del año (o años) que concuerdan con la selección.</p>'});
+	helpSearchText.save();
+	helpSearchText = new HelpSearchText({subjectName: "occurrenceMonth", subjectID: 22, text: '<p></p><p>Seleccione un mes de la lista y haga clic en Agregar filtro. Este filtro retornará registros del mes especificado, sin importar el año.</p>'});
+	helpSearchText.save();
+	helpSearchText = new HelpSearchText({subjectName: "institutionCode", subjectID: 12, text: '<p></p><p>Ingrese un código de institución y "es". Este filtro retornará registros con el código de institución dado.</p>'});
+	helpSearchText.save();
+	helpSearchText = new HelpSearchText({subjectName: "collectionCode", subjectID: 13, text: '<p></p><p>Ingrese un código de colección y "es". El filtro retornará registros con el código de colección.</p>'});
+	helpSearchText.save();
+	helpSearchText = new HelpSearchText({subjectName: "catalogNumber", subjectID: 14, text: '<p></p><p>Ingrese un número de catálogo y pulse en Agregar filtro. Este filtro retornará registros con el número de catálogo especificado.</p>'});
+	helpSearchText.save();
+	dbWrapper.closeConnection();
+	res.send("MongoDB Database updated");
+};
 
 exports.index = function(req, res) {
 	/*async.parallel(
@@ -735,4 +775,4 @@ exports.index = function(req, res) {
 	//});
 	//dbWrapper.closeConnection();
 	//res.render('index', { title: 'Explorador - Portal de datos SIB Colombia' });
-}
+};
