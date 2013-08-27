@@ -43,6 +43,9 @@ requirejs.config({
         "bootstrap": {
             deps: ["jquery"]
         },
+        "customScrollBar": {
+            deps: ["jquery"]
+        },
         "underscore": {
             exports: "_"
         }

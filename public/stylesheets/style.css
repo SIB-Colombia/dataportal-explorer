@@ -860,6 +860,64 @@ h4#currentSearch {
   padding: 3px 0;
   width: 60%;
 }
+#resumeDetail {
+  background-color: rgba(255,255,255,0.2);
+  position: absolute;
+  left: 340px;
+  top: 0px;
+  right: -350px;
+}
+#resumeDetail #topResumeDetail {
+  background-color: rgba(255,255,255,0.8);
+  padding-top: 5px;
+  padding-right: 5px;
+  padding-left: 5px;
+  height: 30px;
+}
+#resumeDetail #topResumeDetail a.close-icon-filter-help {
+  float: right;
+}
+#resumeDetail #topResumeDetail a.close-icon-filter-help:hover {
+  cursor: pointer;
+}
+#resumeDetail #resumeInfoDetailContainer {
+  background-color: rgba(255,255,255,0.8);
+  height: 500px;
+  overflow: hidden;
+}
+#resumeDetail #resumeInfoDetailContainer .contentResumeInfoDetailContainer {
+  padding-left: 5px;
+}
+#resumeDetail #resumeInfoDetailContainer .contentResumeInfoDetailContainer .resume {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+#resumeDetail #resumeInfoDetailContainer .contentResumeInfoDetailContainer .resume h2 {
+  font-family: 'Open sans', Helvetica, Verdana, Helvetica, Arial;
+  font-weight: bold;
+  font-size: 12px;
+}
+#resumeDetail #resumeInfoDetailContainer .contentResumeInfoDetailContainer .resume dl {
+  font-family: 'Open sans', Helvetica, Verdana, Helvetica, Arial;
+  font-size: 12px;
+  margin: 0 0 5px 20px;
+  padding: 0;
+}
+#resumeDetail #resumeInfoDetailContainer .contentResumeInfoDetailContainer .resume dl.preview-data {
+  float: left;
+  width: 100%;
+}
+#resumeDetail #resumeInfoDetailContainer .contentResumeInfoDetailContainer .resume dl.preview-data dt {
+  clear: both;
+  float: left;
+  font-weight: bold;
+  width: 80%;
+}
+#resumeDetail #resumeInfoDetailContainer .contentResumeInfoDetailContainer .resume dl.preview-data dd {
+  float: right;
+  margin: 0;
+  width: 20%;
+}
 .leaflet-popup-tip {
   margin-top: -12px !important;
 }

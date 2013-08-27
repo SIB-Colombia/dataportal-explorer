@@ -65,6 +65,84 @@ block filterWindow
 							dd.altitude(data-bind="text: altitude_metres")
 							dt Profundidad
 							dd.deep(data-bind="text: depth_centimetres")
+		#resumeDetail(style="display: none")
+			#topResumeDetail
+				a.close-icon-filter-help(data-bind="click: disableResumeDetail")
+					img(src="/images/icons/close2.png")
+			#resumeInfoDetailContainer.unselectable
+				.contentResumeInfoDetailContainer
+					.resume(data-bind="foreach: resumesInfo")
+						h2(data-bind="visible: canonicals().length > 0") Publicadores:
+						dl.preview-data(data-bind="foreach: providers")
+							dt
+								ul
+									li
+										a(target="_blank", data-bind="attr: { href: url }")
+											span(data-bind="text: name")
+							dd.cuenta(data-bind="text: count")
+						h2(data-bind="visible: canonicals().length > 0") Conjuntos de datos:
+						dl.preview-data(data-bind="foreach: resources")
+							dt
+								ul
+									li
+										a(target="_blank", data-bind="attr: { href: url }")
+											span(data-bind="text: name")
+							dd.cuenta(data-bind="text: count")
+						h2(data-bind="visible: canonicals().length > 0") Reino:
+						dl.preview-data(data-bind="foreach: kingdoms")
+							dt
+								ul
+									li
+										a(target="_blank", data-bind="attr: { href: url }")
+											span(data-bind="text: name")
+							dd.cuenta(data-bind="text: count")
+						h2(data-bind="visible: canonicals().length > 0") Filo:
+						dl.preview-data(data-bind="foreach: phylums")
+							dt
+								ul
+									li
+										a(target="_blank", data-bind="attr: { href: url }")
+											span(data-bind="text: name")
+							dd.cuenta(data-bind="text: count")
+						h2(data-bind="visible: canonicals().length > 0") Clase:
+						dl.preview-data(data-bind="foreach: taxonClasses")
+							dt
+								ul
+									li
+										a(target="_blank", data-bind="attr: { href: url }")
+											span(data-bind="text: name")
+							dd.cuenta(data-bind="text: count")
+						h2(data-bind="visible: canonicals().length > 0") Orden:
+						dl.preview-data(data-bind="foreach: order_ranks")
+							dt
+								ul
+									li
+										a(target="_blank", data-bind="attr: { href: url }")
+											span(data-bind="text: name")
+							dd.cuenta(data-bind="text: count")
+						h2(data-bind="visible: canonicals().length > 0") Familia:
+						dl.preview-data(data-bind="foreach: families")
+							dt
+								ul
+									li
+										a(target="_blank", data-bind="attr: { href: url }")
+											span(data-bind="text: name")
+							dd.cuenta(data-bind="text: count")
+						h2(data-bind="visible: canonicals().length > 0") Género:
+						dl.preview-data(data-bind="foreach: genuses")
+							dt
+								ul
+									li
+										a(target="_blank", data-bind="attr: { href: url }")
+											span(data-bind="text: name")
+							dd.cuenta(data-bind="text: count")
+						h2(data-bind="visible: canonicals().length > 0") Nombre científico:
+						dl.preview-data(data-bind="foreach: canonicals")
+							dt
+								ul
+									li
+										span(data-bind="text: name")
+							dd.cuenta(data-bind="text: count")
 		#filtersContainerHelp(data-bind="visible: isObjectNameHelpSelected", style="display: none")
 			#topFiltersContainerHelp
 				a.close-icon-filter-help(data-bind="click: disableFilterHelp")

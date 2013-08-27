@@ -34,3 +34,24 @@ exports.getDistributionStatsOneDegree = function(req, res) {
 		res.jsonp(JSON.parse(data));
 	});
 };
+
+exports.getDistributionStatsPointOneDegree = function(req, res) {
+	occurrences = occurrencesES.getStatsOccurrencesPointOneDegree(req.params._cellid, req.params._centicellid);
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
+	});
+};
+
+exports.getDistributionStatsPointFiveDegree = function(req, res) {
+	occurrences = occurrencesES.getStatsOccurrencesPointFiveDegree(req.params._cellid, req.params._pointfivecellid);
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
+	});
+};
+
+exports.getDistributionStatsPointTwoDegree = function(req, res) {
+	occurrences = occurrencesES.getStatsOccurrencesPointTwoDegree(req.params._cellid, req.params._pointtwocellid);
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
+	});
+};

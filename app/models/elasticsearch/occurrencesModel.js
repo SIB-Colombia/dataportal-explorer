@@ -148,9 +148,21 @@ exports.getStatsOccurrencesOneDegree = function(cellid) {
 					"size" : 10
 				}
 			},
+			"kingdom_concept_id": {
+				"terms": {
+					"field": "kingdom_concept_id",
+					"size" : 10
+				}
+			},
 			"phylum": {
 				"terms": {
 					"field": "phylum.untouched",
+					"size" : 10
+				}
+			},
+			"phylum_concept_id": {
+				"terms": {
+					"field": "phylum_concept_id",
 					"size" : 10
 				}
 			},
@@ -160,9 +172,21 @@ exports.getStatsOccurrencesOneDegree = function(cellid) {
 					"size" : 10
 				}
 			},
+			"class_concept_id": {
+				"terms": {
+					"field": "class_concept_id",
+					"size" : 10
+				}
+			},
 			"order_rank": {
 				"terms": {
 					"field": "order_rank.untouched",
+					"size" : 10
+				}
+			},
+			"order_concept_id": {
+				"terms": {
+					"field": "order_concept_id",
 					"size" : 10
 				}
 			},
@@ -172,9 +196,21 @@ exports.getStatsOccurrencesOneDegree = function(cellid) {
 					"size" : 10
 				}
 			},
+			"family_concept_id": {
+				"terms": {
+					"field": "family_concept_id",
+					"size" : 10
+				}
+			},
 			"genus": {
 				"terms": {
 					"field": "genus.untouched",
+					"size" : 10
+				}
+			},
+			"genus_concept_id": {
+				"terms": {
+					"field": "genus_concept_id",
 					"size" : 10
 				}
 			},
@@ -184,9 +220,21 @@ exports.getStatsOccurrencesOneDegree = function(cellid) {
 					"size" : 10
 				}
 			},
+			"data_provider_id": {
+				"terms": {
+					"field": "data_provider_id",
+					"size" : 10
+				}
+			},
 			"data_resource_name": {
 				"terms": {
 					"field": "data_resource_name.untouched",
+					"size" : 10
+				}
+			},
+			"data_resource_id": {
+				"terms": {
+					"field": "data_resource_id",
 					"size" : 10
 				}
 			}
@@ -196,6 +244,399 @@ exports.getStatsOccurrencesOneDegree = function(cellid) {
 	qryObj["query"]["filtered"]["filter"]["term"] = {};
 	qryObj["query"]["filtered"]["filter"]["term"]["cell_id"] = cellid;
 
+
+	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
+	return mySearchCall;
+};
+
+// Returns cell stats for point one degree
+exports.getStatsOccurrencesPointOneDegree = function(cellid, centicellid) {
+	qryObj = {
+		"fields": ["id"],
+		"size": 0,
+		"query": {
+			"filtered" : {
+				"query" : {
+					"match_all" : {}
+				}
+			}
+		},
+		"facets": {
+			"canonical": {
+				"terms": {
+					"field": "canonical.untouched",
+					"size" : 10
+				}
+			},
+			"kingdom": {
+				"terms": {
+					"field": "kingdom.untouched",
+					"size" : 10
+				}
+			},
+			"kingdom_concept_id": {
+				"terms": {
+					"field": "kingdom_concept_id",
+					"size" : 10
+				}
+			},
+			"phylum": {
+				"terms": {
+					"field": "phylum.untouched",
+					"size" : 10
+				}
+			},
+			"phylum_concept_id": {
+				"terms": {
+					"field": "phylum_concept_id",
+					"size" : 10
+				}
+			},
+			"taxonClass": {
+				"terms": {
+					"field": "taxonClass.untouched",
+					"size" : 10
+				}
+			},
+			"class_concept_id": {
+				"terms": {
+					"field": "class_concept_id",
+					"size" : 10
+				}
+			},
+			"order_rank": {
+				"terms": {
+					"field": "order_rank.untouched",
+					"size" : 10
+				}
+			},
+			"order_concept_id": {
+				"terms": {
+					"field": "order_concept_id",
+					"size" : 10
+				}
+			},
+			"family": {
+				"terms": {
+					"field": "family.untouched",
+					"size" : 10
+				}
+			},
+			"family_concept_id": {
+				"terms": {
+					"field": "family_concept_id",
+					"size" : 10
+				}
+			},
+			"genus": {
+				"terms": {
+					"field": "genus.untouched",
+					"size" : 10
+				}
+			},
+			"genus_concept_id": {
+				"terms": {
+					"field": "genus_concept_id",
+					"size" : 10
+				}
+			},
+			"data_provider_name": {
+				"terms": {
+					"field": "data_provider_name.untouched",
+					"size" : 10
+				}
+			},
+			"data_provider_id": {
+				"terms": {
+					"field": "data_provider_id",
+					"size" : 10
+				}
+			},
+			"data_resource_name": {
+				"terms": {
+					"field": "data_resource_name.untouched",
+					"size" : 10
+				}
+			},
+			"data_resource_id": {
+				"terms": {
+					"field": "data_resource_id",
+					"size" : 10
+				}
+			}
+		}
+	};
+	qryObj["query"]["filtered"]["filter"] = {};
+	qryObj["query"]["filtered"]["filter"]["and"] = [];
+	qryObj["query"]["filtered"]["filter"]["and"][0] = {};
+	qryObj["query"]["filtered"]["filter"]["and"][0]["term"] = {};
+	qryObj["query"]["filtered"]["filter"]["and"][0]["term"]["cell_id"] = cellid;
+
+	qryObj["query"]["filtered"]["filter"]["and"][1] = {};
+	qryObj["query"]["filtered"]["filter"]["and"][1]["term"] = {};
+	qryObj["query"]["filtered"]["filter"]["and"][1]["term"]["centi_cell_id"] = centicellid;
+
+	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
+	return mySearchCall;
+};
+
+// Returns cell stats for point five degree
+exports.getStatsOccurrencesPointFiveDegree = function(cellid, pointfivecellid) {
+	qryObj = {
+		"fields": ["id"],
+		"size": 0,
+		"query": {
+			"filtered" : {
+				"query" : {
+					"match_all" : {}
+				}
+			}
+		},
+		"facets": {
+			"canonical": {
+				"terms": {
+					"field": "canonical.untouched",
+					"size" : 10
+				}
+			},
+			"kingdom": {
+				"terms": {
+					"field": "kingdom.untouched",
+					"size" : 10
+				}
+			},
+			"kingdom_concept_id": {
+				"terms": {
+					"field": "kingdom_concept_id",
+					"size" : 10
+				}
+			},
+			"phylum": {
+				"terms": {
+					"field": "phylum.untouched",
+					"size" : 10
+				}
+			},
+			"phylum_concept_id": {
+				"terms": {
+					"field": "phylum_concept_id",
+					"size" : 10
+				}
+			},
+			"taxonClass": {
+				"terms": {
+					"field": "taxonClass.untouched",
+					"size" : 10
+				}
+			},
+			"class_concept_id": {
+				"terms": {
+					"field": "class_concept_id",
+					"size" : 10
+				}
+			},
+			"order_rank": {
+				"terms": {
+					"field": "order_rank.untouched",
+					"size" : 10
+				}
+			},
+			"order_concept_id": {
+				"terms": {
+					"field": "order_concept_id",
+					"size" : 10
+				}
+			},
+			"family": {
+				"terms": {
+					"field": "family.untouched",
+					"size" : 10
+				}
+			},
+			"family_concept_id": {
+				"terms": {
+					"field": "family_concept_id",
+					"size" : 10
+				}
+			},
+			"genus": {
+				"terms": {
+					"field": "genus.untouched",
+					"size" : 10
+				}
+			},
+			"genus_concept_id": {
+				"terms": {
+					"field": "genus_concept_id",
+					"size" : 10
+				}
+			},
+			"data_provider_name": {
+				"terms": {
+					"field": "data_provider_name.untouched",
+					"size" : 10
+				}
+			},
+			"data_provider_id": {
+				"terms": {
+					"field": "data_provider_id",
+					"size" : 10
+				}
+			},
+			"data_resource_name": {
+				"terms": {
+					"field": "data_resource_name.untouched",
+					"size" : 10
+				}
+			},
+			"data_resource_id": {
+				"terms": {
+					"field": "data_resource_id",
+					"size" : 10
+				}
+			}
+		}
+	};
+	qryObj["query"]["filtered"]["filter"] = {};
+	qryObj["query"]["filtered"]["filter"]["and"] = [];
+	qryObj["query"]["filtered"]["filter"]["and"][0] = {};
+	qryObj["query"]["filtered"]["filter"]["and"][0]["term"] = {};
+	qryObj["query"]["filtered"]["filter"]["and"][0]["term"]["cell_id"] = cellid;
+
+	qryObj["query"]["filtered"]["filter"]["and"][1] = {};
+	qryObj["query"]["filtered"]["filter"]["and"][1]["term"] = {};
+	qryObj["query"]["filtered"]["filter"]["and"][1]["term"]["pointfive_cell_id"] = pointfivecellid;
+
+	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
+	return mySearchCall;
+};
+
+// Returns cell stats for point two degree
+exports.getStatsOccurrencesPointTwoDegree = function(cellid, pointtwocellid) {
+	qryObj = {
+		"fields": ["id"],
+		"size": 0,
+		"query": {
+			"filtered" : {
+				"query" : {
+					"match_all" : {}
+				}
+			}
+		},
+		"facets": {
+			"canonical": {
+				"terms": {
+					"field": "canonical.untouched",
+					"size" : 10
+				}
+			},
+			"kingdom": {
+				"terms": {
+					"field": "kingdom.untouched",
+					"size" : 10
+				}
+			},
+			"kingdom_concept_id": {
+				"terms": {
+					"field": "kingdom_concept_id",
+					"size" : 10
+				}
+			},
+			"phylum": {
+				"terms": {
+					"field": "phylum.untouched",
+					"size" : 10
+				}
+			},
+			"phylum_concept_id": {
+				"terms": {
+					"field": "phylum_concept_id",
+					"size" : 10
+				}
+			},
+			"taxonClass": {
+				"terms": {
+					"field": "taxonClass.untouched",
+					"size" : 10
+				}
+			},
+			"class_concept_id": {
+				"terms": {
+					"field": "class_concept_id",
+					"size" : 10
+				}
+			},
+			"order_rank": {
+				"terms": {
+					"field": "order_rank.untouched",
+					"size" : 10
+				}
+			},
+			"order_concept_id": {
+				"terms": {
+					"field": "order_concept_id",
+					"size" : 10
+				}
+			},
+			"family": {
+				"terms": {
+					"field": "family.untouched",
+					"size" : 10
+				}
+			},
+			"family_concept_id": {
+				"terms": {
+					"field": "family_concept_id",
+					"size" : 10
+				}
+			},
+			"genus": {
+				"terms": {
+					"field": "genus.untouched",
+					"size" : 10
+				}
+			},
+			"genus_concept_id": {
+				"terms": {
+					"field": "genus_concept_id",
+					"size" : 10
+				}
+			},
+			"data_provider_name": {
+				"terms": {
+					"field": "data_provider_name.untouched",
+					"size" : 10
+				}
+			},
+			"data_provider_id": {
+				"terms": {
+					"field": "data_provider_id",
+					"size" : 10
+				}
+			},
+			"data_resource_name": {
+				"terms": {
+					"field": "data_resource_name.untouched",
+					"size" : 10
+				}
+			},
+			"data_resource_id": {
+				"terms": {
+					"field": "data_resource_id",
+					"size" : 10
+				}
+			}
+		}
+	};
+	qryObj["query"]["filtered"]["filter"] = {};
+	qryObj["query"]["filtered"]["filter"]["and"] = [];
+	qryObj["query"]["filtered"]["filter"]["and"][0] = {};
+	qryObj["query"]["filtered"]["filter"]["and"][0]["term"] = {};
+	qryObj["query"]["filtered"]["filter"]["and"][0]["term"]["cell_id"] = cellid;
+
+	qryObj["query"]["filtered"]["filter"]["and"][1] = {};
+	qryObj["query"]["filtered"]["filter"]["and"][1]["term"] = {};
+	qryObj["query"]["filtered"]["filter"]["and"][1]["term"]["pointtwo_cell_id"] = pointtwocellid;
 
 	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
 	return mySearchCall;
