@@ -30,7 +30,7 @@ var serverCluster = require("../../../lib/servercluster");
 var markercluster = require("../../../lib/markercluster");
 
 var inspect = require('util').inspect;
-var Client = require('mariasql');
+//var Client = require('mariasql');
 
 var occurrencesES = require("../../models/elasticsearch/occurrencesModel");
 
