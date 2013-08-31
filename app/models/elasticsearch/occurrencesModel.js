@@ -1,5 +1,124 @@
 var moment = require('moment');
 
+exports.getOccurrencesResumeScientificName = function(name) {
+	qryObj = {
+		"fields": [],
+		"facets": {
+			"canonical": {
+				"terms": {
+					"field": "canonical.untouched",
+					"size" : 10
+				}
+			},
+			"kingdom": {
+				"terms": {
+					"field": "kingdom.untouched",
+					"size" : 10
+				}
+			},
+			"kingdom_concept_id": {
+				"terms": {
+					"field": "kingdom_concept_id",
+					"size" : 10
+				}
+			},
+			"phylum": {
+				"terms": {
+					"field": "phylum.untouched",
+					"size" : 10
+				}
+			},
+			"phylum_concept_id": {
+				"terms": {
+					"field": "phylum_concept_id",
+					"size" : 10
+				}
+			},
+			"taxonClass": {
+				"terms": {
+					"field": "taxonClass.untouched",
+					"size" : 10
+				}
+			},
+			"class_concept_id": {
+				"terms": {
+					"field": "class_concept_id",
+					"size" : 10
+				}
+			},
+			"order_rank": {
+				"terms": {
+					"field": "order_rank.untouched",
+					"size" : 10
+				}
+			},
+			"order_concept_id": {
+				"terms": {
+					"field": "order_concept_id",
+					"size" : 10
+				}
+			},
+			"family": {
+				"terms": {
+					"field": "family.untouched",
+					"size" : 10
+				}
+			},
+			"family_concept_id": {
+				"terms": {
+					"field": "family_concept_id",
+					"size" : 10
+				}
+			},
+			"genus": {
+				"terms": {
+					"field": "genus.untouched",
+					"size" : 10
+				}
+			},
+			"genus_concept_id": {
+				"terms": {
+					"field": "genus_concept_id",
+					"size" : 10
+				}
+			},
+			"data_provider_name": {
+				"terms": {
+					"field": "data_provider_name.untouched",
+					"size" : 10
+				}
+			},
+			"data_provider_id": {
+				"terms": {
+					"field": "data_provider_id",
+					"size" : 10
+				}
+			},
+			"data_resource_name": {
+				"terms": {
+					"field": "data_resource_name.untouched",
+					"size" : 10
+				}
+			},
+			"data_resource_id": {
+				"terms": {
+					"field": "data_resource_id",
+					"size" : 10
+				}
+			}
+		}
+	};
+
+	qryObj["query"] = {};
+	qryObj["query"]["filtered"] = {};
+	qryObj["query"]["filtered"]["query"] = {};
+	qryObj["query"]["filtered"]["query"]["wildcard"] = {};
+	qryObj["query"]["filtered"]["query"]["wildcard"]["canonical.exactWords"] = "*"+ name +"*";
+
+	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
+	return mySearchCall;
+};
+
 exports.getOccurrences = function() {
 	qryObj = {
 		"fields": ["id", "canonical", "data_resource_name", "institution_code", "collection_code", "catalogue_number", "occurrence_date", "modified", "location", "country_name", "department_name", "basis_of_record_name_spanish"],

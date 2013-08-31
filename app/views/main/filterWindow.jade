@@ -246,6 +246,71 @@ block filterWindow
 						a(href='#', title='Adicionar este filtro', data-bind='click: $parent.addDepartmentIDFromHelp')
 							img(alt='Quitar este filtro', src='/images/icons/redplus.png')
 						em(data-bind="text: occurrences")
+				.resume(data-bind="foreach: resumesInfoFilter")
+					h2(data-bind="visible: providers().length > 0") Publicadores:
+					dl.preview-data(data-bind="foreach: providers")
+						dt
+							ul
+								li
+									a(target="_blank", data-bind="attr: { href: url }")
+										span(data-bind="text: name")
+						dd.cuenta(data-bind="text: count")
+					h2(data-bind="visible: resources().length > 0") Conjuntos de datos:
+					dl.preview-data(data-bind="foreach: resources")
+						dt
+							ul
+								li
+									a(target="_blank", data-bind="attr: { href: url }")
+										span(data-bind="text: name")
+						dd.cuenta(data-bind="text: count")
+					h2(data-bind="visible: kingdoms().length > 0") Reino:
+					dl.preview-data(data-bind="foreach: kingdoms")
+						dt
+							ul
+								li
+									a(target="_blank", data-bind="attr: { href: url }")
+										span(data-bind="text: name")
+						dd.cuenta(data-bind="text: count")
+					h2(data-bind="visible: phylums().length > 0") Filo:
+					dl.preview-data(data-bind="foreach: phylums")
+						dt
+							ul
+								li
+									a(target="_blank", data-bind="attr: { href: url }")
+										span(data-bind="text: name")
+						dd.cuenta(data-bind="text: count")
+					h2(data-bind="visible: taxonClasses().length > 0") Clase:
+					dl.preview-data(data-bind="foreach: taxonClasses")
+						dt
+							ul
+								li
+									a(target="_blank", data-bind="attr: { href: url }")
+										span(data-bind="text: name")
+						dd.cuenta(data-bind="text: count")
+					h2(data-bind="visible: order_ranks().length > 0") Orden:
+					dl.preview-data(data-bind="foreach: order_ranks")
+						dt
+							ul
+								li
+									a(target="_blank", data-bind="attr: { href: url }")
+										span(data-bind="text: name")
+						dd.cuenta(data-bind="text: count")
+					h2(data-bind="visible: families().length > 0") Familia:
+					dl.preview-data(data-bind="foreach: families")
+						dt
+							ul
+								li
+									a(target="_blank", data-bind="attr: { href: url }")
+										span(data-bind="text: name")
+						dd.cuenta(data-bind="text: count")
+					h2(data-bind="visible: genuses().length > 0") Género:
+					dl.preview-data(data-bind="foreach: genuses")
+						dt
+							ul
+								li
+									a(target="_blank", data-bind="attr: { href: url }")
+										span(data-bind="text: name")
+						dd.cuenta(data-bind="text: count")
 		#filtersContainer
 			#explorerFiltersAndEditor
 				#filterEditorPane

@@ -545,7 +545,7 @@ h4#currentSearch {
   overflow: hidden;
 }
 #filtersContainerHelp #contentFiltersContainerHelp .mCSB_container {
-  background-color: #afafaf;
+  background-color: #fff;
 }
 #filtersContainerHelp #contentFiltersContainerHelp .contentFiltersContainerHelpContainer {
   padding-left: 5px;
@@ -594,6 +594,36 @@ h4#currentSearch {
 #filtersContainerHelp #contentFiltersContainerHelp table tr:hover td {
   background-color: #683c0c;
   color: #fff;
+}
+#filtersContainerHelp #contentFiltersContainerHelp .resume {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+#filtersContainerHelp #contentFiltersContainerHelp .resume h2 {
+  font-family: 'Open sans', Helvetica, Verdana, Helvetica, Arial;
+  font-weight: bold;
+  font-size: 12px;
+}
+#filtersContainerHelp #contentFiltersContainerHelp .resume dl {
+  font-family: 'Open sans', Helvetica, Verdana, Helvetica, Arial;
+  font-size: 12px;
+  margin: 0 0 5px 20px;
+  padding: 0;
+}
+#filtersContainerHelp #contentFiltersContainerHelp .resume dl.preview-data {
+  float: left;
+  width: 100%;
+}
+#filtersContainerHelp #contentFiltersContainerHelp .resume dl.preview-data dt {
+  clear: both;
+  float: left;
+  font-weight: normal;
+  width: 80%;
+}
+#filtersContainerHelp #contentFiltersContainerHelp .resume dl.preview-data dd {
+  float: right;
+  margin: 0;
+  width: 20%;
 }
 #filtersContainer {
   display: block;
