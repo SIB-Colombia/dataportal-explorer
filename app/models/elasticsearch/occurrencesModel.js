@@ -1,6 +1,6 @@
 var moment = require('moment');
 
-exports.getOccurrencesResumeScientificName = function(name) {
+exports.getOccurrencesResumeName = function(name, type) {
 	qryObj = {
 		"fields": [],
 		"facets": {
@@ -82,6 +82,18 @@ exports.getOccurrencesResumeScientificName = function(name) {
 					"size" : 10
 				}
 			},
+			"species": {
+				"terms": {
+					"field": "species.untouched",
+					"size" : 10
+				}
+			},
+			"species_concept_id": {
+				"terms": {
+					"field": "species_concept_id",
+					"size" : 10
+				}
+			},
 			"data_provider_name": {
 				"terms": {
 					"field": "data_provider_name.untouched",
@@ -113,7 +125,27 @@ exports.getOccurrencesResumeScientificName = function(name) {
 	qryObj["query"]["filtered"] = {};
 	qryObj["query"]["filtered"]["query"] = {};
 	qryObj["query"]["filtered"]["query"]["wildcard"] = {};
-	qryObj["query"]["filtered"]["query"]["wildcard"]["canonical.exactWords"] = "*"+ name +"*";
+	if(type == "scientific") {
+		qryObj["query"]["filtered"]["query"]["wildcard"]["canonical.exactWords"] = "*"+ name +"*";
+	} else if(type == "kingdom") {
+		qryObj["query"]["filtered"]["query"]["wildcard"]["kingdom.exactWords"] = "*"+ name +"*";
+	} else if(type == "phylum") {
+		qryObj["query"]["filtered"]["query"]["wildcard"]["phylum.exactWords"] = "*"+ name +"*";
+	} else if(type == "class") {
+		qryObj["query"]["filtered"]["query"]["wildcard"]["taxonClass.exactWords"] = "*"+ name +"*";
+	} else if(type == "order") {
+		qryObj["query"]["filtered"]["query"]["wildcard"]["order_rank.exactWords"] = "*"+ name +"*";
+	} else if(type == "family") {
+		qryObj["query"]["filtered"]["query"]["wildcard"]["family.exactWords"] = "*"+ name +"*";
+	} else if(type == "genus") {
+		qryObj["query"]["filtered"]["query"]["wildcard"]["genus.exactWords"] = "*"+ name +"*";
+	} else if(type == "species") {
+		qryObj["query"]["filtered"]["query"]["wildcard"]["species.exactWords"] = "*"+ name +"*";
+	} else if(type == "providers") {
+		qryObj["query"]["filtered"]["query"]["wildcard"]["data_provider_name.exactWords"] = "*"+ name +"*";
+	} else if(type == "resources") {
+		qryObj["query"]["filtered"]["query"]["wildcard"]["data_resource_name.exactWords"] = "*"+ name +"*";
+	}
 
 	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
 	return mySearchCall;

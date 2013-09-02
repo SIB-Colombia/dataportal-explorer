@@ -22,184 +22,151 @@ var occurrencesES = require("../../models/elasticsearch/occurrencesModel");
 
 // Resume Canonical Name data JSON response
 exports.searchResumeScientificName = function(req, res) {
-	occurrences = occurrencesES.getOccurrencesResumeScientificName("*");
+	occurrences = occurrencesES.getOccurrencesResumeName("*", "scientific");
 	occurrences.exec(function(err, data){
 		res.jsonp(JSON.parse(data));
 	});
 };
 
 exports.searchResumeScientificNameByName = function(req, res) {
-	occurrences = occurrencesES.getOccurrencesResumeScientificName(req.params._name);
+	occurrences = occurrencesES.getOccurrencesResumeName(req.params._name, "scientific");
 	occurrences.exec(function(err, data){
 		res.jsonp(JSON.parse(data));
 	});
 };
-/*exports.searchResumeScientificName = function(req, res) {
-	CanonicalGroup.find().sort('-occurrences').select('canonical occurrences').limit(20).exec(function (err, resume) {
-		if(err)
-			res.send("Error getting resume scientific name data.");
-		res.json(resume);
-	});
-};*/
-
-/*exports.searchResumeScientificNameByName = function(req, res) {
-	CanonicalGroup.find({canonical: new RegExp(req.params._name, "i")}).sort('-occurrences').select('canonical occurrences').limit(20).exec(function (err, resume) {
-		if(err)
-			res.send("Error getting resume scientific name data.");
-		res.json(resume);
-	});
-};*/
 
 // Resume kingdom data JSON response
 exports.searchResumeKingdomName = function(req, res) {
-	KingdomGroup.find().sort('-occurrences').select('kingdom occurrences').limit(20).exec(function (err, resume) {
-		if(err)
-			res.send("Error getting resume kingdom name data.");
-		res.json(resume);
+	occurrences = occurrencesES.getOccurrencesResumeName("*", "kingdom");
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
 	});
 };
 
 exports.searchResumeKingdomNameByName = function(req, res) {
-	KingdomGroup.find({kingdom: new RegExp(req.params._name, "i")}).sort('-occurrences').select('kingdom occurrences').limit(20).exec(function (err, resume) {
-		if(err)
-			res.send("Error getting resume kingdom name data.");
-		res.json(resume);
+	occurrences = occurrencesES.getOccurrencesResumeName(req.params._name, "kingdom");
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
 	});
 };
 
 // Resume phylum data JSON response
 exports.searchResumePhylumName = function(req, res) {
-	PhylumGroup.find().sort('-occurrences').select('phylum occurrences').limit(20).exec(function (err, resume) {
-		if(err)
-			res.send("Error getting resume phylum name data.");
-		res.json(resume);
+	occurrences = occurrencesES.getOccurrencesResumeName("*", "phylum");
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
 	});
 };
 
 exports.searchResumePhylumNameByName = function(req, res) {
-	PhylumGroup.find({phylum: new RegExp(req.params._name, "i")}).sort('-occurrences').select('phylum occurrences').limit(20).exec(function (err, resume) {
-		if(err)
-			res.send("Error getting resume phylum name data.");
-		res.json(resume);
+	occurrences = occurrencesES.getOccurrencesResumeName(req.params._name, "phylum");
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
 	});
 };
 
 // Resume class data JSON response
 exports.searchResumeClassName = function(req, res) {
-	ClassGroup.find().sort('-occurrences').select('nameClass occurrences').limit(20).exec(function (err, resume) {
-		if(err)
-			res.send("Error getting resume class name data.");
-		res.json(resume);
+	occurrences = occurrencesES.getOccurrencesResumeName("*", "class");
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
 	});
 };
 
 exports.searchResumeClassNameByName = function(req, res) {
-	ClassGroup.find({nameClass: new RegExp(req.params._name, "i")}).sort('-occurrences').select('nameClass occurrences').limit(20).exec(function (err, resume) {
-		if(err)
-			res.send("Error getting resume class name data.");
-		res.json(resume);
+	occurrences = occurrencesES.getOccurrencesResumeName(req.params._name, "class");
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
 	});
 };
 
 // Resume order data JSON response
 exports.searchResumeOrderName = function(req, res) {
-	OrderRankGroup.find().sort('-occurrences').select('order_rank occurrences').limit(20).exec(function (err, resume) {
-		if(err)
-			res.send("Error getting resume order rank name data.");
-		res.json(resume);
+	occurrences = occurrencesES.getOccurrencesResumeName("*", "order");
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
 	});
 };
 
 exports.searchResumeOrderNameByName = function(req, res) {
-	OrderRankGroup.find({order_rank: new RegExp(req.params._name, "i")}).sort('-occurrences').select('order_rank occurrences').limit(20).exec(function (err, resume) {
-		if(err)
-			res.send("Error getting resume order rank name data.");
-		res.json(resume);
+	occurrences = occurrencesES.getOccurrencesResumeName(req.params._name, "order");
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
 	});
 };
 
 // Resume family data JSON response
 exports.searchResumeFamilyName = function(req, res) {
-	FamilyGroup.find().sort('-occurrences').select('family occurrences').limit(20).exec(function (err, resume) {
-		if(err)
-			res.send("Error getting resume family name data.");
-		res.json(resume);
+	occurrences = occurrencesES.getOccurrencesResumeName("*", "family");
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
 	});
 };
 
 exports.searchResumeFamilyNameByName = function(req, res) {
-	FamilyGroup.find({family: new RegExp(req.params._name, "i")}).sort('-occurrences').select('family occurrences').limit(20).exec(function (err, resume) {
-		if(err)
-			res.send("Error getting resume family name data.");
-		res.json(resume);
+	occurrences = occurrencesES.getOccurrencesResumeName(req.params._name, "family");
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
 	});
 };
 
 // Resume genus data JSON response
 exports.searchResumeGenusName = function(req, res) {
-	GenusGroup.find().sort('-occurrences').select('genus occurrences').limit(20).exec(function (err, resume) {
-		if(err)
-			res.send("Error getting resume genus name data.");
-		res.json(resume);
+	occurrences = occurrencesES.getOccurrencesResumeName("*", "genus");
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
 	});
 };
 
 exports.searchResumeGenusNameByName = function(req, res) {
-	GenusGroup.find({genus: new RegExp(req.params._name, "i")}).sort('-occurrences').select('genus occurrences').limit(20).exec(function (err, resume) {
-		if(err)
-			res.send("Error getting resume genus name data.");
-		res.json(resume);
+	occurrences = occurrencesES.getOccurrencesResumeName(req.params._name, "genus");
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
 	});
 };
 
 // Resume genus data JSON response
 exports.searchResumeSpeciesName = function(req, res) {
-	SpeciesGroup.find().sort('-occurrences').select('species occurrences').limit(20).exec(function (err, resume) {
-		if(err)
-			res.send("Error getting resume species name data.");
-		res.json(resume);
+	occurrences = occurrencesES.getOccurrencesResumeName("*", "species");
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
 	});
 };
 
 exports.searchResumeSpeciesNameByName = function(req, res) {
-	SpeciesGroup.find({species: new RegExp(req.params._name, "i")}).sort('-occurrences').select('species occurrences').limit(20).exec(function (err, resume) {
-		if(err)
-			res.send("Error getting resume species name data.");
-		res.json(resume);
+	occurrences = occurrencesES.getOccurrencesResumeName(req.params._name, "species");
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
 	});
 };
 
 // Resume data providers data JSON response
 exports.searchResumeDataProviders = function(req, res) {
-	DataProvidersGroup.find().sort('-occurrences').select('providerID providerName occurrences').exec(function (err, resume) {
-		if(err)
-			res.send("Error getting resume data providers data.");
-		res.json(resume);
+	occurrences = occurrencesES.getOccurrencesResumeName("*", "providers");
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
 	});
 };
 
 exports.searchResumeDataProvidersByName = function(req, res) {
-	DataProvidersGroup.find({providerName: new RegExp(req.params._name, "i")}).sort('-occurrences').select('providerID providerName occurrences').exec(function (err, resume) {
-		if(err)
-			res.send("Error getting resume data providers data.");
-		res.json(resume);
+	occurrences = occurrencesES.getOccurrencesResumeName(req.params._name, "providers");
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
 	});
 };
 
 // Resume data resources data JSON response
 exports.searchResumeDataResources = function(req, res) {
-	DataResourcesGroup.find().sort('-occurrences').select('providerID resourceID resourceName occurrences').exec(function (err, resume) {
-		if(err)
-			res.send("Error getting resume data resources data.");
-		res.json(resume);
+	occurrences = occurrencesES.getOccurrencesResumeName("*", "resources");
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
 	});
 };
 
 exports.searchResumeDataResourcesByName = function(req, res) {
-	DataResourcesGroup.find({resourceName: new RegExp(req.params._name, "i")}).sort('-occurrences').select('providerID resourceID resourceName occurrences').exec(function (err, resume) {
-		if(err)
-			res.send("Error getting resume data resources data.");
-		res.json(resume);
+	occurrences = occurrencesES.getOccurrencesResumeName(req.params._name, "resources");
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
 	});
 };
 

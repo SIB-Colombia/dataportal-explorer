@@ -311,6 +311,21 @@ block filterWindow
 									a(target="_blank", data-bind="attr: { href: url }")
 										span(data-bind="text: name")
 						dd.cuenta(data-bind="text: count")
+					h2(data-bind="visible: species().length > 0") Especie:
+					dl.preview-data(data-bind="foreach: species")
+						dt
+							ul
+								li
+									a(target="_blank", data-bind="attr: { href: url }")
+										span(data-bind="text: name")
+						dd.cuenta(data-bind="text: count")
+					h2(data-bind="visible: canonicals().length > 0") Nombre científico:
+					dl.preview-data(data-bind="foreach: canonicals")
+						dt
+							ul
+								li
+									span(data-bind="text: name")
+						dd.cuenta(data-bind="text: count")
 		#filtersContainer
 			#explorerFiltersAndEditor
 				#filterEditorPane

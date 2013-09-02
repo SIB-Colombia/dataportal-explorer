@@ -14,6 +14,7 @@ define(["knockout"], function(ko) {
 		this.order_ranks = data.order_ranks || null;
 		this.families = data.families || null;
 		this.genuses = data.genuses || null;
+		this.species = data.species || null;
 	};
 
 	return resumeInfo;
