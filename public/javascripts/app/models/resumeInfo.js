@@ -15,6 +15,8 @@ define(["knockout"], function(ko) {
 		this.families = data.families || null;
 		this.genuses = data.genuses || null;
 		this.species = data.species || null;
+		this.countries = data.countries || null;
+		this.departments = data.departments || null;
 	};
 
 	return resumeInfo;

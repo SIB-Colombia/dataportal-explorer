@@ -136,6 +136,14 @@ block filterWindow
 										a(target="_blank", data-bind="attr: { href: url }")
 											span(data-bind="text: name")
 							dd.cuenta(data-bind="text: count")
+						h2(data-bind="visible: species().length > 0") Especie:
+						dl.preview-data(data-bind="foreach: species")
+							dt
+								ul
+									li
+										a(target="_blank", data-bind="attr: { href: url }")
+											span(data-bind="text: name")
+							dd.cuenta(data-bind="text: count")
 						h2(data-bind="visible: canonicals().length > 0") Nombre científico:
 						dl.preview-data(data-bind="foreach: canonicals")
 							dt
@@ -257,6 +265,22 @@ block filterWindow
 						dd.cuenta(data-bind="text: count")
 					h2(data-bind="visible: resources().length > 0") Conjuntos de datos:
 					dl.preview-data(data-bind="foreach: resources")
+						dt
+							ul
+								li
+									a(target="_blank", data-bind="attr: { href: url }")
+										span(data-bind="text: name")
+						dd.cuenta(data-bind="text: count")
+					h2(data-bind="visible: countries().length > 0") País:
+					dl.preview-data(data-bind="foreach: countries")
+						dt
+							ul
+								li
+									a(target="_blank", data-bind="attr: { href: url }")
+										span(data-bind="text: name")
+						dd.cuenta(data-bind="text: count")
+					h2(data-bind="visible: departments().length > 0") Departamento:
+					dl.preview-data(data-bind="foreach: departments")
 						dt
 							ul
 								li

@@ -94,6 +94,30 @@ exports.getOccurrencesResumeName = function(name, type) {
 					"size" : 10
 				}
 			},
+			"department_name": {
+				"terms": {
+					"field": "department_name.untouched",
+					"size" : 10
+				}
+			},
+			"iso_department_code": {
+				"terms": {
+					"field": "iso_department_code.untouched",
+					"size" : 10
+				}
+			},
+			"country_name": {
+				"terms": {
+					"field": "country_name.untouched",
+					"size" : 10
+				}
+			},
+			"iso_country_code": {
+				"terms": {
+					"field": "iso_country_code.untouched",
+					"size" : 10
+				}
+			},
 			"data_provider_name": {
 				"terms": {
 					"field": "data_provider_name.untouched",
@@ -117,6 +141,30 @@ exports.getOccurrencesResumeName = function(name, type) {
 					"field": "data_resource_id",
 					"size" : 10
 				}
+			},
+			"institution_code": {
+				"terms": {
+					"field": "institution_code.untouched",
+					"size" : 10
+				}
+			},
+			"institution_code_id": {
+				"terms": {
+					"field": "institution_code_id",
+					"size" : 10
+				}
+			},
+			"collection_code": {
+				"terms": {
+					"field": "collection_code.untouched",
+					"size" : 10
+				}
+			},
+			"collection_code_id": {
+				"terms": {
+					"field": "collection_code_id",
+					"size" : 10
+				}
 			}
 		}
 	};
@@ -126,25 +174,29 @@ exports.getOccurrencesResumeName = function(name, type) {
 	qryObj["query"]["filtered"]["query"] = {};
 	qryObj["query"]["filtered"]["query"]["wildcard"] = {};
 	if(type == "scientific") {
-		qryObj["query"]["filtered"]["query"]["wildcard"]["canonical.exactWords"] = "*"+ name +"*";
+		qryObj["query"]["filtered"]["query"]["wildcard"]["canonical.exactWords"] = "*"+ name.toLowerCase() +"*";
 	} else if(type == "kingdom") {
-		qryObj["query"]["filtered"]["query"]["wildcard"]["kingdom.exactWords"] = "*"+ name +"*";
+		qryObj["query"]["filtered"]["query"]["wildcard"]["kingdom.exactWords"] = "*"+ name.toLowerCase() +"*";
 	} else if(type == "phylum") {
-		qryObj["query"]["filtered"]["query"]["wildcard"]["phylum.exactWords"] = "*"+ name +"*";
+		qryObj["query"]["filtered"]["query"]["wildcard"]["phylum.exactWords"] = "*"+ name.toLowerCase() +"*";
 	} else if(type == "class") {
-		qryObj["query"]["filtered"]["query"]["wildcard"]["taxonClass.exactWords"] = "*"+ name +"*";
+		qryObj["query"]["filtered"]["query"]["wildcard"]["taxonClass.exactWords"] = "*"+ name.toLowerCase() +"*";
 	} else if(type == "order") {
-		qryObj["query"]["filtered"]["query"]["wildcard"]["order_rank.exactWords"] = "*"+ name +"*";
+		qryObj["query"]["filtered"]["query"]["wildcard"]["order_rank.exactWords"] = "*"+ name.toLowerCase() +"*";
 	} else if(type == "family") {
-		qryObj["query"]["filtered"]["query"]["wildcard"]["family.exactWords"] = "*"+ name +"*";
+		qryObj["query"]["filtered"]["query"]["wildcard"]["family.exactWords"] = "*"+ name.toLowerCase() +"*";
 	} else if(type == "genus") {
-		qryObj["query"]["filtered"]["query"]["wildcard"]["genus.exactWords"] = "*"+ name +"*";
+		qryObj["query"]["filtered"]["query"]["wildcard"]["genus.exactWords"] = "*"+ name.toLowerCase() +"*";
 	} else if(type == "species") {
-		qryObj["query"]["filtered"]["query"]["wildcard"]["species.exactWords"] = "*"+ name +"*";
+		qryObj["query"]["filtered"]["query"]["wildcard"]["species.exactWords"] = "*"+ name.toLowerCase() +"*";
 	} else if(type == "providers") {
-		qryObj["query"]["filtered"]["query"]["wildcard"]["data_provider_name.exactWords"] = "*"+ name +"*";
+		qryObj["query"]["filtered"]["query"]["wildcard"]["data_provider_name.exactWords"] = "*"+ name.toLowerCase() +"*";
 	} else if(type == "resources") {
-		qryObj["query"]["filtered"]["query"]["wildcard"]["data_resource_name.exactWords"] = "*"+ name +"*";
+		qryObj["query"]["filtered"]["query"]["wildcard"]["data_resource_name.exactWords"] = "*"+ name.toLowerCase() +"*";
+	} else if(type == "institutionCode") {
+		qryObj["query"]["filtered"]["query"]["wildcard"]["institution_code.exactWords"] = "*"+ name.toLowerCase() +"*";
+	} else if(type == "collectionCode") {
+		qryObj["query"]["filtered"]["query"]["wildcard"]["collection_code.exactWords"] = "*"+ name.toLowerCase() +"*";
 	}
 
 	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
@@ -365,6 +417,18 @@ exports.getStatsOccurrencesOneDegree = function(cellid) {
 					"size" : 10
 				}
 			},
+			"species": {
+				"terms": {
+					"field": "species.untouched",
+					"size" : 10
+				}
+			},
+			"species_concept_id": {
+				"terms": {
+					"field": "species_concept_id",
+					"size" : 10
+				}
+			},
 			"data_provider_name": {
 				"terms": {
 					"field": "data_provider_name.untouched",
@@ -488,6 +552,18 @@ exports.getStatsOccurrencesPointOneDegree = function(cellid, centicellid) {
 			"genus_concept_id": {
 				"terms": {
 					"field": "genus_concept_id",
+					"size" : 10
+				}
+			},
+			"species": {
+				"terms": {
+					"field": "species.untouched",
+					"size" : 10
+				}
+			},
+			"species_concept_id": {
+				"terms": {
+					"field": "species_concept_id",
 					"size" : 10
 				}
 			},
@@ -622,6 +698,18 @@ exports.getStatsOccurrencesPointFiveDegree = function(cellid, pointfivecellid) {
 					"size" : 10
 				}
 			},
+			"species": {
+				"terms": {
+					"field": "species.untouched",
+					"size" : 10
+				}
+			},
+			"species_concept_id": {
+				"terms": {
+					"field": "species_concept_id",
+					"size" : 10
+				}
+			},
 			"data_provider_name": {
 				"terms": {
 					"field": "data_provider_name.untouched",
@@ -750,6 +838,18 @@ exports.getStatsOccurrencesPointTwoDegree = function(cellid, pointtwocellid) {
 			"genus_concept_id": {
 				"terms": {
 					"field": "genus_concept_id",
+					"size" : 10
+				}
+			},
+			"species": {
+				"terms": {
+					"field": "species.untouched",
+					"size" : 10
+				}
+			},
+			"species_concept_id": {
+				"terms": {
+					"field": "species_concept_id",
 					"size" : 10
 				}
 			},

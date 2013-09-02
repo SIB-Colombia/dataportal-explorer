@@ -172,35 +172,31 @@ exports.searchResumeDataResourcesByName = function(req, res) {
 
 // Resume institution codes data JSON response
 exports.searchResumeInstitutionCodes = function(req, res) {
-	InstitutionCodeGroup.find().sort('-occurrences').select('institutionCode institutionCodeID occurrences').limit(20).exec(function (err, resume) {
-		if(err)
-			res.send("Error getting resume institution codes data.");
-		res.json(resume);
+	occurrences = occurrencesES.getOccurrencesResumeName("*", "institutionCode");
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
 	});
 };
 
 exports.searchResumeInstitutionCodesByName = function(req, res) {
-	InstitutionCodeGroup.find({institutionCode: new RegExp(req.params._name, "i")}).sort('-occurrences').select('institutionCode institutionCodeID occurrences').limit(20).exec(function (err, resume) {
-		if(err)
-			res.send("Error getting resume institution codes data.");
-		res.json(resume);
+	occurrences = occurrencesES.getOccurrencesResumeName(req.params._name, "institutionCode");
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
 	});
 };
 
 // Resume collection codes data JSON response
 exports.searchResumeCollectionCodes = function(req, res) {
-	CollectionCodeGroup.find().sort('-occurrences').select('collectionCode collectionCodeID occurrences').limit(20).exec(function (err, resume) {
-		if(err)
-			res.send("Error getting resume collection codes data.");
-		res.json(resume);
+	occurrences = occurrencesES.getOccurrencesResumeName("*", "collectionCode");
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
 	});
 };
 
 exports.searchResumeCollectionCodesByName = function(req, res) {
-	CollectionCodeGroup.find({collectionCode: new RegExp(req.params._name, "i")}).sort('-occurrences').select('collectionCode collectionCodeID occurrences').limit(20).exec(function (err, resume) {
-		if(err)
-			res.send("Error getting resume collection codes data.");
-		res.json(resume);
+	occurrences = occurrencesES.getOccurrencesResumeName(req.params._name, "collectionCode");
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
 	});
 };
 
