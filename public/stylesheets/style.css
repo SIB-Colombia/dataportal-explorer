@@ -454,8 +454,12 @@ fieldset {
   position: absolute;
   left: 50px;
   top: 200px;
-  z-index: 10000;
+  z-index: 1;
   width: 340px;
+/* Fix display block of select2 javascript plugin */
+}
+#filterZone .select2-container {
+  display: block;
 }
 #filterZone .filterBox {
   margin-right: 0px;

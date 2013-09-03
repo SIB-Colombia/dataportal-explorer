@@ -22,7 +22,8 @@ requirejs.config({
         'customScrollBar': 'custom-scrollbar/jquery.mCustomScrollbar.min',
         'customScrollBarMouseWheel': 'custom-scrollbar/jquery.mousewheel.min',
         'kendo': 'kendo/kendo.web.min',
-        'kendoGrid': 'kendo/kendo.grid.min'
+        'kendoGrid': 'kendo/kendo.grid.min',
+        'select2': 'select2/select2.min'
     },
     shim: {
         'Leaflet': {
@@ -40,14 +41,17 @@ requirejs.config({
         'LeafletControlFullScreen': {
             deps: ['Leaflet']
         },
-        "bootstrap": {
-            deps: ["jquery"]
+        'bootstrap': {
+            deps: ['jquery']
         },
-        "customScrollBar": {
-            deps: ["jquery"]
+        'customScrollBar': {
+            deps: ['jquery']
         },
-        "underscore": {
-            exports: "_"
+        'underscore': {
+            exports: '_'
+        },
+        'select2': {
+            deps: ['jquery']
         }
     }
 });

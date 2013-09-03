@@ -202,44 +202,39 @@ exports.searchResumeCollectionCodesByName = function(req, res) {
 
 // Resume countries data JSON response
 exports.searchResumeCountries = function(req, res) {
-	CountriesGroup.find().sort('-occurrences').select('countryName isoCountryCode occurrences').limit(20).exec(function (err, resume) {
-		if(err)
-			res.send("Error getting resume countries data.");
-		res.json(resume);
+	occurrences = occurrencesES.getOccurrencesResumeName("*", "country");
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
 	});
 };
 
 exports.searchResumeCountriesByName = function(req, res) {
-	CountriesGroup.find({isoCountryCode: new RegExp(req.params._name, "i")}).sort('-occurrences').select('countryName isoCountryCode occurrences').limit(20).exec(function (err, resume) {
-		if(err)
-			res.send("Error getting resume countries data.");
-		res.json(resume);
+	occurrences = occurrencesES.getOccurrencesResumeName(req.params._name, "country");
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
 	});
 };
 
 // Resume departments data JSON response
 exports.searchResumeDepartments = function(req, res) {
-	DepartmentsGroup.find().sort('-occurrences').select('departmentName isoDepartmentCode occurrences').limit(20).exec(function (err, resume) {
-		if(err)
-			res.send("Error getting resume departments data.");
-		res.json(resume);
+	occurrences = occurrencesES.getOccurrencesResumeName("*", "department");
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
 	});
 };
 
 exports.searchResumeDepartmentsByName = function(req, res) {
-	DepartmentsGroup.find({isoDepartmentCode: new RegExp(req.params._name, "i")}).sort('-occurrences').select('departmentName isoDepartmentCode occurrences').limit(20).exec(function (err, resume) {
-		if(err)
-			res.send("Error getting resume departments data.");
-		res.json(resume);
+	occurrences = occurrencesES.getOccurrencesResumeName(req.params._name, "department");
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
 	});
 };
 
 // Search help text JSON response
 exports.searchSearchHelpTextByName = function(req, res) {
-	HelpSearchText.findOne({subjectID: req.params._name}, 'subjectID subjectName text', function (err, resume) {
-		if(err)
-			res.send("Error getting search text data.");
-		res.json(resume);
+	occurrences = occurrencesES.getSearchText(req.params._name);
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
 	});
 };
 

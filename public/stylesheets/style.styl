@@ -345,8 +345,11 @@ fieldset
 	position absolute
 	left 50px
 	top 200px
-	z-index 10000
+	z-index 1
 	width 340px
+	/* Fix display block of select2 javascript plugin */
+	.select2-container
+		display block
 	.filterBox
 		margin-right 0px
 		margin-top 0px

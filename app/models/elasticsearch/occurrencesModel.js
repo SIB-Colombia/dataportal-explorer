@@ -197,9 +197,29 @@ exports.getOccurrencesResumeName = function(name, type) {
 		qryObj["query"]["filtered"]["query"]["wildcard"]["institution_code.exactWords"] = "*"+ name.toLowerCase() +"*";
 	} else if(type == "collectionCode") {
 		qryObj["query"]["filtered"]["query"]["wildcard"]["collection_code.exactWords"] = "*"+ name.toLowerCase() +"*";
+	} else if(type == "country") {
+		qryObj["query"]["filtered"]["query"]["wildcard"]["iso_country_code.exactWords"] = "*"+ name.toLowerCase() +"*";
+	} else if(type == "department") {
+		qryObj["query"]["filtered"]["query"]["wildcard"]["iso_department_code.exactWords"] = "*"+ name.toLowerCase() +"*";
 	}
 
 	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
+	return mySearchCall;
+};
+
+exports.getSearchText = function(subjectID) {
+	qryObj = {
+		"fields": ["text"],
+		"query" : {
+			"filtered": {
+				"filter": {
+					"term": {subjectID: subjectID}
+				}
+			}
+		}
+	};
+
+	mySearchCall = elasticSearchClient.search('sibexplorer', 'help_search_text', qryObj);
 	return mySearchCall;
 };
 
