@@ -1,4 +1,4 @@
-define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map-initialize", "app/models/occurrence", "app/models/resumeInfo", "app/models/resumeCount", "app/models/resumeScientificName", "app/models/resumeKingdomName", "app/models/resumePhylumName", "app/models/resumeClassName", "app/models/resumeOrderName", "app/models/resumeFamilyName", "app/models/resumeGenusName", "app/models/resumeSpecieName", "app/models/resumeDataProvider", "app/models/resumeDataResource", "app/models/resumeInstitutionCode", "app/models/resumeCollectionCode", "app/models/resumeCountry", "app/models/resumeDepartment", "select2", "knockoutKendoUI", "Leaflet", "jqueryUI", "bootstrap", "customScrollBar"], function($, ko, _, BaseViewModel, map, Occurrence, ResumeInfo, ResumeCount, ResumeScientificName, ResumeKingdomName, ResumePhylumName, ResumeClassName, ResumeOrderName, ResumeFamilyName, ResumeGenusName, ResumeSpecieName, ResumeDataProvider, ResumeDataResource, ResumeInstitutionCode, ResumeCollectionCode, ResumeCountry, ResumeDepartment, select2) {
+define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map-initialize", "app/models/occurrence", "app/models/resumeInfo", "app/models/resumeCount", "app/models/resumeScientificName", "app/models/resumeKingdomName", "app/models/resumePhylumName", "app/models/resumeClassName", "app/models/resumeOrderName", "app/models/resumeFamilyName", "app/models/resumeGenusName", "app/models/resumeSpecieName", "app/models/resumeDataProvider", "app/models/resumeDataResource", "app/models/resumeInstitutionCode", "app/models/resumeCollectionCode", "app/models/resumeCountry", "app/models/resumeDepartment", "app/models/filterSelected", "select2", "knockoutKendoUI", "Leaflet", "jqueryUI", "bootstrap", "customScrollBar"], function($, ko, _, BaseViewModel, map, Occurrence, ResumeInfo, ResumeCount, ResumeScientificName, ResumeKingdomName, ResumePhylumName, ResumeClassName, ResumeOrderName, ResumeFamilyName, ResumeGenusName, ResumeSpecieName, ResumeDataProvider, ResumeDataResource, ResumeInstitutionCode, ResumeCollectionCode, ResumeCountry, ResumeDepartment, FilterSelected, select2) {
 	var OccurrenceSearchViewModel = function() {
 		var self = this;
 		self.densityCellsOneDegree = new L.FeatureGroup();
@@ -904,7 +904,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		},
 		addFilterItem: function() {
 			var self = this;
-			if(self.selectedSubject() === 0) {
+			if(self.selectedSubject() == "0") {
 				// Adding scientific name filter
 				self.addScientificName();
 			} else if(self.selectedSubject() == 100) {
@@ -2213,6 +2213,54 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments}));
 				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
 			});
+		},
+		// Operations
+		// Add ScientificName filter
+		addScientificName: function() {
+			var self = this;
+			self.selectedScientificNames.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: self.objectNameValue(), textName: "ScientificName"}));
+			self.totalFilters(self.totalFilters()+1);
+		},
+		addScientificNameFromHelp: function(parent, selectedFilter) {
+			var self = parent;
+			self.selectedScientificNames.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.canonical, textName: "ScientificName"}));
+			self.totalFilters(self.totalFilters()+1);
+		},
+		// Removes ScientificName filter
+		removeScientificName: function(parent, selectedFilter) {
+			var self = parent;
+			self.selectedScientificNames.remove(selectedFilter);
+			self.totalFilters(self.totalFilters()-1);
+		},
+		// Add Taxon filter
+		addTaxonName: function(id, name) {
+			var self = this;
+			self.selectedTaxonNames.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: self.objectNameValue(), textName: name}));
+			self.totalFilters(self.totalFilters()+1);
+		},
+		addTaxonNameFromHelp: function(parent, selectedFilter) {
+			var self = parent;
+			if(self.selectedSubject() == 100)
+				self.selectedTaxonNames.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.kingdom, textName: "Reino"}));
+			if(self.selectedSubject() == 101)
+				self.selectedTaxonNames.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.phylum, textName: "Filo"}));
+			if(self.selectedSubject() == 102)
+				self.selectedTaxonNames.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.nameClass, textName: "Clase"}));
+			if(self.selectedSubject() == 103)
+				self.selectedTaxonNames.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.order_rank, textName: "Orden"}));
+			if(self.selectedSubject() == 104)
+				self.selectedTaxonNames.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.family, textName: "Familia"}));
+			if(self.selectedSubject() == 105)
+				self.selectedTaxonNames.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.genus, textName: "Genero"}));
+			if(self.selectedSubject() == 106)
+				self.selectedTaxonNames.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.species, textName: "Especie"}));
+			self.totalFilters(self.totalFilters()+1);
+		},
+		// Removes Taxon filter
+		removeTaxonName: function(parent, selectedFilter) {
+			var self = parent;
+			self.selectedTaxonNames.remove(selectedFilter);
+			self.totalFilters(self.totalFilters()-1);
 		}
 	});
 
