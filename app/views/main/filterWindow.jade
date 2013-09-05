@@ -216,14 +216,14 @@ block filterWindow
 				.contentFiltersContainerHelpContainer(data-bind="foreach: resumeDataProviders, visible: resumeDataProviders().length > 0 && selectedSubject() == 25")
 					.item
 						span(data-bind="html: providerNameWithBold")
-						a(href='#', title='Adicionar este filtro', data-bind='click: $parent.addDataProviderNameFromHelp')
+						a(href='#', title='Adicionar este filtro', data-bind='click: function () { $parent.addDataProviderNameFromHelp($parent, this); }')
 							img(alt='Adicionar este filtro', src='/images/icons/redplus.png')
 						em(data-bind="text: occurrences")
 				// Data resources resume data
 				.contentFiltersContainerHelpContainer(data-bind="foreach: resumeDataResources, visible: resumeDataResources().length > 0 && selectedSubject() == 24")
 					.item
 						span(data-bind="html: resourceNameWithBold")
-						a(href='#', title='Adicionar este filtro', data-bind='click: $parent.addDataResourceNameFromHelp')
+						a(href='#', title='Adicionar este filtro', data-bind='click: function () { $parent.addDataResourceNameFromHelp($parent, this); }')
 							img(alt='Adicionar este filtro', src='/images/icons/redplus.png')
 						em(data-bind="text: occurrences")
 				// Institution codes resume data
@@ -244,14 +244,14 @@ block filterWindow
 				.contentFiltersContainerHelpContainer(data-bind="foreach: resumeCountries, visible: resumeCountries().length > 0 && selectedSubject() == 5")
 					.item
 						span(data-bind="html: countryNameWithBold")
-						a(href='#', title='Adicionar este filtro', data-bind='click: $parent.addCountryIDFromHelp')
+						a(href='#', title='Adicionar este filtro', data-bind='click: function () { $parent.addCountryIDFromHelp($parent, this); }')
 							img(alt='Adicionar este filtro', src='/images/icons/redplus.png')
 						em(data-bind="text: occurrences")
 				// Departments resume data
 				.contentFiltersContainerHelpContainer(data-bind="foreach: resumeDepartments, visible: resumeDepartments().length > 0 && selectedSubject() == 38")
 					.item
 						span(data-bind="html: departmentNameWithBold")
-						a(href='#', title='Adicionar este filtro', data-bind='click: $parent.addDepartmentIDFromHelp')
+						a(href='#', title='Adicionar este filtro', data-bind='click: function () { $parent.addDepartmentIDFromHelp($parent, this); }')
 							img(alt='Adicionar este filtro', src='/images/icons/redplus.png')
 						em(data-bind="text: occurrences")
 				.resume(data-bind="foreach: resumesInfoFilter")
@@ -836,7 +836,7 @@ block filterWindow
 								span(data-bind='visible: $index() == 0') País es 
 								span(data-bind='visible: $index() != 0') o es 
 								span(data-bind='text: textName')
-								a(href='#', title='Quitar este filtro', data-bind='click: $parent.removeCountryID')
+								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeCountryID($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include Department filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedDepartmentsIDs, visible: selectedDepartmentsIDs().length > 0')
@@ -844,7 +844,7 @@ block filterWindow
 								span(data-bind='visible: $index() == 0') Departamento es 
 								span(data-bind='visible: $index() != 0') o es 
 								span(data-bind='text: textName')
-								a(href='#', title='Quitar este filtro', data-bind='click: $parent.removeDepartmentID')
+								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeDepartmentID($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include Latitude filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedLatitudes, visible: selectedLatitudes().length > 0')
@@ -858,7 +858,7 @@ block filterWindow
 									span(data-bind='visible: predicate == 1') mayor que 
 									span(data-bind='visible: predicate == 2') menor que 
 								span(data-bind='text: parsedLatitudeText')
-								a(href='#', title='Quitar este filtro', data-bind='click: $parent.removeLatitudeNumber')
+								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeLatitudeNumber($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include longitude filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedLongitudes, visible: selectedLongitudes().length > 0')
@@ -872,7 +872,7 @@ block filterWindow
 									span(data-bind='visible: predicate == 1') mayor que 
 									span(data-bind='visible: predicate == 2') menor que 
 								span(data-bind='text: parsedLongitudeText')
-								a(href='#', title='Quitar este filtro', data-bind='click: $parent.removeLongitudeNumber')
+								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeLongitudeNumber($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include altitude filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedAltitudes, visible: selectedAltitudes().length > 0')
@@ -886,7 +886,7 @@ block filterWindow
 									span(data-bind='visible: predicate == 1') mayor que 
 									span(data-bind='visible: predicate == 2') menor que 
 								span(data-bind='text: parsedAltitudeText')
-								a(href='#', title='Quitar este filtro', data-bind='click: $parent.removeAltitudeNumber')
+								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeAltitudeNumber($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include deep filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedDeeps, visible: selectedDeeps().length > 0')
@@ -900,14 +900,14 @@ block filterWindow
 									span(data-bind='visible: predicate == 1') mayor que 
 									span(data-bind='visible: predicate == 2') menor que 
 								span(data-bind='text: parsedDeepText')
-								a(href='#', title='Quitar este filtro', data-bind='click: $parent.removeDeepNumber')
+								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeDeepNumber($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include coordinate state filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedCoordinate, visible: selectedCoordinate().length > 0')
 							li(class='alteredFilter')
 								span Estado de las coordenadas es  
 								span(data-bind='text: textName')
-								a(href='#', title='Quitar este filtro', data-bind='click: $parent.removeCoordinateState')
+								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeCoordinateState($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include data providers filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedProviders, visible: selectedProviders().length > 0')
@@ -915,7 +915,7 @@ block filterWindow
 								span(data-bind='visible: $index() == 0') Publicador de datos es 
 								span(data-bind='visible: $index() != 0') o es 
 								span(data-bind='text: textObject')
-								a(href='#', title='Quitar este filtro', data-bind='click: $parent.removeDataProviderName')
+								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeDataProviderName($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include data resources filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedResources, visible: selectedResources().length > 0')
@@ -923,7 +923,7 @@ block filterWindow
 								span(data-bind='visible: $index() == 0') Recurso de datos es 
 								span(data-bind='visible: $index() != 0') o es 
 								span(data-bind='text: textObject')
-								a(href='#', title='Quitar este filtro', data-bind='click: $parent.removeDataResourceName')
+								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeDataResourceName($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						button(style="display: none", class='btn btn-small btn-add-filter', type='button', data-bind='visible: totalFilters() != 0, click: startSearch') Búsqueda
 				#densityButtonsPane

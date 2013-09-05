@@ -129,6 +129,11 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				}
 			});
 
+			// Selected department filter name
+			self.dropDownCoordinateStateText = ko.computed(function() {
+				return $("#dropDownCoordinateState option[value='" + self.selectedCoordinateState() + "']").text();
+			});
+
 			ko.bindingHandlers.selectCountry = {
 				init: function(element, valueAccessor, allBindingsAccessor) {
 					var obj = valueAccessor();
@@ -2260,6 +2265,136 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		removeTaxonName: function(parent, selectedFilter) {
 			var self = parent;
 			self.selectedTaxonNames.remove(selectedFilter);
+			self.totalFilters(self.totalFilters()-1);
+		},
+		// Add Country filter
+		addCountryID: function() {
+			var self = this;
+			self.selectedCountriesIDs.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: self.selectedCountry(), textName: $("#dropDownCountry").select2('data').text}));
+			self.totalFilters(self.totalFilters()+1);
+		},
+		addCountryIDFromHelp: function(parent, selectedFilter) {
+			var self = parent;
+			self.selectedCountriesIDs.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.isoCountryCode, textName: selectedFilter.countryName}));
+			self.totalFilters(self.totalFilters()+1);
+		},
+		// Removes Country filter
+		removeCountryID: function(parent, selectedFilter) {
+			var self = parent;
+			self.selectedCountriesIDs.remove(selectedFilter);
+			self.totalFilters(self.totalFilters()-1);
+		},
+		// Add Department filter
+		addDepartmentID: function() {
+			var self = this;
+			self.selectedDepartmentsIDs.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: self.selectedDepartment(), textName: $("#dropDownDepartment").select2('data').text}));
+			self.totalFilters(self.totalFilters()+1);
+		},
+		addDepartmentIDFromHelp: function(parent, selectedFilter) {
+			var self = parent;
+			self.selectedDepartmentsIDs.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.isoDepartmentCode, textName: selectedFilter.departmentName}));
+			self.totalFilters(self.totalFilters()+1);
+		},
+		// Removes Department filter
+		removeDepartmentID: function(parent, selectedFilter) {
+			var self = this;
+			self.selectedDepartmentsIDs.remove(selectedFilter);
+			self.totalFilters(self.totalFilters()-1);
+		},
+		// Add Latitude filter
+		addLatitudeNumber: function() {
+			var self = this;
+			self.selectedLatitudes.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: self.objectNameValue(), textName: "Latitude"}));
+			self.totalFilters(self.totalFilters()+1);
+		},
+		// Removes Latitude filter
+		removeLatitudeNumber: function(parent, selectedFilter) {
+			var self = parent;
+			self.selectedLatitudes.remove(selectedFilter);
+			self.totalFilters(self.totalFilters()-1);
+		},
+		// Add Longitude filter
+		addLongitudeNumber: function() {
+			var self = this;
+			self.selectedLongitudes.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: self.objectNameValue(), textName: "Longitude"}));
+			self.totalFilters(self.totalFilters()+1);
+		},
+		// Removes Longitude filter
+		removeLongitudeNumber: function(parent, selectedFilter) {
+			var self = parent;
+			self.selectedLongitudes.remove(selectedFilter);
+			self.totalFilters(self.totalFilters()-1);
+		},
+		// Add altitude filter
+		addAltitudeNumber: function() {
+			var self = this;
+			self.selectedAltitudes.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: self.objectNameValue(), textName: "Altitude"}));
+			self.totalFilters(self.totalFilters()+1);
+		},
+		// Removes altitude filter
+		removeAltitudeNumber: function(parent, selectedFilter) {
+			var self = parent;
+			self.selectedAltitudes.remove(selectedFilter);
+			self.totalFilters(self.totalFilters()-1);
+		},
+		// Add deep filter
+		addDeepNumber: function() {
+			var self = this;
+			self.selectedDeeps.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: self.objectNameValue(), textName: "Deep"}));
+			self.totalFilters(self.totalFilters()+1);
+		},
+		// Removes deep filter
+		removeDeepNumber: function(parent, selectedFilter) {
+			var self = parent;
+			self.selectedDeeps.remove(selectedFilter);
+			self.totalFilters(self.totalFilters()-1);
+		},
+		// Add coordinate state filter
+		addCoordinateState: function() {
+			var self = this;
+			if(self.selectedCoordinate().length == "0")
+				self.totalFilters(self.totalFilters()+1);
+			self.selectedCoordinate.removeAll();
+			self.selectedCoordinate.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: self.selectedCoordinateState(), textName: self.dropDownCoordinateStateText()}));
+		},
+		// Removes coordinate state filter
+		removeCoordinateState: function(parent, selectedFilter) {
+			var self = parent;
+			self.selectedCoordinate.remove(selectedFilter);
+			self.totalFilters(self.totalFilters()-1);
+		},
+		// Add data provider name
+		addDataProviderName: function() {
+			var self = this;
+			self.selectedProviders.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: self.objectNameValue(), textName: "Data provider"}));
+			self.totalFilters(self.totalFilters()+1);
+		},
+		addDataProviderNameFromHelp: function(parent, selectedFilter) {
+			var self = parent;
+			self.selectedProviders.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.providerName, textName: "Data provider"}));
+			self.totalFilters(self.totalFilters()+1);
+		},
+		// Removes data provider name
+		removeDataProviderName: function(parent, selectedFilter) {
+			var self = parent;
+			self.selectedProviders.remove(selectedFilter);
+			self.totalFilters(self.totalFilters()-1);
+		},
+		// Add data resource name
+		addDataResourceName: function() {
+			var self = this;
+			self.selectedResources.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: self.objectNameValue(), textName: "Data resource"}));
+			self.totalFilters(self.totalFilters()+1);
+		},
+		addDataResourceNameFromHelp: function(parent, selectedFilter) {
+			var self = parent;
+			self.selectedResources.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.resourceName, textName: "Data resource"}));
+			self.totalFilters(self.totalFilters()+1);
+		},
+		// Removes data resource name
+		removeDataResourceName: function(parent, selectedFilter) {
+			var self = parent;
+			self.selectedResources.remove(selectedFilter);
 			self.totalFilters(self.totalFilters()-1);
 		}
 	});
