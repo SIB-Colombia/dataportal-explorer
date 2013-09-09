@@ -1131,13 +1131,13 @@ exports.getOccurrencesWithFilter = function(conditions) {
 					}
 					countFilter++;
 				}
-				console.log("Must interno");
-				console.log(logic[counter]["bool"]["must"]);
-				console.log("Should interno");
-				console.log(logic[counter]["bool"]["should"]);
+				//console.log("Must interno");
+				//console.log(logic[counter]["bool"]["must"]);
+				//console.log("Should interno");
+				//console.log(logic[counter]["bool"]["should"]);
 			} else {
 				// External condition of single logic operator
-				console.log(conditions.filter.filters[counter].operator);
+				//console.log(conditions.filter.filters[counter].operator);
 				
 				if(conditions.filter.filters[counter].operator == 'eq' || conditions.filter.filters[counter].operator == 'neq') {
 					if(conditions.filter.filters[counter].field == 'occurrence_date') {
@@ -1231,22 +1231,22 @@ exports.getOccurrencesWithFilter = function(conditions) {
 				}
 			}
 		}
-		console.log("Must");
-		console.log(qryObj["query"]["filtered"]["query"]["bool"]["must"]);
-		console.log("Should");
-		console.log(qryObj["query"]["filtered"]["query"]["bool"]["should"]);
-		if(haveQuery == false) {
+		//console.log("Must");
+		//console.log(qryObj["query"]["filtered"]["query"]["bool"]["must"]);
+		//console.log("Should");
+		//console.log(qryObj["query"]["filtered"]["query"]["bool"]["should"]);
+		if(haveQuery === false) {
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][0] = {};
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][0]["match_all"] = {};
 		}
 	}
 	/*qryObj["query"] = {
 		"constant_score": {
-           	"filter": {
-               	"match_all": { }
-           	}
-       	}
-    };*/
+			"filter": {
+				"match_all": { }
+			}
+		}
+	};*/
 	qryObj["from"] = (conditions.page-1)*conditions.pageSize;
 	qryObj["size"] = conditions.pageSize;
 
@@ -1269,7 +1269,7 @@ exports.getOccurrencesWithFilter = function(conditions) {
 		qryObj["sort"] = [ { "canonical.untouched": "asc" } ];
 	}
 
-	console.log(qryObj);
+	//console.log(qryObj);
 	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
-	return mySearchCall;	
+	return mySearchCall;
 };

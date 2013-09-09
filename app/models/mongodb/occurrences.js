@@ -6,10 +6,12 @@ var mongoose = require('mongoose')
   , Schema = mongoose.Schema;
 
 var OccurrenceSchema = new Schema( {
-	id: {type: Number},
+	occurrenceID: {type: Number},
 	canonical: {type: String, default: '', trim: true},
-	latitude: {type: String},
-	longitude: {type: String},
+	location: {
+		lat: Number,
+		lon: Number
+	},
 	data_provider_id: {type: Number},
 	data_provider_name: {type: String, trim: true},
 	data_resource_id: {type: Number},

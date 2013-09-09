@@ -2,7 +2,7 @@ curl -XPUT 'http://localhost:9200/_river/river-mongodb-occurrences/_meta' -d '{
 	"type": "mongodb",
 	"mongodb": {
 		"db": "sibexplorer_dev",
-		"collection": "occurrences_es"
+		"collection": "occurrences"
 	},
 	"index": {
 		"name": "sibexplorer",
@@ -134,7 +134,7 @@ curl -XPUT 'http://localhost:9200/_river/river-mongodb-geooccurrences/_meta' -d 
 	"type": "mongodb",
 	"mongodb": {
 		"db": "sibexplorer_dev",
-		"collection": "geooccurrences_es"
+		"collection": "geooccurrences"
 	},
 	"index": {
 		"name": "sibexplorer",

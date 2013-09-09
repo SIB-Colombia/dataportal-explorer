@@ -276,7 +276,7 @@ p margin 10px010px0 a:link {
   padding: 10px 13px 13px 13px;
   position: absolute;
   display: block;
-  z-index: 10000;
+  z-index: 2;
 }
 .sib .logo:hover {
   filter: alpha(opacity=100);
@@ -409,7 +409,7 @@ fieldset {
   margin-left: 20px;
   margin-right: 20px;
   position: fixed;
-  z-index: 11000;
+  z-index: 3;
   width: 620px;
   margin-top: 53px;
   right: 0px;
@@ -454,7 +454,7 @@ fieldset {
   position: absolute;
   left: 50px;
   top: 100px;
-  z-index: 2;
+  z-index: 4;
   width: 340px;
 /* Fix display block of select2 javascript plugin */
 }

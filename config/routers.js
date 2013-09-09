@@ -106,6 +106,10 @@ module.exports = function(parent, options) {
 					method = 'post';
 					path = '/' + name + '/search';
 					break;
+				case 'searchGeoDistributionOccurrences':
+					method = 'post';
+					path = '/' + name + '/search';
+					break;
 				case 'searchDetailsGeoOccurrences':
 					method = 'get';
 					path = '/' + name + '/details/search';

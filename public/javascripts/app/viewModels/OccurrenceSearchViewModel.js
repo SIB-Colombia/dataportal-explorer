@@ -981,10 +981,11 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			if(self.selectedResources().length !== 0)
 				response['resources'] = self.selectedResources();
 			var data = ko.toJSON(response);
+			console.log(data);
 			$.ajax({
 				contentType: 'application/json',
 				type: 'POST',
-				url: '/occurrences/search',
+				url: '/distribution/search',
 				data: data,
 				beforeSend: function() {
 					self.disableFilterHelp();
@@ -996,45 +997,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					$(".tab-content").removeClass("hide-element");
 				},
 				success: function(returnedData) {
-					//markers.clearLayers();
-					var totalGeoOccurrences = 0;
-					$.each(returnedData, function(i, geooccurrence) {
-						//var marker = new L.Marker(new L.LatLng(geooccurrence.latitude, geooccurrence.longitude), { title: geooccurrence.canonical})
-						//marker.bindPopup(geooccurrence.canonical + ' (' + geooccurrence.num_occurrences + ')')
-						//markers.addLayer(marker)
-						//totalGeoOccurrences = totalGeoOccurrences + geooccurrence.num_occurrences
-					});
-					markers.on('click', function (a) {
-						if(a.layer._preSpiderfyLatlng) {
-							var latitude = a.layer._preSpiderfyLatlng.lat;
-							var longitude = a.layer._preSpiderfyLatlng.lng;
-						} else {
-							var latitude = a.layer.getLatLng().lat;
-							var longitude = a.layer.getLatLng().lng;
-						}
-						$.getJSON("/occurrences/details/search?canonical="+a.layer.options.title+"&latitude="+latitude+"&longitude="+longitude, function(allData) {
-							var mappedOccurrences = $.map(allData, function(item) {
-								return new Occurrence(item);
-							});
-							self.occurrencesDetails(mappedOccurrences);
-							self.disableFilterHelp();
-							if($("#occurrenceDetail").is(':hidden')) {
-								$("#occurrenceDetail").animate({width: 'toggle'}, 500, "swing", function() {
-									if(self.detailsFirstScrollRun) {
-										$("#occurrenceDetailContainer").mCustomScrollbar({
-											theme:"dark"
-										});
-										self.detailsFirstScrollRun = false;
-									} else {
-										$("#occurrenceDetailContainer").mCustomScrollbar("update");
-									}
-								});
-							} else {
-								$("#occurrenceDetailContainer").mCustomScrollbar("update");
-							}
-						});
-					});
-					self.totalGeoOccurrences(totalGeoOccurrences);
+					console.log("success");
 				},
 				dataType: 'jsonp'
 			});
