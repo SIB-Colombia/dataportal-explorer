@@ -367,85 +367,43 @@ exports.getStatsOccurrencesOneDegree = function(cellid) {
 			},
 			"kingdom": {
 				"terms": {
-					"field": "kingdom.untouched",
-					"size" : 10
-				}
-			},
-			"kingdom_concept_id": {
-				"terms": {
-					"field": "kingdom_concept_id",
+					"field": "kingdom_group.untouched",
 					"size" : 10
 				}
 			},
 			"phylum": {
 				"terms": {
-					"field": "phylum.untouched",
-					"size" : 10
-				}
-			},
-			"phylum_concept_id": {
-				"terms": {
-					"field": "phylum_concept_id",
+					"field": "phylum_group.untouched",
 					"size" : 10
 				}
 			},
 			"taxonClass": {
 				"terms": {
-					"field": "taxonClass.untouched",
-					"size" : 10
-				}
-			},
-			"class_concept_id": {
-				"terms": {
-					"field": "class_concept_id",
+					"field": "taxonClass_group.untouched",
 					"size" : 10
 				}
 			},
 			"order_rank": {
 				"terms": {
-					"field": "order_rank.untouched",
-					"size" : 10
-				}
-			},
-			"order_concept_id": {
-				"terms": {
-					"field": "order_concept_id",
+					"field": "order_rank_group.untouched",
 					"size" : 10
 				}
 			},
 			"family": {
 				"terms": {
-					"field": "family.untouched",
-					"size" : 10
-				}
-			},
-			"family_concept_id": {
-				"terms": {
-					"field": "family_concept_id",
+					"field": "family_group.untouched",
 					"size" : 10
 				}
 			},
 			"genus": {
 				"terms": {
-					"field": "genus.untouched",
-					"size" : 10
-				}
-			},
-			"genus_concept_id": {
-				"terms": {
-					"field": "genus_concept_id",
+					"field": "genus_group.untouched",
 					"size" : 10
 				}
 			},
 			"species": {
 				"terms": {
-					"field": "species.untouched",
-					"size" : 10
-				}
-			},
-			"species_concept_id": {
-				"terms": {
-					"field": "species_concept_id",
+					"field": "species_group.untouched",
 					"size" : 10
 				}
 			},

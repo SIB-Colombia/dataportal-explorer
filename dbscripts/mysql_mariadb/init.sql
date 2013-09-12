@@ -33,13 +33,13 @@ catalogue_number.`code` AS catalogue_number,
 data_resource.citation,
 data_resource.created,
 data_resource.modified,
-taxon_concept_kingdom.kingdom_concept_id AS kingdom_concept_id,
-taxon_concept_phylum.phylum_concept_id AS phylum_concept_id,
-taxon_concept_class.class_concept_id AS class_concept_id,
-taxon_concept_order.order_concept_id AS order_concept_id,
-taxon_concept_family.family_concept_id AS family_concept_id,
-taxon_concept_genus.genus_concept_id AS genus_concept_id,
-taxon_concept_species.species_concept_id AS species_concept_id,
+taxon_concept_phylum.partner_concept_id AS phylum_concept_id,
+taxon_concept_kingdom.partner_concept_id AS kingdom_concept_id,
+taxon_concept_class.partner_concept_id AS class_concept_id,
+taxon_concept_order.partner_concept_id AS order_concept_id,
+taxon_concept_family.partner_concept_id AS family_concept_id,
+taxon_concept_genus.partner_concept_id AS genus_concept_id,
+taxon_concept_species.partner_concept_id AS species_concept_id,
 occurrence_record.iso_country_code,
 country_name.`name` AS country_name,
 occurrence_record.iso_department_code,
@@ -60,14 +60,14 @@ INNER JOIN institution_code ON occurrence_record.institution_code_id = instituti
 INNER JOIN collection_code ON occurrence_record.collection_code_id = collection_code.id
 INNER JOIN catalogue_number ON occurrence_record.catalogue_number_id = catalogue_number.id
 INNER JOIN lookup_basis_of_record ON occurrence_record.basis_of_record = lookup_basis_of_record.br_key
-LEFT JOIN taxon_concept AS taxon_concept_kingdom_concept_id ON occurrence_record.taxon_concept_id = taxon_concept_kingdom_concept_id.id
-LEFT JOIN taxon_concept AS taxon_concept_kingdom ON taxon_concept_kingdom_concept_id.kingdom_concept_id = taxon_concept_kingdom.id
-LEFT JOIN taxon_concept AS taxon_concept_phylum ON taxon_concept_kingdom_concept_id.phylum_concept_id = taxon_concept_phylum.id
-LEFT JOIN taxon_concept AS taxon_concept_class ON taxon_concept_kingdom_concept_id.class_concept_id = taxon_concept_class.id
-LEFT JOIN taxon_concept AS taxon_concept_order ON taxon_concept_kingdom_concept_id.order_concept_id = taxon_concept_order.id
-LEFT JOIN taxon_concept AS taxon_concept_family ON taxon_concept_kingdom_concept_id.family_concept_id = taxon_concept_family.id
-LEFT JOIN taxon_concept AS taxon_concept_genus ON taxon_concept_kingdom_concept_id.genus_concept_id = taxon_concept_genus.id
-LEFT JOIN taxon_concept AS taxon_concept_species ON taxon_concept_kingdom_concept_id.species_concept_id = taxon_concept_species.id
+LEFT JOIN taxon_concept ON occurrence_record.taxon_concept_id = taxon_concept.id
+LEFT JOIN taxon_concept AS taxon_concept_phylum ON taxon_concept.phylum_concept_id = taxon_concept_phylum.id
+LEFT JOIN taxon_concept AS taxon_concept_kingdom ON taxon_concept.kingdom_concept_id = taxon_concept_kingdom.id
+LEFT JOIN taxon_concept AS taxon_concept_class ON taxon_concept.class_concept_id = taxon_concept_class.id
+LEFT JOIN taxon_concept AS taxon_concept_order ON taxon_concept.order_concept_id = taxon_concept_order.id
+LEFT JOIN taxon_concept AS taxon_concept_family ON taxon_concept.family_concept_id = taxon_concept_family.id
+LEFT JOIN taxon_concept AS taxon_concept_genus ON taxon_concept.genus_concept_id = taxon_concept_genus.id
+LEFT JOIN taxon_concept AS taxon_concept_species ON taxon_concept.species_concept_id = taxon_concept_species.id
 LEFT JOIN country_name ON occurrence_record.iso_country_code = country_name.iso_country_code
 LEFT JOIN department ON occurrence_record.iso_department_code = department.iso_department_code
 WHERE
@@ -127,23 +127,23 @@ catalogue_number.`code` AS catalogue_number,
 data_resource.citation,
 data_resource.created,
 data_resource.modified,
-taxon_concept_kingdom.kingdom_concept_id AS kingdom_concept_id,
-taxon_name_kingdom.canonical AS kingdom,
-taxon_concept_phylum.phylum_concept_id AS phylum_concept_id,
+department.department_name AS department_name,
+taxon_concept_phylum.partner_concept_id AS phylum_concept_id,
 taxon_name_phylum.canonical AS phylum,
-taxon_concept_class.class_concept_id AS class_concept_id,
+taxon_concept_kingdom.partner_concept_id AS kingdom_concept_id,
+taxon_name_kingdom.canonical AS kingdom,
+taxon_concept_class.partner_concept_id AS class_concept_id,
 taxon_name_class.canonical AS class,
-taxon_concept_order.order_concept_id AS order_concept_id,
+taxon_concept_order.partner_concept_id AS order_concept_id,
 taxon_name_order.canonical AS order_rank,
-taxon_concept_family.family_concept_id AS family_concept_id,
+taxon_concept_family.partner_concept_id AS family_concept_id,
 taxon_name_family.canonical AS family,
-taxon_concept_genus.genus_concept_id AS genus_concept_id,
+taxon_concept_genus.partner_concept_id AS genus_concept_id,
 taxon_name_genus.canonical AS genus,
-taxon_concept_species.species_concept_id AS species_concept_id,
+taxon_concept_species.partner_concept_id AS species_concept_id,
 taxon_name_species.canonical AS species,
 occurrence_record.iso_country_code,
 occurrence_record.iso_department_code,
-department.department_name AS department_name,
 occurrence_record.basis_of_record AS basis_of_record_id,
 lookup_basis_of_record.`br_value` AS basis_of_record_name,
 occurrence_record.`year`,
@@ -161,20 +161,20 @@ INNER JOIN collection_code ON occurrence_record.collection_code_id = collection_
 INNER JOIN catalogue_number ON occurrence_record.catalogue_number_id = catalogue_number.id
 INNER JOIN lookup_basis_of_record ON occurrence_record.basis_of_record = lookup_basis_of_record.br_key
 LEFT JOIN department ON occurrence_record.iso_department_code = department.iso_department_code
-LEFT JOIN taxon_concept AS taxon_concept_kingdom_concept_id ON occurrence_record.taxon_concept_id = taxon_concept_kingdom_concept_id.id
-LEFT JOIN taxon_concept AS taxon_concept_kingdom ON taxon_concept_kingdom_concept_id.kingdom_concept_id = taxon_concept_kingdom.id
-LEFT JOIN taxon_name AS taxon_name_kingdom ON taxon_concept_kingdom.taxon_name_id = taxon_name_kingdom.id
-LEFT JOIN taxon_concept AS taxon_concept_phylum ON taxon_concept_kingdom_concept_id.phylum_concept_id = taxon_concept_phylum.id
+LEFT JOIN taxon_concept ON occurrence_record.taxon_concept_id = taxon_concept.id
+LEFT JOIN taxon_concept AS taxon_concept_phylum ON taxon_concept.phylum_concept_id = taxon_concept_phylum.id
 LEFT JOIN taxon_name AS taxon_name_phylum ON taxon_concept_phylum.taxon_name_id = taxon_name_phylum.id
-LEFT JOIN taxon_concept AS taxon_concept_class ON taxon_concept_kingdom_concept_id.class_concept_id = taxon_concept_class.id
+LEFT JOIN taxon_concept AS taxon_concept_kingdom ON taxon_concept.kingdom_concept_id = taxon_concept_kingdom.id
+LEFT JOIN taxon_name AS taxon_name_kingdom ON taxon_concept_kingdom.taxon_name_id = taxon_name_kingdom.id
+LEFT JOIN taxon_concept AS taxon_concept_class ON taxon_concept.class_concept_id = taxon_concept_class.id
 LEFT JOIN taxon_name AS taxon_name_class ON taxon_concept_class.taxon_name_id = taxon_name_class.id
-LEFT JOIN taxon_concept AS taxon_concept_order ON taxon_concept_kingdom_concept_id.order_concept_id = taxon_concept_order.id
+LEFT JOIN taxon_concept AS taxon_concept_order ON taxon_concept.order_concept_id = taxon_concept_order.id
 LEFT JOIN taxon_name AS taxon_name_order ON taxon_concept_order.taxon_name_id = taxon_name_order.id
-LEFT JOIN taxon_concept AS taxon_concept_family ON taxon_concept_kingdom_concept_id.family_concept_id = taxon_concept_family.id
+LEFT JOIN taxon_concept AS taxon_concept_family ON taxon_concept.family_concept_id = taxon_concept_family.id
 LEFT JOIN taxon_name AS taxon_name_family ON taxon_concept_family.taxon_name_id = taxon_name_family.id
-LEFT JOIN taxon_concept AS taxon_concept_genus ON taxon_concept_kingdom_concept_id.genus_concept_id = taxon_concept_genus.id
+LEFT JOIN taxon_concept AS taxon_concept_genus ON taxon_concept.genus_concept_id = taxon_concept_genus.id
 LEFT JOIN taxon_name AS taxon_name_genus ON taxon_concept_genus.taxon_name_id = taxon_name_genus.id
-LEFT JOIN taxon_concept AS taxon_concept_species ON taxon_concept_kingdom_concept_id.species_concept_id = taxon_concept_species.id
+LEFT JOIN taxon_concept AS taxon_concept_species ON taxon_concept.species_concept_id = taxon_concept_species.id
 LEFT JOIN taxon_name AS taxon_name_species ON taxon_concept_species.taxon_name_id = taxon_name_species.id
 WHERE
 occurrence_record.deleted IS NULL);

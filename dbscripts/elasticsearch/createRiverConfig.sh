@@ -860,6 +860,166 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                         }
                     }
             },
+            "kingdom_group" :  {
+                "type": "multi_field", 
+                    "fields" : { 
+                        "kingdom_group": { 
+                            "type": "string" 
+                        },
+                        "untouched": {
+                            "type": "string",
+                            "index": "not_analyzed" 
+                        },
+                        "exactWords": {
+                            "type": "string",
+                            "analyzer": "string_lowercase"
+                        }
+                    }
+            },
+            "phylum_group" :  {
+                "type": "multi_field", 
+                    "fields" : { 
+                        "phylum_group": { 
+                            "type": "string" 
+                        },
+                        "untouched": {
+                            "type": "string",
+                            "index": "not_analyzed" 
+                        },
+                        "exactWords": {
+                            "type": "string",
+                            "analyzer": "string_lowercase"
+                        }
+                    }
+            },
+            "taxonClass_group" :  {
+                "type": "multi_field", 
+                    "fields" : { 
+                        "taxonClass_group": { 
+                            "type": "string" 
+                        },
+                        "untouched": {
+                            "type": "string",
+                            "index": "not_analyzed" 
+                        },
+                        "exactWords": {
+                            "type": "string",
+                            "analyzer": "string_lowercase"
+                        }
+                    }
+            },
+            "order_rank_group" :  {
+                "type": "multi_field", 
+                    "fields" : { 
+                        "order_rank_group": { 
+                            "type": "string" 
+                        },
+                        "untouched": {
+                            "type": "string",
+                            "index": "not_analyzed" 
+                        },
+                        "exactWords": {
+                            "type": "string",
+                            "analyzer": "string_lowercase"
+                        }
+                    }
+            },
+            "family_group" :  {
+                "type": "multi_field", 
+                    "fields" : { 
+                        "family_group": { 
+                            "type": "string" 
+                        },
+                        "untouched": {
+                            "type": "string",
+                            "index": "not_analyzed" 
+                        },
+                        "exactWords": {
+                            "type": "string",
+                            "analyzer": "string_lowercase"
+                        }
+                    }
+            },
+            "genus_group" :  {
+                "type": "multi_field", 
+                    "fields" : { 
+                        "genus_group": { 
+                            "type": "string" 
+                        },
+                        "untouched": {
+                            "type": "string",
+                            "index": "not_analyzed" 
+                        },
+                        "exactWords": {
+                            "type": "string",
+                            "analyzer": "string_lowercase"
+                        }
+                    }
+            },
+            "species_group" :  {
+                "type": "multi_field", 
+                    "fields" : { 
+                        "species_group": { 
+                            "type": "string" 
+                        },
+                        "untouched": {
+                            "type": "string",
+                            "index": "not_analyzed" 
+                        },
+                        "exactWords": {
+                            "type": "string",
+                            "analyzer": "string_lowercase"
+                        }
+                    }
+            },
+            "pointfive_group" :  {
+                "type": "multi_field", 
+                    "fields" : { 
+                        "pointfive_group": { 
+                            "type": "string" 
+                        },
+                        "untouched": {
+                            "type": "string",
+                            "index": "not_analyzed" 
+                        },
+                        "exactWords": {
+                            "type": "string",
+                            "analyzer": "string_lowercase"
+                        }
+                    }
+            },
+            "pointtwo_group" :  {
+                "type": "multi_field", 
+                    "fields" : { 
+                        "pointtwo_group": { 
+                            "type": "string" 
+                        },
+                        "untouched": {
+                            "type": "string",
+                            "index": "not_analyzed" 
+                        },
+                        "exactWords": {
+                            "type": "string",
+                            "analyzer": "string_lowercase"
+                        }
+                    }
+            },
+            "centi_group" :  {
+                "type": "multi_field", 
+                    "fields" : { 
+                        "centi_group": { 
+                            "type": "string" 
+                        },
+                        "untouched": {
+                            "type": "string",
+                            "index": "not_analyzed" 
+                        },
+                        "exactWords": {
+                            "type": "string",
+                            "analyzer": "string_lowercase"
+                        }
+                    }
+            },
             "country_name" :  {
                 "type": "multi_field", 
                     "fields" : { 

@@ -31,7 +31,6 @@ db.geooccurrences.ensureIndex({ "year" : 1 },{ "name" : "year" });
 db.geooccurrences.ensureIndex({ "month" : 1 },{ "name" : "month" });
 db.geooccurrences.ensureIndex({ "occurrence_date" : 1 },{ "name" : "occurrence_date" });
 db.geooccurrences.ensureIndex({ "country_name" : 1 },{ "name" : "country_name" });
-
 db.occurrences.ensureIndex({ "canonical" : 1 },{ "name" : "canonical" });
 db.occurrences.ensureIndex({ "latitude" : 1 },{ "name" : "latitude" });
 db.occurrences.ensureIndex({ "longitude" : 1 },{ "name" : "longitude" });
@@ -75,7 +74,6 @@ db.occurrences.ensureIndex({ "country_name" : 1 },{ "name" : "country_name" });
 db.occurrences.ensureIndex({ "department_name" : 1 },{ "name" : "department_name" });
 db.occurrences.ensureIndex({ "base_of_record_name" : 1 },{ "name" : "base_of_record_name" });
 db.occurrences.ensureIndex({ "base_of_record_name_spanish" : 1 },{ "name" : "base_of_record_name_spanish" });
-
 db.canonical_groups.ensureIndex({ "canonical" : 1 },{ "name" : "canonical" });
 db.cell_density.ensureIndex({ "type" : 1 },{ "name" : "type" });
 db.cell_density.ensureIndex({ "entity_id" : 1 },{ "name" : "entity_id" });

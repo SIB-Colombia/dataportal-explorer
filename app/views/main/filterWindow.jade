@@ -93,56 +93,91 @@ block filterWindow
 							dt
 								ul
 									li
+										<!-- ko if: url === null -->
+										span(data-bind="text: name")
+										<!-- /ko -->
+										<!-- ko if: url !== null -->
 										a(target="_blank", data-bind="attr: { href: url }")
 											span(data-bind="text: name")
+										<!-- /ko -->
 							dd.cuenta(data-bind="text: count")
 						h2(data-bind="visible: canonicals().length > 0") Filo:
 						dl.preview-data(data-bind="foreach: phylums")
 							dt
 								ul
 									li
+										<!-- ko if: url === null -->
+										span(data-bind="text: name")
+										<!-- /ko -->
+										<!-- ko if: url !== null -->
 										a(target="_blank", data-bind="attr: { href: url }")
 											span(data-bind="text: name")
+										<!-- /ko -->
 							dd.cuenta(data-bind="text: count")
 						h2(data-bind="visible: canonicals().length > 0") Clase:
 						dl.preview-data(data-bind="foreach: taxonClasses")
 							dt
 								ul
 									li
+										<!-- ko if: url === null -->
+										span(data-bind="text: name")
+										<!-- /ko -->
+										<!-- ko if: url !== null -->
 										a(target="_blank", data-bind="attr: { href: url }")
 											span(data-bind="text: name")
+										<!-- /ko -->
 							dd.cuenta(data-bind="text: count")
 						h2(data-bind="visible: canonicals().length > 0") Orden:
 						dl.preview-data(data-bind="foreach: order_ranks")
 							dt
 								ul
 									li
+										<!-- ko if: url === null -->
+										span(data-bind="text: name")
+										<!-- /ko -->
+										<!-- ko if: url !== null -->
 										a(target="_blank", data-bind="attr: { href: url }")
 											span(data-bind="text: name")
+										<!-- /ko -->
 							dd.cuenta(data-bind="text: count")
 						h2(data-bind="visible: canonicals().length > 0") Familia:
 						dl.preview-data(data-bind="foreach: families")
 							dt
 								ul
 									li
+										<!-- ko if: url === null -->
+										span(data-bind="text: name")
+										<!-- /ko -->
+										<!-- ko if: url !== null -->
 										a(target="_blank", data-bind="attr: { href: url }")
 											span(data-bind="text: name")
+										<!-- /ko -->
 							dd.cuenta(data-bind="text: count")
 						h2(data-bind="visible: canonicals().length > 0") Género:
 						dl.preview-data(data-bind="foreach: genuses")
 							dt
 								ul
 									li
+										<!-- ko if: url === null -->
+										span(data-bind="text: name")
+										<!-- /ko -->
+										<!-- ko if: url !== null -->
 										a(target="_blank", data-bind="attr: { href: url }")
 											span(data-bind="text: name")
+										<!-- /ko -->
 							dd.cuenta(data-bind="text: count")
 						h2(data-bind="visible: species().length > 0") Especie:
 						dl.preview-data(data-bind="foreach: species")
 							dt
 								ul
 									li
+										<!-- ko if: url === null -->
+										span(data-bind="text: name")
+										<!-- /ko -->
+										<!-- ko if: url !== null -->
 										a(target="_blank", data-bind="attr: { href: url }")
 											span(data-bind="text: name")
+										<!-- /ko -->
 							dd.cuenta(data-bind="text: count")
 						h2(data-bind="visible: canonicals().length > 0") Nombre científico:
 						dl.preview-data(data-bind="foreach: canonicals")
