@@ -185,6 +185,7 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 			layers: 'gbif:country_borders,gbif:tabDensityLayer',
 			format: 'image/png',
 			transparent: true,
+			opacity: 0.5,
 			attribution: "GBIF, Density layer",
 			filter: '()(<Filter><PropertyIsEqualTo><PropertyName>url</PropertyName><Literal><![CDATA[http://50.19.34.70/maplayer/country/48]]></Literal></PropertyIsEqualTo></Filter>)()()'
 		}
@@ -238,8 +239,8 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 
 	};
 	
-	baseAndFirstOverlays = L.control.layers(baseLayers, overlays).addTo(map);
-	L.control.layers({}, wmsLayers).addTo(map);
+	baseAndFirstOverlays = L.control.layers(baseLayers, wmsLayers).addTo(map);
+	//L.control.layers(wmsLayers).addTo(map);
 	map.addControl(new L.Control.Scale());
 
 	// Enable floating windows for search floating window

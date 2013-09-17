@@ -1066,7 +1066,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				response['resources'] = self.selectedResources();
 			var data = ko.toJSON(response);
 			console.log(data);
-			$.ajax({
+			/*$.ajax({
 				contentType: 'application/json',
 				type: 'POST',
 				url: '/distribution/search',
@@ -1084,7 +1084,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					console.log("success");
 				},
 				dataType: 'jsonp'
-			});
+			});*/
 		},
 		toggleDistribution: function(data, event) {
 			var self = this;
