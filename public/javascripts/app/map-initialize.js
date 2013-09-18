@@ -81,6 +81,7 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 			layers: 'ComplejosParamos2012',
 			format: 'image/png',
 			transparent: true,
+			crs: L.CRS.EPSG4326,
 			attribution: "Fuente: Instituto Alexander Von Humboldt - Colombia"
 		}
 	);
@@ -89,6 +90,7 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 			layers: 'Grilla',
 			format: 'image/png',
 			transparent: true,
+			crs: L.CRS.EPSG4326,
 			attribution: "Fuente: Instituto Alexander Von Humboldt - Colombia"
 		}
 	);
@@ -97,6 +99,7 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 			layers: 'embalse',
 			format: 'image/png',
 			transparent: true,
+			crs: L.CRS.EPSG4326,
 			attribution: "Fuente: Instituto Alexander Von Humboldt - Colombia"
 		}
 	);
@@ -105,6 +108,7 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 			layers: 'AreasProtegidas_RUNAP',
 			format: 'image/png',
 			transparent: true,
+			crs: L.CRS.EPSG4326,
 			attribution: "Fuente: Instituto Alexander Von Humboldt - Colombia"
 		}
 	);
@@ -113,6 +117,7 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 			layers: 'laguna',
 			format: 'image/png',
 			transparent: true,
+			crs: L.CRS.EPSG4326,
 			attribution: "Fuente: Instituto Alexander Von Humboldt - Colombia"
 		}
 	);
@@ -121,6 +126,7 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 			layers: 'centros_poblados',
 			format: 'image/png',
 			transparent: true,
+			crs: L.CRS.EPSG4326,
 			attribution: "Fuente: Instituto Alexander Von Humboldt - Colombia"
 		}
 	);
@@ -129,6 +135,7 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 			layers: 'cuencas_hidrograficas',
 			format: 'image/png',
 			transparent: true,
+			crs: L.CRS.EPSG4326,
 			attribution: "Fuente: Instituto Alexander Von Humboldt - Colombia"
 		}
 	);
@@ -137,6 +144,7 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 			layers: 'Jurisdiccion_CARs',
 			format: 'image/png',
 			transparent: true,
+			crs: L.CRS.EPSG4326,
 			attribution: "Fuente: Instituto Alexander Von Humboldt - Colombia"
 		}
 	);
@@ -145,6 +153,7 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 			layers: 'ParquesNacionalesNaturales',
 			format: 'image/png',
 			transparent: true,
+			crs: L.CRS.EPSG4326,
 			attribution: "Fuente: Instituto Alexander Von Humboldt - Colombia"
 		}
 	);
@@ -153,6 +162,7 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 			layers: 'aicas',
 			format: 'image/png',
 			transparent: true,
+			crs: L.CRS.EPSG4326,
 			attribution: "Fuente: Instituto Alexander Von Humboldt - Colombia"
 		}
 	);
@@ -161,6 +171,7 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 			layers: 'ecosistemas_generales',
 			format: 'image/png',
 			transparent: true,
+			crs: L.CRS.EPSG4326,
 			attribution: "Fuente: Instituto Alexander Von Humboldt - Colombia"
 		}
 	);
@@ -169,6 +180,7 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 			layers: 'resguardos_indigenas',
 			format: 'image/png',
 			transparent: true,
+			crs: L.CRS.EPSG4326,
 			attribution: "Fuente: Instituto Alexander Von Humboldt - Colombia"
 		}
 	);
@@ -177,6 +189,7 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 			layers: 'comunidades_negras',
 			format: 'image/png',
 			transparent: true,
+			crs: L.CRS.EPSG4326,
 			attribution: "Fuente: Instituto Alexander Von Humboldt - Colombia"
 		}
 	);
@@ -206,6 +219,7 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 	var map = L.map('mapa', {
 		center: [4.781505, -79.804687],
 		zoom: 6,
+		//crs: L.CRS.EPSG4326,
 		layers: [googleTerrain],
 		fullscreenControl: true
 	});
