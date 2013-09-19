@@ -334,6 +334,8 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		},
 		loadCellDensityOneDegree: function() {
 			var self = this;
+			$("#oneDegree").button('toggle');
+			self.currentActiveDistribution("oneDegree");
 			// Hide map area
 			self.hideMapAreaWithSpinner();
 			// Initialize default cell density distribution (one degree)
@@ -362,8 +364,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					self.densityCellsOneDegree().addLayer(densityCell);
 				});
 				self.totalGeoOccurrences(allData.facets.stats.total);
-				$("#oneDegree").button('toggle');
-				self.currentActiveDistribution("oneDegree");
+				
 
 				self.densityCellsOneDegree().on('click', function (a) {
 					// Hide map area
