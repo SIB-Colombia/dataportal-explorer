@@ -2745,8 +2745,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			self.totalFilters(self.totalFilters()-1);
 		},
 		hideMapAreaWithSpinner: function() {
-			var self = this;
-			self.disableFilterHelp();
 			$(".tab-content").addClass("hide-element");
 			$("#map-filter-area").addClass("loading");
 		},
