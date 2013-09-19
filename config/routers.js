@@ -74,6 +74,10 @@ module.exports = function(parent, options) {
 					method = 'post';
 					path = '/' + name + '/search';
 					break;
+				case 'searchInitialPagedDataOccurrences':
+					method = 'get';
+					path = '/' + name + '/PagedData';
+					break;
 				/*case 'show':
 					method = 'get';
 					path = '/' + name + '/:' + name + '_id';
@@ -102,10 +106,6 @@ module.exports = function(parent, options) {
 					method = 'get';
 					path = '/' + name + '/list';
 					break;*/
-				case 'searchInitialPagedDataOccurrences':
-					method = 'get';
-					path = '/' + name + '/PagedData';
-					break;
 				/*case 'searchGeoOccurrences':
 					method = 'post';
 					path = '/' + name + '/search';

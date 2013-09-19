@@ -1085,7 +1085,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			if(self.selectedResources().length !== 0)
 				response['resources'] = self.selectedResources();
 			var data = ko.toJSON(response);
-			console.log(data);
 			$.ajax({
 				contentType: 'application/json',
 				type: 'POST',
@@ -1101,7 +1100,33 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					$(".tab-content").removeClass("hide-element");
 				},
 				success: function(returnedData) {
-					console.log("success");
+					map.removeLayer(self.densityCellsOneDegree());
+					self.densityCellsOneDegree(new L.FeatureGroup());
+					map.addLayer(self.densityCellsOneDegree());
+					$.each(returnedData.facets.cellgroup.terms, function(i, cell) {
+						var idAndLocation = cell.term.split("~~~");
+						var bounds = [[parseFloat(idAndLocation[1]), parseFloat(idAndLocation[2])], [parseFloat(idAndLocation[1])+1, parseFloat(idAndLocation[2])+1]];
+						var color = "#ff7800";
+						if (cell.count > 0 && cell.count < 10) {
+							color = "#FFFF00";
+						} else if(cell.count > 9 && cell.count < 100) {
+							color = "#FFCC00";
+						} else if(cell.count > 99 && cell.count < 1000) {
+							color = "#FF9900";
+						} else if(cell.count > 999 && cell.count < 10000) {
+							color = "#FF6600";
+						} else if(cell.count > 9999 && cell.count < 100000) {
+							color = "#FF3300";
+						} else if(cell.count > 99999) {
+							color = "#CC0000";
+						}
+						var densityCell = new L.rectangle(bounds, {color: color, weight: 1, fill: true, fillOpacity: 0.5, cellID: idAndLocation[0]});
+						densityCell.on('click', function (a) {
+							a.target.bindPopup("<strong>No. registros: </strong>" + cell.count + "</br></br><strong>Ubicación:</strong></br>[" + idAndLocation[1] + ", " + idAndLocation[2] + "] [" + (parseFloat(idAndLocation[1])+1) + ", " + (parseFloat(idAndLocation[2])+1) + "]").openPopup();
+						});
+						self.densityCellsOneDegree().addLayer(densityCell);
+					});
+					self.totalGeoOccurrences(returnedData.facets.cellgroup.total);
 				},
 				dataType: 'jsonp'
 			});
@@ -2745,6 +2770,8 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			self.totalFilters(self.totalFilters()-1);
 		},
 		hideMapAreaWithSpinner: function() {
+			var self = this;
+			self.disableFilterHelp();
 			$(".tab-content").addClass("hide-element");
 			$("#map-filter-area").addClass("loading");
 		},

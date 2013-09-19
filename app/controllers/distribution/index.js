@@ -61,15 +61,10 @@ exports.getDistributionStatsPointTwoDegree = function(req, res) {
 
 exports.searchDistributionOccurrences = function(req, res) {
 	var data = req.body;
-	occurrences = occurrencesES.getOccurrencesWithFilter(data);
+	occurrences = occurrencesES.getDistributionWithFilter(data);
 	occurrences.exec(function(err, data){
 		res.jsonp(JSON.parse(data));
 	});
-
-	
-	/*_.each(scientificNames, function(data) {
-		console.log(data);
-	});*/
 };
 
 /*exports.searchGeoDistributionOccurrences = function(req, res) {

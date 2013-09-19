@@ -1,4 +1,5 @@
 var moment = require('moment');
+var _ = require('underscore');
 
 exports.getOccurrencesResumeName = function(name, type) {
 	qryObj = {
@@ -699,6 +700,130 @@ exports.getStatsOccurrencesPointTwoDegree = function(cellid, pointtwocellid) {
 	qryObj["query"]["filtered"]["filter"]["and"][1]["term"] = {};
 	qryObj["query"]["filtered"]["filter"]["and"][1]["term"]["pointtwo_cell_id"] = pointtwocellid;
 
+	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
+	return mySearchCall;
+};
+
+exports.getDistributionWithFilter = function(conditions) {
+	var qryObj = {
+		"fields": [],
+		"query": {
+			"filtered": {
+				"filter": {
+					"exists" : {
+						"field": "cell_id"
+					}
+				},
+				"query" : {
+					"bool": {
+						"must": []
+					}
+				}
+			}
+		},
+		"facets": {
+			"cellgroup": {
+				"terms": {
+					"field": "cell_group.untouched",
+					"size" : 100000000
+				}
+			}
+		}
+	};
+
+	var andCounter = 0;
+	var orCounter = 0;
+
+	if(conditions.scientificNames) {
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
+		_.each(conditions.scientificNames, function(data) {
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["canonical.exactWords"] = data.textObject.toLowerCase();
+			orCounter+=1;
+		});
+		andCounter+=1;
+	}
+	if(conditions.taxons) {
+		orCounter = 0;
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
+		_.each(conditions.taxons, function(data) {
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
+			if(data.textName == "Reino")
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["kingdom.exactWords"] = data.textObject.toLowerCase();
+			if(data.textName == "Filo")
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["phylum.exactWords"] = data.textObject.toLowerCase();
+			if(data.textName == "Clase")
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["taxonClass.exactWords"] = data.textObject.toLowerCase();
+			if(data.textName == "Orden")
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["order_rank.exactWords"] = data.textObject.toLowerCase();
+			if(data.textName == "Familia")
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["family.exactWords"] = data.textObject.toLowerCase();
+			if(data.textName == "Genero")
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["genus.exactWords"] = data.textObject.toLowerCase();
+			if(data.textName == "Especie")
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["species.exactWords"] = data.textObject.toLowerCase();
+			orCounter+=1;
+		});
+		andCounter+=1;
+	}
+	if(conditions.countries) {
+		orCounter = 0;
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
+		_.each(conditions.countries, function(data) {
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["iso_country_code.exactWords"] = data.textObject.toLowerCase();
+			orCounter+=1;
+		});
+		andCounter+=1;
+	}
+	if(conditions.departments) {
+		orCounter = 0;
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
+		_.each(conditions.departments, function(data) {
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["iso_department_code.exactWords"] = data.textObject.toLowerCase();
+			orCounter+=1;
+		});
+		andCounter+=1;
+	}
+	if(conditions.providers) {
+		orCounter = 0;
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
+		_.each(conditions.providers, function(data) {
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["data_provider_name.exactWords"] = data.textObject.toLowerCase();
+			orCounter+=1;
+		});
+		andCounter+=1;
+	}
+	if(conditions.resources) {
+		orCounter = 0;
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
+		_.each(conditions.resources, function(data) {
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["data_resource_name.exactWords"] = data.textObject.toLowerCase();
+			orCounter+=1;
+		});
+		andCounter+=1;
+	}
 	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
 	return mySearchCall;
 };
