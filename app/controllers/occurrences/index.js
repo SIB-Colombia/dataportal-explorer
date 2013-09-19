@@ -1,4 +1,4 @@
-var mongoose = require('mongoose')
+/*var mongoose = require('mongoose')
   , CanonicalGroup = mongoose.model('CanonicalGroup')
   , KingdomGroup = mongoose.model('KingdomGroup')
   , PhylumGroup = mongoose.model('PhylumGroup')
@@ -16,7 +16,7 @@ var mongoose = require('mongoose')
   , DepartmentsGroup = mongoose.model('DepartmentsGroup')
   , GeoOccurrence = mongoose.model('GeoOccurrence')
   , Occurrence = mongoose.model('Occurrence')
-  , HelpSearchText = mongoose.model('HelpSearchText')
+  , HelpSearchText = mongoose.model('HelpSearchText')*/
 
 var occurrencesES = require("../../models/elasticsearch/occurrencesModel");
 
@@ -239,7 +239,7 @@ exports.searchSearchHelpTextByName = function(req, res) {
 };
 
 // Search occurrences
-exports.searchGeoOccurrences = function(req, res) {
+/*exports.searchGeoOccurrences = function(req, res) {
 	var data = req.body;
 	var scientificNames = [];
 	var taxonNames = [];
@@ -307,9 +307,9 @@ exports.searchGeoOccurrences = function(req, res) {
 			res.send("Error getting search geo occurrence data.");
 		res.jsonp(geooccurrences);
 	});
-};
+};*/
 
-exports.searchDetailsGeoOccurrences = function(req, res) {
+/*exports.searchDetailsGeoOccurrences = function(req, res) {
 	Occurrence.find({canonical: req.query.canonical, latitude: req.query.latitude, longitude: req.query.longitude}).select('id canonical latitude longitude data_provider_id data_provider_name data_resource_id data_resource_name institution_code_id institution_code collection_code_id collection_code catalogue_number_id catalogue_number created occurrence_date iso_country_code iso_department_code altitude_metres depth_centimetres kingdom phylum taxonClass order_rank family genus species').exec(function (err, occurrences) {
 		if(err)
 			res.send("Error getting search occurrence details data.");
@@ -323,7 +323,7 @@ exports.searchInitialOccurrences = function(req, res) {
 			res.send("Error getting initial geo occurrence data.");
 		res.jsonp(geooccurrences);
 	});
-};
+};*/
 
 exports.searchInitialPagedDataOccurrences = function(req, res) {
 	//console.log(req.query);

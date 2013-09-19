@@ -334,6 +334,8 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		},
 		loadCellDensityOneDegree: function() {
 			var self = this;
+			// Hide map area
+			self.hideMapAreaWithSpinner();
 			// Initialize default cell density distribution (one degree)
 			map.addLayer(self.densityCellsOneDegree());
 			$.getJSON("/distribution/onedegree/list", function(allData) {
@@ -364,6 +366,8 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				self.currentActiveDistribution("oneDegree");
 
 				self.densityCellsOneDegree().on('click', function (a) {
+					// Hide map area
+					self.hideMapAreaWithSpinner();
 					$.getJSON("/distribution/onedegree/stats/"+a.layer.options.cellID, function(allData) {
 						var canonicals = ko.observableArray();
 						_.each(allData.facets.canonical.terms, function(data) {
@@ -463,8 +467,12 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 						} else {
 							$("#resumeInfoDetailContainer").mCustomScrollbar("update");
 						}
+						// Show map area
+						self.showMapAreaWithSpinner();
 					});
 				});
+				// Show map area
+				self.showMapAreaWithSpinner();
 			});
 		},
 		loadCellDensityPointOneDegree: function() {
@@ -496,6 +504,8 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				});
 
 				self.densityCellsPointOneDegree().on('click', function (a) {
+					// Hide map area
+					self.hideMapAreaWithSpinner();
 					$.getJSON("/distribution/centidegree/stats/"+a.layer.options.cellID+"/"+a.layer.options.centicellID, function(allData) {
 						var canonicals = ko.observableArray();
 						_.each(allData.facets.canonical.terms, function(data) {
@@ -595,6 +605,8 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 						} else {
 							$("#resumeInfoDetailContainer").mCustomScrollbar("update");
 						}
+						// Show map area
+						show.hideMapAreaWithSpinner();
 					});
 				});
 			});
@@ -628,6 +640,8 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				});
 
 				self.densityCellsPointFiveDegree().on('click', function (a) {
+					// Hide map area
+					self.hideMapAreaWithSpinner();
 					$.getJSON("/distribution/pointfivedegree/stats/"+a.layer.options.cellID+"/"+a.layer.options.pointfivecellID, function(allData) {
 						var canonicals = ko.observableArray();
 						_.each(allData.facets.canonical.terms, function(data) {
@@ -727,6 +741,8 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 						} else {
 							$("#resumeInfoDetailContainer").mCustomScrollbar("update");
 						}
+						// Show map area
+						show.hideMapAreaWithSpinner();
 					});
 				});
 			});
@@ -760,6 +776,8 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				});
 
 				self.densityCellsPointTwoDegree().on('click', function (a) {
+					// Hide map area
+					self.hideMapAreaWithSpinner();
 					$.getJSON("/distribution/pointtwodegree/stats/"+a.layer.options.cellID+"/"+a.layer.options.pointtwocellID, function(allData) {
 						var canonicals = ko.observableArray();
 						_.each(allData.facets.canonical.terms, function(data) {
@@ -859,6 +877,8 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 						} else {
 							$("#resumeInfoDetailContainer").mCustomScrollbar("update");
 						}
+						// Show map area
+						show.hideMapAreaWithSpinner();
 					});
 				});
 			});
@@ -1066,7 +1086,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				response['resources'] = self.selectedResources();
 			var data = ko.toJSON(response);
 			console.log(data);
-			/*$.ajax({
+			$.ajax({
 				contentType: 'application/json',
 				type: 'POST',
 				url: '/distribution/search',
@@ -1084,7 +1104,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					console.log("success");
 				},
 				dataType: 'jsonp'
-			});*/
+			});
 		},
 		toggleDistribution: function(data, event) {
 			var self = this;
@@ -2723,6 +2743,16 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			var self = parent;
 			self.selectedResources.remove(selectedFilter);
 			self.totalFilters(self.totalFilters()-1);
+		},
+		hideMapAreaWithSpinner: function() {
+			var self = this;
+			self.disableFilterHelp();
+			$(".tab-content").addClass("hide-element");
+			$("#map-filter-area").addClass("loading");
+		},
+		showMapAreaWithSpinner: function() {
+			$("#map-filter-area").removeClass("loading");
+			$(".tab-content").removeClass("hide-element");
 		}
 	});
 

@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var Occurrence = mongoose.model('Occurrence');
 var occurrencesES = require("../../models/elasticsearch/occurrencesModel");
+var _ = require('underscore');
 
 exports.listInitialDistributionOneDegree = function(req, res) {
 	occurrences = occurrencesES.getDistributionsOneDegree();
@@ -58,7 +59,20 @@ exports.getDistributionStatsPointTwoDegree = function(req, res) {
 	});
 };
 
-exports.searchGeoDistributionOccurrences = function(req, res) {
+exports.searchDistributionOccurrences = function(req, res) {
+	var data = req.body;
+	occurrences = occurrencesES.getOccurrencesWithFilter(data);
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
+	});
+
+	
+	/*_.each(scientificNames, function(data) {
+		console.log(data);
+	});*/
+};
+
+/*exports.searchGeoDistributionOccurrences = function(req, res) {
 	var data = req.body;
 	var scientificNames = [];
 	var taxonNames = [];
@@ -126,4 +140,4 @@ exports.searchGeoDistributionOccurrences = function(req, res) {
 			res.send("Error getting search geo occurrence data.");
 		res.jsonp(geooccurrences);
 	});
-};
+};*/

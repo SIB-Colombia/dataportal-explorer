@@ -70,6 +70,10 @@ module.exports = function(parent, options) {
 					method = 'get';
 					path = '/' + name + '/pointtwodegree/stats/:' + '_cellid' + '/:' + '_pointtwocellid';
 					break;
+				case 'searchDistributionOccurrences':
+					method = 'post';
+					path = '/' + name + '/search';
+					break;
 				/*case 'show':
 					method = 'get';
 					path = '/' + name + '/:' + name + '_id';
@@ -90,10 +94,10 @@ module.exports = function(parent, options) {
 					method = 'post';
 					path = '/' + name;
 					break;*/
-				case 'searchInitialOccurrences':
+				/*case 'searchInitialOccurrences':
 					method = 'get';
 					path = '/' + name + '/list';
-					break;
+					break;*/
 				/*case 'searchAllOccurrences':
 					method = 'get';
 					path = '/' + name + '/list';
@@ -102,18 +106,18 @@ module.exports = function(parent, options) {
 					method = 'get';
 					path = '/' + name + '/PagedData';
 					break;
-				case 'searchGeoOccurrences':
+				/*case 'searchGeoOccurrences':
 					method = 'post';
 					path = '/' + name + '/search';
-					break;
-				case 'searchGeoDistributionOccurrences':
+					break;*/
+				/*case 'searchGeoDistributionOccurrences':
 					method = 'post';
 					path = '/' + name + '/search';
-					break;
-				case 'searchDetailsGeoOccurrences':
+					break;*/
+				/*case 'searchDetailsGeoOccurrences':
 					method = 'get';
 					path = '/' + name + '/details/search';
-					break;
+					break;*/
 				case 'searchResumeScientificNameByName':
 					method = 'get';
 					path = '/' + name + '/resume/scientificname/name/:' + '_name';
