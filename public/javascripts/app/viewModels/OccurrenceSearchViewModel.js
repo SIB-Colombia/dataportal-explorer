@@ -606,7 +606,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 							$("#resumeInfoDetailContainer").mCustomScrollbar("update");
 						}
 						// Show map area
-						show.hideMapAreaWithSpinner();
+						self.showMapAreaWithSpinner();
 					});
 				});
 			});
@@ -742,7 +742,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 							$("#resumeInfoDetailContainer").mCustomScrollbar("update");
 						}
 						// Show map area
-						show.hideMapAreaWithSpinner();
+						self.showMapAreaWithSpinner();
 					});
 				});
 			});
@@ -878,7 +878,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 							$("#resumeInfoDetailContainer").mCustomScrollbar("update");
 						}
 						// Show map area
-						show.hideMapAreaWithSpinner();
+						self.showMapAreaWithSpinner();
 					});
 				});
 			});
