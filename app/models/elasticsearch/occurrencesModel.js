@@ -727,6 +727,24 @@ exports.getDistributionWithFilter = function(conditions) {
 					"field": "cell_group.untouched",
 					"size" : 100000000
 				}
+			},
+			"pointfivegroup": {
+				"terms": {
+					"field": "pointfive_group.untouched",
+					"size" : 100000000
+				}
+			},
+			"pointtwogroup": {
+				"terms": {
+					"field": "pointtwo_group.untouched",
+					"size" : 100000000
+				}
+			},
+			"centigroup": {
+				"terms": {
+					"field": "centi_group.untouched",
+					"size" : 100000000
+				}
 			}
 		}
 	};

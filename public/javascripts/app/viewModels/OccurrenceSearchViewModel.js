@@ -1101,7 +1101,15 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				},
 				success: function(returnedData) {
 					map.removeLayer(self.densityCellsOneDegree());
+					map.removeLayer(self.densityCellsPointOneDegree());
+					map.removeLayer(self.densityCellsPointFiveDegree());
+					map.removeLayer(self.densityCellsPointTwoDegree());
+
 					self.densityCellsOneDegree(new L.FeatureGroup());
+					self.densityCellsPointOneDegree(new L.FeatureGroup());
+					self.densityCellsPointFiveDegree(new L.FeatureGroup());
+					self.densityCellsPointTwoDegree(new L.FeatureGroup());
+
 					map.addLayer(self.densityCellsOneDegree());
 					$.each(returnedData.facets.cellgroup.terms, function(i, cell) {
 						var idAndLocation = cell.term.split("~~~");
@@ -1126,7 +1134,76 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 						});
 						self.densityCellsOneDegree().addLayer(densityCell);
 					});
-					self.totalGeoOccurrences(returnedData.facets.cellgroup.total);
+					$.each(returnedData.facets.pointfivegroup.terms, function(i, cell) {
+						var idAndLocation = cell.term.split("~~~");
+						var bounds = [[parseFloat(idAndLocation[2]), parseFloat(idAndLocation[3])], [parseFloat(idAndLocation[2])+0.5, parseFloat(idAndLocation[3])+0.5]];
+						var color = "#ff7800";
+						if (cell.count > 0 && cell.count < 10) {
+							color = "#FFFF00";
+						} else if(cell.count > 9 && cell.count < 100) {
+							color = "#FFCC00";
+						} else if(cell.count > 99 && cell.count < 1000) {
+							color = "#FF9900";
+						} else if(cell.count > 999 && cell.count < 10000) {
+							color = "#FF6600";
+						} else if(cell.count > 9999 && cell.count < 100000) {
+							color = "#FF3300";
+						} else if(cell.count > 99999) {
+							color = "#CC0000";
+						}
+						var densityCell = new L.rectangle(bounds, {color: color, weight: 1, fill: true, fillOpacity: 0.5, cellID: idAndLocation[0], pointfivecellID: idAndLocation[1]});
+						densityCell.on('click', function (a) {
+							a.target.bindPopup("<strong>No. registros: </strong>" + cell.count + "</br></br><strong>Ubicación:</strong></br>[" + idAndLocation[2] + ", " + idAndLocation[3] + "] [" + (((parseFloat(idAndLocation[2])*10)+5)/10) + ", " + (((parseFloat(idAndLocation[3])*10)+5)/10) + "]").openPopup();
+						});
+						self.densityCellsPointFiveDegree().addLayer(densityCell);
+					});
+					$.each(returnedData.facets.pointtwogroup.terms, function(i, cell) {
+						var idAndLocation = cell.term.split("~~~");
+						var bounds = [[parseFloat(idAndLocation[2]), parseFloat(idAndLocation[3])], [parseFloat(idAndLocation[2])+0.2, parseFloat(idAndLocation[3])+0.2]];
+						var color = "#ff7800";
+						if (cell.count > 0 && cell.count < 10) {
+							color = "#FFFF00";
+						} else if(cell.count > 9 && cell.count < 100) {
+							color = "#FFCC00";
+						} else if(cell.count > 99 && cell.count < 1000) {
+							color = "#FF9900";
+						} else if(cell.count > 999 && cell.count < 10000) {
+							color = "#FF6600";
+						} else if(cell.count > 9999 && cell.count < 100000) {
+							color = "#FF3300";
+						} else if(cell.count > 99999) {
+							color = "#CC0000";
+						}
+						var densityCell = new L.rectangle(bounds, {color: color, weight: 1, fill: true, fillOpacity: 0.5, cellID: idAndLocation[0], pointtwocellID: idAndLocation[1]});
+						densityCell.on('click', function (a) {
+							a.target.bindPopup("<strong>No. registros: </strong>" + cell.count + "</br></br><strong>Ubicación:</strong></br>[" + idAndLocation[2] + ", " + idAndLocation[3] + "] [" + (((parseFloat(idAndLocation[2])*10)+2)/10) + ", " + (((parseFloat(idAndLocation[3])*10)+2)/10) + "]").openPopup();
+						});
+						self.densityCellsPointTwoDegree().addLayer(densityCell);
+					});
+					$.each(returnedData.facets.centigroup.terms, function(i, cell) {
+						var idAndLocation = cell.term.split("~~~");
+						var bounds = [[parseFloat(idAndLocation[2]), parseFloat(idAndLocation[3])], [parseFloat(idAndLocation[2])+0.1, parseFloat(idAndLocation[3])+0.1]];
+						var color = "#ff7800";
+						if (cell.count > 0 && cell.count < 10) {
+							color = "#FFFF00";
+						} else if(cell.count > 9 && cell.count < 100) {
+							color = "#FFCC00";
+						} else if(cell.count > 99 && cell.count < 1000) {
+							color = "#FF9900";
+						} else if(cell.count > 999 && cell.count < 10000) {
+							color = "#FF6600";
+						} else if(cell.count > 9999 && cell.count < 100000) {
+							color = "#FF3300";
+						} else if(cell.count > 99999) {
+							color = "#CC0000";
+						}
+						var densityCell = new L.rectangle(bounds, {color: color, weight: 1, fill: true, fillOpacity: 0.5, cellID: idAndLocation[0], pointtwocellID: idAndLocation[1]});
+						densityCell.on('click', function (a) {
+							a.target.bindPopup("<strong>No. registros: </strong>" + cell.count + "</br></br><strong>Ubicación:</strong></br>[" + idAndLocation[2] + ", " + idAndLocation[3] + "] [" + (((parseFloat(idAndLocation[2])*10)+1)/10) + ", " + (((parseFloat(idAndLocation[3])*10)+1)/10) + "]").openPopup();
+						});
+						self.densityCellsPointOneDegree().addLayer(densityCell);
+					});
+					self.totalGeoOccurrences(returnedData.hits.total);
 				},
 				dataType: 'jsonp'
 			});
