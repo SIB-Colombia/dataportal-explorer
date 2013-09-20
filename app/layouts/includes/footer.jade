@@ -1,9 +1,4 @@
 block footer
-	// Including google maps API
-	script(src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC69q4cWqAg7oJHdYNu9ZTl2C6zSaTrUeA&sensor=false")
-	// Including RequiereJS module loader
-	script(data-main="/javascripts/main", src="/javascripts/require.js")
-//
 	script.
 		var _gaq = _gaq || [];
 		_gaq.push(['_setAccount', 'UA-1418857-10']);
@@ -16,10 +11,7 @@ block footer
 			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 		})();
 
-		$('a[data-toggle="tab"]').on('shown', function (e) {
-			// Map Height
-			$("#mapa").height($(window).height()-$("header").height());
-			// Table view height
-			$("#reportGrid").height($(window).height()-$("header").height()-$("#actual-search-stats-data").height()-60);
-			$("#reportGrid .k-grid-content").height($(window).height()-$("header").height()-$("#actual-search-stats-data").height()-60-91);
-		});
+	// Including google maps API
+	script(src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC69q4cWqAg7oJHdYNu9ZTl2C6zSaTrUeA&sensor=false")
+	// Including RequiereJS module loader
+	script(data-main="/javascripts/main", src="/javascripts/require.js")

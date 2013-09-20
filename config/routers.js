@@ -58,13 +58,21 @@ module.exports = function(parent, options) {
 					method = 'get';
 					path = '/' + name + '/onedegree/stats/:' + '_cellid';
 					break;
-				case 'getDistributionStatsPointOneDegree':
-					method = 'get';
-					path = '/' + name + '/centidegree/stats/:' + '_cellid' + '/:' + '_centicellid';
+				case 'getDistributionStatsWithSearchOneDegree':
+					method = 'post';
+					path = '/' + name + '/onedegree/stats';
 					break;
 				case 'getDistributionStatsPointFiveDegree':
 					method = 'get';
 					path = '/' + name + '/pointfivedegree/stats/:' + '_cellid' + '/:' + '_pointfivecellid';
+					break;
+				case 'getDistributionStatsWithSearchPointFiveDegree':
+					method = 'post';
+					path = '/' + name + '/pointfivedegree/stats';
+					break;
+				case 'getDistributionStatsPointOneDegree':
+					method = 'get';
+					path = '/' + name + '/centidegree/stats/:' + '_cellid' + '/:' + '_centicellid';
 					break;
 				case 'getDistributionStatsPointTwoDegree':
 					method = 'get';

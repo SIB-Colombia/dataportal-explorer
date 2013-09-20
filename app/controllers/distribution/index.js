@@ -32,36 +32,49 @@ exports.listInitialDistributionPointTwoDegree = function(req, res) {
 };
 
 exports.getDistributionStatsOneDegree = function(req, res) {
-	occurrences = occurrencesES.getStatsOccurrencesOneDegree(req.params._cellid);
+	occurrences = occurrencesES.getDistributionStatsOneDegree(req.params._cellid);
 	occurrences.exec(function(err, data){
 		res.jsonp(JSON.parse(data));
 	});
 };
 
-exports.getDistributionStatsPointOneDegree = function(req, res) {
-	occurrences = occurrencesES.getStatsOccurrencesPointOneDegree(req.params._cellid, req.params._centicellid);
+exports.getDistributionStatsWithSearchOneDegree = function(req, res) {
+	occurrences = occurrencesES.getDistributionStatsWithSearchOneDegree(req.body);
 	occurrences.exec(function(err, data){
 		res.jsonp(JSON.parse(data));
 	});
 };
 
 exports.getDistributionStatsPointFiveDegree = function(req, res) {
-	occurrences = occurrencesES.getStatsOccurrencesPointFiveDegree(req.params._cellid, req.params._pointfivecellid);
+	occurrences = occurrencesES.getDistributionStatsPointFiveDegree(req.params._cellid, req.params._pointfivecellid);
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
+	});
+};
+
+exports.getDistributionStatsWithSearchPointFiveDegree = function(req, res) {
+	occurrences = occurrencesES.getDistributionStatsWithSearchPointFiveDegree(req.body);
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
+	});
+};
+
+exports.getDistributionStatsPointOneDegree = function(req, res) {
+	occurrences = occurrencesES.getDistributionStatsPointOneDegree(req.params._cellid, req.params._centicellid);
 	occurrences.exec(function(err, data){
 		res.jsonp(JSON.parse(data));
 	});
 };
 
 exports.getDistributionStatsPointTwoDegree = function(req, res) {
-	occurrences = occurrencesES.getStatsOccurrencesPointTwoDegree(req.params._cellid, req.params._pointtwocellid);
+	occurrences = occurrencesES.getDistributionStatsPointTwoDegree(req.params._cellid, req.params._pointtwocellid);
 	occurrences.exec(function(err, data){
 		res.jsonp(JSON.parse(data));
 	});
 };
 
 exports.searchDistributionOccurrences = function(req, res) {
-	var data = req.body;
-	occurrences = occurrencesES.getDistributionWithFilter(data);
+	occurrences = occurrencesES.getDistributionWithFilter(req.body);
 	occurrences.exec(function(err, data){
 		res.jsonp(JSON.parse(data));
 	});

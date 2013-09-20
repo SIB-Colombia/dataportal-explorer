@@ -306,7 +306,7 @@ exports.getDistributionsPointTwoDegree = function() {
 };
 
 // Returns cell stats for one degree
-exports.getStatsOccurrencesOneDegree = function(cellid) {
+exports.getDistributionStatsOneDegree = function(cellid) {
 	qryObj = {
 		"fields": ["id"],
 		"size": 0,
@@ -401,15 +401,21 @@ exports.getStatsOccurrencesOneDegree = function(cellid) {
 	return mySearchCall;
 };
 
-// Returns cell stats for point one degree
-exports.getStatsOccurrencesPointOneDegree = function(cellid, centicellid) {
-	qryObj = {
-		"fields": ["id"],
-		"size": 0,
+// Returns cell stats for one degree with search conditions
+exports.getDistributionStatsWithSearchOneDegree = function(conditions) {
+	var qryObj = {
+		"fields": [],
 		"query": {
-			"filtered" : {
+			"filtered": {
+				"filter": {
+					"term" : {
+						"cell_id": conditions.cellid
+					}
+				},
 				"query" : {
-					"match_all" : {}
+					"bool": {
+						"must": []
+					}
 				}
 			}
 		},
@@ -488,22 +494,106 @@ exports.getStatsOccurrencesPointOneDegree = function(cellid, centicellid) {
 			}
 		}
 	};
-	qryObj["query"]["filtered"]["filter"] = {};
-	qryObj["query"]["filtered"]["filter"]["and"] = [];
-	qryObj["query"]["filtered"]["filter"]["and"][0] = {};
-	qryObj["query"]["filtered"]["filter"]["and"][0]["term"] = {};
-	qryObj["query"]["filtered"]["filter"]["and"][0]["term"]["cell_id"] = cellid;
 
-	qryObj["query"]["filtered"]["filter"]["and"][1] = {};
-	qryObj["query"]["filtered"]["filter"]["and"][1]["term"] = {};
-	qryObj["query"]["filtered"]["filter"]["and"][1]["term"]["centi_cell_id"] = centicellid;
+	var andCounter = 0;
+	var orCounter = 0;
 
+	if(conditions.scientificNames) {
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
+		_.each(conditions.scientificNames, function(data) {
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["canonical.exactWords"] = data.textObject.toLowerCase();
+			orCounter+=1;
+		});
+		andCounter+=1;
+	}
+	if(conditions.taxons) {
+		orCounter = 0;
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
+		_.each(conditions.taxons, function(data) {
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
+			if(data.textName == "kingdom")
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["kingdom.exactWords"] = data.textObject.toLowerCase();
+			if(data.textName == "phylum")
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["phylum.exactWords"] = data.textObject.toLowerCase();
+			if(data.textName == "class")
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["taxonClass.exactWords"] = data.textObject.toLowerCase();
+			if(data.textName == "order")
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["order_rank.exactWords"] = data.textObject.toLowerCase();
+			if(data.textName == "family")
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["family.exactWords"] = data.textObject.toLowerCase();
+			if(data.textName == "genus")
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["genus.exactWords"] = data.textObject.toLowerCase();
+			if(data.textName == "species")
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["species.exactWords"] = data.textObject.toLowerCase();
+			orCounter+=1;
+		});
+		andCounter+=1;
+	}
+	if(conditions.countries) {
+		orCounter = 0;
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
+		_.each(conditions.countries, function(data) {
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["iso_country_code.exactWords"] = data.textObject.toLowerCase();
+			orCounter+=1;
+		});
+		andCounter+=1;
+	}
+	if(conditions.departments) {
+		orCounter = 0;
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
+		_.each(conditions.departments, function(data) {
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["iso_department_code.exactWords"] = data.textObject.toLowerCase();
+			orCounter+=1;
+		});
+		andCounter+=1;
+	}
+	if(conditions.providers) {
+		orCounter = 0;
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
+		_.each(conditions.providers, function(data) {
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["data_provider_name.exactWords"] = data.textObject.toLowerCase();
+			orCounter+=1;
+		});
+		andCounter+=1;
+	}
+	if(conditions.resources) {
+		orCounter = 0;
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
+		_.each(conditions.resources, function(data) {
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["data_resource_name.exactWords"] = data.textObject.toLowerCase();
+			orCounter+=1;
+		});
+		andCounter+=1;
+	}
 	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
 	return mySearchCall;
 };
 
 // Returns cell stats for point five degree
-exports.getStatsOccurrencesPointFiveDegree = function(cellid, pointfivecellid) {
+exports.getDistributionStatsPointFiveDegree = function(cellid, pointfivecellid) {
 	qryObj = {
 		"fields": ["id"],
 		"size": 0,
@@ -603,8 +693,309 @@ exports.getStatsOccurrencesPointFiveDegree = function(cellid, pointfivecellid) {
 	return mySearchCall;
 };
 
+// Returns cell stats for point five degree with search conditions
+exports.getDistributionStatsWithSearchPointFiveDegree = function(conditions) {
+	var qryObj = {
+		"fields": [],
+		"query": {
+			"filtered": {
+				"filter": {
+					"and": [
+						{
+							"term" : {
+								"cell_id": conditions.cellid
+							}
+						},
+						{
+							"term" : {
+								"pointfive_cell_id": conditions.pointfivecellid
+							}
+						}
+					]
+				},
+				"query" : {
+					"bool": {
+						"must": []
+					}
+				}
+			}
+		},
+		"facets": {
+			"canonical": {
+				"terms": {
+					"field": "canonical.untouched",
+					"size" : 10
+				}
+			},
+			"kingdom": {
+				"terms": {
+					"field": "kingdom_group.untouched",
+					"size" : 10
+				}
+			},
+			"phylum": {
+				"terms": {
+					"field": "phylum_group.untouched",
+					"size" : 10
+				}
+			},
+			"taxonClass": {
+				"terms": {
+					"field": "taxonClass_group.untouched",
+					"size" : 10
+				}
+			},
+			"order_rank": {
+				"terms": {
+					"field": "order_rank_group.untouched",
+					"size" : 10
+				}
+			},
+			"family": {
+				"terms": {
+					"field": "family_group.untouched",
+					"size" : 10
+				}
+			},
+			"genus": {
+				"terms": {
+					"field": "genus_group.untouched",
+					"size" : 10
+				}
+			},
+			"species": {
+				"terms": {
+					"field": "species_group.untouched",
+					"size" : 10
+				}
+			},
+			"data_provider_name": {
+				"terms": {
+					"field": "data_provider_name.untouched",
+					"size" : 10
+				}
+			},
+			"data_provider_id": {
+				"terms": {
+					"field": "data_provider_id",
+					"size" : 10
+				}
+			},
+			"data_resource_name": {
+				"terms": {
+					"field": "data_resource_name.untouched",
+					"size" : 10
+				}
+			},
+			"data_resource_id": {
+				"terms": {
+					"field": "data_resource_id",
+					"size" : 10
+				}
+			}
+		}
+	};
+
+	var andCounter = 0;
+	var orCounter = 0;
+
+	if(conditions.scientificNames) {
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
+		_.each(conditions.scientificNames, function(data) {
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["canonical.exactWords"] = data.textObject.toLowerCase();
+			orCounter+=1;
+		});
+		andCounter+=1;
+	}
+	if(conditions.taxons) {
+		orCounter = 0;
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
+		_.each(conditions.taxons, function(data) {
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
+			if(data.textName == "kingdom")
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["kingdom.exactWords"] = data.textObject.toLowerCase();
+			if(data.textName == "phylum")
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["phylum.exactWords"] = data.textObject.toLowerCase();
+			if(data.textName == "class")
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["taxonClass.exactWords"] = data.textObject.toLowerCase();
+			if(data.textName == "order")
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["order_rank.exactWords"] = data.textObject.toLowerCase();
+			if(data.textName == "family")
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["family.exactWords"] = data.textObject.toLowerCase();
+			if(data.textName == "genus")
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["genus.exactWords"] = data.textObject.toLowerCase();
+			if(data.textName == "species")
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["species.exactWords"] = data.textObject.toLowerCase();
+			orCounter+=1;
+		});
+		andCounter+=1;
+	}
+	if(conditions.countries) {
+		orCounter = 0;
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
+		_.each(conditions.countries, function(data) {
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["iso_country_code.exactWords"] = data.textObject.toLowerCase();
+			orCounter+=1;
+		});
+		andCounter+=1;
+	}
+	if(conditions.departments) {
+		orCounter = 0;
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
+		_.each(conditions.departments, function(data) {
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["iso_department_code.exactWords"] = data.textObject.toLowerCase();
+			orCounter+=1;
+		});
+		andCounter+=1;
+	}
+	if(conditions.providers) {
+		orCounter = 0;
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
+		_.each(conditions.providers, function(data) {
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["data_provider_name.exactWords"] = data.textObject.toLowerCase();
+			orCounter+=1;
+		});
+		andCounter+=1;
+	}
+	if(conditions.resources) {
+		orCounter = 0;
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
+		_.each(conditions.resources, function(data) {
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["data_resource_name.exactWords"] = data.textObject.toLowerCase();
+			orCounter+=1;
+		});
+		andCounter+=1;
+	}
+	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
+	return mySearchCall;
+};
+
+// Returns cell stats for point one degree
+exports.getDistributionStatsPointOneDegree = function(cellid, centicellid) {
+	qryObj = {
+		"fields": ["id"],
+		"size": 0,
+		"query": {
+			"filtered" : {
+				"query" : {
+					"match_all" : {}
+				}
+			}
+		},
+		"facets": {
+			"canonical": {
+				"terms": {
+					"field": "canonical.untouched",
+					"size" : 10
+				}
+			},
+			"kingdom": {
+				"terms": {
+					"field": "kingdom_group.untouched",
+					"size" : 10
+				}
+			},
+			"phylum": {
+				"terms": {
+					"field": "phylum_group.untouched",
+					"size" : 10
+				}
+			},
+			"taxonClass": {
+				"terms": {
+					"field": "taxonClass_group.untouched",
+					"size" : 10
+				}
+			},
+			"order_rank": {
+				"terms": {
+					"field": "order_rank_group.untouched",
+					"size" : 10
+				}
+			},
+			"family": {
+				"terms": {
+					"field": "family_group.untouched",
+					"size" : 10
+				}
+			},
+			"genus": {
+				"terms": {
+					"field": "genus_group.untouched",
+					"size" : 10
+				}
+			},
+			"species": {
+				"terms": {
+					"field": "species_group.untouched",
+					"size" : 10
+				}
+			},
+			"data_provider_name": {
+				"terms": {
+					"field": "data_provider_name.untouched",
+					"size" : 10
+				}
+			},
+			"data_provider_id": {
+				"terms": {
+					"field": "data_provider_id",
+					"size" : 10
+				}
+			},
+			"data_resource_name": {
+				"terms": {
+					"field": "data_resource_name.untouched",
+					"size" : 10
+				}
+			},
+			"data_resource_id": {
+				"terms": {
+					"field": "data_resource_id",
+					"size" : 10
+				}
+			}
+		}
+	};
+	qryObj["query"]["filtered"]["filter"] = {};
+	qryObj["query"]["filtered"]["filter"]["and"] = [];
+	qryObj["query"]["filtered"]["filter"]["and"][0] = {};
+	qryObj["query"]["filtered"]["filter"]["and"][0]["term"] = {};
+	qryObj["query"]["filtered"]["filter"]["and"][0]["term"]["cell_id"] = cellid;
+
+	qryObj["query"]["filtered"]["filter"]["and"][1] = {};
+	qryObj["query"]["filtered"]["filter"]["and"][1]["term"] = {};
+	qryObj["query"]["filtered"]["filter"]["and"][1]["term"]["centi_cell_id"] = centicellid;
+
+	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
+	return mySearchCall;
+};
+
 // Returns cell stats for point two degree
-exports.getStatsOccurrencesPointTwoDegree = function(cellid, pointtwocellid) {
+exports.getDistributionStatsPointTwoDegree = function(cellid, pointtwocellid) {
 	qryObj = {
 		"fields": ["id"],
 		"size": 0,
@@ -772,19 +1163,19 @@ exports.getDistributionWithFilter = function(conditions) {
 		_.each(conditions.taxons, function(data) {
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
-			if(data.textName == "Reino")
+			if(data.textName == "kingdom")
 				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["kingdom.exactWords"] = data.textObject.toLowerCase();
-			if(data.textName == "Filo")
+			if(data.textName == "phylum")
 				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["phylum.exactWords"] = data.textObject.toLowerCase();
-			if(data.textName == "Clase")
+			if(data.textName == "class")
 				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["taxonClass.exactWords"] = data.textObject.toLowerCase();
-			if(data.textName == "Orden")
+			if(data.textName == "order")
 				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["order_rank.exactWords"] = data.textObject.toLowerCase();
-			if(data.textName == "Familia")
+			if(data.textName == "family")
 				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["family.exactWords"] = data.textObject.toLowerCase();
-			if(data.textName == "Genero")
+			if(data.textName == "genus")
 				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["genus.exactWords"] = data.textObject.toLowerCase();
-			if(data.textName == "Especie")
+			if(data.textName == "species")
 				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["species.exactWords"] = data.textObject.toLowerCase();
 			orCounter+=1;
 		});

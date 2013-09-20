@@ -927,7 +927,7 @@ block filterWindow
 									span(data-bind='visible: predicate == 0') es 
 									span(data-bind='visible: predicate == 1') mayor que 
 									span(data-bind='visible: predicate == 2') menor que 
-								span(data-bind='text: parsedLatitudeText')
+								span(data-bind='text: $parent.parsedLatitudeText($data)')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeLatitudeNumber($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include longitude filters
@@ -941,7 +941,7 @@ block filterWindow
 									span(data-bind='visible: predicate == 0') es 
 									span(data-bind='visible: predicate == 1') mayor que 
 									span(data-bind='visible: predicate == 2') menor que 
-								span(data-bind='text: parsedLongitudeText')
+								span(data-bind='text: $parent.parsedLongitudeText($data)')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeLongitudeNumber($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include altitude filters
@@ -955,7 +955,7 @@ block filterWindow
 									span(data-bind='visible: predicate == 0') es 
 									span(data-bind='visible: predicate == 1') mayor que 
 									span(data-bind='visible: predicate == 2') menor que 
-								span(data-bind='text: parsedAltitudeText')
+								span(data-bind='text: $parent.parsedHeightText($data)')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeAltitudeNumber($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include deep filters
@@ -969,7 +969,7 @@ block filterWindow
 									span(data-bind='visible: predicate == 0') es 
 									span(data-bind='visible: predicate == 1') mayor que 
 									span(data-bind='visible: predicate == 2') menor que 
-								span(data-bind='text: parsedDeepText')
+								span(data-bind='text: $parent.parsedHeightText($data)')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeDeepNumber($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include coordinate state filters
