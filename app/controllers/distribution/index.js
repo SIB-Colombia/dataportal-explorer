@@ -66,8 +66,22 @@ exports.getDistributionStatsPointOneDegree = function(req, res) {
 	});
 };
 
+exports.getDistributionStatsWithSearchPointOneDegree = function(req, res) {
+	occurrences = occurrencesES.getDistributionStatsWithSearchPointOneDegree(req.body);
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
+	});
+};
+
 exports.getDistributionStatsPointTwoDegree = function(req, res) {
 	occurrences = occurrencesES.getDistributionStatsPointTwoDegree(req.params._cellid, req.params._pointtwocellid);
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
+	});
+};
+
+exports.getDistributionStatsWithSearchPointTwoDegree = function(req, res) {
+	occurrences = occurrencesES.getDistributionStatsWithSearchPointTwoDegree(req.body);
 	occurrences.exec(function(err, data){
 		res.jsonp(JSON.parse(data));
 	});

@@ -74,9 +74,17 @@ module.exports = function(parent, options) {
 					method = 'get';
 					path = '/' + name + '/centidegree/stats/:' + '_cellid' + '/:' + '_centicellid';
 					break;
+				case 'getDistributionStatsWithSearchPointOneDegree':
+					method = 'post';
+					path = '/' + name + '/pointonedegree/stats';
+					break;
 				case 'getDistributionStatsPointTwoDegree':
 					method = 'get';
 					path = '/' + name + '/pointtwodegree/stats/:' + '_cellid' + '/:' + '_pointtwocellid';
+					break;
+				case 'getDistributionStatsWithSearchPointTwoDegree':
+					method = 'post';
+					path = '/' + name + '/pointtwodegree/stats';
 					break;
 				case 'searchDistributionOccurrences':
 					method = 'post';

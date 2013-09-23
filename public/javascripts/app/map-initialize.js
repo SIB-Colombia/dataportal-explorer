@@ -200,7 +200,7 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 			transparent: true,
 			opacity: 0.5,
 			attribution: "GBIF, Density layer",
-			filter: '()(<Filter><PropertyIsEqualTo><PropertyName>url</PropertyName><Literal><![CDATA[http://50.19.34.70/maplayer/country/48]]></Literal></PropertyIsEqualTo></Filter>)()()'
+			filter: '()(<Filter><PropertyIsEqualTo><PropertyName>url</PropertyName><Literal><![CDATA[http://data.sibcolombia.net/maplayer/country/48]]></Literal></PropertyIsEqualTo></Filter>)()()'
 		}
 	);
 	

@@ -839,6 +839,33 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 						});
 						self.densityCellsPointTwoDegree().addLayer(densityCell);
 					});
+					self.densityCellsPointTwoDegree().on('click', function (a) {
+						response["cellid"] = a.layer.options.cellID;
+						response["pointtwocellid"] = a.layer.options.pointtwocellID;
+						data = ko.toJSON(response);
+						// Hide map area
+						self.hideMapAreaWithSpinner();
+						$.ajax({
+							contentType: 'application/json',
+							type: 'POST',
+							url: '/distribution/pointtwodegree/stats',
+							data: data,
+							beforeSend: function() {
+								self.disableFilterHelp();
+								$(".tab-content").addClass("hide-element");
+								$("#map-filter-area").addClass("loading");
+							},
+							complete: function() {
+								$("#map-filter-area").removeClass("loading");
+								$(".tab-content").removeClass("hide-element");
+							},
+							success: function(allData) {
+								self.fillCellDensityPointTwoDegreeData(allData, a);
+							},
+							dataType: 'jsonp'
+						});
+					});
+
 					$.each(returnedData.facets.centigroup.terms, function(i, cell) {
 						var idAndLocation = cell.term.split("~~~");
 						var bounds = [[parseFloat(idAndLocation[2]), parseFloat(idAndLocation[3])], [parseFloat(idAndLocation[2])+0.1, parseFloat(idAndLocation[3])+0.1]];
@@ -856,12 +883,39 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 						} else if(cell.count > 99999) {
 							color = "#CC0000";
 						}
-						var densityCell = new L.rectangle(bounds, {color: color, weight: 1, fill: true, fillOpacity: 0.5, cellID: idAndLocation[0], pointtwocellID: idAndLocation[1]});
+						var densityCell = new L.rectangle(bounds, {color: color, weight: 1, fill: true, fillOpacity: 0.5, cellID: idAndLocation[0], pointonecellID: idAndLocation[1]});
 						densityCell.on('click', function (a) {
 							a.target.bindPopup("<strong>No. registros: </strong>" + cell.count + "</br></br><strong>Ubicación:</strong></br>[" + idAndLocation[2] + ", " + idAndLocation[3] + "] [" + (((parseFloat(idAndLocation[2])*10)+1)/10) + ", " + (((parseFloat(idAndLocation[3])*10)+1)/10) + "]").openPopup();
 						});
 						self.densityCellsPointOneDegree().addLayer(densityCell);
 					});
+					self.densityCellsPointOneDegree().on('click', function (a) {
+						response["cellid"] = a.layer.options.cellID;
+						response["pointonecellid"] = a.layer.options.pointonecellID;
+						data = ko.toJSON(response);
+						// Hide map area
+						self.hideMapAreaWithSpinner();
+						$.ajax({
+							contentType: 'application/json',
+							type: 'POST',
+							url: '/distribution/pointonedegree/stats',
+							data: data,
+							beforeSend: function() {
+								self.disableFilterHelp();
+								$(".tab-content").addClass("hide-element");
+								$("#map-filter-area").addClass("loading");
+							},
+							complete: function() {
+								$("#map-filter-area").removeClass("loading");
+								$(".tab-content").removeClass("hide-element");
+							},
+							success: function(allData) {
+								self.fillCellDensityPointOneDegreeData(allData, a);
+							},
+							dataType: 'jsonp'
+						});
+					});
+
 					self.totalGeoOccurrences(returnedData.hits.total);
 					// Show map area
 					self.showMapAreaWithSpinner();
