@@ -338,7 +338,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			self.hideMapAreaWithSpinner();
 			// Initialize default cell density distribution (one degree)
 			map.addLayer(self.densityCellsOneDegree());
-			$.getJSON("/distribution/onedegree/list", function(allData) {
+			$.getJSON("/rest/distribution/onedegree/list", function(allData) {
 				$.each(allData.hits.hits, function(i, cell) {
 					var bounds = [[cell.fields.location_cell.lat, cell.fields.location_cell.lon], [cell.fields.location_cell.lat+1, cell.fields.location_cell.lon+1]];
 					var color = "#ff7800";
@@ -366,7 +366,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				self.densityCellsOneDegree().on('click', function (a) {
 					// Hide map area
 					self.hideMapAreaWithSpinner();
-					$.getJSON("/distribution/onedegree/stats/"+a.layer.options.cellID, function(allData) {
+					$.getJSON("/rest/distribution/onedegree/stats/"+a.layer.options.cellID, function(allData) {
 						self.fillCellDensityOneDegreeData(allData, a);
 					});
 				});
@@ -376,7 +376,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			var self = this;
 			// Initialize default cell density distribution (one degree)
 			var densityCellsPointOneDegree = new L.FeatureGroup();
-			$.getJSON("/distribution/centidegree/list", function(allData) {
+			$.getJSON("/rest/distribution/centidegree/list", function(allData) {
 				$.each(allData.hits.hits, function(i, cell) {
 					var bounds = [[cell.fields.location_centi_cell.lat, cell.fields.location_centi_cell.lon], [cell.fields.location_centi_cell.lat+0.1, cell.fields.location_centi_cell.lon+0.1]];
 					var color = "#ff7800";
@@ -403,7 +403,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				self.densityCellsPointOneDegree().on('click', function (a) {
 					// Hide map area
 					self.hideMapAreaWithSpinner();
-					$.getJSON("/distribution/centidegree/stats/"+a.layer.options.cellID+"/"+a.layer.options.centicellID, function(allData) {
+					$.getJSON("/rest/distribution/centidegree/stats/"+a.layer.options.cellID+"/"+a.layer.options.centicellID, function(allData) {
 						self.fillCellDensityPointOneDegreeData(allData, a);
 					});
 				});
@@ -419,7 +419,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			var self = this;
 			// Initialize default cell density distribution (five degrees)
 			var densityCellsPointFiveDegree = new L.FeatureGroup();
-			$.getJSON("/distribution/pointfivedegree/list", function(allData) {
+			$.getJSON("/rest/distribution/pointfivedegree/list", function(allData) {
 				$.each(allData.hits.hits, function(i, cell) {
 					var bounds = [[cell.fields.location_pointfive_cell.lat, cell.fields.location_pointfive_cell.lon], [cell.fields.location_pointfive_cell.lat+0.5, cell.fields.location_pointfive_cell.lon+0.5]];
 					var color = "#ff7800";
@@ -446,7 +446,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				self.densityCellsPointFiveDegree().on('click', function (a) {
 					// Hide map area
 					self.hideMapAreaWithSpinner();
-					$.getJSON("/distribution/pointfivedegree/stats/"+a.layer.options.cellID+"/"+a.layer.options.pointfivecellID, function(allData) {
+					$.getJSON("/rest/distribution/pointfivedegree/stats/"+a.layer.options.cellID+"/"+a.layer.options.pointfivecellID, function(allData) {
 						self.fillCellDensityPointFiveDegreeData(allData, a);
 					});
 				});
@@ -456,7 +456,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			var self = this;
 			// Initialize default cell density distribution (two degrees)
 			var densityCellsPointTwoDegree = new L.FeatureGroup();
-			$.getJSON("/distribution/pointtwodegree/list", function(allData) {
+			$.getJSON("/rest/distribution/pointtwodegree/list", function(allData) {
 				$.each(allData.hits.hits, function(i, cell) {
 					var bounds = [[cell.fields.location_pointtwo_cell.lat, cell.fields.location_pointtwo_cell.lon], [cell.fields.location_pointtwo_cell.lat+0.2, cell.fields.location_pointtwo_cell.lon+0.2]];
 					var color = "#ff7800";
@@ -483,7 +483,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				self.densityCellsPointTwoDegree().on('click', function (a) {
 					// Hide map area
 					self.hideMapAreaWithSpinner();
-					$.getJSON("/distribution/pointtwodegree/stats/"+a.layer.options.cellID+"/"+a.layer.options.pointtwocellID, function(allData) {
+					$.getJSON("/rest/distribution/pointtwodegree/stats/"+a.layer.options.cellID+"/"+a.layer.options.pointtwocellID, function(allData) {
 						self.fillCellDensityPointTwoDegreeData(allData, a);
 					});
 				});
@@ -596,7 +596,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		},
 		getHelpSearchText: function() {
 			var self = this;
-			$.getJSON("/occurrences/searchhelptext/name/"+self.selectedSubject(), function(allData) {
+			$.getJSON("/rest/occurrences/searchhelptext/name/"+self.selectedSubject(), function(allData) {
 				self.helpSearchText(allData.hits.hits[0].fields.text);
 			});
 		},
@@ -982,7 +982,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		// Ajax get data functions
 		getScientificNamesData: function() {
 			var self = this;
-			$.getJSON("/occurrences/resume/scientificname/name/"+((typeof self.objectNameValue() === "undefined")?"":self.objectNameValue()), function(allData) {
+			$.getJSON("/rest/occurrences/resume/scientificname/name/"+((typeof self.objectNameValue() === "undefined")?"":self.objectNameValue()), function(allData) {
 				self.resumeScientificNames.removeAll();
 				_.each(allData.facets.canonical.terms, function(data) {
 					self.resumeScientificNames.push(new ResumeScientificName({canonical: data.term, occurrences: data.count}));
@@ -1082,7 +1082,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		},
 		getKingdomNamesData: function() {
 			var self = this;
-			$.getJSON("/occurrences/resume/kingdom/name/"+((typeof self.objectNameValue() === "undefined")?"":self.objectNameValue()), function(allData) {
+			$.getJSON("/rest/occurrences/resume/kingdom/name/"+((typeof self.objectNameValue() === "undefined")?"":self.objectNameValue()), function(allData) {
 				self.resumeKingdomNames.removeAll();
 				_.each(allData.facets.kingdom.terms, function(data) {
 					var nameAndID = data.term.split("~~~");
@@ -1180,7 +1180,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		},
 		getPhylumNamesData: function() {
 			var self = this;
-			$.getJSON("/occurrences/resume/phylum/name/"+((typeof self.objectNameValue() === "undefined")?"":self.objectNameValue()), function(allData) {
+			$.getJSON("/rest/occurrences/resume/phylum/name/"+((typeof self.objectNameValue() === "undefined")?"":self.objectNameValue()), function(allData) {
 				self.resumePhylumNames.removeAll();
 				_.each(allData.facets.phylum.terms, function(data) {
 					var nameAndID = data.term.split("~~~");
@@ -1278,7 +1278,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		},
 		getClassNamesData: function() {
 			var self = this;
-			$.getJSON("/occurrences/resume/class/name/"+((typeof self.objectNameValue() === "undefined")?"":self.objectNameValue()), function(allData) {
+			$.getJSON("/rest/occurrences/resume/class/name/"+((typeof self.objectNameValue() === "undefined")?"":self.objectNameValue()), function(allData) {
 				self.resumeClassNames.removeAll();
 				_.each(allData.facets.taxonClass.terms, function(data) {
 					var nameAndID = data.term.split("~~~");
@@ -1376,7 +1376,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		},
 		getOrderNamesData: function() {
 			var self = this;
-			$.getJSON("/occurrences/resume/order/name/"+((typeof self.objectNameValue() === "undefined")?"":self.objectNameValue()), function(allData) {
+			$.getJSON("/rest/occurrences/resume/order/name/"+((typeof self.objectNameValue() === "undefined")?"":self.objectNameValue()), function(allData) {
 				self.resumeOrderNames.removeAll();
 				_.each(allData.facets.order_rank.terms, function(data) {
 					var nameAndID = data.term.split("~~~");
@@ -1474,7 +1474,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		},
 		getFamilyNamesData: function() {
 			var self = this;
-			$.getJSON("/occurrences/resume/family/name/"+((typeof self.objectNameValue() === "undefined")?"":self.objectNameValue()), function(allData) {
+			$.getJSON("/rest/occurrences/resume/family/name/"+((typeof self.objectNameValue() === "undefined")?"":self.objectNameValue()), function(allData) {
 				self.resumeFamilyNames.removeAll();
 				_.each(allData.facets.family.terms, function(data) {
 					var nameAndID = data.term.split("~~~");
@@ -1572,7 +1572,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		},
 		getGenusNamesData: function() {
 			var self = this;
-			$.getJSON("/occurrences/resume/genus/name/"+((typeof self.objectNameValue() === "undefined")?"":self.objectNameValue()), function(allData) {
+			$.getJSON("/rest/occurrences/resume/genus/name/"+((typeof self.objectNameValue() === "undefined")?"":self.objectNameValue()), function(allData) {
 				self.resumeGenusNames.removeAll();
 				_.each(allData.facets.genus.terms, function(data) {
 					var nameAndID = data.term.split("~~~");
@@ -1670,7 +1670,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		},
 		getSpeciesNamesData: function() {
 			var self = this;
-			$.getJSON("/occurrences/resume/species/name/"+((typeof self.objectNameValue() === "undefined")?"":self.objectNameValue()), function(allData) {
+			$.getJSON("/rest/occurrences/resume/species/name/"+((typeof self.objectNameValue() === "undefined")?"":self.objectNameValue()), function(allData) {
 				self.resumeSpeciesNames.removeAll();
 				_.each(allData.facets.species.terms, function(data) {
 					var nameAndID = data.term.split("~~~");
@@ -1768,7 +1768,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		},
 		getDataProvidersData: function() {
 			var self = this;
-			$.getJSON("/occurrences/resume/dataproviders/name/"+((typeof self.objectNameValue() === "undefined")?"":self.objectNameValue()), function(allData) {
+			$.getJSON("/rest/occurrences/resume/dataproviders/name/"+((typeof self.objectNameValue() === "undefined")?"":self.objectNameValue()), function(allData) {
 				self.resumeDataProviders.removeAll();
 				var count = 0;
 				_.each(allData.facets.data_provider_name.terms, function(data) {
@@ -1870,7 +1870,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		},
 		getDataResourcesData: function() {
 			var self = this;
-			$.getJSON("/occurrences/resume/dataresources/name/"+((typeof self.objectNameValue() === "undefined")?"":self.objectNameValue()), function(allData) {
+			$.getJSON("/rest/occurrences/resume/dataresources/name/"+((typeof self.objectNameValue() === "undefined")?"":self.objectNameValue()), function(allData) {
 				self.resumeDataResources.removeAll();
 				var count = 0;
 				_.each(allData.facets.data_resource_name.terms, function(data) {
@@ -1972,7 +1972,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		},
 		getInstitutionCodesData: function() {
 			var self = this;
-			$.getJSON("/occurrences/resume/institutioncodes/name/"+((typeof self.objectNameValue() === "undefined")?"":self.objectNameValue()), function(allData) {
+			$.getJSON("/rest/occurrences/resume/institutioncodes/name/"+((typeof self.objectNameValue() === "undefined")?"":self.objectNameValue()), function(allData) {
 				self.resumeInstitutionCodes.removeAll();
 				var count = 0;
 				_.each(allData.facets.institution_code.terms, function(data) {
@@ -2079,7 +2079,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		},
 		getCollectionCodesData: function() {
 			var self = this;
-			$.getJSON("/occurrences/resume/collectioncodes/name/"+((typeof self.objectNameValue() === "undefined")?"":self.objectNameValue()), function(allData) {
+			$.getJSON("/rest/occurrences/resume/collectioncodes/name/"+((typeof self.objectNameValue() === "undefined")?"":self.objectNameValue()), function(allData) {
 				self.resumeCollectionCodes.removeAll();
 				var count = 0;
 				_.each(allData.facets.collection_code.terms, function(data) {
@@ -2186,7 +2186,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		},
 		getCountriesData: function() {
 			var self = this;
-			$.getJSON("/occurrences/resume/countries/name/"+((typeof self.objectNameValue() === "undefined")?"":self.objectNameValue()), function(allData) {
+			$.getJSON("/rest/occurrences/resume/countries/name/"+((typeof self.objectNameValue() === "undefined")?"":self.objectNameValue()), function(allData) {
 				self.resumeCountries.removeAll();
 				var count = 0;
 				_.each(allData.facets.country_name.terms, function(data) {
@@ -2288,7 +2288,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		},
 		getDepartmentsData: function() {
 			var self = this;
-			$.getJSON("/occurrences/resume/departments/name/"+((typeof self.objectNameValue() === "undefined")?"":self.objectNameValue()), function(allData) {
+			$.getJSON("/rest/occurrences/resume/departments/name/"+((typeof self.objectNameValue() === "undefined")?"":self.objectNameValue()), function(allData) {
 				self.resumeDepartments.removeAll();
 				var count = 0;
 				_.each(allData.facets.department_name.terms, function(data) {
