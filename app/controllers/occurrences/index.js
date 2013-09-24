@@ -19,6 +19,7 @@
   , HelpSearchText = mongoose.model('HelpSearchText')*/
 
 var occurrencesES = require("../../models/elasticsearch/occurrencesModel");
+var _ = require('underscore');
 
 // Resume Canonical Name data JSON response
 exports.searchResumeScientificName = function(req, res) {
@@ -235,6 +236,72 @@ exports.searchSearchHelpTextByName = function(req, res) {
 	occurrences = occurrencesES.getSearchText(req.params._name);
 	occurrences.exec(function(err, data){
 		res.jsonp(JSON.parse(data));
+	});
+};
+
+exports.geoJsonMapPoints = function(req, res) {
+	occurrences = occurrencesES.geoJsonMapPoints(req.query);
+	occurrences.exec(function(err, data){
+		var result = JSON.parse(data);
+
+		var response = {
+			"hostUrl": req.protocol + "://" + req.get('host'),
+			"count": 1000,
+			"start": 0,
+			"totalMatched": result.hits.total,
+			"features": []
+		};
+
+		response["start"] = req.query.startindex || 0;
+		if(req.query.maxresults) {
+			if(req.query.maxresults > 1000) {
+				response["count"] = 1000;
+			} else {
+				response["count"] = req.query.maxresults;
+			}
+		} else {
+			response["count"] = req.query.maxresults || 1000;
+		}
+		var currentCanonical = "";
+		var currentFeature = -1;
+		var currentGeometry = 0;
+		_.each(result.hits.hits, function(occurrence) {
+			if(occurrence.fields.canonical != currentCanonical) {
+				// New feature
+				// New currentCanonical
+				currentCanonical = occurrence.fields.canonical;
+				currentFeature += 1;
+				// A new geometry for a new geature
+				currentGeometry = 0;
+				response["features"][currentFeature] = {};
+				response["features"][currentFeature]["taxonName"] = occurrence.fields.canonical;
+				response["features"][currentFeature]["type"] = "Feature";
+				response["features"][currentFeature]["key"] = occurrence.fields.id;
+				response["features"][currentFeature]["geometry"] = {};
+				response["features"][currentFeature]["geometry"]["type"] = "GeometryCollection";
+				response["features"][currentFeature]["geometry"]["geometries"] = [];
+				response["features"][currentFeature]["geometry"]["geometries"][currentGeometry] = {};
+				response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["occurrenceID"] = occurrence.fields.id;
+				response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["type"] = "Point";
+				response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["coordinates"] = [];
+				response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["coordinates"][0] = occurrence.fields.location.lon;
+				response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["coordinates"][1] = occurrence.fields.location.lat;
+				currentGeometry += 1;
+			} else {
+				// Existing feature
+				response["features"][currentFeature]["geometry"]["geometries"][currentGeometry] = {};
+				response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["occurrenceID"] = occurrence.fields.id;
+				response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["type"] = "Point";
+				response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["coordinates"] = [];
+				response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["coordinates"][0] = occurrence.fields.location.lon;
+				response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["coordinates"][1] = occurrence.fields.location.lat;
+				currentGeometry += 1;
+			}
+		});
+
+		console.log(response);
+
+		res.jsonp(response);
 	});
 };
 

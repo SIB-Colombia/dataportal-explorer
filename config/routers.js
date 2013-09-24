@@ -94,6 +94,10 @@ module.exports = function(parent, options) {
 					method = 'get';
 					path = '/' + name + '/PagedData';
 					break;
+				case 'geoJsonMapPoints':
+					method = 'get';
+					path = '/rest/' + name + '/mappoints';
+					break;
 				/*case 'show':
 					method = 'get';
 					path = '/' + name + '/:' + name + '_id';

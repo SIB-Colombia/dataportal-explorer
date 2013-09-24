@@ -1997,3 +1997,176 @@ exports.getOccurrencesWithFilter = function(conditions) {
 	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
 	return mySearchCall;
 };
+
+exports.geoJsonMapPoints = function(parameters) {
+	var qryObj = {
+		"fields": ["id", "canonical", "location"],
+		"sort": [ { "canonical.untouched": "asc" } ],
+		"from": 0,
+    "size" : 1000,
+		"query": {
+			"filtered": {
+				"filter": {
+					"exists" : {
+						"field": "cell_id"
+					}
+				},
+				"query" : {
+					"bool": {
+						"must": []
+					}
+				}
+			}
+		}
+	};
+	qryObj["from"] = parameters.startindex || 0;
+	if(parameters.maxresults) {
+		if(parameters.maxresults > 1000) {
+			qryObj["size"] = 1000;
+		} else {
+			qryObj["size"] = parameters.maxresults;
+		}
+	} else {
+		qryObj["size"] = parameters.maxresults || 1000;
+	}
+
+	var andCounter = 0;
+
+	if(parameters.originisocountrycode) {
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["wildcard"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["wildcard"]["iso_country_code.exactWords"] = parameters.originisocountrycode.toLowerCase();
+		andCounter+=1;
+	}
+
+	if(parameters.scientificname) {
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["wildcard"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["wildcard"]["canonical.exactWords"] = parameters.scientificname.toLowerCase();
+		andCounter+=1;
+	}
+
+	if(parameters.dataproviderkey) {
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["term"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["term"]["data_provider_id"] = parameters.dataproviderkey.toLowerCase();
+		andCounter+=1;
+	}
+
+	if(parameters.datasourcekey) {
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["term"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["term"]["data_resource_id"] = parameters.datasourcekey.toLowerCase();
+		andCounter+=1;
+	}
+
+	if(parameters.institutioncode) {
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["wildcard"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["wildcard"]["institution_code.exactWords"] = parameters.institutioncode.toLowerCase();
+		andCounter+=1;
+	}
+
+	if(parameters.catalognumber) {
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["wildcard"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["wildcard"]["catalogue_number.exactWords"] = parameters.catalognumber.toLowerCase();
+		andCounter+=1;
+	}
+
+	if(parameters.originisodepartmentcode) {
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["wildcard"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["wildcard"]["iso_department_code.exactWords"] = parameters.originisodepartmentcode.toLowerCase();
+		andCounter+=1;
+	}
+
+	if(parameters.taxonconceptkey) {
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][0] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][0]["term"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][0]["term"]["kingdom_concept_id"] = parameters.taxonconceptkey.toLowerCase();
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][1] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][1]["term"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][1]["term"]["phylum_concept_id"] = parameters.taxonconceptkey.toLowerCase();
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][2] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][2]["term"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][2]["term"]["class_concept_id"] = parameters.taxonconceptkey.toLowerCase();
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][3] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][3]["term"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][3]["term"]["order_concept_id"] = parameters.taxonconceptkey.toLowerCase();
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][4] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][4]["term"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][4]["term"]["family_concept_id"] = parameters.taxonconceptkey.toLowerCase();
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][5] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][5]["term"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][5]["term"]["genus_concept_id"] = parameters.taxonconceptkey.toLowerCase();
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][6] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][6]["term"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][6]["term"]["species_concept_id"] = parameters.taxonconceptkey.toLowerCase();
+		andCounter+=1;
+	}
+
+	if(parameters.cellid) {
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["term"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["term"]["cell_id"] = parameters.cellid.toLowerCase();
+		andCounter+=1;
+	}
+
+	if(parameters.centicellid) {
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["term"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["term"]["centi_cell_id"] = parameters.centicellid.toLowerCase();
+		andCounter+=1;
+	}
+
+	if(parameters.pointfivecellid) {
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["term"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["term"]["pointfive_cell_id"] = parameters.pointfivecellid.toLowerCase();
+		andCounter+=1;
+	}
+
+	if(parameters.pointtwocellid) {
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["term"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["term"]["pointtwo_cell_id"] = parameters.pointtwocellid.toLowerCase();
+		andCounter+=1;
+	}
+
+	if(parameters.minlatitude || parameters.maxlatitude || parameters.minlongitude || parameters.maxlongitude) {
+		qryObj["query"]["filtered"]["filter"]["geo_bounding_box"] = {};
+		qryObj["query"]["filtered"]["filter"]["geo_bounding_box"]["location"] = {};
+		qryObj["query"]["filtered"]["filter"]["geo_bounding_box"]["location"]["top_left"] = {};
+		if(parameters.maxlatitude) {
+			qryObj["query"]["filtered"]["filter"]["geo_bounding_box"]["location"]["top_left"]["lat"] = parameters.maxlatitude;
+		} else {
+			qryObj["query"]["filtered"]["filter"]["geo_bounding_box"]["location"]["top_left"]["lat"] = 90;
+		}
+		if(parameters.minlongitude) {
+			qryObj["query"]["filtered"]["filter"]["geo_bounding_box"]["location"]["top_left"]["lon"] = parameters.minlongitude;
+		} else {
+			qryObj["query"]["filtered"]["filter"]["geo_bounding_box"]["location"]["top_left"]["lon"] = -180;
+		}
+		qryObj["query"]["filtered"]["filter"]["geo_bounding_box"]["location"]["bottom_right"] = {};
+		if(parameters.minlatitude) {
+			qryObj["query"]["filtered"]["filter"]["geo_bounding_box"]["location"]["bottom_right"]["lat"] = parameters.minlatitude;
+		} else {
+			qryObj["query"]["filtered"]["filter"]["geo_bounding_box"]["location"]["bottom_right"]["lat"] = -90;
+		}
+		if(parameters.maxlongitude) {
+			qryObj["query"]["filtered"]["filter"]["geo_bounding_box"]["location"]["bottom_right"]["lon"] = parameters.maxlongitude;
+		} else {
+			qryObj["query"]["filtered"]["filter"]["geo_bounding_box"]["location"]["bottom_right"]["lon"] = 180;
+		}
+		andCounter+=1;
+	}
+
+
+	console.log(JSON.stringify(qryObj));
+	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
+	return mySearchCall;
+};
