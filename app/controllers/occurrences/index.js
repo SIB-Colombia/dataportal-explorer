@@ -244,8 +244,11 @@ exports.geoJsonMapPoints = function(req, res) {
 	occurrences.exec(function(err, data){
 		var result = JSON.parse(data);
 
-		var response = {
-			"hostUrl": req.protocol + "://" + req.get('host'),
+		var response = {};
+		if(result.hits) {
+			response = {
+			"hostUrl": req.protocol + "://" + req.get('host') + req.path,
+			"query": req.query,
 			"count": 1000,
 			"start": 0,
 			"totalMatched": result.hits.total,
@@ -298,8 +301,17 @@ exports.geoJsonMapPoints = function(req, res) {
 				currentGeometry += 1;
 			}
 		});
-
-		console.log(response);
+		} else {
+			response = {
+				"hostUrl": req.protocol + "://" + req.get('host') + req.path,
+				"query": req.query,
+				"count": 0,
+				"start": 0,
+				"error": "Failed to obtain requested data.",
+				"cause": "Invalid request parameter.",
+				"features": []
+			};
+		}
 
 		res.jsonp(response);
 	});

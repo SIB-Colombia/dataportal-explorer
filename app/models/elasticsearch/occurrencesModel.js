@@ -2003,14 +2003,16 @@ exports.geoJsonMapPoints = function(parameters) {
 		"fields": ["id", "canonical", "location"],
 		"sort": [ { "canonical.untouched": "asc" } ],
 		"from": 0,
-    "size" : 1000,
+		"size" : 1000,
 		"query": {
 			"filtered": {
-				"filter": {
-					"exists" : {
-						"field": "cell_id"
+				"filter": [
+					{
+						"exists" : {
+							"field": "cell_id"
+						}
 					}
-				},
+				],
 				"query" : {
 					"bool": {
 						"must": []
@@ -2031,6 +2033,7 @@ exports.geoJsonMapPoints = function(parameters) {
 	}
 
 	var andCounter = 0;
+	var currentFilter = 1;
 
 	if(parameters.originisocountrycode) {
 		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
@@ -2138,35 +2141,90 @@ exports.geoJsonMapPoints = function(parameters) {
 	}
 
 	if(parameters.minlatitude || parameters.maxlatitude || parameters.minlongitude || parameters.maxlongitude) {
-		qryObj["query"]["filtered"]["filter"]["geo_bounding_box"] = {};
-		qryObj["query"]["filtered"]["filter"]["geo_bounding_box"]["location"] = {};
-		qryObj["query"]["filtered"]["filter"]["geo_bounding_box"]["location"]["top_left"] = {};
+		qryObj["query"]["filtered"]["filter"][currentFilter] = {};
+		qryObj["query"]["filtered"]["filter"][currentFilter]["geo_bounding_box"] = {};
+		qryObj["query"]["filtered"]["filter"][currentFilter]["geo_bounding_box"]["location"] = {};
+		qryObj["query"]["filtered"]["filter"][currentFilter]["geo_bounding_box"]["location"]["top_left"] = {};
 		if(parameters.maxlatitude) {
-			qryObj["query"]["filtered"]["filter"]["geo_bounding_box"]["location"]["top_left"]["lat"] = parameters.maxlatitude;
+			qryObj["query"]["filtered"]["filter"][currentFilter]["geo_bounding_box"]["location"]["top_left"]["lat"] = parameters.maxlatitude;
 		} else {
-			qryObj["query"]["filtered"]["filter"]["geo_bounding_box"]["location"]["top_left"]["lat"] = 90;
+			qryObj["query"]["filtered"]["filter"][currentFilter]["geo_bounding_box"]["location"]["top_left"]["lat"] = 90;
 		}
 		if(parameters.minlongitude) {
-			qryObj["query"]["filtered"]["filter"]["geo_bounding_box"]["location"]["top_left"]["lon"] = parameters.minlongitude;
+			qryObj["query"]["filtered"]["filter"][currentFilter]["geo_bounding_box"]["location"]["top_left"]["lon"] = parameters.minlongitude;
 		} else {
-			qryObj["query"]["filtered"]["filter"]["geo_bounding_box"]["location"]["top_left"]["lon"] = -180;
+			qryObj["query"]["filtered"]["filter"][currentFilter]["geo_bounding_box"]["location"]["top_left"]["lon"] = -180;
 		}
-		qryObj["query"]["filtered"]["filter"]["geo_bounding_box"]["location"]["bottom_right"] = {};
+		qryObj["query"]["filtered"]["filter"][currentFilter]["geo_bounding_box"]["location"]["bottom_right"] = {};
 		if(parameters.minlatitude) {
-			qryObj["query"]["filtered"]["filter"]["geo_bounding_box"]["location"]["bottom_right"]["lat"] = parameters.minlatitude;
+			qryObj["query"]["filtered"]["filter"][currentFilter]["geo_bounding_box"]["location"]["bottom_right"]["lat"] = parameters.minlatitude;
 		} else {
-			qryObj["query"]["filtered"]["filter"]["geo_bounding_box"]["location"]["bottom_right"]["lat"] = -90;
+			qryObj["query"]["filtered"]["filter"][currentFilter]["geo_bounding_box"]["location"]["bottom_right"]["lat"] = -90;
 		}
 		if(parameters.maxlongitude) {
-			qryObj["query"]["filtered"]["filter"]["geo_bounding_box"]["location"]["bottom_right"]["lon"] = parameters.maxlongitude;
+			qryObj["query"]["filtered"]["filter"][currentFilter]["geo_bounding_box"]["location"]["bottom_right"]["lon"] = parameters.maxlongitude;
 		} else {
-			qryObj["query"]["filtered"]["filter"]["geo_bounding_box"]["location"]["bottom_right"]["lon"] = 180;
+			qryObj["query"]["filtered"]["filter"][currentFilter]["geo_bounding_box"]["location"]["bottom_right"]["lon"] = 179.999;
 		}
+		currentFilter+=1;
 		andCounter+=1;
 	}
 
+	if(parameters.mindepth || parameters.maxdepth) {
+		qryObj["query"]["filtered"]["filter"][currentFilter] = {};
+		qryObj["query"]["filtered"]["filter"][currentFilter]["numeric_range"] = {};
+		qryObj["query"]["filtered"]["filter"][currentFilter]["numeric_range"]["altitude_metres"] = {};
+		if(parameters.mindepth)
+			qryObj["query"]["filtered"]["filter"][currentFilter]["numeric_range"]["altitude_metres"]["gte"] = parameters.mindepth;
+		if(parameters.maxdepth)
+			qryObj["query"]["filtered"]["filter"][currentFilter]["numeric_range"]["altitude_metres"]["lte"] = parameters.maxdepth;
+		currentFilter+=1;
+		andCounter+=1;
+	}
 
-	console.log(JSON.stringify(qryObj));
+	if(parameters.startdate || parameters.enddate) {
+		qryObj["query"]["filtered"]["filter"][currentFilter] = {};
+		qryObj["query"]["filtered"]["filter"][currentFilter]["numeric_range"] = {};
+		qryObj["query"]["filtered"]["filter"][currentFilter]["numeric_range"]["created"] = {};
+		if(parameters.startdate)
+			qryObj["query"]["filtered"]["filter"][currentFilter]["numeric_range"]["created"]["gte"] = parameters.startdate + " 00:00:00";
+		if(parameters.enddate)
+			qryObj["query"]["filtered"]["filter"][currentFilter]["numeric_range"]["created"]["lte"] = parameters.enddate + " 00:00:00";
+		currentFilter+=1;
+		andCounter+=1;
+	}
+
+	if(parameters.startyear || parameters.endyear) {
+		qryObj["query"]["filtered"]["filter"][currentFilter] = {};
+		qryObj["query"]["filtered"]["filter"][currentFilter]["numeric_range"] = {};
+		qryObj["query"]["filtered"]["filter"][currentFilter]["numeric_range"]["created"] = {};
+		if(parameters.startyear)
+			qryObj["query"]["filtered"]["filter"][currentFilter]["numeric_range"]["created"]["gte"] = parameters.startyear + "-01-01 00:00:00";
+		if(parameters.endyear)
+			qryObj["query"]["filtered"]["filter"][currentFilter]["numeric_range"]["created"]["lte"] = parameters.endyear + "-12-31 00:00:00";
+		currentFilter+=1;
+		andCounter+=1;
+	}
+
+	if(parameters.year) {
+		qryObj["query"]["filtered"]["filter"][currentFilter] = {};
+		qryObj["query"]["filtered"]["filter"][currentFilter]["numeric_range"] = {};
+		qryObj["query"]["filtered"]["filter"][currentFilter]["numeric_range"]["created"] = {};
+		qryObj["query"]["filtered"]["filter"][currentFilter]["numeric_range"]["created"]["gte"] = parameters.year + "-01-01 00:00:00";
+		qryObj["query"]["filtered"]["filter"][currentFilter]["numeric_range"]["created"]["lte"] = parameters.year + "-12-31 00:00:00";
+		currentFilter+=1;
+		andCounter+=1;
+	}
+
+	if(parameters.modifiedsince) {
+		qryObj["query"]["filtered"]["filter"][currentFilter] = {};
+		qryObj["query"]["filtered"]["filter"][currentFilter]["numeric_range"] = {};
+		qryObj["query"]["filtered"]["filter"][currentFilter]["numeric_range"]["modified"] = {};
+		qryObj["query"]["filtered"]["filter"][currentFilter]["numeric_range"]["modified"]["gte"] = parameters.modifiedsince + " 00:00:00";
+		currentFilter+=1;
+		andCounter+=1;
+	}
+
 	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
 	return mySearchCall;
 };
