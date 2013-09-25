@@ -41,6 +41,9 @@ requirejs.config({
         'LeafletControlFullScreen': {
             deps: ['Leaflet']
         },
+        'jqueryUI': {
+            deps: ['jquery']
+        },
         'bootstrap': {
             deps: ['jquery', 'jqueryUI']
         },
