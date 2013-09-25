@@ -42,7 +42,7 @@ requirejs.config({
             deps: ['Leaflet']
         },
         'bootstrap': {
-            deps: ['jquery']
+            deps: ['jquery', 'jqueryUI']
         },
         'customScrollBar': {
             deps: ['jquery']
