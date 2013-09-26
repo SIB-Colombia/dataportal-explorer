@@ -222,7 +222,7 @@ p margin 10px010px0 a:link {
   min-width: 1050px;
   position: fixed;
   width: 100%;
-  z-index: 1;
+  z-index: 11;
   top: 0px;
 }
 .sib:after {
@@ -409,7 +409,7 @@ fieldset {
   margin-left: 20px;
   margin-right: 20px;
   position: fixed;
-  z-index: 3;
+  z-index: 10;
   width: 620px;
   margin-top: 53px;
   right: 0px;
@@ -454,7 +454,7 @@ fieldset {
   position: absolute;
   left: 50px;
   top: 100px;
-  z-index: 4;
+  z-index: 12;
   width: 340px;
 /* Fix display block of select2 javascript plugin */
 }
@@ -1052,7 +1052,7 @@ h4#currentSearch {
   overflow: hidden;
   position: absolute;
   top: -3px;
-  right: -3px;
+  right: 0px;
 }
 .ribbon-green {
   font: bold 15px Sans-Serif;
