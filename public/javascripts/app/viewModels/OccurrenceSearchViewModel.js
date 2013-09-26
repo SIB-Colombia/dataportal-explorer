@@ -87,46 +87,80 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			this.loadCellDensityPointFiveDegree();
 			this.loadCellDensityPointTwoDegree();
 			this.loadCellDensityPointOneDegree();
+			var timeout;
 
-			// Event subscription
-			self.objectNameValue.subscribe(function (newValue) {
+			var searchParamsResume = function() {
 				if(self.selectedSubject() == "0") {
 					// Load new scientific name data
+					self.hideResumeContainer();
 					self.getScientificNamesData();
 				} else if(self.selectedSubject() == 100) {
 					// Get resume kingdom data
+					self.hideResumeContainer();
 					self.getKingdomNamesData();
 				} else if(self.selectedSubject() == 101) {
 					// Get resume phylum data
+					self.hideResumeContainer();
 					self.getPhylumNamesData();
 				} else if(self.selectedSubject() == 102) {
 					// Get resume class data
+					self.hideResumeContainer();
 					self.getClassNamesData();
 				} else if(self.selectedSubject() == 103) {
 					// Get resume order data
+					self.hideResumeContainer();
 					self.getOrderNamesData();
 				} else if(self.selectedSubject() == 104) {
 					// Get resume family data
+					self.hideResumeContainer();
 					self.getFamilyNamesData();
 				} else if(self.selectedSubject() == 105) {
 					// Get resume genus data
+					self.hideResumeContainer();
 					self.getGenusNamesData();
 				} else if(self.selectedSubject() == 106) {
 					// Get resume species data
+					self.hideResumeContainer();
 					self.getSpeciesNamesData();
 				} else if(self.selectedSubject() == 25) {
 					// Get resume data providers data
+					self.hideResumeContainer();
 					self.getDataProvidersData();
 				} else if(self.selectedSubject() == 24) {
 					// Get resume data resources data}
+					self.hideResumeContainer();
 					self.getDataResourcesData();
 				} else if(self.selectedSubject() == 12) {
 					// Get institution codes data
+					self.hideResumeContainer();
 					self.getInstitutionCodesData();
 				} else if(self.selectedSubject() == 13) {
 					// Get collection codes data
+					self.hideResumeContainer();
 					self.getCollectionCodesData();
 				}
+			};
+
+			// Underscore.js implementation
+			var debounce = function (func, wait, immediate) {
+				var result;
+				return function () {
+					var context = this, args = arguments;
+					var later = function () {
+						timeout = null;
+						if (!immediate) result = func.apply(context, args);
+					};
+					var callNow = immediate && !timeout;
+					clearTimeout(timeout);
+					timeout = setTimeout(later, wait);
+					if (callNow) result = func.apply(context, args);
+					return result;
+				};
+			};
+
+			// Event subscription
+			self.objectNameValue.subscribe(function (newValue) {
+				debounce(searchParamsResume, 500)();
 			});
 
 			// Selected department filter name
@@ -146,6 +180,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					$(element).on("change", function(e) {
 						if(typeof e.val !== 'undefined') {
 							self.objectNameValue(e.val);
+							self.hideResumeContainer();
 							self.getCountriesData();
 							self.enableFilterHelp();
 						}
@@ -168,6 +203,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					$(element).on("change", function(e) {
 						if(typeof e.val !== 'undefined') {
 							self.objectNameValue(e.val);
+							self.hideResumeContainer();
 							self.getDepartmentsData();
 							self.enableFilterHelp();
 						}
@@ -1078,6 +1114,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments}));
 				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
+				self.showResumeContainer();
 			});
 		},
 		getKingdomNamesData: function() {
@@ -1176,6 +1213,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments}));
 				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
+				self.showResumeContainer();
 			});
 		},
 		getPhylumNamesData: function() {
@@ -1274,6 +1312,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments}));
 				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
+				self.showResumeContainer();
 			});
 		},
 		getClassNamesData: function() {
@@ -1372,6 +1411,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments}));
 				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
+				self.showResumeContainer();
 			});
 		},
 		getOrderNamesData: function() {
@@ -1470,6 +1510,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments}));
 				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
+				self.showResumeContainer();
 			});
 		},
 		getFamilyNamesData: function() {
@@ -1568,6 +1609,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments}));
 				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
+				self.showResumeContainer();
 			});
 		},
 		getGenusNamesData: function() {
@@ -1666,6 +1708,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments}));
 				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
+				self.showResumeContainer();
 			});
 		},
 		getSpeciesNamesData: function() {
@@ -1764,6 +1807,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments}));
 				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
+				self.showResumeContainer();
 			});
 		},
 		getDataProvidersData: function() {
@@ -1866,6 +1910,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments}));
 				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
+				self.showResumeContainer();
 			});
 		},
 		getDataResourcesData: function() {
@@ -1968,6 +2013,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments}));
 				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
+				self.showResumeContainer();
 			});
 		},
 		getInstitutionCodesData: function() {
@@ -2075,6 +2121,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments}));
 				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
+				self.showResumeContainer();
 			});
 		},
 		getCollectionCodesData: function() {
@@ -2182,6 +2229,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments}));
 				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
+				self.showResumeContainer();
 			});
 		},
 		getCountriesData: function() {
@@ -2284,6 +2332,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments}));
 				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
+				self.showResumeContainer();
 			});
 		},
 		getDepartmentsData: function() {
@@ -2386,6 +2435,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments}));
 				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
+				self.showResumeContainer();
 			});
 		},
 		// Operations
@@ -3014,6 +3064,14 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			}
 			// Show map area
 			self.showMapAreaWithSpinner();
+		},
+		hideResumeContainer: function() {
+			$("#topFiltersContainerHelp").addClass("loading2");
+			$("#contentFiltersContainerHelp").addClass("opacity-element");
+		},
+		showResumeContainer: function() {
+			$("#topFiltersContainerHelp").removeClass("loading2");
+			$("#contentFiltersContainerHelp").removeClass("opacity-element");
 		}
 	});
 

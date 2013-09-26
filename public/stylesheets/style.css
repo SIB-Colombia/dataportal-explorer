@@ -796,14 +796,23 @@ h4#currentSearch {
 /* Fin estilos ventana filtro de búsqueda */
 /* Estilos de apoyo */
 .loading {
-  background-image: url("/images/loading/ajax-loader.gif");
+  background-image: url("/images/loading/loading64w.gif");
   background-position: center center;
   background-repeat: no-repeat;
   opacity: 0.5;
   -moz-opacity: 0.5;
 }
+.loading2 {
+  background-image: url("/images/loading/loading2.gif");
+  background-position: left top;
+  background-repeat: no-repeat;
+}
 .hide-element {
   visibility: hidden;
+}
+.opacity-element {
+  opacity: 0.2;
+  -moz-opacity: 0.2;
 }
 /* Fin de estilos de apoyo */
 /* Estilos ventana detalles registro biológico */
