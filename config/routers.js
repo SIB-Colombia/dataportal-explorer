@@ -37,6 +37,67 @@ module.exports = function(parent, options) {
 					method = 'get';
 					path = '/';
 					break;
+				// Cases for distribution cells
+				case 'listInitialDistributionOneDegree':
+					method = 'get';
+					path = '/rest/' + name + '/onedegree/list';
+					break;
+				case 'listInitialDistributionCentiDegree':
+					method = 'get';
+					path = '/rest/' + name + '/centidegree/list';
+					break;
+				case 'listInitialDistributionPointTwoDegree':
+					method = 'get';
+					path = '/rest/' + name + '/pointtwodegree/list';
+					break;
+				case 'listInitialDistributionPointFiveDegree':
+					method = 'get';
+					path = '/rest/' + name + '/pointfivedegree/list';
+					break;
+				case 'getDistributionStatsOneDegree':
+					method = 'get';
+					path = '/rest/' + name + '/onedegree/stats/:' + '_cellid';
+					break;
+				case 'getDistributionStatsWithSearchOneDegree':
+					method = 'post';
+					path = '/' + name + '/onedegree/stats';
+					break;
+				case 'getDistributionStatsPointFiveDegree':
+					method = 'get';
+					path = '/rest/' + name + '/pointfivedegree/stats/:' + '_cellid' + '/:' + '_pointfivecellid';
+					break;
+				case 'getDistributionStatsWithSearchPointFiveDegree':
+					method = 'post';
+					path = '/' + name + '/pointfivedegree/stats';
+					break;
+				case 'getDistributionStatsPointOneDegree':
+					method = 'get';
+					path = '/rest/' + name + '/centidegree/stats/:' + '_cellid' + '/:' + '_centicellid';
+					break;
+				case 'getDistributionStatsWithSearchPointOneDegree':
+					method = 'post';
+					path = '/' + name + '/pointonedegree/stats';
+					break;
+				case 'getDistributionStatsPointTwoDegree':
+					method = 'get';
+					path = '/rest/' + name + '/pointtwodegree/stats/:' + '_cellid' + '/:' + '_pointtwocellid';
+					break;
+				case 'getDistributionStatsWithSearchPointTwoDegree':
+					method = 'post';
+					path = '/' + name + '/pointtwodegree/stats';
+					break;
+				case 'searchDistributionOccurrences':
+					method = 'post';
+					path = '/' + name + '/search';
+					break;
+				case 'searchInitialPagedDataOccurrences':
+					method = 'get';
+					path = '/' + name + '/PagedData';
+					break;
+				case 'geoJsonMapPoints':
+					method = 'get';
+					path = '/rest/' + name + '/mappoints';
+					break;
 				/*case 'show':
 					method = 'get';
 					path = '/' + name + '/:' + name + '_id';
@@ -57,141 +118,141 @@ module.exports = function(parent, options) {
 					method = 'post';
 					path = '/' + name;
 					break;*/
-				case 'searchInitialOccurrences':
+				/*case 'searchInitialOccurrences':
 					method = 'get';
 					path = '/' + name + '/list';
-					break;
+					break;*/
 				/*case 'searchAllOccurrences':
 					method = 'get';
 					path = '/' + name + '/list';
 					break;*/
-				case 'searchInitialPagedDataOccurrences':
-					method = 'get';
-					path = '/' + name + '/PagedData';
-					break;
-				case 'searchGeoOccurrences':
+				/*case 'searchGeoOccurrences':
 					method = 'post';
 					path = '/' + name + '/search';
-					break;
-				case 'searchDetailsGeoOccurrences':
+					break;*/
+				/*case 'searchGeoDistributionOccurrences':
+					method = 'post';
+					path = '/' + name + '/search';
+					break;*/
+				/*case 'searchDetailsGeoOccurrences':
 					method = 'get';
 					path = '/' + name + '/details/search';
-					break;
+					break;*/
 				case 'searchResumeScientificNameByName':
 					method = 'get';
-					path = '/' + name + '/resume/scientificname/name/:' + '_name';
+					path = '/rest/' + name + '/resume/scientificname/name/:' + '_name';
 					break;
 				case 'searchResumeScientificName':
 					method = 'get';
-					path = '/' + name + '/resume/scientificname/name';
+					path = '/rest/' + name + '/resume/scientificname/name';
 					break;
 				case 'searchResumeKingdomNameByName':
 					method = 'get';
-					path = '/' + name + '/resume/kingdom/name/:' + '_name';
+					path = '/rest/' + name + '/resume/kingdom/name/:' + '_name';
 					break;
 				case 'searchResumeKingdomName':
 					method = 'get';
-					path = '/' + name + '/resume/kingdom/name';
+					path = '/rest/' + name + '/resume/kingdom/name';
 					break;
 				case 'searchResumePhylumNameByName':
 					method = 'get';
-					path = '/' + name + '/resume/phylum/name/:' + '_name';
+					path = '/rest/' + name + '/resume/phylum/name/:' + '_name';
 					break;
 				case 'searchResumePhylumName':
 					method = 'get';
-					path = '/' + name + '/resume/phylum/name';
+					path = '/rest/' + name + '/resume/phylum/name';
 					break;
 				case 'searchResumeClassNameByName':
 					method = 'get';
-					path = '/' + name + '/resume/class/name/:' + '_name';
+					path = '/rest/' + name + '/resume/class/name/:' + '_name';
 					break;
 				case 'searchResumeClassName':
 					method = 'get';
-					path = '/' + name + '/resume/class/name';
+					path = '/rest/' + name + '/resume/class/name';
 					break;
 				case 'searchResumeOrderNameByName':
 					method = 'get';
-					path = '/' + name + '/resume/order/name/:' + '_name';
+					path = '/rest/' + name + '/resume/order/name/:' + '_name';
 					break;
 				case 'searchResumeOrderName':
 					method = 'get';
-					path = '/' + name + '/resume/order/name';
+					path = '/rest/' + name + '/resume/order/name';
 					break;
 				case 'searchResumeFamilyNameByName':
 					method = 'get';
-					path = '/' + name + '/resume/family/name/:' + '_name';
+					path = '/rest/' + name + '/resume/family/name/:' + '_name';
 					break;
 				case 'searchResumeFamilyName':
 					method = 'get';
-					path = '/' + name + '/resume/family/name';
+					path = '/rest/' + name + '/resume/family/name';
 					break;
 				case 'searchResumeGenusNameByName':
 					method = 'get';
-					path = '/' + name + '/resume/genus/name/:' + '_name';
+					path = '/rest/' + name + '/resume/genus/name/:' + '_name';
 					break;
 				case 'searchResumeGenusName':
 					method = 'get';
-					path = '/' + name + '/resume/genus/name';
+					path = '/rest/' + name + '/resume/genus/name';
 					break;
 				case 'searchResumeSpeciesNameByName':
 					method = 'get';
-					path = '/' + name + '/resume/species/name/:' + '_name';
+					path = '/rest/' + name + '/resume/species/name/:' + '_name';
 					break;
 				case 'searchResumeSpeciesName':
 					method = 'get';
-					path = '/' + name + '/resume/species/name';
+					path = '/rest/' + name + '/resume/species/name';
 					break;
 				case 'searchResumeDataProvidersByName':
 					method = 'get';
-					path = '/' + name + '/resume/dataproviders/name/:' + '_name';
+					path = '/rest/' + name + '/resume/dataproviders/name/:' + '_name';
 					break;
 				case 'searchResumeDataProviders':
 					method = 'get';
-					path = '/' + name + '/resume/dataproviders/name';
+					path = '/rest/' + name + '/resume/dataproviders/name';
 					break;
 				case 'searchResumeDataResourcesByName':
 					method = 'get';
-					path = '/' + name + '/resume/dataresources/name/:' + '_name';
+					path = '/rest/' + name + '/resume/dataresources/name/:' + '_name';
 					break;
 				case 'searchResumeDataResources':
 					method = 'get';
-					path = '/' + name + '/resume/dataresources/name';
+					path = '/rest/' + name + '/resume/dataresources/name';
 					break;
 				case 'searchResumeInstitutionCodesByName':
 					method = 'get';
-					path = '/' + name + '/resume/institutioncodes/name/:' + '_name';
+					path = '/rest/' + name + '/resume/institutioncodes/name/:' + '_name';
 					break;
 				case 'searchResumeInstitutionCodes':
 					method = 'get';
-					path = '/' + name + '/resume/institutioncodes/name';
+					path = '/rest/' + name + '/resume/institutioncodes/name';
 					break;
 				case 'searchResumeCollectionCodesByName':
 					method = 'get';
-					path = '/' + name + '/resume/collectioncodes/name/:' + '_name';
+					path = '/rest/' + name + '/resume/collectioncodes/name/:' + '_name';
 					break;
 				case 'searchResumeCollectionCodes':
 					method = 'get';
-					path = '/' + name + '/resume/collectioncodes/name';
+					path = '/rest/' + name + '/resume/collectioncodes/name';
 					break;
 				case 'searchResumeCountriesByName':
 					method = 'get';
-					path = '/' + name + '/resume/countries/name/:' + '_name';
+					path = '/rest/' + name + '/resume/countries/name/:' + '_name';
 					break;
 				case 'searchResumeCountries':
 					method = 'get';
-					path = '/' + name + '/resume/countries/name';
+					path = '/rest/' + name + '/resume/countries/name';
 					break;
 				case 'searchResumeDepartmentsByName':
 					method = 'get';
-					path = '/' + name + '/resume/departments/name/:' + '_name';
+					path = '/rest/' + name + '/resume/departments/name/:' + '_name';
 					break;
 				case 'searchResumeDepartments':
 					method = 'get';
-					path = '/' + name + '/resume/departments/name';
+					path = '/rest/' + name + '/resume/departments/name';
 					break;
 				case 'searchSearchHelpTextByName':
 					method = 'get';
-					path = '/' + name + '/searchhelptext/name/:' + '_name';
+					path = '/rest/' + name + '/searchhelptext/name/:' + '_name';
 					break;
 				case 'updatemongodb':
 					method = 'get';

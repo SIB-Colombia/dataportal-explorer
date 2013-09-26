@@ -222,7 +222,7 @@ p margin 10px010px0 a:link {
   min-width: 1050px;
   position: fixed;
   width: 100%;
-  z-index: 10000;
+  z-index: 1;
   top: 0px;
 }
 .sib:after {
@@ -276,7 +276,7 @@ p margin 10px010px0 a:link {
   padding: 10px 13px 13px 13px;
   position: absolute;
   display: block;
-  z-index: 10000;
+  z-index: 2;
 }
 .sib .logo:hover {
   filter: alpha(opacity=100);
@@ -409,7 +409,7 @@ fieldset {
   margin-left: 20px;
   margin-right: 20px;
   position: fixed;
-  z-index: 11000;
+  z-index: 3;
   width: 620px;
   margin-top: 53px;
   right: 0px;
@@ -453,9 +453,13 @@ fieldset {
 #filterZone {
   position: absolute;
   left: 50px;
-  top: 200px;
-  z-index: 10000;
+  top: 100px;
+  z-index: 4;
   width: 340px;
+/* Fix display block of select2 javascript plugin */
+}
+#filterZone .select2-container {
+  display: block;
 }
 #filterZone .filterBox {
   margin-right: 0px;
@@ -545,7 +549,7 @@ h4#currentSearch {
   overflow: hidden;
 }
 #filtersContainerHelp #contentFiltersContainerHelp .mCSB_container {
-  background-color: #afafaf;
+  background-color: #fff;
 }
 #filtersContainerHelp #contentFiltersContainerHelp .contentFiltersContainerHelpContainer {
   padding-left: 5px;
@@ -595,6 +599,36 @@ h4#currentSearch {
   background-color: #683c0c;
   color: #fff;
 }
+#filtersContainerHelp #contentFiltersContainerHelp .resume {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+#filtersContainerHelp #contentFiltersContainerHelp .resume h2 {
+  font-family: 'Open sans', Helvetica, Verdana, Helvetica, Arial;
+  font-weight: bold;
+  font-size: 12px;
+}
+#filtersContainerHelp #contentFiltersContainerHelp .resume dl {
+  font-family: 'Open sans', Helvetica, Verdana, Helvetica, Arial;
+  font-size: 12px;
+  margin: 0 0 5px 20px;
+  padding: 0;
+}
+#filtersContainerHelp #contentFiltersContainerHelp .resume dl.preview-data {
+  float: left;
+  width: 100%;
+}
+#filtersContainerHelp #contentFiltersContainerHelp .resume dl.preview-data dt {
+  clear: both;
+  float: left;
+  font-weight: normal;
+  width: 80%;
+}
+#filtersContainerHelp #contentFiltersContainerHelp .resume dl.preview-data dd {
+  float: right;
+  margin: 0;
+  width: 20%;
+}
 #filtersContainer {
   display: block;
   background: url("/images/standard/shadow_top_clear.png") no-repeat center top;
@@ -606,6 +640,8 @@ h4#currentSearch {
 #filtersContainer #explorerFiltersAndEditor #filterEditorPane {
   width: auto;
   vertical-align: top;
+}
+#filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter {
   padding: 0px 20px;
 }
 #filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter select,
@@ -646,6 +682,7 @@ h4#currentSearch {
   width: auto;
   font-size: 90%;
   margin-right: 15px;
+  padding: 0px 20px;
 }
 #filtersContainer #explorerFiltersAndEditor #filterEditorPane #selectedFilterHelp .taxonomyFilterHelp {
   height: auto;
@@ -712,6 +749,39 @@ h4#currentSearch {
 #filtersContainer #explorerFiltersAndEditor #constructedFiltersPane #constructedFilters ul.filterItem img {
   padding-left: 5px;
 }
+#filtersContainer #explorerFiltersAndEditor #densityButtonsPane {
+  width: 100%;
+}
+#filtersContainer #explorerFiltersAndEditor #densityButtonsPane .btn-primary {
+  background-color: #589cd1;
+  background-image: -moz-linear-gradient(top, #589cd1, #3c7099);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#589cd1), to(#3c7099));
+  background-image: -webkit-linear-gradient(top, #589cd1, #3c7099);
+  background-image: -o-linear-gradient(top, #589cd1, #3c7099);
+  background-image: linear-gradient(to bottom, #589cd1, #3c7099);
+}
+#filtersContainer #explorerFiltersAndEditor #densityButtonsPane .btn-primary:hover,
+#filtersContainer #explorerFiltersAndEditor #densityButtonsPane .btn-primary:focus {
+  background-color: #589cd1;
+  background-image: linear-gradient(to bottom, #589cd1, #589cd1);
+}
+#filtersContainer #explorerFiltersAndEditor #densityButtonsPane .btn-primary.active {
+  background-color: #589cd1;
+  background-image: linear-gradient(to bottom, #589cd1, #589cd1);
+}
+#filtersContainer #explorerFiltersAndEditor #densityButtonsPane #densityButtons {
+  height: 100%;
+  vertical-align: top;
+  padding-left: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: #115b96;
+  color: #fff;
+}
+#filtersContainer #explorerFiltersAndEditor #densityButtonsPane #densityButtons .btn-small {
+  padding-left: 6px;
+  padding-right: 6px;
+}
 .btn-add-filter {
   color: #fff;
   background: #2b7fbc !important;
@@ -726,14 +796,23 @@ h4#currentSearch {
 /* Fin estilos ventana filtro de búsqueda */
 /* Estilos de apoyo */
 .loading {
-  background-image: url("/images/loading/ajax-loader.gif");
+  background-image: url("/images/loading/loading64w.gif");
   background-position: center center;
   background-repeat: no-repeat;
   opacity: 0.5;
   -moz-opacity: 0.5;
 }
+.loading2 {
+  background-image: url("/images/loading/loading2.gif");
+  background-position: left top;
+  background-repeat: no-repeat;
+}
 .hide-element {
   visibility: hidden;
+}
+.opacity-element {
+  opacity: 0.2;
+  -moz-opacity: 0.2;
 }
 /* Fin de estilos de apoyo */
 /* Estilos ventana detalles registro biológico */
@@ -823,6 +902,64 @@ h4#currentSearch {
   margin: 0;
   padding: 3px 0;
   width: 60%;
+}
+#resumeDetail {
+  background-color: rgba(255,255,255,0.2);
+  position: absolute;
+  left: 340px;
+  top: 0px;
+  right: -350px;
+}
+#resumeDetail #topResumeDetail {
+  background-color: rgba(255,255,255,0.8);
+  padding-top: 5px;
+  padding-right: 5px;
+  padding-left: 5px;
+  height: 30px;
+}
+#resumeDetail #topResumeDetail a.close-icon-filter-help {
+  float: right;
+}
+#resumeDetail #topResumeDetail a.close-icon-filter-help:hover {
+  cursor: pointer;
+}
+#resumeDetail #resumeInfoDetailContainer {
+  background-color: rgba(255,255,255,0.8);
+  height: 500px;
+  overflow: hidden;
+}
+#resumeDetail #resumeInfoDetailContainer .contentResumeInfoDetailContainer {
+  padding-left: 5px;
+}
+#resumeDetail #resumeInfoDetailContainer .contentResumeInfoDetailContainer .resume {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+#resumeDetail #resumeInfoDetailContainer .contentResumeInfoDetailContainer .resume h2 {
+  font-family: 'Open sans', Helvetica, Verdana, Helvetica, Arial;
+  font-weight: bold;
+  font-size: 12px;
+}
+#resumeDetail #resumeInfoDetailContainer .contentResumeInfoDetailContainer .resume dl {
+  font-family: 'Open sans', Helvetica, Verdana, Helvetica, Arial;
+  font-size: 12px;
+  margin: 0 0 5px 20px;
+  padding: 0;
+}
+#resumeDetail #resumeInfoDetailContainer .contentResumeInfoDetailContainer .resume dl.preview-data {
+  float: left;
+  width: 100%;
+}
+#resumeDetail #resumeInfoDetailContainer .contentResumeInfoDetailContainer .resume dl.preview-data dt {
+  clear: both;
+  float: left;
+  font-weight: bold;
+  width: 80%;
+}
+#resumeDetail #resumeInfoDetailContainer .contentResumeInfoDetailContainer .resume dl.preview-data dd {
+  float: right;
+  margin: 0;
+  width: 20%;
 }
 .leaflet-popup-tip {
   margin-top: -12px !important;
