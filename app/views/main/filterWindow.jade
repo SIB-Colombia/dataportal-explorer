@@ -65,6 +65,127 @@ block filterWindow
 							dd.altitude(data-bind="text: altitude_metres")
 							dt Profundidad
 							dd.deep(data-bind="text: depth_centimetres")
+		#resumeDetail(style="display: none")
+			#topResumeDetail
+				a.close-icon-filter-help(data-bind="click: disableResumeDetail")
+					img(src="/images/icons/close2.png")
+			#resumeInfoDetailContainer.unselectable
+				.contentResumeInfoDetailContainer
+					.resume(data-bind="foreach: resumesInfo")
+						h2(data-bind="visible: canonicals().length > 0") Publicadores:
+						dl.preview-data(data-bind="foreach: providers")
+							dt
+								ul
+									li
+										a(target="_blank", data-bind="attr: { href: url }")
+											span(data-bind="text: name")
+							dd.cuenta(data-bind="text: count")
+						h2(data-bind="visible: canonicals().length > 0") Conjuntos de datos:
+						dl.preview-data(data-bind="foreach: resources")
+							dt
+								ul
+									li
+										a(target="_blank", data-bind="attr: { href: url }")
+											span(data-bind="text: name")
+							dd.cuenta(data-bind="text: count")
+						h2(data-bind="visible: canonicals().length > 0") Reino:
+						dl.preview-data(data-bind="foreach: kingdoms")
+							dt
+								ul
+									li
+										<!-- ko if: url === null -->
+										span(data-bind="text: name")
+										<!-- /ko -->
+										<!-- ko if: url !== null -->
+										a(target="_blank", data-bind="attr: { href: url }")
+											span(data-bind="text: name")
+										<!-- /ko -->
+							dd.cuenta(data-bind="text: count")
+						h2(data-bind="visible: canonicals().length > 0") Filo:
+						dl.preview-data(data-bind="foreach: phylums")
+							dt
+								ul
+									li
+										<!-- ko if: url === null -->
+										span(data-bind="text: name")
+										<!-- /ko -->
+										<!-- ko if: url !== null -->
+										a(target="_blank", data-bind="attr: { href: url }")
+											span(data-bind="text: name")
+										<!-- /ko -->
+							dd.cuenta(data-bind="text: count")
+						h2(data-bind="visible: canonicals().length > 0") Clase:
+						dl.preview-data(data-bind="foreach: taxonClasses")
+							dt
+								ul
+									li
+										<!-- ko if: url === null -->
+										span(data-bind="text: name")
+										<!-- /ko -->
+										<!-- ko if: url !== null -->
+										a(target="_blank", data-bind="attr: { href: url }")
+											span(data-bind="text: name")
+										<!-- /ko -->
+							dd.cuenta(data-bind="text: count")
+						h2(data-bind="visible: canonicals().length > 0") Orden:
+						dl.preview-data(data-bind="foreach: order_ranks")
+							dt
+								ul
+									li
+										<!-- ko if: url === null -->
+										span(data-bind="text: name")
+										<!-- /ko -->
+										<!-- ko if: url !== null -->
+										a(target="_blank", data-bind="attr: { href: url }")
+											span(data-bind="text: name")
+										<!-- /ko -->
+							dd.cuenta(data-bind="text: count")
+						h2(data-bind="visible: canonicals().length > 0") Familia:
+						dl.preview-data(data-bind="foreach: families")
+							dt
+								ul
+									li
+										<!-- ko if: url === null -->
+										span(data-bind="text: name")
+										<!-- /ko -->
+										<!-- ko if: url !== null -->
+										a(target="_blank", data-bind="attr: { href: url }")
+											span(data-bind="text: name")
+										<!-- /ko -->
+							dd.cuenta(data-bind="text: count")
+						h2(data-bind="visible: canonicals().length > 0") Género:
+						dl.preview-data(data-bind="foreach: genuses")
+							dt
+								ul
+									li
+										<!-- ko if: url === null -->
+										span(data-bind="text: name")
+										<!-- /ko -->
+										<!-- ko if: url !== null -->
+										a(target="_blank", data-bind="attr: { href: url }")
+											span(data-bind="text: name")
+										<!-- /ko -->
+							dd.cuenta(data-bind="text: count")
+						h2(data-bind="visible: species().length > 0") Especie:
+						dl.preview-data(data-bind="foreach: species")
+							dt
+								ul
+									li
+										<!-- ko if: url === null -->
+										span(data-bind="text: name")
+										<!-- /ko -->
+										<!-- ko if: url !== null -->
+										a(target="_blank", data-bind="attr: { href: url }")
+											span(data-bind="text: name")
+										<!-- /ko -->
+							dd.cuenta(data-bind="text: count")
+						h2(data-bind="visible: canonicals().length > 0") Nombre científico:
+						dl.preview-data(data-bind="foreach: canonicals")
+							dt
+								ul
+									li
+										span(data-bind="text: name")
+							dd.cuenta(data-bind="text: count")
 		#filtersContainerHelp(data-bind="visible: isObjectNameHelpSelected", style="display: none")
 			#topFiltersContainerHelp
 				a.close-icon-filter-help(data-bind="click: disableFilterHelp")
@@ -74,100 +195,231 @@ block filterWindow
 				.contentFiltersContainerHelpContainer(data-bind="foreach: resumeScientificNames, visible: resumeScientificNames().length > 0 && selectedSubject() == 0")
 					.item
 						span(data-bind="html: canonicalWithBold")
-						a(href='#', title='Adicionar este filtro', data-bind='click: $parent.addScientificNameFromHelp')
-							img(alt='Quitar este filtro', src='/images/icons/redplus.png')
+						a(href='#', title='Adicionar este filtro', data-bind='click: function () { $parent.addScientificNameFromHelp($parent, this); }')
+							img(alt='Adicionar este filtro', src='/images/icons/redplus.png')
 						em(data-bind="text: occurrences")
 				// Kingdom resume data
 				.contentFiltersContainerHelpContainer(data-bind="foreach: resumeKingdomNames, visible: resumeKingdomNames().length > 0 && selectedSubject() == 100")
 					.item
 						span(data-bind="html: kingdomWithBold")
-						a(href='#', title='Adicionar este filtro', data-bind='click: $parent.addTaxonNameFromHelp')
-							img(alt='Quitar este filtro', src='/images/icons/redplus.png')
+						a(href='#', title='Adicionar este filtro', data-bind='click: function () { $parent.addTaxonNameFromHelp($parent, this); }')
+							img(alt='Adicionar este filtro', src='/images/icons/redplus.png')
 						em(data-bind="text: occurrences")
 				// Phylum resume data
 				.contentFiltersContainerHelpContainer(data-bind="foreach: resumePhylumNames, visible: resumePhylumNames().length > 0 && selectedSubject() == 101")
 					.item
 						span(data-bind="html: phylumWithBold")
-						a(href='#', title='Adicionar este filtro', data-bind='click: $parent.addTaxonNameFromHelp')
-							img(alt='Quitar este filtro', src='/images/icons/redplus.png')
+						a(href='#', title='Adicionar este filtro', data-bind='click: function () { $parent.addTaxonNameFromHelp($parent, this); }')
+							img(alt='Adicionar este filtro', src='/images/icons/redplus.png')
 						em(data-bind="text: occurrences")
 				// Class resume data
 				.contentFiltersContainerHelpContainer(data-bind="foreach: resumeClassNames, visible: resumeClassNames().length > 0 && selectedSubject() == 102")
 					.item
 						span(data-bind="html: nameClassWithBold")
-						a(href='#', title='Adicionar este filtro', data-bind='click: $parent.addTaxonNameFromHelp')
-							img(alt='Quitar este filtro', src='/images/icons/redplus.png')
+						a(href='#', title='Adicionar este filtro', data-bind='click: function () { $parent.addTaxonNameFromHelp($parent, this); }')
+							img(alt='Adicionar este filtro', src='/images/icons/redplus.png')
 						em(data-bind="text: occurrences")
 				// Order Rank resume data
 				.contentFiltersContainerHelpContainer(data-bind="foreach: resumeOrderNames, visible: resumeOrderNames().length > 0 && selectedSubject() == 103")
 					.item
 						span(data-bind="html: order_rankWithBold")
-						a(href='#', title='Adicionar este filtro', data-bind='click: $parent.addTaxonNameFromHelp')
-							img(alt='Quitar este filtro', src='/images/icons/redplus.png')
+						a(href='#', title='Adicionar este filtro', data-bind='click: function () { $parent.addTaxonNameFromHelp($parent, this); }')
+							img(alt='Adicionar este filtro', src='/images/icons/redplus.png')
 						em(data-bind="text: occurrences")
 				// Family resume data
 				.contentFiltersContainerHelpContainer(data-bind="foreach: resumeFamilyNames, visible: resumeFamilyNames().length > 0 && selectedSubject() == 104")
 					.item
 						span(data-bind="html: familyWithBold")
-						a(href='#', title='Adicionar este filtro', data-bind='click: $parent.addTaxonNameFromHelp')
-							img(alt='Quitar este filtro', src='/images/icons/redplus.png')
+						a(href='#', title='Adicionar este filtro', data-bind='click: function () { $parent.addTaxonNameFromHelp($parent, this); }')
+							img(alt='Adicionar este filtro', src='/images/icons/redplus.png')
 						em(data-bind="text: occurrences")
 				// Genus resume data
 				.contentFiltersContainerHelpContainer(data-bind="foreach: resumeGenusNames, visible: resumeGenusNames().length > 0 && selectedSubject() == 105")
 					.item
 						span(data-bind="html: genusWithBold")
-						a(href='#', title='Adicionar este filtro', data-bind='click: $parent.addTaxonNameFromHelp')
-							img(alt='Quitar este filtro', src='/images/icons/redplus.png')
+						a(href='#', title='Adicionar este filtro', data-bind='click: function () { $parent.addTaxonNameFromHelp($parent, this); }')
+							img(alt='Adicionar este filtro', src='/images/icons/redplus.png')
 						em(data-bind="text: occurrences")
 				// Species resume data
 				.contentFiltersContainerHelpContainer(data-bind="foreach: resumeSpeciesNames, visible: resumeSpeciesNames().length > 0 && selectedSubject() == 106")
 					.item
 						span(data-bind="html: speciesWithBold")
-						a(href='#', title='Adicionar este filtro', data-bind='click: $parent.addTaxonNameFromHelp')
-							img(alt='Quitar este filtro', src='/images/icons/redplus.png')
+						a(href='#', title='Adicionar este filtro', data-bind='click: function () { $parent.addTaxonNameFromHelp($parent, this); }')
+							img(alt='Adicionar este filtro', src='/images/icons/redplus.png')
 						em(data-bind="text: occurrences")
 				// Data providers resume data
 				.contentFiltersContainerHelpContainer(data-bind="foreach: resumeDataProviders, visible: resumeDataProviders().length > 0 && selectedSubject() == 25")
 					.item
 						span(data-bind="html: providerNameWithBold")
-						a(href='#', title='Adicionar este filtro', data-bind='click: $parent.addDataProviderNameFromHelp')
-							img(alt='Quitar este filtro', src='/images/icons/redplus.png')
+						a(href='#', title='Adicionar este filtro', data-bind='click: function () { $parent.addDataProviderNameFromHelp($parent, this); }')
+							img(alt='Adicionar este filtro', src='/images/icons/redplus.png')
 						em(data-bind="text: occurrences")
 				// Data resources resume data
 				.contentFiltersContainerHelpContainer(data-bind="foreach: resumeDataResources, visible: resumeDataResources().length > 0 && selectedSubject() == 24")
 					.item
 						span(data-bind="html: resourceNameWithBold")
-						a(href='#', title='Adicionar este filtro', data-bind='click: $parent.addDataResourceNameFromHelp')
-							img(alt='Quitar este filtro', src='/images/icons/redplus.png')
+						a(href='#', title='Adicionar este filtro', data-bind='click: function () { $parent.addDataResourceNameFromHelp($parent, this); }')
+							img(alt='Adicionar este filtro', src='/images/icons/redplus.png')
 						em(data-bind="text: occurrences")
 				// Institution codes resume data
 				.contentFiltersContainerHelpContainer(data-bind="foreach: resumeInstitutionCodes, visible: resumeInstitutionCodes().length > 0 && selectedSubject() == 12")
 					.item
 						span(data-bind="html: institutionCodeWithBold")
 						a(href='#', title='Adicionar este filtro', data-bind='')
-							img(alt='Quitar este filtro', src='/images/icons/redplus.png')
+							img(alt='Adicionar este filtro', src='/images/icons/redplus.png')
 						em(data-bind="text: occurrences")
 				// Collection codes resume data
 				.contentFiltersContainerHelpContainer(data-bind="foreach: resumeCollectionCodes, visible: resumeCollectionCodes().length > 0 && selectedSubject() == 13")
 					.item
 						span(data-bind="html: collectionCodeWithBold")
 						a(href='#', title='Adicionar este filtro', data-bind='')
-							img(alt='Quitar este filtro', src='/images/icons/redplus.png')
+							img(alt='Adicionar este filtro', src='/images/icons/redplus.png')
 						em(data-bind="text: occurrences")
 				// Countries resume data
 				.contentFiltersContainerHelpContainer(data-bind="foreach: resumeCountries, visible: resumeCountries().length > 0 && selectedSubject() == 5")
 					.item
 						span(data-bind="html: countryNameWithBold")
-						a(href='#', title='Adicionar este filtro', data-bind='click: $parent.addCountryIDFromHelp')
-							img(alt='Quitar este filtro', src='/images/icons/redplus.png')
+						a(href='#', title='Adicionar este filtro', data-bind='click: function () { $parent.addCountryIDFromHelp($parent, this); }')
+							img(alt='Adicionar este filtro', src='/images/icons/redplus.png')
 						em(data-bind="text: occurrences")
 				// Departments resume data
 				.contentFiltersContainerHelpContainer(data-bind="foreach: resumeDepartments, visible: resumeDepartments().length > 0 && selectedSubject() == 38")
 					.item
 						span(data-bind="html: departmentNameWithBold")
-						a(href='#', title='Adicionar este filtro', data-bind='click: $parent.addDepartmentIDFromHelp')
-							img(alt='Quitar este filtro', src='/images/icons/redplus.png')
+						a(href='#', title='Adicionar este filtro', data-bind='click: function () { $parent.addDepartmentIDFromHelp($parent, this); }')
+							img(alt='Adicionar este filtro', src='/images/icons/redplus.png')
 						em(data-bind="text: occurrences")
+				.resume(data-bind="foreach: resumesInfoFilter")
+					h2(data-bind="visible: providers().length > 0") Publicadores:
+					dl.preview-data(data-bind="foreach: providers")
+						dt
+							ul
+								li
+									a(target="_blank", data-bind="attr: { href: url }")
+										span(data-bind="text: name")
+						dd.cuenta(data-bind="text: count")
+					h2(data-bind="visible: resources().length > 0") Conjuntos de datos:
+					dl.preview-data(data-bind="foreach: resources")
+						dt
+							ul
+								li
+									a(target="_blank", data-bind="attr: { href: url }")
+										span(data-bind="text: name")
+						dd.cuenta(data-bind="text: count")
+					h2(data-bind="visible: countries().length > 0") País:
+					dl.preview-data(data-bind="foreach: countries")
+						dt
+							ul
+								li
+									a(target="_blank", data-bind="attr: { href: url }")
+										span(data-bind="text: name")
+						dd.cuenta(data-bind="text: count")
+					h2(data-bind="visible: departments().length > 0") Departamento:
+					dl.preview-data(data-bind="foreach: departments")
+						dt
+							ul
+								li
+									a(target="_blank", data-bind="attr: { href: url }")
+										span(data-bind="text: name")
+						dd.cuenta(data-bind="text: count")
+					h2(data-bind="visible: kingdoms().length > 0") Reino:
+					dl.preview-data(data-bind="foreach: kingdoms")
+						dt
+							ul
+								li
+									<!-- ko if: url === null -->
+									span(data-bind="text: name")
+									<!-- /ko -->
+									<!-- ko if: url !== null -->
+									a(target="_blank", data-bind="attr: { href: url }")
+										span(data-bind="text: name")
+									<!-- /ko -->
+						dd.cuenta(data-bind="text: count")
+					h2(data-bind="visible: phylums().length > 0") Filo:
+					dl.preview-data(data-bind="foreach: phylums")
+						dt
+							ul
+								li
+									<!-- ko if: url === null -->
+									span(data-bind="text: name")
+									<!-- /ko -->
+									<!-- ko if: url !== null -->
+									a(target="_blank", data-bind="attr: { href: url }")
+										span(data-bind="text: name")
+									<!-- /ko -->
+						dd.cuenta(data-bind="text: count")
+					h2(data-bind="visible: taxonClasses().length > 0") Clase:
+					dl.preview-data(data-bind="foreach: taxonClasses")
+						dt
+							ul
+								li
+									<!-- ko if: url === null -->
+									span(data-bind="text: name")
+									<!-- /ko -->
+									<!-- ko if: url !== null -->
+									a(target="_blank", data-bind="attr: { href: url }")
+										span(data-bind="text: name")
+									<!-- /ko -->
+						dd.cuenta(data-bind="text: count")
+					h2(data-bind="visible: order_ranks().length > 0") Orden:
+					dl.preview-data(data-bind="foreach: order_ranks")
+						dt
+							ul
+								li
+									<!-- ko if: url === null -->
+									span(data-bind="text: name")
+									<!-- /ko -->
+									<!-- ko if: url !== null -->
+									a(target="_blank", data-bind="attr: { href: url }")
+										span(data-bind="text: name")
+									<!-- /ko -->
+						dd.cuenta(data-bind="text: count")
+					h2(data-bind="visible: families().length > 0") Familia:
+					dl.preview-data(data-bind="foreach: families")
+						dt
+							ul
+								li
+									<!-- ko if: url === null -->
+									span(data-bind="text: name")
+									<!-- /ko -->
+									<!-- ko if: url !== null -->
+									a(target="_blank", data-bind="attr: { href: url }")
+										span(data-bind="text: name")
+									<!-- /ko -->
+						dd.cuenta(data-bind="text: count")
+					h2(data-bind="visible: genuses().length > 0") Género:
+					dl.preview-data(data-bind="foreach: genuses")
+						dt
+							ul
+								li
+									<!-- ko if: url === null -->
+									span(data-bind="text: name")
+									<!-- /ko -->
+									<!-- ko if: url !== null -->
+									a(target="_blank", data-bind="attr: { href: url }")
+										span(data-bind="text: name")
+									<!-- /ko -->
+						dd.cuenta(data-bind="text: count")
+					h2(data-bind="visible: species().length > 0") Especie:
+					dl.preview-data(data-bind="foreach: species")
+						dt
+							ul
+								li
+									<!-- ko if: url === null -->
+									span(data-bind="text: name")
+									<!-- /ko -->
+									<!-- ko if: url !== null -->
+									a(target="_blank", data-bind="attr: { href: url }")
+										span(data-bind="text: name")
+									<!-- /ko -->
+						dd.cuenta(data-bind="text: count")
+					h2(data-bind="visible: canonicals().length > 0") Nombre científico:
+					dl.preview-data(data-bind="foreach: canonicals")
+						dt
+							ul
+								li
+									span(data-bind="text: name")
+						dd.cuenta(data-bind="text: count")
 		#filtersContainer
 			#explorerFiltersAndEditor
 				#filterEditorPane
@@ -209,7 +461,7 @@ block filterWindow
 								// Input for simple text
 								input(name='c[0].o', type='text', id='statesInput', class='input-medium search-query', autocomplete='off', data-bind="click: enableFilterHelp, value: objectNameValue, valueUpdate: 'afterkeydown', visible: selectedSubject() == 0 || selectedSubject() == 100 || selectedSubject() == 101 || selectedSubject() == 102 || selectedSubject() == 103 || selectedSubject() == 104 || selectedSubject() == 105 || selectedSubject() == 106 || selectedSubject() == 1 || selectedSubject() == 2 || selectedSubject() == 34 || selectedSubject() == 35 || selectedSubject() == 24 || selectedSubject() == 25 || selectedSubject() == 21 || selectedSubject() == 12 || selectedSubject() == 13 || selectedSubject() == 14", style="display: none")
 								// Input for country
-								select(name='c[0].o', id='dropDownCountry', data-bind='visible: selectedSubject() == 5, value: selectedCountry',  style='display: none')
+								select(name='c[0].o', id='dropDownCountry', data-bind='visible: selectedSubject() == 5, value: selectedCountry, selectCountry: {}',  style='display: none')
 									option(value='AF') Afganistán
 									option(value="AX") Islas de Åland
 									option(value="AL") Albania
@@ -460,7 +712,7 @@ block filterWindow
 									option(value="ZM") Zambia
 									option(value="ZW") Zimbabue
 								// Input for department
-								select(name="c[0].o", id="dropDownDepartment", data-bind="visible: selectedSubject() == 38, value: selectedDepartment",  style="display: none")
+								select(name="c[0].o", id="dropDownDepartment", data-bind="visible: selectedSubject() == 38, value: selectedDepartment, selectDepartment: {}",  style="display: none")
 									option(value="CO-AMA") Amazonas
 									option(value="CO-ANT") Antioquia
 									option(value="CO-ARA") Arauca
@@ -637,7 +889,7 @@ block filterWindow
 								span(data-bind='visible: $index() == 0') Nombre Científico es 
 								span(data-bind='visible: $index() != 0') o es 
 								span(data-bind='text: textObject')
-								a(href='#', title='Quitar este filtro', data-bind='click: $parent.removeScientificName')
+								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeScientificName($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include Taxon filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedTaxonNames, visible: selectedTaxonNames().length > 0')
@@ -646,7 +898,7 @@ block filterWindow
 								span(data-bind='visible: $index() != 0') o incluye 
 								span(data-bind='text: textName + ": "')
 								span(data-bind='text: textObject')
-								a(href='#', title='Quitar este filtro', data-bind='click: $parent.removeTaxonName')
+								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeTaxonName($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include Country filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedCountriesIDs, visible: selectedCountriesIDs().length > 0')
@@ -654,7 +906,7 @@ block filterWindow
 								span(data-bind='visible: $index() == 0') País es 
 								span(data-bind='visible: $index() != 0') o es 
 								span(data-bind='text: textName')
-								a(href='#', title='Quitar este filtro', data-bind='click: $parent.removeCountryID')
+								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeCountryID($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include Department filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedDepartmentsIDs, visible: selectedDepartmentsIDs().length > 0')
@@ -662,7 +914,7 @@ block filterWindow
 								span(data-bind='visible: $index() == 0') Departamento es 
 								span(data-bind='visible: $index() != 0') o es 
 								span(data-bind='text: textName')
-								a(href='#', title='Quitar este filtro', data-bind='click: $parent.removeDepartmentID')
+								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeDepartmentID($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include Latitude filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedLatitudes, visible: selectedLatitudes().length > 0')
@@ -675,8 +927,8 @@ block filterWindow
 									span(data-bind='visible: predicate == 0') es 
 									span(data-bind='visible: predicate == 1') mayor que 
 									span(data-bind='visible: predicate == 2') menor que 
-								span(data-bind='text: parsedLatitudeText')
-								a(href='#', title='Quitar este filtro', data-bind='click: $parent.removeLatitudeNumber')
+								span(data-bind='text: $parent.parsedLatitudeText($data)')
+								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeLatitudeNumber($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include longitude filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedLongitudes, visible: selectedLongitudes().length > 0')
@@ -689,8 +941,8 @@ block filterWindow
 									span(data-bind='visible: predicate == 0') es 
 									span(data-bind='visible: predicate == 1') mayor que 
 									span(data-bind='visible: predicate == 2') menor que 
-								span(data-bind='text: parsedLongitudeText')
-								a(href='#', title='Quitar este filtro', data-bind='click: $parent.removeLongitudeNumber')
+								span(data-bind='text: $parent.parsedLongitudeText($data)')
+								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeLongitudeNumber($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include altitude filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedAltitudes, visible: selectedAltitudes().length > 0')
@@ -703,8 +955,8 @@ block filterWindow
 									span(data-bind='visible: predicate == 0') es 
 									span(data-bind='visible: predicate == 1') mayor que 
 									span(data-bind='visible: predicate == 2') menor que 
-								span(data-bind='text: parsedAltitudeText')
-								a(href='#', title='Quitar este filtro', data-bind='click: $parent.removeAltitudeNumber')
+								span(data-bind='text: $parent.parsedHeightText($data)')
+								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeAltitudeNumber($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include deep filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedDeeps, visible: selectedDeeps().length > 0')
@@ -717,15 +969,15 @@ block filterWindow
 									span(data-bind='visible: predicate == 0') es 
 									span(data-bind='visible: predicate == 1') mayor que 
 									span(data-bind='visible: predicate == 2') menor que 
-								span(data-bind='text: parsedDeepText')
-								a(href='#', title='Quitar este filtro', data-bind='click: $parent.removeDeepNumber')
+								span(data-bind='text: $parent.parsedHeightText($data)')
+								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeDeepNumber($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include coordinate state filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedCoordinate, visible: selectedCoordinate().length > 0')
 							li(class='alteredFilter')
 								span Estado de las coordenadas es  
 								span(data-bind='text: textName')
-								a(href='#', title='Quitar este filtro', data-bind='click: $parent.removeCoordinateState')
+								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeCoordinateState($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include data providers filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedProviders, visible: selectedProviders().length > 0')
@@ -733,7 +985,7 @@ block filterWindow
 								span(data-bind='visible: $index() == 0') Publicador de datos es 
 								span(data-bind='visible: $index() != 0') o es 
 								span(data-bind='text: textObject')
-								a(href='#', title='Quitar este filtro', data-bind='click: $parent.removeDataProviderName')
+								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeDataProviderName($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include data resources filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedResources, visible: selectedResources().length > 0')
@@ -741,6 +993,12 @@ block filterWindow
 								span(data-bind='visible: $index() == 0') Recurso de datos es 
 								span(data-bind='visible: $index() != 0') o es 
 								span(data-bind='text: textObject')
-								a(href='#', title='Quitar este filtro', data-bind='click: $parent.removeDataResourceName')
+								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeDataResourceName($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						button(style="display: none", class='btn btn-small btn-add-filter', type='button', data-bind='visible: totalFilters() != 0, click: startSearch') Búsqueda
+				#densityButtonsPane
+					#densityButtons
+						button(id='oneDegree', class='btn btn-primary btn-small', type='button', data-toggle="button", data-bind='click: toggleDistribution') 1x1 grados
+						button(id='pointFiveDegree',class='btn btn-primary btn-small', type='button', data-toggle="button", data-bind='click: toggleDistribution') .5x.5 grados
+						button(id='pointTwoDegree', class='btn btn-primary btn-small', type='button', data-toggle="button", data-bind='click: toggleDistribution') .2x.2 grados
+						button(id='pointOneDegree', class='btn btn-primary btn-small', type='button', data-toggle="button", data-bind='click: toggleDistribution') .1x.1 grados

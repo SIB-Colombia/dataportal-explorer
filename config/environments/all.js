@@ -19,6 +19,8 @@ module.exports = function(parent) {
 		require('./development')(parent);
 	} else if(process.env.NODE_ENV == 'production') {
 		require('./production')(parent);
+	} else {
+		require('./development')(parent);
 	}
 
 	// Databases initialization
