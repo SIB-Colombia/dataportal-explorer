@@ -1,4 +1,4 @@
-define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles", "LeafletProviders", "LeafletControlFullScreen"], function($) {
+define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles", "LeafletProviders", "LeafletControlFullScreen", "LeafletDraw"], function($) {
 	//console.log(kendo);
 	//kendo.culture("es-CO");
 
@@ -224,6 +224,35 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 		fullscreenControl: true
 	});
 
+	/*var drawControl = new L.Control.Draw({
+		draw: {
+			position: 'topleft',
+			polygon: {
+				title: 'Draw a sexy polygon!',
+				allowIntersection: false,
+				drawError: {
+					color: '#b00b00',
+					timeout: 1000
+				},
+				shapeOptions: {
+					color: '#bada55'
+				},
+				showArea: true
+			},
+			polyline: {
+				metric: false
+			},
+			circle: {
+				shapeOptions: {
+					color: '#662d91'
+				}
+			}
+		},
+		edit: {
+			featureGroup: drawnItems
+		}
+	});*/
+
 	var wmsLayers = {
 		'Invemar: Ecorregiones': invemarEcoregiones,
 		'Invemar: Ecozonas': invemarEcozonas,
@@ -256,6 +285,19 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 	baseAndFirstOverlays = L.control.layers(baseLayers, wmsLayers).addTo(map);
 	//L.control.layers(wmsLayers).addTo(map);
 	map.addControl(new L.Control.Scale());
+
+	var drawnItems = new L.FeatureGroup();
+	map.addLayer(drawnItems);
+
+	var drawControl = new L.Control.Draw({
+		draw: {
+			marker: false
+		},
+		edit: {
+			featureGroup: drawnItems
+		}
+	});
+	map.addControl(drawControl);
 
 	// Enable floating windows for search floating window
 	$(function() {
