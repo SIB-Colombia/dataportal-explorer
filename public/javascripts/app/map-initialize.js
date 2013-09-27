@@ -286,18 +286,51 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 	//L.control.layers(wmsLayers).addTo(map);
 	map.addControl(new L.Control.Scale());
 
-	var drawnItems = new L.FeatureGroup();
-	map.addLayer(drawnItems);
+	var featureGroup = new L.FeatureGroup().addTo(map);
 
 	var drawControl = new L.Control.Draw({
 		draw: {
+			polyline: {
+				shapeOptions: {
+					color: '#FF0000',
+					weight: 2
+				}
+			},
+			polygon: {
+				allowIntersection: false, // Restricts shapes to simple polygons
+				drawError: {
+					color: '#FF00FF', // Color the shape will turn when intersects
+					message: '<strong>¡Error, <strong> los polígonos deben ser simples!' // Message that will show when intersect
+				},
+				shapeOptions: {
+					color: '#FF0000',
+					weight: 2
+				}
+			},
+			circle: {
+				shapeOptions: {
+					color: '#FF0000',
+					weight: 2,
+					start: 'Haga click y desplace para dibujar un círculo.'
+				}
+			},
+			rectangle: {
+				shapeOptions: {
+					color: '#FF0000',
+					weight: 2
+				}
+			},
 			marker: false
 		},
 		edit: {
-			featureGroup: drawnItems
+			featureGroup: featureGroup
 		}
+	}).addTo(map);
+
+	map.on('draw:created', function(e) {
+		featureGroup.clearLayers();
+		featureGroup.addLayer(e.layer);
 	});
-	map.addControl(drawControl);
 
 	// Enable floating windows for search floating window
 	$(function() {
