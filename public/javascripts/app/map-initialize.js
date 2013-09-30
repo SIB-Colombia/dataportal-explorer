@@ -377,12 +377,6 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 	
 	var drawControl = new L.Control.Draw({
 		draw: {
-			polyline: {
-				shapeOptions: {
-					color: '#FF0000',
-					weight: 2
-				}
-			},
 			polygon: {
 				allowIntersection: false, // Restricts shapes to simple polygons
 				drawError: {
@@ -407,6 +401,7 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 					weight: 2
 				}
 			},
+			polyline: false,
 			marker: false
 		},
 		edit: {

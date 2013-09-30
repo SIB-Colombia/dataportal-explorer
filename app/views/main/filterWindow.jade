@@ -998,7 +998,8 @@ block filterWindow
 						button(style="display: none", class='btn btn-small btn-add-filter', type='button', data-bind='visible: totalFilters() != 0, click: startSearch') Búsqueda
 				#densityButtonsPane
 					#densityButtons
-						button(id='oneDegree', class='btn btn-primary btn-small', type='button', data-toggle="button", data-bind='click: toggleDistribution') 1x1 grados
-						button(id='pointFiveDegree',class='btn btn-primary btn-small', type='button', data-toggle="button", data-bind='click: toggleDistribution') .5x.5 grados
-						button(id='pointTwoDegree', class='btn btn-primary btn-small', type='button', data-toggle="button", data-bind='click: toggleDistribution') .2x.2 grados
-						button(id='pointOneDegree', class='btn btn-primary btn-small', type='button', data-toggle="button", data-bind='click: toggleDistribution') .1x.1 grados
+						span.detailDensity Nivel de detalle:
+						button(id='oneDegree', class='btn btn-primary btn-small', type='button', data-toggle="button", data-bind='click: toggleDistribution') 1x1 &deg;
+						button(id='pointFiveDegree',class='btn btn-primary btn-small', type='button', data-toggle="button", data-bind='click: toggleDistribution') 0.5x0.5 &deg;
+						button(id='pointTwoDegree', class='btn btn-primary btn-small', type='button', data-toggle="button", data-bind='click: toggleDistribution') 0.2x0.2 &deg;
+						button(id='pointOneDegree', class='btn btn-primary btn-small', type='button', data-toggle="button", data-bind='click: toggleDistribution') 0.1x0.1 &deg;

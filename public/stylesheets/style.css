@@ -796,6 +796,15 @@ h4#currentSearch {
   background-color: #115b96;
   color: #fff;
 }
+#filtersContainer #explorerFiltersAndEditor #densityButtonsPane #densityButtons button {
+  font-size: 13px;
+  margin-right: 1px;
+  width: 79px;
+}
+#filtersContainer #explorerFiltersAndEditor #densityButtonsPane #densityButtons .detailDensity {
+  display: block;
+  margin-bottom: 5px;
+}
 #filtersContainer #explorerFiltersAndEditor #densityButtonsPane #densityButtons .btn-small {
   padding-left: 6px;
   padding-right: 6px;
