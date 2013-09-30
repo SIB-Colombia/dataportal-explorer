@@ -288,6 +288,93 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 
 	var featureGroup = new L.FeatureGroup().addTo(map);
 
+	// Set toolbar draw to spanish
+	L.drawLocal = {
+		draw: {
+			toolbar: {
+				actions: {
+					title: 'Cancelar dibujo',
+					text: 'Cancelar'
+				},
+				buttons: {
+					polyline: 'Dibujar linea poligonal',
+					polygon: 'Dibujar un polígono',
+					rectangle: 'Dibujar un rectángulo',
+					circle: 'Dibujar un círculo',
+					marker: 'Dibujar un marcador'
+				}
+			},
+			handlers: {
+				circle: {
+					tooltip: {
+						start: 'Haga click y deslice para dibujar un círculo.'
+					}
+				},
+				marker: {
+					tooltip: {
+						start: 'Haga click para colocar un marcador.'
+					}
+				},
+				polygon: {
+					tooltip: {
+						start: 'Haga click para comenzar a dibujar una figura.',
+						cont: 'Haga click para continuar dibujando la figura.',
+						end: 'Haga click en el primer punto para cerrar la figura.'
+					}
+				},
+				polyline: {
+					error: '<strong>¡Error:</strong> los bordes de la figura no se pueden cruzar!',
+					tooltip: {
+						start: 'Haga click para comenzar a dibujar la linea.',
+						cont: 'Haga click para continuar dibujando la linea.',
+						end: 'Haga click en el último punto para finalizar la linea.'
+					}
+				},
+				rectangle: {
+					tooltip: {
+						start: 'Haga click y deslice para dibujar un rectángulo.'
+					}
+				},
+				simpleshape: {
+					tooltip: {
+						end: 'Libere el click del rator para finalizar la figura.'
+					}
+				}
+			}
+		},
+		edit: {
+			toolbar: {
+				actions: {
+					save: {
+						title: 'Guardar cambios.',
+						text: 'Guardar'
+					},
+					cancel: {
+						title: 'Cancelar edición, descargar todos los cambios.',
+						text: 'Cancelar'
+					}
+				},
+				buttons: {
+					edit: 'Editar capas',
+					remove: 'Borrar capas'
+				}
+			},
+			handlers: {
+				edit: {
+					tooltip: {
+						text: 'Desplace las manijas o marcadores para editar la características.',
+						subtext: 'Haga click en cancelar para deshacer los cambios.'
+					}
+				},
+				remove: {
+					tooltip: {
+						text: 'Haga click en una característica para borrarla'
+					}
+				}
+			}
+		}
+	};
+	
 	var drawControl = new L.Control.Draw({
 		draw: {
 			polyline: {
