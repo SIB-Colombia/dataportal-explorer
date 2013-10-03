@@ -281,7 +281,7 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 
 	};
 	
-	baseAndFirstOverlays = L.control.layers(baseLayers, wmsLayers).addTo(map);
+	baseAndFirstOverlays = L.control.layers(baseLayers, wmsLayers, {collapsed: true}).addTo(map);
 	//L.control.layers(wmsLayers).addTo(map);
 	L.control.fullscreen({
 		position: 'topleft',

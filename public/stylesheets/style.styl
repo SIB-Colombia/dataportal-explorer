@@ -282,10 +282,8 @@ fieldset
 	padding 0px
 	height 600px
 .leaflet-control-layers-expanded
-	height 300px
-	padding 0px
+	height 400px
 	overflow-y scroll
-	border-radius(15px)
 	-webkit-overflow-scrolling touch
 	label
 		padding 3px
@@ -293,7 +291,7 @@ fieldset
 		&:nth-child(2n)
 			background-color rgba(168,219,247, 0.7)
 .leaflet-top+.leaflet-right
-	margin-top 100px
+	margin-top 50px
 .leaflet-control-zoom
 	a
 		width 26px !important
@@ -441,16 +439,28 @@ h4#currentSearch
 			background-color white
 		.contentFiltersContainerHelpContainer
 			padding-left 5px
+		.item-header
+			font-weight bold
+			padding-left 5px
+			padding-bottom 20px
+			span
+				float left
+				width 180px
+				padding-right 5px
+				text-overflow ellipsis
+				overflow-x hidden
+				overflow-y hidden
+			em
+				float left
 		.item
 			min-height 18px
-			padding-bottom 8px
-			padding-top 8px
+			padding-top 3px
+			padding-bottom 3px
 			padding-left 15px
 			border-bottom 1px #cacaca solid
-			border-top 1px #cacaca solid
 			background-color #fff
-			margin-top -1px
 			float left
+			line-height 20px
 			transition(all 0.5s ease-in-out)
 			&:hover
 				background-color #1775bf
@@ -477,16 +487,30 @@ h4#currentSearch
 					td
 						background-color #683C0C
 						color white
-		.resume
-			padding-left 15px
-			padding-right 15px
+		.resumeHeader
+			padding-left 10px
+			float left
+			margin-top 20px
 			h2
 				font-family 'Open sans', Helvetica, Verdana, Helvetica, Arial
 				font-weight bold
-				font-size 12px
+				line-height 25px
+		.resume
+			padding-left 15px
+			padding-right 15px
+			font-family 'Open sans', Helvetica, Verdana, Helvetica, Arial
+			font-size 12px
+			.headerDistribution
+				font-weight bold
+				float left
+				margin-bottom 5px
+				margin-top 10px
+			.headerCount
+				font-weight bold
+				float right
+				margin-bottom 5px
+				margin-top 10px
 			dl
-				font-family 'Open sans', Helvetica, Verdana, Helvetica, Arial
-				font-size 12px
 				margin 0 0 5px 20px
 				padding 0
 				&.preview-data
@@ -496,11 +520,11 @@ h4#currentSearch
 						clear both
 						float left
 						font-weight normal
-						width 80%
+						width 70%
 					dd
 						float right
 						margin 0
-						width 20%
+						width 25%
 #filtersContainer
 	display block
 	background url("/images/standard/shadow_top_clear.png") no-repeat center top
@@ -745,16 +769,33 @@ h4#currentSearch
 		overflow hidden
 		.contentResumeInfoDetailContainer
 			padding-left 5px
-			.resume
-				padding-left 15px
-				padding-right 15px
+			font-family 'Open sans', Helvetica, Verdana, Helvetica, Arial
+			.resumeHeader
+				padding-left 10px
+				float left
 				h2
 					font-family 'Open sans', Helvetica, Verdana, Helvetica, Arial
 					font-weight bold
 					font-size 12px
+					line-height 25px
+			.resume
+				padding-left 15px
+				padding-right 15px
+				font-size 12px
+				float left
+				h2
+					font-weight bold
+				.headerDistribution
+					font-weight bold
+					float left
+					margin-bottom 5px
+					margin-top 10px
+				.headerCount
+					font-weight bold
+					float right
+					margin-bottom 5px
+					margin-top 10px
 				dl
-					font-family 'Open sans', Helvetica, Verdana, Helvetica, Arial
-					font-size 12px
 					margin 0 0 5px 20px
 					padding 0
 					&.preview-data

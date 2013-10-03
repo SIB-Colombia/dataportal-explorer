@@ -71,8 +71,11 @@ block filterWindow
 					img(src="/images/icons/close2.png")
 			#resumeInfoDetailContainer.unselectable
 				.contentResumeInfoDetailContainer
+					.resumeHeader
+						h2 Distribución de registros en celda
 					.resume(data-bind="foreach: resumesInfo")
-						h2(data-bind="visible: canonicals().length > 0") Publicadores:
+						span.headerDistribution(data-bind="visible: canonicals().length > 0") Publicadores:
+						span.headerCount(data-bind="visible: canonicals().length > 0") # Registros
 						dl.preview-data(data-bind="foreach: providers")
 							dt
 								ul
@@ -80,7 +83,8 @@ block filterWindow
 										a(target="_blank", data-bind="attr: { href: url }")
 											span(data-bind="text: name")
 							dd.cuenta(data-bind="text: count")
-						h2(data-bind="visible: canonicals().length > 0") Conjuntos de datos:
+						span.headerDistribution(data-bind="visible: canonicals().length > 0") Conjuntos de datos:
+						span.headerCount(data-bind="visible: canonicals().length > 0") # Registros
 						dl.preview-data(data-bind="foreach: resources")
 							dt
 								ul
@@ -88,7 +92,8 @@ block filterWindow
 										a(target="_blank", data-bind="attr: { href: url }")
 											span(data-bind="text: name")
 							dd.cuenta(data-bind="text: count")
-						h2(data-bind="visible: canonicals().length > 0") Reino:
+						span.headerDistribution(data-bind="visible: canonicals().length > 0") Reino:
+						span.headerCount(data-bind="visible: canonicals().length > 0") # Registros
 						dl.preview-data(data-bind="foreach: kingdoms")
 							dt
 								ul
@@ -101,7 +106,8 @@ block filterWindow
 											span(data-bind="text: name")
 										<!-- /ko -->
 							dd.cuenta(data-bind="text: count")
-						h2(data-bind="visible: canonicals().length > 0") Filo:
+						span.headerDistribution(data-bind="visible: canonicals().length > 0") Filo:
+						span.headerCount(data-bind="visible: canonicals().length > 0") # Registros
 						dl.preview-data(data-bind="foreach: phylums")
 							dt
 								ul
@@ -114,7 +120,8 @@ block filterWindow
 											span(data-bind="text: name")
 										<!-- /ko -->
 							dd.cuenta(data-bind="text: count")
-						h2(data-bind="visible: canonicals().length > 0") Clase:
+						span.headerDistribution(data-bind="visible: canonicals().length > 0") Clase:
+						span.headerCount(data-bind="visible: canonicals().length > 0") # Registros
 						dl.preview-data(data-bind="foreach: taxonClasses")
 							dt
 								ul
@@ -127,7 +134,8 @@ block filterWindow
 											span(data-bind="text: name")
 										<!-- /ko -->
 							dd.cuenta(data-bind="text: count")
-						h2(data-bind="visible: canonicals().length > 0") Orden:
+						span.headerDistribution(data-bind="visible: canonicals().length > 0") Orden:
+						span.headerCount(data-bind="visible: canonicals().length > 0") # Registros
 						dl.preview-data(data-bind="foreach: order_ranks")
 							dt
 								ul
@@ -140,7 +148,8 @@ block filterWindow
 											span(data-bind="text: name")
 										<!-- /ko -->
 							dd.cuenta(data-bind="text: count")
-						h2(data-bind="visible: canonicals().length > 0") Familia:
+						span.headerDistribution(data-bind="visible: canonicals().length > 0") Familia:
+						span.headerCount(data-bind="visible: canonicals().length > 0") # Registros
 						dl.preview-data(data-bind="foreach: families")
 							dt
 								ul
@@ -153,7 +162,8 @@ block filterWindow
 											span(data-bind="text: name")
 										<!-- /ko -->
 							dd.cuenta(data-bind="text: count")
-						h2(data-bind="visible: canonicals().length > 0") Género:
+						span.headerDistribution(data-bind="visible: canonicals().length > 0") Género:
+						span.headerCount(data-bind="visible: canonicals().length > 0") # Registros
 						dl.preview-data(data-bind="foreach: genuses")
 							dt
 								ul
@@ -166,7 +176,8 @@ block filterWindow
 											span(data-bind="text: name")
 										<!-- /ko -->
 							dd.cuenta(data-bind="text: count")
-						h2(data-bind="visible: species().length > 0") Especie:
+						span.headerDistribution(data-bind="visible: species().length > 0") Especie:
+						span.headerCount(data-bind="visible: species().length > 0") # Registros
 						dl.preview-data(data-bind="foreach: species")
 							dt
 								ul
@@ -179,7 +190,8 @@ block filterWindow
 											span(data-bind="text: name")
 										<!-- /ko -->
 							dd.cuenta(data-bind="text: count")
-						h2(data-bind="visible: canonicals().length > 0") Nombre científico:
+						span.headerDistribution(data-bind="visible: canonicals().length > 0") Nombre científico:
+						span.headerCount(data-bind="visible: canonicals().length > 0") # Registros
 						dl.preview-data(data-bind="foreach: canonicals")
 							dt
 								ul
@@ -191,6 +203,10 @@ block filterWindow
 				a.close-icon-filter-help(data-bind="click: disableFilterHelp")
 					img(src="/images/icons/close2.png")
 			#contentFiltersContainerHelp.unselectable
+				.contentFiltersContainerHelpContainer
+					.item-header
+						span Top 10 encontrados
+						em # Registros
 				// Scientific Names resume data
 				.contentFiltersContainerHelpContainer(data-bind="foreach: resumeScientificNames, visible: resumeScientificNames().length > 0 && selectedSubject() == 0")
 					.item
@@ -289,8 +305,11 @@ block filterWindow
 						a(href='#', title='Adicionar este filtro', data-bind='click: function () { $parent.addDepartmentIDFromHelp($parent, this); }')
 							img(alt='Adicionar este filtro', src='/images/icons/redplus.png')
 						em(data-bind="text: occurrences")
+				.resumeHeader
+					h2 Distribución de registros encontrados
 				.resume(data-bind="foreach: resumesInfoFilter")
-					h2(data-bind="visible: providers().length > 0") Publicadores:
+					span.headerDistribution(data-bind="visible: providers().length > 0") Publicadores:
+					span.headerCount(data-bind="visible: providers().length > 0") # Registros
 					dl.preview-data(data-bind="foreach: providers")
 						dt
 							ul
@@ -298,7 +317,8 @@ block filterWindow
 									a(target="_blank", data-bind="attr: { href: url }")
 										span(data-bind="text: name")
 						dd.cuenta(data-bind="text: count")
-					h2(data-bind="visible: resources().length > 0") Conjuntos de datos:
+					span.headerDistribution(data-bind="visible: resources().length > 0") Conjuntos de datos:
+					span.headerCount(data-bind="visible: resources().length > 0") # Registros
 					dl.preview-data(data-bind="foreach: resources")
 						dt
 							ul
@@ -306,7 +326,8 @@ block filterWindow
 									a(target="_blank", data-bind="attr: { href: url }")
 										span(data-bind="text: name")
 						dd.cuenta(data-bind="text: count")
-					h2(data-bind="visible: countries().length > 0") País:
+					span.headerDistribution(data-bind="visible: countries().length > 0") País:
+					span.headerCount(data-bind="visible: countries().length > 0") # Registros
 					dl.preview-data(data-bind="foreach: countries")
 						dt
 							ul
@@ -314,7 +335,8 @@ block filterWindow
 									a(target="_blank", data-bind="attr: { href: url }")
 										span(data-bind="text: name")
 						dd.cuenta(data-bind="text: count")
-					h2(data-bind="visible: departments().length > 0") Departamento:
+					span.headerDistribution(data-bind="visible: departments().length > 0") Departamento:
+					span.headerCount(data-bind="visible: departments().length > 0") # Registros
 					dl.preview-data(data-bind="foreach: departments")
 						dt
 							ul
@@ -322,7 +344,8 @@ block filterWindow
 									a(target="_blank", data-bind="attr: { href: url }")
 										span(data-bind="text: name")
 						dd.cuenta(data-bind="text: count")
-					h2(data-bind="visible: kingdoms().length > 0") Reino:
+					span.headerDistribution(data-bind="visible: kingdoms().length > 0") Reino:
+					span.headerCount(data-bind="visible: kingdoms().length > 0") # Registros
 					dl.preview-data(data-bind="foreach: kingdoms")
 						dt
 							ul
@@ -335,7 +358,8 @@ block filterWindow
 										span(data-bind="text: name")
 									<!-- /ko -->
 						dd.cuenta(data-bind="text: count")
-					h2(data-bind="visible: phylums().length > 0") Filo:
+					span.headerDistribution(data-bind="visible: phylums().length > 0") Filo:
+					span.headerCount(data-bind="visible: phylums().length > 0") # Registros
 					dl.preview-data(data-bind="foreach: phylums")
 						dt
 							ul
@@ -348,7 +372,8 @@ block filterWindow
 										span(data-bind="text: name")
 									<!-- /ko -->
 						dd.cuenta(data-bind="text: count")
-					h2(data-bind="visible: taxonClasses().length > 0") Clase:
+					span.headerDistribution(data-bind="visible: taxonClasses().length > 0") Clase:
+					span.headerCount(data-bind="visible: taxonClasses().length > 0") # Registros
 					dl.preview-data(data-bind="foreach: taxonClasses")
 						dt
 							ul
@@ -361,7 +386,8 @@ block filterWindow
 										span(data-bind="text: name")
 									<!-- /ko -->
 						dd.cuenta(data-bind="text: count")
-					h2(data-bind="visible: order_ranks().length > 0") Orden:
+					span.headerDistribution(data-bind="visible: order_ranks().length > 0") Orden:
+					span.headerCount(data-bind="visible: order_ranks().length > 0") # Registros
 					dl.preview-data(data-bind="foreach: order_ranks")
 						dt
 							ul
@@ -374,7 +400,8 @@ block filterWindow
 										span(data-bind="text: name")
 									<!-- /ko -->
 						dd.cuenta(data-bind="text: count")
-					h2(data-bind="visible: families().length > 0") Familia:
+					span.headerDistribution(data-bind="visible: families().length > 0") Familia:
+					span.headerCount(data-bind="visible: families().length > 0") # Registros
 					dl.preview-data(data-bind="foreach: families")
 						dt
 							ul
@@ -387,7 +414,8 @@ block filterWindow
 										span(data-bind="text: name")
 									<!-- /ko -->
 						dd.cuenta(data-bind="text: count")
-					h2(data-bind="visible: genuses().length > 0") Género:
+					span.headerDistribution(data-bind="visible: genuses().length > 0") Género:
+					span.headerCount(data-bind="visible: genuses().length > 0") # Registros
 					dl.preview-data(data-bind="foreach: genuses")
 						dt
 							ul
@@ -400,7 +428,8 @@ block filterWindow
 										span(data-bind="text: name")
 									<!-- /ko -->
 						dd.cuenta(data-bind="text: count")
-					h2(data-bind="visible: species().length > 0") Especie:
+					span.headerDistribution(data-bind="visible: species().length > 0") Especie:
+					span.headerCount(data-bind="visible: species().length > 0") # Registros
 					dl.preview-data(data-bind="foreach: species")
 						dt
 							ul
@@ -413,7 +442,8 @@ block filterWindow
 										span(data-bind="text: name")
 									<!-- /ko -->
 						dd.cuenta(data-bind="text: count")
-					h2(data-bind="visible: canonicals().length > 0") Nombre científico:
+					span.headerDistribution(data-bind="visible: canonicals().length > 0") Nombre científico:
+					span.headerCount(data-bind="visible: canonicals().length > 0") # Registros
 					dl.preview-data(data-bind="foreach: canonicals")
 						dt
 							ul
@@ -998,7 +1028,7 @@ block filterWindow
 						button(style="display: none", class='btn btn-small btn-add-filter', type='button', data-bind='visible: totalFilters() != 0, click: startSearch') Búsqueda
 				#densityButtonsPane
 					#densityButtons
-						span.detailDensity Nivel de detalle:
+						span.detailDensity Nivel de detalle de celda:
 						button(id='oneDegree', class='btn btn-primary btn-small', type='button', data-toggle="button", data-bind='click: toggleDistribution') 1x1 &deg;
 						button(id='pointFiveDegree',class='btn btn-primary btn-small', type='button', data-toggle="button", data-bind='click: toggleDistribution') 0.5x0.5 &deg;
 						button(id='pointTwoDegree', class='btn btn-primary btn-small', type='button', data-toggle="button", data-bind='click: toggleDistribution') 0.2x0.2 &deg;

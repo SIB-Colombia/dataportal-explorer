@@ -382,12 +382,8 @@ fieldset {
   height: 600px;
 }
 .leaflet-control-layers-expanded {
-  height: 300px;
-  padding: 0px;
+  height: 400px;
   overflow-y: scroll;
-  -webkit-border-radius: 15px;
-  -moz-border-radius: 15px;
-  border-radius: 15px;
   -webkit-overflow-scrolling: touch;
 }
 .leaflet-control-layers-expanded label {
@@ -400,7 +396,7 @@ fieldset {
   background-color: rgba(168,219,247,0.7);
 }
 .leaflet-top+.leaflet-right {
-  margin-top: 100px;
+  margin-top: 50px;
 }
 .leaflet-control-zoom a {
   width: 26px !important;
@@ -572,16 +568,31 @@ h4#currentSearch {
 #filtersContainerHelp #contentFiltersContainerHelp .contentFiltersContainerHelpContainer {
   padding-left: 5px;
 }
+#filtersContainerHelp #contentFiltersContainerHelp .item-header {
+  font-weight: bold;
+  padding-left: 5px;
+  padding-bottom: 20px;
+}
+#filtersContainerHelp #contentFiltersContainerHelp .item-header span {
+  float: left;
+  width: 180px;
+  padding-right: 5px;
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+#filtersContainerHelp #contentFiltersContainerHelp .item-header em {
+  float: left;
+}
 #filtersContainerHelp #contentFiltersContainerHelp .item {
   min-height: 18px;
-  padding-bottom: 8px;
-  padding-top: 8px;
+  padding-top: 3px;
+  padding-bottom: 3px;
   padding-left: 15px;
   border-bottom: 1px #cacaca solid;
-  border-top: 1px #cacaca solid;
   background-color: #fff;
-  margin-top: -1px;
   float: left;
+  line-height: 20px;
   -webkit-transition: all 0.5s ease-in-out;
   transition: all 0.5s ease-in-out;
 }
@@ -617,18 +628,35 @@ h4#currentSearch {
   background-color: #683c0c;
   color: #fff;
 }
+#filtersContainerHelp #contentFiltersContainerHelp .resumeHeader {
+  padding-left: 10px;
+  float: left;
+  margin-top: 20px;
+}
+#filtersContainerHelp #contentFiltersContainerHelp .resumeHeader h2 {
+  font-family: 'Open sans', Helvetica, Verdana, Helvetica, Arial;
+  font-weight: bold;
+  line-height: 25px;
+}
 #filtersContainerHelp #contentFiltersContainerHelp .resume {
   padding-left: 15px;
   padding-right: 15px;
-}
-#filtersContainerHelp #contentFiltersContainerHelp .resume h2 {
   font-family: 'Open sans', Helvetica, Verdana, Helvetica, Arial;
-  font-weight: bold;
   font-size: 12px;
+}
+#filtersContainerHelp #contentFiltersContainerHelp .resume .headerDistribution {
+  font-weight: bold;
+  float: left;
+  margin-bottom: 5px;
+  margin-top: 10px;
+}
+#filtersContainerHelp #contentFiltersContainerHelp .resume .headerCount {
+  font-weight: bold;
+  float: right;
+  margin-bottom: 5px;
+  margin-top: 10px;
 }
 #filtersContainerHelp #contentFiltersContainerHelp .resume dl {
-  font-family: 'Open sans', Helvetica, Verdana, Helvetica, Arial;
-  font-size: 12px;
   margin: 0 0 5px 20px;
   padding: 0;
 }
@@ -640,12 +668,12 @@ h4#currentSearch {
   clear: both;
   float: left;
   font-weight: normal;
-  width: 80%;
+  width: 70%;
 }
 #filtersContainerHelp #contentFiltersContainerHelp .resume dl.preview-data dd {
   float: right;
   margin: 0;
-  width: 20%;
+  width: 25%;
 }
 #filtersContainer {
   display: block;
@@ -957,19 +985,40 @@ h4#currentSearch {
 }
 #resumeDetail #resumeInfoDetailContainer .contentResumeInfoDetailContainer {
   padding-left: 5px;
+  font-family: 'Open sans', Helvetica, Verdana, Helvetica, Arial;
+}
+#resumeDetail #resumeInfoDetailContainer .contentResumeInfoDetailContainer .resumeHeader {
+  padding-left: 10px;
+  float: left;
+}
+#resumeDetail #resumeInfoDetailContainer .contentResumeInfoDetailContainer .resumeHeader h2 {
+  font-family: 'Open sans', Helvetica, Verdana, Helvetica, Arial;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 25px;
 }
 #resumeDetail #resumeInfoDetailContainer .contentResumeInfoDetailContainer .resume {
   padding-left: 15px;
   padding-right: 15px;
+  font-size: 12px;
+  float: left;
 }
 #resumeDetail #resumeInfoDetailContainer .contentResumeInfoDetailContainer .resume h2 {
-  font-family: 'Open sans', Helvetica, Verdana, Helvetica, Arial;
   font-weight: bold;
-  font-size: 12px;
+}
+#resumeDetail #resumeInfoDetailContainer .contentResumeInfoDetailContainer .resume .headerDistribution {
+  font-weight: bold;
+  float: left;
+  margin-bottom: 5px;
+  margin-top: 10px;
+}
+#resumeDetail #resumeInfoDetailContainer .contentResumeInfoDetailContainer .resume .headerCount {
+  font-weight: bold;
+  float: right;
+  margin-bottom: 5px;
+  margin-top: 10px;
 }
 #resumeDetail #resumeInfoDetailContainer .contentResumeInfoDetailContainer .resume dl {
-  font-family: 'Open sans', Helvetica, Verdana, Helvetica, Arial;
-  font-size: 12px;
   margin: 0 0 5px 20px;
   padding: 0;
 }
