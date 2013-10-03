@@ -44,6 +44,8 @@ occurrence_record.iso_country_code,
 country_name.`name` AS country_name,
 occurrence_record.iso_department_code,
 department.department_name AS department_name,
+occurrence_record.iso_county_code,
+county.county_name AS county_name,
 occurrence_record.basis_of_record AS basis_of_record_id,
 lookup_basis_of_record.br_value AS basis_of_record_name,
 occurrence_record.`year`,
@@ -70,6 +72,7 @@ LEFT JOIN taxon_concept AS taxon_concept_genus ON taxon_concept.genus_concept_id
 LEFT JOIN taxon_concept AS taxon_concept_species ON taxon_concept.species_concept_id = taxon_concept_species.id
 LEFT JOIN country_name ON occurrence_record.iso_country_code = country_name.iso_country_code
 LEFT JOIN department ON occurrence_record.iso_department_code = department.iso_department_code
+LEFT JOIN county ON occurrence_record.iso_county_code = county.iso_county_code
 WHERE
 occurrence_record.centi_cell_id is not null AND
 occurrence_record.geospatial_issue=0 AND
@@ -128,6 +131,7 @@ data_resource.citation,
 data_resource.created,
 data_resource.modified,
 department.department_name AS department_name,
+county.county_name AS county_name,
 taxon_concept_phylum.partner_concept_id AS phylum_concept_id,
 taxon_name_phylum.canonical AS phylum,
 taxon_concept_kingdom.partner_concept_id AS kingdom_concept_id,
@@ -144,6 +148,7 @@ taxon_concept_species.partner_concept_id AS species_concept_id,
 taxon_name_species.canonical AS species,
 occurrence_record.iso_country_code,
 occurrence_record.iso_department_code,
+occurrence_record.iso_county_code,
 occurrence_record.basis_of_record AS basis_of_record_id,
 lookup_basis_of_record.`br_value` AS basis_of_record_name,
 occurrence_record.`year`,
@@ -161,6 +166,7 @@ INNER JOIN collection_code ON occurrence_record.collection_code_id = collection_
 INNER JOIN catalogue_number ON occurrence_record.catalogue_number_id = catalogue_number.id
 INNER JOIN lookup_basis_of_record ON occurrence_record.basis_of_record = lookup_basis_of_record.br_key
 LEFT JOIN department ON occurrence_record.iso_department_code = department.iso_department_code
+LEFT JOIN county ON occurrence_record.iso_county_code = county.iso_county_code
 LEFT JOIN taxon_concept ON occurrence_record.taxon_concept_id = taxon_concept.id
 LEFT JOIN taxon_concept AS taxon_concept_phylum ON taxon_concept.phylum_concept_id = taxon_concept_phylum.id
 LEFT JOIN taxon_name AS taxon_name_phylum ON taxon_concept_phylum.taxon_name_id = taxon_name_phylum.id

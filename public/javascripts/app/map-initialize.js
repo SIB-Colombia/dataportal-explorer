@@ -220,8 +220,7 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 		center: [4.781505, -79.804687],
 		zoom: 6,
 		//crs: L.CRS.EPSG4326,
-		layers: [googleTerrain],
-		fullscreenControl: true
+		layers: [googleTerrain]
 	});
 
 	/*var drawControl = new L.Control.Draw({
@@ -284,7 +283,10 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 	
 	baseAndFirstOverlays = L.control.layers(baseLayers, wmsLayers).addTo(map);
 	//L.control.layers(wmsLayers).addTo(map);
-	map.addControl(new L.Control.Scale());
+	L.control.fullscreen({
+		position: 'topleft',
+		title: 'Mostrar mapa en pantalla completa'
+	}).addTo(map);
 
 	var featureGroup = new L.FeatureGroup().addTo(map);
 
@@ -298,9 +300,9 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 				},
 				buttons: {
 					polyline: 'Dibujar linea poligonal',
-					polygon: 'Dibujar un polígono',
-					rectangle: 'Dibujar un rectángulo',
-					circle: 'Dibujar un círculo',
+					polygon: 'Dibujar un polígono para búsqueda en el area',
+					rectangle: 'Dibujar un rectángulo para búsqueda en el area',
+					circle: 'Dibujar un círculo para búsqueda en el area',
 					marker: 'Dibujar un marcador'
 				}
 			},
@@ -355,20 +357,20 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 					}
 				},
 				buttons: {
-					edit: 'Editar capas',
-					remove: 'Borrar capas'
+					edit: 'Editar area de búsqueda',
+					remove: 'Borrar area de búsqueda'
 				}
 			},
 			handlers: {
 				edit: {
 					tooltip: {
-						text: 'Desplace las manijas o marcadores para editar la características.',
+						text: 'Desplace las manijas o marcadores para modificar el area.',
 						subtext: 'Haga click en cancelar para deshacer los cambios.'
 					}
 				},
 				remove: {
 					tooltip: {
-						text: 'Haga click en una característica para borrarla'
+						text: 'Haga click en area dibujada para borrarla'
 					}
 				}
 			}
