@@ -290,6 +290,8 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 
 	var featureGroup = new L.FeatureGroup().addTo(map);
 
+	L.control.scale().addTo(map);
+
 	// Set toolbar draw to spanish
 	L.drawLocal = {
 		draw: {

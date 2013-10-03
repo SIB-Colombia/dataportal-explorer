@@ -6,6 +6,11 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		self.densityCellsPointFiveDegree = new L.FeatureGroup();
 		self.densityCellsPointTwoDegree = new L.FeatureGroup();
 
+		self.densityCellsOneDegreeCache = new L.FeatureGroup();
+		self.densityCellsPointOneDegreeCache = new L.FeatureGroup();
+		self.densityCellsPointFiveDegreeCache = new L.FeatureGroup();
+		self.densityCellsPointTwoDegreeCache = new L.FeatureGroup();
+
 		// Grid table data
 		self.gridItems = [];
 
