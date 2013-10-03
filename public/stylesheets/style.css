@@ -757,6 +757,7 @@ h4#currentSearch {
 #filtersContainer #explorerFiltersAndEditor #constructedFiltersPane button {
   background: #589cd1 !important;
   border: 0px none transparent;
+  margin-right: 3px;
 }
 #filtersContainer #explorerFiltersAndEditor #constructedFiltersPane #constructedFilters {
   height: 100%;

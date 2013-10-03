@@ -21,12 +21,15 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		self.firstScrollRun = true;
 		self.detailsFirstScrollRun = true;
 		self.resumeFirstScrollRun = true;
+		self.isFiltered = false;
 		self.helpSearchText = "<p>Escriba un nombre científico y pulse en Agregar filtro.</p><p>Este filtro devolverá cualquier registro que posea un nombre que concuerde con el identificador dado del organismo, sin importar como está clasificado el organismo.</p>";
 		self.totalFilters = 0;
 
 		// Total occurrences data
 		self.totalOccurrences = 0;
 		self.totalGeoOccurrences = 0;
+		self.totalOccurrencesCache = 0;
+		self.totalGeoOccurrencesCache = 0;
 
 		// Arrays for resume help windows
 		self.resumeScientificNames = [];
@@ -403,6 +406,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					self.densityCellsOneDegree().addLayer(densityCell);
 				});
 				self.totalGeoOccurrences(allData.facets.stats.total);
+				self.totalGeoOccurrencesCache(allData.facets.stats.total);
 
 				self.densityCellsOneDegree().on('click', function (a) {
 					// Hide map area
@@ -411,6 +415,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 						self.fillCellDensityOneDegreeData(allData, a);
 					});
 				});
+				jQuery.extend(self.densityCellsOneDegreeCache(),self.densityCellsOneDegree());
 			});
 		},
 		loadCellDensityPointOneDegree: function() {
@@ -454,6 +459,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				self.currentActiveDistribution("oneDegree");
 				//$("#oneDegree").button('self');
 				//toggle.currentActiveDistribution("oneDegree");
+				jQuery.extend(self.densityCellsPointOneDegreeCache(),self.densityCellsPointOneDegree());
 			});
 		},
 		loadCellDensityPointFiveDegree: function() {
@@ -491,6 +497,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 						self.fillCellDensityPointFiveDegreeData(allData, a);
 					});
 				});
+				jQuery.extend(self.densityCellsPointFiveDegreeCache(),self.densityCellsPointFiveDegree());
 			});
 		},
 		loadCellDensityPointTwoDegree: function() {
@@ -528,6 +535,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 						self.fillCellDensityPointTwoDegreeData(allData, a);
 					});
 				});
+				jQuery.extend(self.densityCellsPointTwoDegreeCache(),self.densityCellsPointTwoDegree());
 			});
 		},
 		disableOccurrencesDetail: function() {
@@ -965,6 +973,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					}
 					$("#oneDegree").button('toggle');
 					self.currentActiveDistribution("oneDegree");
+					self.isFiltered(true);
 				},
 				dataType: 'jsonp'
 			});
@@ -3077,6 +3086,28 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		showResumeContainer: function() {
 			$("#topFiltersContainerHelp").removeClass("loading2");
 			$("#contentFiltersContainerHelp").removeClass("opacity-element");
+		},
+		removeFilter: function() {
+			var self = this;
+			map.removeLayer(self.densityCellsOneDegree());
+			map.removeLayer(self.densityCellsPointOneDegree());
+			map.removeLayer(self.densityCellsPointFiveDegree());
+			map.removeLayer(self.densityCellsPointTwoDegree());
+			
+			jQuery.extend(self.densityCellsOneDegree(),self.densityCellsOneDegreeCache());
+			jQuery.extend(self.densityCellsPointOneDegree(),self.densityCellsPointOneDegreeCache());
+			jQuery.extend(self.densityCellsPointFiveDegree(),self.densityCellsPointFiveDegreeCache());
+			jQuery.extend(self.densityCellsPointTwoDegree(),self.densityCellsPointTwoDegreeCache());
+
+			map.addLayer(self.densityCellsOneDegree());
+			self.totalGeoOccurrences(self.totalGeoOccurrencesCache());
+			if(self.currentActiveDistribution() != "none") {
+				$("#"+self.currentActiveDistribution()).button('toggle');
+			}
+			$("#oneDegree").button('toggle');
+			self.currentActiveDistribution("oneDegree");
+
+			self.isFiltered(false);
 		}
 	});
 
