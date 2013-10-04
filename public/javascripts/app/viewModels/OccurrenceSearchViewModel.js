@@ -668,50 +668,52 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		},
 		addFilterItem: function() {
 			var self = this;
-			if(self.selectedSubject() == "0") {
-				// Adding scientific name filter
-				self.addScientificName();
-			} else if(self.selectedSubject() == 100) {
-				self.addTaxonName(self.selectedSubject(), "kingdom");
-			} else if(self.selectedSubject() == 101) {
-				self.addTaxonName(self.selectedSubject(), "phylum");
-			} else if(self.selectedSubject() == 102) {
-				self.addTaxonName(self.selectedSubject(), "class");
-			} else if(self.selectedSubject() == 103) {
-				self.addTaxonName(self.selectedSubject(), "order");
-			} else if(self.selectedSubject() == 104) {
-				self.addTaxonName(self.selectedSubject(), "family");
-			} else if(self.selectedSubject() == 105) {
-				self.addTaxonName(self.selectedSubject(), "genus");
-			} else if(self.selectedSubject() == 106) {
-				self.addTaxonName(self.selectedSubject(), "species");
-			} else if(self.selectedSubject() == 5) {
-				// Adding cuntry filter
-				self.addCountryID();
-			} else if(self.selectedSubject() == 38) {
-				// Adding department filter
-				self.addDepartmentID();
-			} else if(self.selectedSubject() == 1) {
-				// Adding latitude filter
-				self.addLatitudeNumber();
-			} else if(self.selectedSubject() == 2) {
-				// Adding longitude filter
-				self.addLongitudeNumber();
-			} else if(self.selectedSubject() == 34) {
-				// Adding altitude filter
-				self.addAltitudeNumber();
-			} else if(self.selectedSubject() == 35) {
-				// Adding deep filter
-				self.addDeepNumber();
-			} else if(self.selectedSubject() == 28) {
-				// Adding coordinate state filter
-				self.addCoordinateState();
-			} else if(self.selectedSubject() == 25) {
-				// Adding data provider filter
-				self.addDataProviderName();
-			} else if(self.selectedSubject() == 24) {
-				// Adding data resource filter
-				self.addDataResourceName();
+			if(self.objectNameValue() !== "") {
+				if(self.selectedSubject() == "0") {
+					// Adding scientific name filter
+					self.addScientificName();
+				} else if(self.selectedSubject() == 100) {
+					self.addTaxonName(self.selectedSubject(), "kingdom");
+				} else if(self.selectedSubject() == 101) {
+					self.addTaxonName(self.selectedSubject(), "phylum");
+				} else if(self.selectedSubject() == 102) {
+					self.addTaxonName(self.selectedSubject(), "class");
+				} else if(self.selectedSubject() == 103) {
+					self.addTaxonName(self.selectedSubject(), "order");
+				} else if(self.selectedSubject() == 104) {
+					self.addTaxonName(self.selectedSubject(), "family");
+				} else if(self.selectedSubject() == 105) {
+					self.addTaxonName(self.selectedSubject(), "genus");
+				} else if(self.selectedSubject() == 106) {
+					self.addTaxonName(self.selectedSubject(), "species");
+				} else if(self.selectedSubject() == 5) {
+					// Adding cuntry filter
+					self.addCountryID();
+				} else if(self.selectedSubject() == 38) {
+					// Adding department filter
+					self.addDepartmentID();
+				} else if(self.selectedSubject() == 1) {
+					// Adding latitude filter
+					self.addLatitudeNumber();
+				} else if(self.selectedSubject() == 2) {
+					// Adding longitude filter
+					self.addLongitudeNumber();
+				} else if(self.selectedSubject() == 34) {
+					// Adding altitude filter
+					self.addAltitudeNumber();
+				} else if(self.selectedSubject() == 35) {
+					// Adding deep filter
+					self.addDeepNumber();
+				} else if(self.selectedSubject() == 28) {
+					// Adding coordinate state filter
+					self.addCoordinateState();
+				} else if(self.selectedSubject() == 25) {
+					// Adding data provider filter
+					self.addDataProviderName();
+				} else if(self.selectedSubject() == 24) {
+					// Adding data resource filter
+					self.addDataResourceName();
+				}
 			}
 		},
 		startSearch: function() {
