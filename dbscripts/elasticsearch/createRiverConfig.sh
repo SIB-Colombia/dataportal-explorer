@@ -1052,6 +1052,22 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                         }
                     }
             },
+            "county_group" :  {
+                "type": "multi_field", 
+                    "fields" : { 
+                        "county_group": { 
+                            "type": "string" 
+                        },
+                        "untouched": {
+                            "type": "string",
+                            "index": "not_analyzed" 
+                        },
+                        "exactWords": {
+                            "type": "string",
+                            "analyzer": "string_lowercase"
+                        }
+                    }
+            },
             "country_name" :  {
                 "type": "multi_field", 
                     "fields" : { 

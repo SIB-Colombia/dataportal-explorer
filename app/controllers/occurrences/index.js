@@ -231,9 +231,32 @@ exports.searchResumeDepartmentsByName = function(req, res) {
 	});
 };
 
+// Resume counties data JSON response
+exports.searchResumeCounties = function(req, res) {
+	occurrences = occurrencesES.getOccurrencesResumeName("*", "county");
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
+	});
+};
+
+exports.searchResumeCountiesByName = function(req, res) {
+	occurrences = occurrencesES.getOccurrencesResumeName(req.params._name, "county");
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
+	});
+};
+
 // Search help text JSON response
 exports.searchSearchHelpTextByName = function(req, res) {
 	occurrences = occurrencesES.getSearchText(req.params._name);
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
+	});
+};
+
+// Get all the counties for dropdown list
+exports.listCounties = function(req, res) {
+	occurrences = occurrencesES.getCounties();
 	occurrences.exec(function(err, data){
 		res.jsonp(JSON.parse(data));
 	});

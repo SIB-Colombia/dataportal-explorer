@@ -305,6 +305,13 @@ block filterWindow
 						a(href='#', title='Adicionar este filtro', data-bind='click: function () { $parent.addDepartmentIDFromHelp($parent, this); }')
 							img(alt='Adicionar este filtro', src='/images/icons/redplus.png')
 						em(data-bind="text: occurrences")
+				// Counties resume data
+				.contentFiltersContainerHelpContainer(data-bind="foreach: resumeCounties, visible: resumeCounties().length > 0 && selectedSubject() == 39")
+					.item
+						span(data-bind="html: departmentAndCountyNameWithBold")
+						a(href='#', title='Adicionar este filtro', data-bind='click: function () { $parent.addCountyIDFromHelp($parent, this); }')
+							img(alt='Adicionar este filtro', src='/images/icons/redplus.png')
+						em(data-bind="text: occurrences")
 				.resumeHeader
 					h2 Distribución de registros encontrados
 				.resume(data-bind="foreach: resumesInfoFilter")
@@ -343,6 +350,14 @@ block filterWindow
 								li
 									a(target="_blank", data-bind="attr: { href: url }")
 										span(data-bind="text: name")
+						dd.cuenta(data-bind="text: count")
+					span.headerDistribution(data-bind="visible: counties().length > 0") Municipio:
+					span.headerCount(data-bind="visible: counties().length > 0") # Registros
+					dl.preview-data(data-bind="foreach: counties")
+						dt
+							ul
+								li
+									span(data-bind="text: name")
 						dd.cuenta(data-bind="text: count")
 					span.headerDistribution(data-bind="visible: kingdoms().length > 0") Reino:
 					span.headerCount(data-bind="visible: kingdoms().length > 0") # Registros
@@ -469,6 +484,7 @@ block filterWindow
 									optgroup(label='Geoespacial')
 										option(value='5') País
 										option(value='38') Departamento
+										option(value='39') Municipio
 										option(value='1') Latitud
 										option(value='2') Longitud
 										option(value='34') Altitud
@@ -776,6 +792,9 @@ block filterWindow
 									option(value="CO-VAC") Valle del Cauca
 									option(value="CO-VAU") Vaupés
 									option(value="CO-VID") Vichada
+								// Input for county
+								select(name="c[0].o", id="dropDownCounty", data-bind="foreach: countyDropdown, visible: selectedSubject() == 39, value: selectedCounty, selectCounty: {}",  style="display: none")
+									option(data-bind="attr: { value: isoCountyCode }, text: departmentAndCountyName")
 								// Input for coordinates data
 								select(name="c[0].o", id="dropDownCoordinateState", data-bind="visible: selectedSubject() == 28, value: selectedCoordinateState",  style="display: none")
 									option(value="0") Incluye coordenadas

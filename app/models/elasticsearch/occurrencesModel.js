@@ -1,6 +1,33 @@
 var moment = require('moment');
 var _ = require('underscore');
 
+exports.getCounties = function() {
+	qryObj = {
+		"fields": [],
+		"query": {
+			"filtered": {
+				"filter": {
+					"exists": {
+						"field": "iso_county_code"
+					}
+				}
+			}
+		},
+		"facets": {
+			"counties": {
+				"terms": {
+					"field": "county_group.untouched",
+					"size": 10000000,
+					"order": "term"
+				}
+			}
+		}
+	};
+
+	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
+	return mySearchCall;
+};
+
 exports.getOccurrencesResumeName = function(name, type) {
 	qryObj = {
 		"fields": [],
@@ -75,6 +102,26 @@ exports.getOccurrencesResumeName = function(name, type) {
 				"terms": {
 					"field": "iso_country_code.untouched",
 					"size" : 10
+				}
+			},
+			"county_name": {
+				"terms": {
+					"field": "county_name.untouched",
+					"size" : 10
+				}
+			},
+			"iso_county_code": {
+				"terms": {
+					"field": "iso_county_code.untouched",
+					"size" : 10
+				}
+			},
+			"county_group": {
+				"terms": {
+					"field": "county_group.untouched",
+					"size": 10,
+					"regex": "[\\D]+~~~[\\D]+~~~[\\d]+",
+					"regex_flags" : "CANON_EQ"
 				}
 			},
 			"data_provider_name": {
@@ -160,6 +207,8 @@ exports.getOccurrencesResumeName = function(name, type) {
 		qryObj["query"]["filtered"]["query"]["wildcard"]["iso_country_code.exactWords"] = "*"+ name.toLowerCase() +"*";
 	} else if(type == "department") {
 		qryObj["query"]["filtered"]["query"]["wildcard"]["iso_department_code.exactWords"] = "*"+ name.toLowerCase() +"*";
+	} else if(type == "county") {
+		qryObj["query"]["filtered"]["query"]["wildcard"]["iso_county_code.exactWords"] = "*"+ name.toLowerCase() +"*";
 	}
 
 	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
