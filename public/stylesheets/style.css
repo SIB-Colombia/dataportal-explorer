@@ -416,9 +416,6 @@ fieldset {
   text-decoration: none;
   color: #000;
 }
-.leaflet-custom-control {
-  margin-left: 13px !important;
-}
 /* Fin estilos area contenido mapa */
 /* Estilos tab area y tab buttons para elegir vistas */
 #map-filter-area .tabbable .nav {
