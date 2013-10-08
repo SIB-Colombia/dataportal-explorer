@@ -92,6 +92,14 @@ block filterWindow
 										a(target="_blank", data-bind="attr: { href: url }")
 											span(data-bind="text: name")
 							dd.cuenta(data-bind="text: count")
+						span.headerDistribution(data-bind="visible: counties().length > 0") Municipios:
+						span.headerCount(data-bind="visible: counties().length > 0") # Registros
+						dl.preview-data(data-bind="foreach: counties")
+							dt
+								ul
+									li
+										span(data-bind="text: name")
+							dd.cuenta(data-bind="text: count")
 						span.headerDistribution(data-bind="visible: canonicals().length > 0") Reino:
 						span.headerCount(data-bind="visible: canonicals().length > 0") # Registros
 						dl.preview-data(data-bind="foreach: kingdoms")
@@ -964,6 +972,14 @@ block filterWindow
 								span(data-bind='visible: $index() != 0') o es 
 								span(data-bind='text: textName')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeDepartmentID($parent, this); }')
+									img(alt='Quitar este filtro', src='/images/grey_minus.png')
+						// Include counties filters
+						ul(style="display: none", class='filterItem', data-bind='foreach: selectedCountiesIDs, visible: selectedCountiesIDs().length > 0')
+							li(class='alteredFilter')
+								span(data-bind='visible: $index() == 0') Municipio es 
+								span(data-bind='visible: $index() != 0') o es 
+								span(data-bind='text: textName')
+								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeCountyID($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include Latitude filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedLatitudes, visible: selectedLatitudes().length > 0')

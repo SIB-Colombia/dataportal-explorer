@@ -1199,7 +1199,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				var counties = ko.observableArray();
 				_.each(allData.facets.county_group.terms, function(data) {
 					var countyData = data.term.split("~~~");
-					counties.push(new ResumeCount({id: countyData[2], name: countyData[1], count: data.count}));
+					counties.push(new ResumeCount({id: countyData[2], name: countyData[0] + " - " + countyData[1], count: data.count}));
 				});
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties}));
@@ -1303,7 +1303,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				var counties = ko.observableArray();
 				_.each(allData.facets.county_group.terms, function(data) {
 					var countyData = data.term.split("~~~");
-					counties.push(new ResumeCount({id: countyData[2], name: countyData[1], count: data.count}));
+					counties.push(new ResumeCount({id: countyData[2], name: countyData[0] + " - " + countyData[1], count: data.count}));
 				});
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties}));
@@ -1407,7 +1407,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				var counties = ko.observableArray();
 				_.each(allData.facets.county_group.terms, function(data) {
 					var countyData = data.term.split("~~~");
-					counties.push(new ResumeCount({id: countyData[2], name: countyData[1], count: data.count}));
+					counties.push(new ResumeCount({id: countyData[2], name: countyData[0] + " - " + countyData[1], count: data.count}));
 				});
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties}));
@@ -1511,7 +1511,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				var counties = ko.observableArray();
 				_.each(allData.facets.county_group.terms, function(data) {
 					var countyData = data.term.split("~~~");
-					counties.push(new ResumeCount({id: countyData[2], name: countyData[1], count: data.count}));
+					counties.push(new ResumeCount({id: countyData[2], name: countyData[0] + " - " + countyData[1], count: data.count}));
 				});
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties}));
@@ -1615,7 +1615,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				var counties = ko.observableArray();
 				_.each(allData.facets.county_group.terms, function(data) {
 					var countyData = data.term.split("~~~");
-					counties.push(new ResumeCount({id: countyData[2], name: countyData[1], count: data.count}));
+					counties.push(new ResumeCount({id: countyData[2], name: countyData[0] + " - " + countyData[1], count: data.count}));
 				});
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties}));
@@ -1719,7 +1719,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				var counties = ko.observableArray();
 				_.each(allData.facets.county_group.terms, function(data) {
 					var countyData = data.term.split("~~~");
-					counties.push(new ResumeCount({id: countyData[2], name: countyData[1], count: data.count}));
+					counties.push(new ResumeCount({id: countyData[2], name: countyData[0] + " - " + countyData[1], count: data.count}));
 				});
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties}));
@@ -1823,7 +1823,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				var counties = ko.observableArray();
 				_.each(allData.facets.county_group.terms, function(data) {
 					var countyData = data.term.split("~~~");
-					counties.push(new ResumeCount({id: countyData[2], name: countyData[1], count: data.count}));
+					counties.push(new ResumeCount({id: countyData[2], name: countyData[0] + " - " + countyData[1], count: data.count}));
 				});
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties}));
@@ -1927,7 +1927,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				var counties = ko.observableArray();
 				_.each(allData.facets.county_group.terms, function(data) {
 					var countyData = data.term.split("~~~");
-					counties.push(new ResumeCount({id: countyData[2], name: countyData[1], count: data.count}));
+					counties.push(new ResumeCount({id: countyData[2], name: countyData[0] + " - " + countyData[1], count: data.count}));
 				});
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties}));
@@ -2035,7 +2035,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				var counties = ko.observableArray();
 				_.each(allData.facets.county_group.terms, function(data) {
 					var countyData = data.term.split("~~~");
-					counties.push(new ResumeCount({id: countyData[2], name: countyData[1], count: data.count}));
+					counties.push(new ResumeCount({id: countyData[2], name: countyData[0] + " - " + countyData[1], count: data.count}));
 				});
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties}));
@@ -2143,7 +2143,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				var counties = ko.observableArray();
 				_.each(allData.facets.county_group.terms, function(data) {
 					var countyData = data.term.split("~~~");
-					counties.push(new ResumeCount({id: countyData[2], name: countyData[1], count: data.count}));
+					counties.push(new ResumeCount({id: countyData[2], name: countyData[0] + " - " + countyData[1], count: data.count}));
 				});
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties}));
@@ -2256,7 +2256,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				var counties = ko.observableArray();
 				_.each(allData.facets.county_group.terms, function(data) {
 					var countyData = data.term.split("~~~");
-					counties.push(new ResumeCount({id: countyData[2], name: countyData[1], count: data.count}));
+					counties.push(new ResumeCount({id: countyData[2], name: countyData[0] + " - " + countyData[1], count: data.count}));
 				});
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties}));
@@ -2369,7 +2369,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				var counties = ko.observableArray();
 				_.each(allData.facets.county_group.terms, function(data) {
 					var countyData = data.term.split("~~~");
-					counties.push(new ResumeCount({id: countyData[2], name: countyData[1], count: data.count}));
+					counties.push(new ResumeCount({id: countyData[2], name: countyData[0] + " - " + countyData[1], count: data.count}));
 				});
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties}));
@@ -2477,7 +2477,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				var counties = ko.observableArray();
 				_.each(allData.facets.county_group.terms, function(data) {
 					var countyData = data.term.split("~~~");
-					counties.push(new ResumeCount({id: countyData[2], name: countyData[1], count: data.count}));
+					counties.push(new ResumeCount({id: countyData[2], name: countyData[0] + " - " + countyData[1], count: data.count}));
 				});
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties}));
@@ -2585,7 +2585,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				var counties = ko.observableArray();
 				_.each(allData.facets.county_group.terms, function(data) {
 					var countyData = data.term.split("~~~");
-					counties.push(new ResumeCount({id: countyData[2], name: countyData[1], count: data.count}));
+					counties.push(new ResumeCount({id: countyData[2], name: countyData[0] + " - " + countyData[1], count: data.count}));
 				});
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties}));
@@ -2789,7 +2789,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		},
 		addCountyIDFromHelp: function(parent, selectedFilter) {
 			var self = parent;
-			self.selectedCountiesIDs.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.isoCountyCode, textName: selectedFilter.countyName}));
+			self.selectedCountiesIDs.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.isoCountyCode, textName: selectedFilter.departmentAndCountyName}));
 			self.totalFilters(self.totalFilters()+1);
 		},
 		// Removes County filter
@@ -3015,8 +3015,12 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					species.push(new ResumeCount({name: nameAndID[0], count: data.count}));
 				}
 			});
+			var counties = ko.observableArray();
+			_.each(allData.facets.county_name.terms, function(data) {
+				counties.push(new ResumeCount({name: data.term, count: data.count}));
+			});
 			self.resumesInfo.removeAll();
-			self.resumesInfo.push(new ResumeInfo({cellID: a.layer.options.cellID, canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species}));
+			self.resumesInfo.push(new ResumeInfo({cellID: a.layer.options.cellID, canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, counties: counties}));
 			self.disableFilterHelp();
 			if($("#resumeDetail").is(':hidden')) {
 				$("#resumeDetail").animate({width: 'toggle'}, 500, "swing", function() {
@@ -3116,8 +3120,12 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					species.push(new ResumeCount({name: nameAndID[0], count: data.count}));
 				}
 			});
+			var counties = ko.observableArray();
+			_.each(allData.facets.county_name.terms, function(data) {
+				counties.push(new ResumeCount({name: data.term, count: data.count}));
+			});
 			self.resumesInfo.removeAll();
-			self.resumesInfo.push(new ResumeInfo({cellID: a.layer.options.cellID, canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species}));
+			self.resumesInfo.push(new ResumeInfo({cellID: a.layer.options.cellID, canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, counties: counties}));
 			self.disableFilterHelp();
 
 			if($("#resumeDetail").is(':hidden')) {
@@ -3218,8 +3226,12 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					species.push(new ResumeCount({name: nameAndID[0], count: data.count}));
 				}
 			});
+			var counties = ko.observableArray();
+			_.each(allData.facets.county_name.terms, function(data) {
+				counties.push(new ResumeCount({name: data.term, count: data.count}));
+			});
 			self.resumesInfo.removeAll();
-			self.resumesInfo.push(new ResumeInfo({cellID: a.layer.options.cellID, canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species}));
+			self.resumesInfo.push(new ResumeInfo({cellID: a.layer.options.cellID, canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, counties: counties}));
 
 			self.disableFilterHelp();
 
@@ -3321,8 +3333,12 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					species.push(new ResumeCount({name: nameAndID[0], count: data.count}));
 				}
 			});
+			var counties = ko.observableArray();
+			_.each(allData.facets.county_name.terms, function(data) {
+				counties.push(new ResumeCount({name: data.term, count: data.count}));
+			});
 			self.resumesInfo.removeAll();
-			self.resumesInfo.push(new ResumeInfo({cellID: a.layer.options.cellID, canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species}));
+			self.resumesInfo.push(new ResumeInfo({cellID: a.layer.options.cellID, canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, counties: counties}));
 
 			self.disableFilterHelp();
 
