@@ -1,4 +1,4 @@
-define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles", "LeafletProviders", "LeafletControlFullScreen", "LeafletDraw"], function($) {
+define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles", "LeafletProviders", "LeafletControlFullScreen", "LeafletDraw", "html2canvas"], function($) {
 	//console.log(kendo);
 	//kendo.culture("es-CO");
 
@@ -288,6 +288,21 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 		title: 'Mostrar mapa en pantalla completa'
 	}).addTo(map);
 
+	var MyControl = L.Control.extend({
+		options: {
+			position: 'topleft'
+		},
+		onAdd: function (map) {
+			// create the control container with a particular class name
+			var container = L.DomUtil.create('div', 'leaflet-custom-control leaflet-bar');
+			container.innerHTML += '<a id="btnSaveMap" href="#" title="Guardar imagen mapa"><i class="icon-download-alt"></i></a>';
+			// ... initialize other DOM elements, add listeners, etc.
+			return container;
+		}
+	});
+
+	map.addControl(new MyControl());
+
 	var featureGroup = new L.FeatureGroup().addTo(map);
 
 	L.control.scale().addTo(map);
@@ -442,6 +457,19 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 		$("#mapa").height($(window).height()-$("header").height());
 		$("#reportGrid").height($(window).height()-$("header").height()-$("#actual-search-stats-data").height()-60);
 		$("#reportGrid .k-grid-content").height($(window).height()-$("header").height()-$("#actual-search-stats-data").height()-60-91);
+	});
+
+	$('#btnSaveMap').click(function() {
+		setTimeout(function() {
+			html2canvas(document.body, {
+				logging: false,
+				useCORS: true,
+				onrendered: function(canvas) {
+					document.body.appendChild(canvas);
+				}
+			});
+			alert("Hola mundo!");
+		}, 1000);
 	});
 
 	return map;

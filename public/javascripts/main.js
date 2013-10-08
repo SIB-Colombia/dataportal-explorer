@@ -24,7 +24,8 @@ requirejs.config({
         'customScrollBarMouseWheel': 'custom-scrollbar/jquery.mousewheel.min',
         'kendo': 'kendo/kendo.web.min',
         'kendoGrid': 'kendo/kendo.grid.min',
-        'select2': 'select2/select2.min'
+        'select2': 'select2/select2.min',
+        'html2canvas': 'html2canvas/html2canvas'
     },
     shim: {
         'Leaflet': {
