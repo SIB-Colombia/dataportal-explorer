@@ -673,6 +673,9 @@ h4#currentSearch
 	background-image url("/images/loading/loading2.gif")
 	background-position left top
 	background-repeat no-repeat
+.hiding
+	opacity .5
+	-moz-opacity .5
 .hide-element
 	visibility hidden
 .opacity-element
@@ -924,3 +927,23 @@ h4#currentSearch
 .ribbon-green:after
 	right 0
 /* End of beta ribbon styles */
+/* Request processing window */
+#processing-request
+	position absolute
+	left 50%
+	width 404px
+	margin-left -202px
+	top 208px
+	text-align left
+	color #333333
+	z-index 500000
+	.processing-request-container
+		background-color rgb(228, 228, 228)
+		padding 10px
+		h3
+			font-family 'Open sans', Helvetica, Verdana, Helvetica, Arial
+		.loading-area
+			margin-top 10px
+			margin-left 170px
+			margin-bottom 10px
+/* End request processing window */

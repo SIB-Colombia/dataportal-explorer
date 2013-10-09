@@ -818,12 +818,10 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				data: data,
 				beforeSend: function() {
 					self.disableFilterHelp();
-					$(".tab-content").addClass("hide-element");
-					$("#map-filter-area").addClass("loading");
+					self.hideMapAreaWithSpinner();
 				},
 				complete: function() {
-					$("#map-filter-area").removeClass("loading");
-					$(".tab-content").removeClass("hide-element");
+					self.showMapAreaWithSpinner();
 				},
 				success: function(returnedData) {
 					map.removeLayer(self.densityCellsOneDegree());
@@ -2928,11 +2926,13 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			var self = this;
 			self.disableFilterHelp();
 			$("#mapa").addClass("hide-element");
-			$("#map-filter-area").addClass("loading");
+			$("#map-filter-area").addClass("hiding");
+			$("#processing-request").removeClass("hide-element");
 		},
 		showMapAreaWithSpinner: function() {
-			$("#map-filter-area").removeClass("loading");
+			$("#map-filter-area").removeClass("hiding");
 			$("#mapa").removeClass("hide-element");
+			$("#processing-request").addClass("hide-element");
 		},
 		fillCellDensityOneDegreeData: function(allData, a) {
 			var self = this;

@@ -863,6 +863,10 @@ h4#currentSearch {
   background-position: left top;
   background-repeat: no-repeat;
 }
+.hiding {
+  opacity: 0.5;
+  -moz-opacity: 0.5;
+}
 .hide-element {
   visibility: hidden;
 }
@@ -1171,3 +1175,27 @@ h4#currentSearch {
   right: 0;
 }
 /* End of beta ribbon styles */
+/* Request processing window */
+#processing-request {
+  position: absolute;
+  left: 50%;
+  width: 404px;
+  margin-left: -202px;
+  top: 208px;
+  text-align: left;
+  color: #333;
+  z-index: 500000;
+}
+#processing-request .processing-request-container {
+  background-color: #e4e4e4;
+  padding: 10px;
+}
+#processing-request .processing-request-container h3 {
+  font-family: 'Open sans', Helvetica, Verdana, Helvetica, Arial;
+}
+#processing-request .processing-request-container .loading-area {
+  margin-top: 10px;
+  margin-left: 170px;
+  margin-bottom: 10px;
+}
+/* End request processing window */
