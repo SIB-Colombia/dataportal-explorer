@@ -870,12 +870,10 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 							data: data,
 							beforeSend: function() {
 								self.disableFilterHelp();
-								$(".tab-content").addClass("hide-element");
-								$("#map-filter-area").addClass("loading");
+								self.hideMapAreaWithSpinner();
 							},
 							complete: function() {
-								$("#map-filter-area").removeClass("loading");
-								$(".tab-content").removeClass("hide-element");
+								self.showMapAreaWithSpinner();
 							},
 							success: function(allData) {
 								self.fillCellDensityOneDegreeData(allData, a);
@@ -920,12 +918,10 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 							data: data,
 							beforeSend: function() {
 								self.disableFilterHelp();
-								$(".tab-content").addClass("hide-element");
-								$("#map-filter-area").addClass("loading");
+								self.hideMapAreaWithSpinner();
 							},
 							complete: function() {
-								$("#map-filter-area").removeClass("loading");
-								$(".tab-content").removeClass("hide-element");
+								self.showMapAreaWithSpinner();
 							},
 							success: function(allData) {
 								self.fillCellDensityPointFiveDegreeData(allData, a);
@@ -970,12 +966,10 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 							data: data,
 							beforeSend: function() {
 								self.disableFilterHelp();
-								$(".tab-content").addClass("hide-element");
-								$("#map-filter-area").addClass("loading");
+								self.hideMapAreaWithSpinner();
 							},
 							complete: function() {
-								$("#map-filter-area").removeClass("loading");
-								$(".tab-content").removeClass("hide-element");
+								self.showMapAreaWithSpinner();
 							},
 							success: function(allData) {
 								self.fillCellDensityPointTwoDegreeData(allData, a);
@@ -1020,12 +1014,10 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 							data: data,
 							beforeSend: function() {
 								self.disableFilterHelp();
-								$(".tab-content").addClass("hide-element");
-								$("#map-filter-area").addClass("loading");
+								self.hideMapAreaWithSpinner();
 							},
 							complete: function() {
-								$("#map-filter-area").removeClass("loading");
-								$(".tab-content").removeClass("hide-element");
+								self.showMapAreaWithSpinner();
 							},
 							success: function(allData) {
 								self.fillCellDensityPointOneDegreeData(allData, a);
