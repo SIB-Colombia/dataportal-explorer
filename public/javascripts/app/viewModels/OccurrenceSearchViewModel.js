@@ -455,6 +455,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 
 				self.densityCellsOneDegree().on('click', function (a) {
 					// Hide map area
+					//self.disableFilterHelp();
 					self.hideMapAreaWithSpinner();
 					$.getJSON("/rest/distribution/onedegree/stats/"+a.layer.options.cellID, function(allData) {
 						self.fillCellDensityOneDegreeData(allData, a);
@@ -817,7 +818,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				url: '/distribution/search',
 				data: data,
 				beforeSend: function() {
-					self.disableFilterHelp();
 					self.hideMapAreaWithSpinner();
 				},
 				complete: function() {
@@ -861,15 +861,12 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					self.densityCellsOneDegree().on('click', function (a) {
 						response["cellid"] = a.layer.options.cellID;
 						data = ko.toJSON(response);
-						// Hide map area
-						self.hideMapAreaWithSpinner();
 						$.ajax({
 							contentType: 'application/json',
 							type: 'POST',
 							url: '/distribution/onedegree/stats',
 							data: data,
 							beforeSend: function() {
-								self.disableFilterHelp();
 								self.hideMapAreaWithSpinner();
 							},
 							complete: function() {
@@ -909,15 +906,12 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 						response["cellid"] = a.layer.options.cellID;
 						response["pointfivecellid"] = a.layer.options.pointfivecellID;
 						data = ko.toJSON(response);
-						// Hide map area
-						self.hideMapAreaWithSpinner();
 						$.ajax({
 							contentType: 'application/json',
 							type: 'POST',
 							url: '/distribution/pointfivedegree/stats',
 							data: data,
 							beforeSend: function() {
-								self.disableFilterHelp();
 								self.hideMapAreaWithSpinner();
 							},
 							complete: function() {
@@ -957,15 +951,12 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 						response["cellid"] = a.layer.options.cellID;
 						response["pointtwocellid"] = a.layer.options.pointtwocellID;
 						data = ko.toJSON(response);
-						// Hide map area
-						self.hideMapAreaWithSpinner();
 						$.ajax({
 							contentType: 'application/json',
 							type: 'POST',
 							url: '/distribution/pointtwodegree/stats',
 							data: data,
 							beforeSend: function() {
-								self.disableFilterHelp();
 								self.hideMapAreaWithSpinner();
 							},
 							complete: function() {
@@ -1005,15 +996,12 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 						response["cellid"] = a.layer.options.cellID;
 						response["pointonecellid"] = a.layer.options.pointonecellID;
 						data = ko.toJSON(response);
-						// Hide map area
-						self.hideMapAreaWithSpinner();
 						$.ajax({
 							contentType: 'application/json',
 							type: 'POST',
 							url: '/distribution/pointonedegree/stats',
 							data: data,
 							beforeSend: function() {
-								self.disableFilterHelp();
 								self.hideMapAreaWithSpinner();
 							},
 							complete: function() {
@@ -1028,7 +1016,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 
 					self.totalGeoOccurrences(returnedData.hits.total);
 					// Show map area
-					self.showMapAreaWithSpinner();
+					//self.showMapAreaWithSpinner();
 					if(self.currentActiveDistribution() != "none") {
 						$("#"+self.currentActiveDistribution()).button('toggle');
 					}
@@ -3013,7 +3001,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			});
 			self.resumesInfo.removeAll();
 			self.resumesInfo.push(new ResumeInfo({cellID: a.layer.options.cellID, canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, counties: counties}));
-			self.disableFilterHelp();
 			if($("#resumeDetail").is(':hidden')) {
 				$("#resumeDetail").animate({width: 'toggle'}, 500, "swing", function() {
 					if(self.resumeFirstScrollRun) {
@@ -3118,7 +3105,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			});
 			self.resumesInfo.removeAll();
 			self.resumesInfo.push(new ResumeInfo({cellID: a.layer.options.cellID, canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, counties: counties}));
-			self.disableFilterHelp();
 
 			if($("#resumeDetail").is(':hidden')) {
 				$("#resumeDetail").animate({width: 'toggle'}, 500, "swing", function() {
@@ -3225,8 +3211,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			self.resumesInfo.removeAll();
 			self.resumesInfo.push(new ResumeInfo({cellID: a.layer.options.cellID, canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, counties: counties}));
 
-			self.disableFilterHelp();
-
 			if($("#resumeDetail").is(':hidden')) {
 				$("#resumeDetail").animate({width: 'toggle'}, 500, "swing", function() {
 					if(self.resumeFirstScrollRun) {
@@ -3331,8 +3315,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			});
 			self.resumesInfo.removeAll();
 			self.resumesInfo.push(new ResumeInfo({cellID: a.layer.options.cellID, canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, counties: counties}));
-
-			self.disableFilterHelp();
 
 			if($("#resumeDetail").is(':hidden')) {
 				$("#resumeDetail").animate({width: 'toggle'}, 500, "swing", function() {
