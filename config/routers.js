@@ -74,6 +74,10 @@ module.exports = function(parent, options) {
 					method = 'get';
 					path = '/rest/' + name + '/centidegree/stats/:' + '_cellid' + '/:' + '_centicellid';
 					break;
+				case 'listCounties':
+					method = 'get';
+					path = '/rest/' + name + '/counties/list';
+					break;
 				case 'getDistributionStatsWithSearchPointOneDegree':
 					method = 'post';
 					path = '/' + name + '/pointonedegree/stats';
@@ -249,6 +253,14 @@ module.exports = function(parent, options) {
 				case 'searchResumeDepartments':
 					method = 'get';
 					path = '/rest/' + name + '/resume/departments/name';
+					break;
+				case 'searchResumeCountiesByName':
+					method = 'get';
+					path = '/rest/' + name + '/resume/counties/name/:' + '_name';
+					break;
+				case 'searchResumeCounties':
+					method = 'get';
+					path = '/rest/' + name + '/resume/counties/name';
 					break;
 				case 'searchSearchHelpTextByName':
 					method = 'get';

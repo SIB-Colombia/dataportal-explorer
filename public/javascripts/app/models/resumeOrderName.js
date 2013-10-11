@@ -1,5 +1,6 @@
 define(["knockout"], function(ko) {
 	var ResumeOrderName = function(data) {
+		this.id = data.id;
 		this.order_rank = data.order_rank;
 		this.occurrences = data.occurrences;
 

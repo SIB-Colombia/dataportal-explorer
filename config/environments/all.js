@@ -11,6 +11,7 @@ module.exports = function(parent) {
 	parent.use(express.methodOverride());
 	parent.use(require('stylus').middleware(__dirname + '/../../public'));
 	parent.use(express.static(path.join(__dirname, '/../../public')));
+	parent.use(express.compress());
 
 	var env = process.env.NODE_ENV || 'development';
 

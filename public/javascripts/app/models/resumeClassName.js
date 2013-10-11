@@ -1,5 +1,6 @@
 define(["knockout"], function(ko) {
 	var ResumeClassName = function(data) {
+		this.id = data.id;
 		this.nameClass = data.nameClass;
 		this.occurrences = data.occurrences;
 

@@ -1,5 +1,6 @@
 define(["knockout"], function(ko) {
 	var ResumeFamilyName = function(data) {
+		this.id = data.id;
 		this.family = data.family;
 		this.occurrences = data.occurrences;
 
