@@ -1071,6 +1071,11 @@ block filterWindow
 						button(id='pointOneDegree', class='btn btn-primary btn-small', type='button', data-toggle="button", data-bind='click: toggleDistribution') 0.1x0.1 &deg;
 				#additionalInfoPane.occult-element
 					#downloadResults
-						a(target="_blank", data-bind="attr: { href: urlDownloadSpreadsheet }")
-							i(class="icon-download-alt icon-white")
-							span Descargar resultados en hoja de cálculo
+						.downloadItem
+							a(target="_blank", data-bind="visible: totalGeoOccurrences() != 0, attr: { href: urlDownloadSpreadsheetWithURL }")
+								i(class="icon-download-alt icon-white")
+								span Descargar resultados con coordenadas.
+						.downloadItem
+							a(target="_blank", data-bind="attr: { href: urlDownloadSpreadsheet }")
+								i(class="icon-download-alt icon-white")
+								span Descargar todos los resultados.

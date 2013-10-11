@@ -88,6 +88,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 
 		// Download URLs
 		self.urlDownloadSpreadsheet = "";
+		self.urlDownloadSpreadsheetWithURL = "";
 
 		// Resume info
 		self.resumesInfo = [];
@@ -3413,6 +3414,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				counter++;
 			});
 			self.urlDownloadSpreadsheet(url);
+			self.urlDownloadSpreadsheetWithURL(url+"&c["+counter+"].s=28&c["+counter+"].p=0&c["+counter+"].o=0");
 			self.showAdditionalInfoPane();
 		},
 		dataPortalConditionCodes: function(condition) {

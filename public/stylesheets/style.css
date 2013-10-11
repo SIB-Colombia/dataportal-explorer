@@ -850,14 +850,17 @@ h4#currentSearch {
   background-color: #1775bf;
   color: #fff;
 }
-#filtersContainer #explorerFiltersAndEditor #additionalInfoPane #downloadResults a {
+#filtersContainer #explorerFiltersAndEditor #additionalInfoPane #downloadResults .downloadItem {
+  padding-bottom: 5px;
+}
+#filtersContainer #explorerFiltersAndEditor #additionalInfoPane #downloadResults .downloadItem a {
   color: #fff;
   text-decoration: underline;
 }
-#filtersContainer #explorerFiltersAndEditor #additionalInfoPane #downloadResults a:hover {
+#filtersContainer #explorerFiltersAndEditor #additionalInfoPane #downloadResults .downloadItem a:hover {
   text-decoration: none;
 }
-#filtersContainer #explorerFiltersAndEditor #additionalInfoPane #downloadResults a .icon-download-alt {
+#filtersContainer #explorerFiltersAndEditor #additionalInfoPane #downloadResults .downloadItem a .icon-download-alt {
   margin-top: 3px;
   margin-right: 5px;
 }
