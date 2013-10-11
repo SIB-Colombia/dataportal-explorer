@@ -86,6 +86,9 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		self.selectedCounty = "";
 		self.selectedCoordinateState = "";
 
+		// Download URLs
+		self.urlDownloadSpreadsheet = "";
+
 		// Resume info
 		self.resumesInfo = [];
 		self.resumesInfoFilter = [];
@@ -1023,6 +1026,9 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					$("#oneDegree").button('toggle');
 					self.currentActiveDistribution("oneDegree");
 					self.isFiltered(true);
+
+					// Enable download links
+					self.generateURLSpreadsheet();
 				},
 				dataType: 'jsonp'
 			});
@@ -1191,7 +1197,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				self.resumeKingdomNames.removeAll();
 				_.each(allData.facets.kingdom.terms, function(data) {
 					var nameAndID = data.term.split("~~~");
-					self.resumeKingdomNames.push(new ResumeKingdomName({kingdom: nameAndID[0], occurrences: data.count}));
+					self.resumeKingdomNames.push(new ResumeKingdomName({kingdom: nameAndID[0], occurrences: data.count, id: nameAndID[1]}));
 				});
 				var kingdoms = ko.observableArray();
 				var count = 0;
@@ -1295,7 +1301,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				self.resumePhylumNames.removeAll();
 				_.each(allData.facets.phylum.terms, function(data) {
 					var nameAndID = data.term.split("~~~");
-					self.resumePhylumNames.push(new ResumePhylumName({phylum: nameAndID[0], occurrences: data.count}));
+					self.resumePhylumNames.push(new ResumePhylumName({phylum: nameAndID[0], occurrences: data.count, id: nameAndID[1]}));
 				});
 				var phylums = ko.observableArray();
 				var count = 0;
@@ -1399,7 +1405,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				self.resumeClassNames.removeAll();
 				_.each(allData.facets.taxonClass.terms, function(data) {
 					var nameAndID = data.term.split("~~~");
-					self.resumeClassNames.push(new ResumeClassName({nameClass: nameAndID[0], occurrences: data.count}));
+					self.resumeClassNames.push(new ResumeClassName({nameClass: nameAndID[0], occurrences: data.count, id: nameAndID[1]}));
 				});
 				var taxonClasses = ko.observableArray();
 				var count = 0;
@@ -1503,7 +1509,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				self.resumeOrderNames.removeAll();
 				_.each(allData.facets.order_rank.terms, function(data) {
 					var nameAndID = data.term.split("~~~");
-					self.resumeOrderNames.push(new ResumeOrderName({order_rank: nameAndID[0], occurrences: data.count}));
+					self.resumeOrderNames.push(new ResumeOrderName({order_rank: nameAndID[0], occurrences: data.count, id: nameAndID[1]}));
 				});
 				var order_ranks = ko.observableArray();
 				var count = 0;
@@ -1607,7 +1613,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				self.resumeFamilyNames.removeAll();
 				_.each(allData.facets.family.terms, function(data) {
 					var nameAndID = data.term.split("~~~");
-					self.resumeFamilyNames.push(new ResumeFamilyName({family: nameAndID[0], occurrences: data.count}));
+					self.resumeFamilyNames.push(new ResumeFamilyName({family: nameAndID[0], occurrences: data.count, id: nameAndID[1]}));
 				});
 				var families = ko.observableArray();
 				var count = 0;
@@ -1711,7 +1717,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				self.resumeGenusNames.removeAll();
 				_.each(allData.facets.genus.terms, function(data) {
 					var nameAndID = data.term.split("~~~");
-					self.resumeGenusNames.push(new ResumeGenusName({genus: nameAndID[0], occurrences: data.count}));
+					self.resumeGenusNames.push(new ResumeGenusName({genus: nameAndID[0], occurrences: data.count, id: nameAndID[1]}));
 				});
 				var genuses = ko.observableArray();
 				var count = 0;
@@ -1815,7 +1821,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				self.resumeSpeciesNames.removeAll();
 				_.each(allData.facets.species.terms, function(data) {
 					var nameAndID = data.term.split("~~~");
-					self.resumeSpeciesNames.push(new ResumeSpecieName({species: nameAndID[0], occurrences: data.count}));
+					self.resumeSpeciesNames.push(new ResumeSpecieName({species: nameAndID[0], occurrences: data.count, id: nameAndID[1]}));
 				});
 				var species = ko.observableArray();
 				var count = 0;
@@ -2704,19 +2710,19 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		addTaxonNameFromHelp: function(parent, selectedFilter) {
 			var self = parent;
 			if(self.selectedSubject() == 100)
-				self.selectedTaxonNames.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.kingdom, textName: "kingdom"}));
+				self.selectedTaxonNames.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.kingdom, textName: "kingdom", id: selectedFilter.id}));
 			if(self.selectedSubject() == 101)
-				self.selectedTaxonNames.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.phylum, textName: "phylum"}));
+				self.selectedTaxonNames.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.phylum, textName: "phylum", id: selectedFilter.id}));
 			if(self.selectedSubject() == 102)
-				self.selectedTaxonNames.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.nameClass, textName: "class"}));
+				self.selectedTaxonNames.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.nameClass, textName: "class", id: selectedFilter.id}));
 			if(self.selectedSubject() == 103)
-				self.selectedTaxonNames.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.order_rank, textName: "order"}));
+				self.selectedTaxonNames.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.order_rank, textName: "order", id: selectedFilter.id}));
 			if(self.selectedSubject() == 104)
-				self.selectedTaxonNames.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.family, textName: "family"}));
+				self.selectedTaxonNames.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.family, textName: "family", id: selectedFilter.id}));
 			if(self.selectedSubject() == 105)
-				self.selectedTaxonNames.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.genus, textName: "genus"}));
+				self.selectedTaxonNames.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.genus, textName: "genus", id: selectedFilter.id}));
 			if(self.selectedSubject() == 106)
-				self.selectedTaxonNames.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.species, textName: "species"}));
+				self.selectedTaxonNames.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.species, textName: "species", id: selectedFilter.id}));
 			self.totalFilters(self.totalFilters()+1);
 		},
 		// Removes Taxon filter
@@ -2846,7 +2852,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		},
 		addDataProviderNameFromHelp: function(parent, selectedFilter) {
 			var self = parent;
-			self.selectedProviders.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.providerName, textName: "Data provider"}));
+			self.selectedProviders.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.providerName, textName: "Data provider", id: selectedFilter.providerID}));
 			self.totalFilters(self.totalFilters()+1);
 		},
 		// Removes data provider name
@@ -2863,7 +2869,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		},
 		addDataResourceNameFromHelp: function(parent, selectedFilter) {
 			var self = parent;
-			self.selectedResources.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.resourceName, textName: "Data resource"}));
+			self.selectedResources.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.resourceName, textName: "Data resource", id: selectedFilter.resourceID}));
 			self.totalFilters(self.totalFilters()+1);
 		},
 		// Removes data resource name
@@ -3362,6 +3368,57 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			self.currentActiveDistribution("oneDegree");
 
 			self.isFiltered(false);
+
+			// Disable download options
+			self.hideAdditionalInfoPane();
+		},
+		showAdditionalInfoPane: function() {
+			$("#additionalInfoPane").removeClass("occult-element");
+		},
+		hideAdditionalInfoPane: function() {
+			$("#additionalInfoPane").addClass("occult-element");
+		},
+		generateURLSpreadsheet: function() {
+			var self = this;
+			var counter = 0;
+			var url = "http://data.sibcolombia.net/occurrences/downloadSpreadsheet.htm?";
+			_.each(self.selectedScientificNames(), function(scientificName) {
+				url += ((counter > 0) ? "&" : "")+"c["+counter+"].s="+scientificName.subject+"&"+"c["+counter+"].p="+self.dataPortalConditionCodes(scientificName.predicate)+"&"+"c["+counter+"].o="+scientificName.textObject;
+				counter++;
+			});
+			_.each(self.selectedTaxonNames(), function(taxonName) {
+				if(taxonName.id !== "null") {
+					url += ((counter > 0) ? "&" : "")+"c["+counter+"].s=20&"+"c["+counter+"].p="+self.dataPortalConditionCodes(taxonName.predicate)+"&"+"c["+counter+"].o="+taxonName.id;
+					counter++;
+				}
+			});
+			_.each(self.selectedCountriesIDs(), function(country) {
+				url += ((counter > 0) ? "&" : "")+"c["+counter+"].s="+country.subject+"&"+"c["+counter+"].p="+self.dataPortalConditionCodes(country.predicate)+"&"+"c["+counter+"].o="+country.textObject;
+				counter++;
+			});
+			_.each(self.selectedDepartmentsIDs(), function(department) {
+				url += ((counter > 0) ? "&" : "")+"c["+counter+"].s="+department.subject+"&"+"c["+counter+"].p="+self.dataPortalConditionCodes(department.predicate)+"&"+"c["+counter+"].o="+department.textObject;
+				counter++;
+			});
+			_.each(self.selectedCountiesIDs(), function(county) {
+				url += ((counter > 0) ? "&" : "")+"c["+counter+"].s="+county.subject+"&"+"c["+counter+"].p="+self.dataPortalConditionCodes(county.predicate)+"&"+"c["+counter+"].o="+county.textObject;
+				counter++;
+			});
+			_.each(self.selectedProviders(), function(provider) {
+				url += ((counter > 0) ? "&" : "")+"c["+counter+"].s="+provider.subject+"&"+"c["+counter+"].p="+self.dataPortalConditionCodes(provider.predicate)+"&"+"c["+counter+"].o="+provider.id;
+				counter++;
+			});
+			_.each(self.selectedResources(), function(resource) {
+				url += ((counter > 0) ? "&" : "")+"c["+counter+"].s="+resource.subject+"&"+"c["+counter+"].p="+self.dataPortalConditionCodes(resource.predicate)+"&"+"c["+counter+"].o="+resource.id;
+				counter++;
+			});
+			self.urlDownloadSpreadsheet(url);
+			self.showAdditionalInfoPane();
+		},
+		dataPortalConditionCodes: function(condition) {
+			if(condition=="eq") {
+				return 0;
+			}
 		}
 	});
 

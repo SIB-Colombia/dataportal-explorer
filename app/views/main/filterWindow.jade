@@ -1069,3 +1069,8 @@ block filterWindow
 						button(id='pointFiveDegree',class='btn btn-primary btn-small', type='button', data-toggle="button", data-bind='click: toggleDistribution') 0.5x0.5 &deg;
 						button(id='pointTwoDegree', class='btn btn-primary btn-small', type='button', data-toggle="button", data-bind='click: toggleDistribution') 0.2x0.2 &deg;
 						button(id='pointOneDegree', class='btn btn-primary btn-small', type='button', data-toggle="button", data-bind='click: toggleDistribution') 0.1x0.1 &deg;
+				#additionalInfoPane.occult-element
+					#downloadResults
+						a(target="_blank", data-bind="attr: { href: urlDownloadSpreadsheet }")
+							i(class="icon-download-alt icon-white")
+							span Descargar resultados en hoja de cálculo

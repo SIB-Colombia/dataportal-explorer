@@ -838,6 +838,29 @@ h4#currentSearch {
   padding-left: 6px;
   padding-right: 6px;
 }
+#filtersContainer #explorerFiltersAndEditor #additionalInfoPane {
+  width: 100%;
+}
+#filtersContainer #explorerFiltersAndEditor #additionalInfoPane #downloadResults {
+  height: 100%;
+  vertical-align: top;
+  padding-left: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: #1775bf;
+  color: #fff;
+}
+#filtersContainer #explorerFiltersAndEditor #additionalInfoPane #downloadResults a {
+  color: #fff;
+  text-decoration: underline;
+}
+#filtersContainer #explorerFiltersAndEditor #additionalInfoPane #downloadResults a:hover {
+  text-decoration: none;
+}
+#filtersContainer #explorerFiltersAndEditor #additionalInfoPane #downloadResults a .icon-download-alt {
+  margin-top: 3px;
+  margin-right: 5px;
+}
 .btn-add-filter {
   color: #fff;
   background: #2b7fbc !important;
@@ -869,6 +892,9 @@ h4#currentSearch {
 }
 .hide-element {
   visibility: hidden;
+}
+.occult-element {
+  display: none;
 }
 .opacity-element {
   opacity: 0.2;
