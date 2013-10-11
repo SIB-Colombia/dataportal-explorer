@@ -16,6 +16,7 @@ define(["knockout"], function(ko) {
 		this.genuses = data.genuses || null;
 		this.species = data.species || null;
 		this.countries = data.countries || null;
+		this.counties = data.counties || null;
 		this.departments = data.departments || null;
 	};
 

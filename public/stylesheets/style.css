@@ -222,7 +222,7 @@ p margin 10px010px0 a:link {
   min-width: 1050px;
   position: fixed;
   width: 100%;
-  z-index: 1;
+  z-index: 11;
   top: 0px;
 }
 .sib:after {
@@ -382,12 +382,8 @@ fieldset {
   height: 600px;
 }
 .leaflet-control-layers-expanded {
-  height: 300px;
-  padding: 0px;
+  height: 400px;
   overflow-y: scroll;
-  -webkit-border-radius: 15px;
-  -moz-border-radius: 15px;
-  border-radius: 15px;
   -webkit-overflow-scrolling: touch;
 }
 .leaflet-control-layers-expanded label {
@@ -400,7 +396,25 @@ fieldset {
   background-color: rgba(168,219,247,0.7);
 }
 .leaflet-top+.leaflet-right {
-  margin-top: 100px;
+  margin-top: 50px;
+}
+.leaflet-control-zoom a {
+  width: 26px !important;
+  height: 26px !important;
+}
+.leaflet-draw {
+  margin-left: 13px !important;
+}
+.leaflet-bar a {
+  background-color: #fff;
+  border-bottom: 1px solid #ccc;
+  width: 26px;
+  height: 26px;
+  line-height: 26px;
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  color: #000;
 }
 /* Fin estilos area contenido mapa */
 /* Estilos tab area y tab buttons para elegir vistas */
@@ -409,8 +423,8 @@ fieldset {
   margin-left: 20px;
   margin-right: 20px;
   position: fixed;
-  z-index: 3;
-  width: 620px;
+  z-index: 10;
+  width: 700px;
   margin-top: 53px;
   right: 0px;
   background: rgba(255,255,255,0.8);
@@ -454,7 +468,7 @@ fieldset {
   position: absolute;
   left: 50px;
   top: 100px;
-  z-index: 4;
+  z-index: 12;
   width: 340px;
 /* Fix display block of select2 javascript plugin */
 }
@@ -554,16 +568,31 @@ h4#currentSearch {
 #filtersContainerHelp #contentFiltersContainerHelp .contentFiltersContainerHelpContainer {
   padding-left: 5px;
 }
+#filtersContainerHelp #contentFiltersContainerHelp .item-header {
+  font-weight: bold;
+  padding-left: 5px;
+  padding-bottom: 20px;
+}
+#filtersContainerHelp #contentFiltersContainerHelp .item-header span {
+  float: left;
+  width: 180px;
+  padding-right: 5px;
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+#filtersContainerHelp #contentFiltersContainerHelp .item-header em {
+  float: left;
+}
 #filtersContainerHelp #contentFiltersContainerHelp .item {
   min-height: 18px;
-  padding-bottom: 8px;
-  padding-top: 8px;
+  padding-top: 3px;
+  padding-bottom: 3px;
   padding-left: 15px;
   border-bottom: 1px #cacaca solid;
-  border-top: 1px #cacaca solid;
   background-color: #fff;
-  margin-top: -1px;
   float: left;
+  line-height: 20px;
   -webkit-transition: all 0.5s ease-in-out;
   transition: all 0.5s ease-in-out;
 }
@@ -599,18 +628,35 @@ h4#currentSearch {
   background-color: #683c0c;
   color: #fff;
 }
+#filtersContainerHelp #contentFiltersContainerHelp .resumeHeader {
+  padding-left: 10px;
+  float: left;
+  margin-top: 20px;
+}
+#filtersContainerHelp #contentFiltersContainerHelp .resumeHeader h2 {
+  font-family: 'Open sans', Helvetica, Verdana, Helvetica, Arial;
+  font-weight: bold;
+  line-height: 25px;
+}
 #filtersContainerHelp #contentFiltersContainerHelp .resume {
   padding-left: 15px;
   padding-right: 15px;
-}
-#filtersContainerHelp #contentFiltersContainerHelp .resume h2 {
   font-family: 'Open sans', Helvetica, Verdana, Helvetica, Arial;
-  font-weight: bold;
   font-size: 12px;
+}
+#filtersContainerHelp #contentFiltersContainerHelp .resume .headerDistribution {
+  font-weight: bold;
+  float: left;
+  margin-bottom: 5px;
+  margin-top: 10px;
+}
+#filtersContainerHelp #contentFiltersContainerHelp .resume .headerCount {
+  font-weight: bold;
+  float: right;
+  margin-bottom: 5px;
+  margin-top: 10px;
 }
 #filtersContainerHelp #contentFiltersContainerHelp .resume dl {
-  font-family: 'Open sans', Helvetica, Verdana, Helvetica, Arial;
-  font-size: 12px;
   margin: 0 0 5px 20px;
   padding: 0;
 }
@@ -622,12 +668,12 @@ h4#currentSearch {
   clear: both;
   float: left;
   font-weight: normal;
-  width: 80%;
+  width: 70%;
 }
 #filtersContainerHelp #contentFiltersContainerHelp .resume dl.preview-data dd {
   float: right;
   margin: 0;
-  width: 20%;
+  width: 25%;
 }
 #filtersContainer {
   display: block;
@@ -711,6 +757,7 @@ h4#currentSearch {
 #filtersContainer #explorerFiltersAndEditor #constructedFiltersPane button {
   background: #589cd1 !important;
   border: 0px none transparent;
+  margin-right: 3px;
 }
 #filtersContainer #explorerFiltersAndEditor #constructedFiltersPane #constructedFilters {
   height: 100%;
@@ -778,9 +825,44 @@ h4#currentSearch {
   background-color: #115b96;
   color: #fff;
 }
+#filtersContainer #explorerFiltersAndEditor #densityButtonsPane #densityButtons button {
+  font-size: 13px;
+  margin-right: 1px;
+  width: 79px;
+}
+#filtersContainer #explorerFiltersAndEditor #densityButtonsPane #densityButtons .detailDensity {
+  display: block;
+  margin-bottom: 5px;
+}
 #filtersContainer #explorerFiltersAndEditor #densityButtonsPane #densityButtons .btn-small {
   padding-left: 6px;
   padding-right: 6px;
+}
+#filtersContainer #explorerFiltersAndEditor #additionalInfoPane {
+  width: 100%;
+}
+#filtersContainer #explorerFiltersAndEditor #additionalInfoPane #downloadResults {
+  height: 100%;
+  vertical-align: top;
+  padding-left: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: #1775bf;
+  color: #fff;
+}
+#filtersContainer #explorerFiltersAndEditor #additionalInfoPane #downloadResults .downloadItem {
+  padding-bottom: 5px;
+}
+#filtersContainer #explorerFiltersAndEditor #additionalInfoPane #downloadResults .downloadItem a {
+  color: #fff;
+  text-decoration: underline;
+}
+#filtersContainer #explorerFiltersAndEditor #additionalInfoPane #downloadResults .downloadItem a:hover {
+  text-decoration: none;
+}
+#filtersContainer #explorerFiltersAndEditor #additionalInfoPane #downloadResults .downloadItem a .icon-download-alt {
+  margin-top: 3px;
+  margin-right: 5px;
 }
 .btn-add-filter {
   color: #fff;
@@ -807,8 +889,15 @@ h4#currentSearch {
   background-position: left top;
   background-repeat: no-repeat;
 }
+.hiding {
+  opacity: 0.5;
+  -moz-opacity: 0.5;
+}
 .hide-element {
   visibility: hidden;
+}
+.occult-element {
+  display: none;
 }
 .opacity-element {
   opacity: 0.2;
@@ -930,19 +1019,40 @@ h4#currentSearch {
 }
 #resumeDetail #resumeInfoDetailContainer .contentResumeInfoDetailContainer {
   padding-left: 5px;
+  font-family: 'Open sans', Helvetica, Verdana, Helvetica, Arial;
+}
+#resumeDetail #resumeInfoDetailContainer .contentResumeInfoDetailContainer .resumeHeader {
+  padding-left: 10px;
+  float: left;
+}
+#resumeDetail #resumeInfoDetailContainer .contentResumeInfoDetailContainer .resumeHeader h2 {
+  font-family: 'Open sans', Helvetica, Verdana, Helvetica, Arial;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 25px;
 }
 #resumeDetail #resumeInfoDetailContainer .contentResumeInfoDetailContainer .resume {
   padding-left: 15px;
   padding-right: 15px;
+  font-size: 12px;
+  float: left;
 }
 #resumeDetail #resumeInfoDetailContainer .contentResumeInfoDetailContainer .resume h2 {
-  font-family: 'Open sans', Helvetica, Verdana, Helvetica, Arial;
   font-weight: bold;
-  font-size: 12px;
+}
+#resumeDetail #resumeInfoDetailContainer .contentResumeInfoDetailContainer .resume .headerDistribution {
+  font-weight: bold;
+  float: left;
+  margin-bottom: 5px;
+  margin-top: 10px;
+}
+#resumeDetail #resumeInfoDetailContainer .contentResumeInfoDetailContainer .resume .headerCount {
+  font-weight: bold;
+  float: right;
+  margin-bottom: 5px;
+  margin-top: 10px;
 }
 #resumeDetail #resumeInfoDetailContainer .contentResumeInfoDetailContainer .resume dl {
-  font-family: 'Open sans', Helvetica, Verdana, Helvetica, Arial;
-  font-size: 12px;
   margin: 0 0 5px 20px;
   padding: 0;
 }
@@ -961,9 +1071,8 @@ h4#currentSearch {
   margin: 0;
   width: 20%;
 }
-.leaflet-popup-tip {
-  margin-top: -12px !important;
-}
+/*.leaflet-popup-tip
+	margin-top -12px !important*/
 /* Fin estilos ventana detalles registro biológico */
 /* Estilos vista tabla registros biológicos */
 .k-secondary.k-filter-menu {
@@ -1041,3 +1150,81 @@ h4#currentSearch {
 /* Estilos vista tabla registros biológicos */
 /* Estilos area filtro de búsqueda en zona tabla */
 /* Fin estilos area filtro de búsqueda en zona tabla */
+/* Beta ribbon styles */
+.wrapper {
+  position: relative;
+  z-index: 90;
+}
+.ribbon-wrapper-green {
+  width: 85px;
+  height: 88px;
+  overflow: hidden;
+  position: absolute;
+  top: -3px;
+  right: 0px;
+}
+.ribbon-green {
+  font: bold 15px Sans-Serif;
+  color: #333;
+  text-align: center;
+  text-shadow: rgba(255,255,255,0.5) 0px 1px 0px;
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  position: relative;
+  padding: 7px 0;
+  left: -5px;
+  top: 15px;
+  width: 120px;
+  background-color: #bfdc7a;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#bfdc7a), to(#8ebf45));
+  background-image: -webkit-linear-gradient(top, #bfdc7a, #8ebf45);
+  background-image: -moz-linear-gradient(top, #bfdc7a, #8ebf45);
+  background-image: -ms-linear-gradient(top, #bfdc7a, #8ebf45);
+  background-image: -o-linear-gradient(top, #bfdc7a, #8ebf45);
+  color: #6a6340;
+  -webkit-box-shadow: 0px 0px 3px rgba(0,0,0,0.3);
+  -moz-box-shadow: 0px 0px 3px rgba(0,0,0,0.3);
+  box-shadow: 0px 0px 3px rgba(0,0,0,0.3);
+}
+.ribbon-green:before,
+.ribbon-green:after {
+  content: "";
+  border-top: 3px solid #6e8900;
+  border-left: 3px solid transparent;
+  border-right: 3px solid transparent;
+  position: absolute;
+  bottom: -3px;
+}
+.ribbon-green:before {
+  left: 0;
+}
+.ribbon-green:after {
+  right: 0;
+}
+/* End of beta ribbon styles */
+/* Request processing window */
+#processing-request {
+  position: absolute;
+  left: 50%;
+  width: 404px;
+  margin-left: -202px;
+  top: 208px;
+  text-align: left;
+  color: #333;
+  z-index: 500000;
+}
+#processing-request .processing-request-container {
+  background-color: #e4e4e4;
+  padding: 10px;
+}
+#processing-request .processing-request-container h3 {
+  font-family: 'Open sans', Helvetica, Verdana, Helvetica, Arial;
+}
+#processing-request .processing-request-container .loading-area {
+  margin-top: 10px;
+  margin-left: 170px;
+  margin-bottom: 10px;
+}
+/* End request processing window */

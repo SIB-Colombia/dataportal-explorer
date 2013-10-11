@@ -3,7 +3,14 @@ extends ../../layouts/layout
 block content
 	.container-fluid
 		.row-fluid
-			section#map-filter-area
+			section#processing-request
+				.processing-request-container
+					.content
+						h3 PROCESANDO SOLICITUD
+						span Por favor espere mientras la solicitud es procesada...
+						.loading-area
+							img(src="/images/loading/loading5.gif")
+			section#map-filter-area.hiding
 				.tabbable
 					ul.nav.nav-pills
 						#actual-search-stats-data

@@ -1,4 +1,4 @@
-define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles", "LeafletProviders", "LeafletControlFullScreen"], function($) {
+define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles", "LeafletProviders", "LeafletControlFullScreen", "LeafletDraw"], function($) {
 	//console.log(kendo);
 	//kendo.culture("es-CO");
 
@@ -220,9 +220,37 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 		center: [4.781505, -79.804687],
 		zoom: 6,
 		//crs: L.CRS.EPSG4326,
-		layers: [googleTerrain],
-		fullscreenControl: true
+		layers: [googleTerrain]
 	});
+
+	/*var drawControl = new L.Control.Draw({
+		draw: {
+			position: 'topleft',
+			polygon: {
+				title: 'Draw a sexy polygon!',
+				allowIntersection: false,
+				drawError: {
+					color: '#b00b00',
+					timeout: 1000
+				},
+				shapeOptions: {
+					color: '#bada55'
+				},
+				showArea: true
+			},
+			polyline: {
+				metric: false
+			},
+			circle: {
+				shapeOptions: {
+					color: '#662d91'
+				}
+			}
+		},
+		edit: {
+			featureGroup: drawnItems
+		}
+	});*/
 
 	var wmsLayers = {
 		'Invemar: Ecorregiones': invemarEcoregiones,
@@ -253,9 +281,142 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 
 	};
 	
-	baseAndFirstOverlays = L.control.layers(baseLayers, wmsLayers).addTo(map);
+	baseAndFirstOverlays = L.control.layers(baseLayers, wmsLayers, {collapsed: true}).addTo(map);
 	//L.control.layers(wmsLayers).addTo(map);
-	map.addControl(new L.Control.Scale());
+	L.control.fullscreen({
+		position: 'topleft',
+		title: 'Mostrar mapa en pantalla completa'
+	}).addTo(map);
+
+	var featureGroup = new L.FeatureGroup().addTo(map);
+
+	L.control.scale().addTo(map);
+
+	// Set toolbar draw to spanish
+	L.drawLocal = {
+		draw: {
+			toolbar: {
+				actions: {
+					title: 'Cancelar dibujo',
+					text: 'Cancelar'
+				},
+				buttons: {
+					polyline: 'Dibujar linea poligonal',
+					polygon: 'Dibujar un polígono para búsqueda en el area',
+					rectangle: 'Dibujar un rectángulo para búsqueda en el area',
+					circle: 'Dibujar un círculo para búsqueda en el area',
+					marker: 'Dibujar un marcador'
+				}
+			},
+			handlers: {
+				circle: {
+					tooltip: {
+						start: 'Haga click y deslice para dibujar un círculo.'
+					}
+				},
+				marker: {
+					tooltip: {
+						start: 'Haga click para colocar un marcador.'
+					}
+				},
+				polygon: {
+					tooltip: {
+						start: 'Haga click para comenzar a dibujar una figura.',
+						cont: 'Haga click para continuar dibujando la figura.',
+						end: 'Haga click en el primer punto para cerrar la figura.'
+					}
+				},
+				polyline: {
+					error: '<strong>¡Error:</strong> los bordes de la figura no se pueden cruzar!',
+					tooltip: {
+						start: 'Haga click para comenzar a dibujar la linea.',
+						cont: 'Haga click para continuar dibujando la linea.',
+						end: 'Haga click en el último punto para finalizar la linea.'
+					}
+				},
+				rectangle: {
+					tooltip: {
+						start: 'Haga click y deslice para dibujar un rectángulo.'
+					}
+				},
+				simpleshape: {
+					tooltip: {
+						end: 'Libere el click del rator para finalizar la figura.'
+					}
+				}
+			}
+		},
+		edit: {
+			toolbar: {
+				actions: {
+					save: {
+						title: 'Guardar cambios.',
+						text: 'Guardar'
+					},
+					cancel: {
+						title: 'Cancelar edición, descargar todos los cambios.',
+						text: 'Cancelar'
+					}
+				},
+				buttons: {
+					edit: 'Editar area de búsqueda',
+					remove: 'Borrar area de búsqueda'
+				}
+			},
+			handlers: {
+				edit: {
+					tooltip: {
+						text: 'Desplace las manijas o marcadores para modificar el area.',
+						subtext: 'Haga click en cancelar para deshacer los cambios.'
+					}
+				},
+				remove: {
+					tooltip: {
+						text: 'Haga click en area dibujada para borrarla'
+					}
+				}
+			}
+		}
+	};
+	
+	var drawControl = new L.Control.Draw({
+		draw: {
+			polygon: {
+				allowIntersection: false, // Restricts shapes to simple polygons
+				drawError: {
+					color: '#FF00FF', // Color the shape will turn when intersects
+					message: '<strong>¡Error, <strong> los polígonos deben ser simples!' // Message that will show when intersect
+				},
+				shapeOptions: {
+					color: '#FF0000',
+					weight: 2
+				}
+			},
+			circle: {
+				shapeOptions: {
+					color: '#FF0000',
+					weight: 2,
+					start: 'Haga click y desplace para dibujar un círculo.'
+				}
+			},
+			rectangle: {
+				shapeOptions: {
+					color: '#FF0000',
+					weight: 2
+				}
+			},
+			polyline: false,
+			marker: false
+		},
+		edit: {
+			featureGroup: featureGroup
+		}
+	}).addTo(map);
+
+	map.on('draw:created', function(e) {
+		featureGroup.clearLayers();
+		featureGroup.addLayer(e.layer);
+	});
 
 	// Enable floating windows for search floating window
 	$(function() {

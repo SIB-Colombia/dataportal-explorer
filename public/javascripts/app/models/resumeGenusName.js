@@ -1,5 +1,6 @@
 define(["knockout"], function(ko) {
 	var ResumeGenusName = function(data) {
+		this.id = data.id;
 		this.genus = data.genus;
 		this.occurrences = data.occurrences;
 

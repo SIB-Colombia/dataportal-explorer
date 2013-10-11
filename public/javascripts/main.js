@@ -16,6 +16,7 @@ requirejs.config({
         'LeafletControlFullScreen': 'leaflet/plugins/fullscreen/Control.FullScreen',
         'LeafletGoogleTiles': 'leaflet/plugins/layer/tile/Google',
         'LeafletBingTiles': 'leaflet/plugins/layer/tile/Bing',
+        'LeafletDraw': 'leaflet/plugins/draw/leaflet.draw',
         'bootstrap': 'bootstrap/bootstrap.min',
         'knockout': 'knockout/knockout-2.3.0',
         'knockoutKendoUI': 'knockout-kendoui/knockout-kendo.min',
@@ -39,6 +40,9 @@ requirejs.config({
             deps: ['Leaflet']
         },
         'LeafletControlFullScreen': {
+            deps: ['Leaflet']
+        },
+        'LeafletDraw': {
             deps: ['Leaflet']
         },
         'jqueryUI': {

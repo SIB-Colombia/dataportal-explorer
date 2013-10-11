@@ -748,6 +748,22 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                         }
                     }
             },
+            "iso_county_code" :  {
+                "type": "multi_field", 
+                    "fields" : { 
+                        "iso_county_code": { 
+                            "type": "string" 
+                        },
+                        "untouched": {
+                            "type": "string",
+                            "index": "not_analyzed" 
+                        },
+                        "exactWords": {
+                            "type": "string",
+                            "analyzer": "string_lowercase"
+                        }
+                    }
+            },
             "kingdom" :  {
                 "type": "multi_field", 
                     "fields" : { 
@@ -1036,6 +1052,22 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                         }
                     }
             },
+            "county_group" :  {
+                "type": "multi_field", 
+                    "fields" : { 
+                        "county_group": { 
+                            "type": "string" 
+                        },
+                        "untouched": {
+                            "type": "string",
+                            "index": "not_analyzed" 
+                        },
+                        "exactWords": {
+                            "type": "string",
+                            "analyzer": "string_lowercase"
+                        }
+                    }
+            },
             "country_name" :  {
                 "type": "multi_field", 
                     "fields" : { 
@@ -1056,6 +1088,22 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                 "type": "multi_field", 
                     "fields" : { 
                         "department_name": { 
+                            "type": "string" 
+                        },
+                        "untouched": {
+                            "type": "string",
+                            "index": "not_analyzed" 
+                        },
+                        "exactWords": {
+                            "type": "string",
+                            "analyzer": "string_lowercase"
+                        }
+                    }
+            },
+            "county_name" :  {
+                "type": "multi_field", 
+                    "fields" : { 
+                        "county_name": { 
                             "type": "string" 
                         },
                         "untouched": {
@@ -1307,6 +1355,22 @@ curl -XPUT 'http://localhost:9200/sibexplorer/geooccurrences/_mapping' -d '
                         }
                     }
             },
+            "iso_county_code" :  {
+                "type": "multi_field", 
+                    "fields" : { 
+                        "iso_county_code": { 
+                            "type": "string" 
+                        },
+                        "untouched": {
+                            "type": "string",
+                            "index": "not_analyzed" 
+                        },
+                        "exactWords": {
+                            "type": "string",
+                            "analyzer": "string_lowercase"
+                        }
+                    }
+            },
             "country_name" :  {
                 "type": "multi_field", 
                     "fields" : { 
@@ -1327,6 +1391,22 @@ curl -XPUT 'http://localhost:9200/sibexplorer/geooccurrences/_mapping' -d '
                 "type": "multi_field", 
                     "fields" : { 
                         "department_name": { 
+                            "type": "string" 
+                        },
+                        "untouched": {
+                            "type": "string",
+                            "index": "not_analyzed" 
+                        },
+                        "exactWords": {
+                            "type": "string",
+                            "analyzer": "string_lowercase"
+                        }
+                    }
+            },
+            "county_name" :  {
+                "type": "multi_field", 
+                    "fields" : { 
+                        "county_name": { 
                             "type": "string" 
                         },
                         "untouched": {

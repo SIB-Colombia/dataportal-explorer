@@ -4,6 +4,7 @@ define(["knockout"], function(ko) {
 		this.predicate = data.predicate;
 		this.textName = data.textName;
 		this.textObject = data.textObject;
+		this.id = data.id;
 	};
 
 	return FilterSelected;

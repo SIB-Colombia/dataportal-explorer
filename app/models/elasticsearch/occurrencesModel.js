@@ -1,6 +1,33 @@
 var moment = require('moment');
 var _ = require('underscore');
 
+exports.getCounties = function() {
+	qryObj = {
+		"fields": [],
+		"query": {
+			"filtered": {
+				"filter": {
+					"exists": {
+						"field": "iso_county_code"
+					}
+				}
+			}
+		},
+		"facets": {
+			"counties": {
+				"terms": {
+					"field": "county_group.untouched",
+					"size": 10000000,
+					"order": "term"
+				}
+			}
+		}
+	};
+
+	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
+	return mySearchCall;
+};
+
 exports.getOccurrencesResumeName = function(name, type) {
 	qryObj = {
 		"fields": [],
@@ -75,6 +102,26 @@ exports.getOccurrencesResumeName = function(name, type) {
 				"terms": {
 					"field": "iso_country_code.untouched",
 					"size" : 10
+				}
+			},
+			"county_name": {
+				"terms": {
+					"field": "county_name.untouched",
+					"size" : 10
+				}
+			},
+			"iso_county_code": {
+				"terms": {
+					"field": "iso_county_code.untouched",
+					"size" : 10
+				}
+			},
+			"county_group": {
+				"terms": {
+					"field": "county_group.untouched",
+					"size": 10,
+					"regex": "[\\D]+~~~[\\D]+~~~[\\d]+",
+					"regex_flags" : "CANON_EQ"
 				}
 			},
 			"data_provider_name": {
@@ -160,6 +207,8 @@ exports.getOccurrencesResumeName = function(name, type) {
 		qryObj["query"]["filtered"]["query"]["wildcard"]["iso_country_code.exactWords"] = "*"+ name.toLowerCase() +"*";
 	} else if(type == "department") {
 		qryObj["query"]["filtered"]["query"]["wildcard"]["iso_department_code.exactWords"] = "*"+ name.toLowerCase() +"*";
+	} else if(type == "county") {
+		qryObj["query"]["filtered"]["query"]["wildcard"]["iso_county_code.exactWords"] = "*"+ name.toLowerCase() +"*";
 	}
 
 	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
@@ -184,7 +233,7 @@ exports.getSearchText = function(subjectID) {
 
 exports.getOccurrences = function() {
 	qryObj = {
-		"fields": ["id", "canonical", "data_resource_name", "institution_code", "collection_code", "catalogue_number", "occurrence_date", "modified", "location", "country_name", "department_name", "basis_of_record_name_spanish"],
+		"fields": ["id", "canonical", "data_resource_name", "institution_code", "collection_code", "catalogue_number", "occurrence_date", "modified", "location", "country_name", "department_name", "county_name", "basis_of_record_name_spanish"],
 		"from": 0,
 		"size" : 20,
 		"sort": [ { "canonical.untouched": "asc" } ],
@@ -389,6 +438,12 @@ exports.getDistributionStatsOneDegree = function(cellid) {
 					"field": "data_resource_id",
 					"size" : 10
 				}
+			},
+			"county_name": {
+				"terms": {
+					"field": "county_name.untouched",
+					"size" : 10
+				}
 			}
 		}
 	};
@@ -491,6 +546,12 @@ exports.getDistributionStatsWithSearchOneDegree = function(conditions) {
 					"field": "data_resource_id",
 					"size" : 10
 				}
+			},
+			"county_name": {
+				"terms": {
+					"field": "county_name.untouched",
+					"size" : 10
+				}
 			}
 		}
 	};
@@ -558,6 +619,19 @@ exports.getDistributionStatsWithSearchOneDegree = function(conditions) {
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["iso_department_code.exactWords"] = data.textObject.toLowerCase();
+			orCounter+=1;
+		});
+		andCounter+=1;
+	}
+	if(conditions.counties) {
+		orCounter = 0;
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
+		_.each(conditions.counties, function(data) {
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["iso_county_code.exactWords"] = data.textObject.toLowerCase();
 			orCounter+=1;
 		});
 		andCounter+=1;
@@ -676,6 +750,12 @@ exports.getDistributionStatsPointFiveDegree = function(cellid, pointfivecellid) 
 					"field": "data_resource_id",
 					"size" : 10
 				}
+			},
+			"county_name": {
+				"terms": {
+					"field": "county_name.untouched",
+					"size" : 10
+				}
 			}
 		}
 	};
@@ -792,6 +872,12 @@ exports.getDistributionStatsWithSearchPointFiveDegree = function(conditions) {
 					"field": "data_resource_id",
 					"size" : 10
 				}
+			},
+			"county_name": {
+				"terms": {
+					"field": "county_name.untouched",
+					"size" : 10
+				}
 			}
 		}
 	};
@@ -859,6 +945,19 @@ exports.getDistributionStatsWithSearchPointFiveDegree = function(conditions) {
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["iso_department_code.exactWords"] = data.textObject.toLowerCase();
+			orCounter+=1;
+		});
+		andCounter+=1;
+	}
+	if(conditions.counties) {
+		orCounter = 0;
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
+		_.each(conditions.counties, function(data) {
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["iso_county_code.exactWords"] = data.textObject.toLowerCase();
 			orCounter+=1;
 		});
 		andCounter+=1;
@@ -977,6 +1076,12 @@ exports.getDistributionStatsPointOneDegree = function(cellid, centicellid) {
 					"field": "data_resource_id",
 					"size" : 10
 				}
+			},
+			"county_name": {
+				"terms": {
+					"field": "county_name.untouched",
+					"size" : 10
+				}
 			}
 		}
 	};
@@ -1093,6 +1198,12 @@ exports.getDistributionStatsWithSearchPointOneDegree = function(conditions) {
 					"field": "data_resource_id",
 					"size" : 10
 				}
+			},
+			"county_name": {
+				"terms": {
+					"field": "county_name.untouched",
+					"size" : 10
+				}
 			}
 		}
 	};
@@ -1160,6 +1271,19 @@ exports.getDistributionStatsWithSearchPointOneDegree = function(conditions) {
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["iso_department_code.exactWords"] = data.textObject.toLowerCase();
+			orCounter+=1;
+		});
+		andCounter+=1;
+	}
+	if(conditions.counties) {
+		orCounter = 0;
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
+		_.each(conditions.counties, function(data) {
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["iso_county_code.exactWords"] = data.textObject.toLowerCase();
 			orCounter+=1;
 		});
 		andCounter+=1;
@@ -1278,6 +1402,12 @@ exports.getDistributionStatsPointTwoDegree = function(cellid, pointtwocellid) {
 					"field": "data_resource_id",
 					"size" : 10
 				}
+			},
+			"county_name": {
+				"terms": {
+					"field": "county_name.untouched",
+					"size" : 10
+				}
 			}
 		}
 	};
@@ -1394,6 +1524,12 @@ exports.getDistributionStatsWithSearchPointTwoDegree = function(conditions) {
 					"field": "data_resource_id",
 					"size" : 10
 				}
+			},
+			"county_name": {
+				"terms": {
+					"field": "county_name.untouched",
+					"size" : 10
+				}
 			}
 		}
 	};
@@ -1461,6 +1597,19 @@ exports.getDistributionStatsWithSearchPointTwoDegree = function(conditions) {
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["iso_department_code.exactWords"] = data.textObject.toLowerCase();
+			orCounter+=1;
+		});
+		andCounter+=1;
+	}
+	if(conditions.counties) {
+		orCounter = 0;
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
+		_.each(conditions.counties, function(data) {
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["iso_county_code.exactWords"] = data.textObject.toLowerCase();
 			orCounter+=1;
 		});
 		andCounter+=1;
@@ -1603,6 +1752,19 @@ exports.getDistributionWithFilter = function(conditions) {
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["iso_department_code.exactWords"] = data.textObject.toLowerCase();
+			orCounter+=1;
+		});
+		andCounter+=1;
+	}
+	if(conditions.counties) {
+		orCounter = 0;
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
+		_.each(conditions.counties, function(data) {
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["iso_county_code.exactWords"] = data.textObject.toLowerCase();
 			orCounter+=1;
 		});
 		andCounter+=1;
@@ -2081,6 +2243,13 @@ exports.geoJsonMapPoints = function(parameters) {
 		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
 		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["wildcard"] = {};
 		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["wildcard"]["iso_department_code.exactWords"] = parameters.originisodepartmentcode.toLowerCase();
+		andCounter+=1;
+	}
+
+	if(parameters.originisocountycode) {
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["wildcard"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["wildcard"]["iso_county_code.exactWords"] = parameters.originisocountycode.toLowerCase();
 		andCounter+=1;
 	}
 
