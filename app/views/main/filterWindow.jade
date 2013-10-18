@@ -1060,6 +1060,22 @@ block filterWindow
 								span(data-bind='text: textObject')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeDataResourceName($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
+						// Include poligonal coordinates data
+						ul(style="display: none", class='filterItem', data-bind='visible: selectedOnMapPoligonCoordinates().length > 0')
+							li(class='alteredFilter')
+								span Conjunto de coordenadas poligonales son: 
+								span(data-bind='foreach: selectedOnMapPoligonCoordinates')
+									span(data-bind='text: coodinateText')
+								a(href='#', title='Quitar este filtro', data-bind='click: removePoligonalCoordinateFilter')
+									img(alt='Quitar este filtro', src='/images/grey_minus.png')
+						// Include radial coordinates data
+						ul(style="display: none", class='filterItem', data-bind='visible: selectedOnMapRadialCoordinates().length > 0')
+							li(class='alteredFilter')
+								span Coordenada radial es: 
+								span(data-bind='foreach: selectedOnMapRadialCoordinates')
+									span(data-bind='text: coodinateText')
+								a(href='#', title='Quitar este filtro', data-bind='click: removeRadialCoordinateFilter')
+									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						button(style="display: none", class='btn btn-small btn-add-filter', type='button', data-bind='visible: totalFilters() != 0, click: startSearch') Búsqueda
 						button(style="display: none", class='btn btn-small btn-add-filter', type='button', data-bind='visible: isFiltered(), click: removeFilter') Quitar filtro actual
 				#densityButtonsPane

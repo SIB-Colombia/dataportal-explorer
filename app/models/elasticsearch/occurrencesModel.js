@@ -662,6 +662,44 @@ exports.getDistributionStatsWithSearchOneDegree = function(conditions) {
 		});
 		andCounter+=1;
 	}
+	if(conditions.poligonalCoordinates || conditions.radialCoordinates) {
+		if(conditions.poligonalCoordinates) {
+			orCounter = 0;
+			qryObj["query"]["filtered"]["filter"] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"] = [];
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][0] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_polygon"] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_polygon"]["location"] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_polygon"]["location"]["points"] = [];
+			_.each(conditions.poligonalCoordinates, function(data) {
+				qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_polygon"]["location"]["points"][orCounter] = {"lat": data.lat, "lon": data.lng};
+				orCounter+=1;
+			});
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1]["term"] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1]["term"]["cell_id"] = conditions.cellid;
+		}
+		if(conditions.radialCoordinates) {
+			qryObj["query"]["filtered"]["filter"] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"] = [];
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][0] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_distance"] = {};
+			_.each(conditions.radialCoordinates, function(data) {
+				qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_distance"]["distance"] = data.radius + "m";
+				qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_distance"]["location"] = {"lat": data.lat, "lon": data.lng};
+			});
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1]["term"] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1]["term"]["cell_id"] = conditions.cellid;
+		}
+	}
+	if(qryObj["query"]["filtered"]["query"]["bool"]["must"].length === 0) {
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["match_all"] = {};
+		andCounter+=1;
+	}
 	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
 	return mySearchCall;
 };
@@ -986,6 +1024,50 @@ exports.getDistributionStatsWithSearchPointFiveDegree = function(conditions) {
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["data_resource_name.exactWords"] = data.textObject.toLowerCase();
 			orCounter+=1;
 		});
+		andCounter+=1;
+	}
+	if(conditions.poligonalCoordinates || conditions.radialCoordinates) {
+		if(conditions.poligonalCoordinates) {
+			orCounter = 0;
+			qryObj["query"]["filtered"]["filter"] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"] = [];
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][0] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_polygon"] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_polygon"]["location"] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_polygon"]["location"]["points"] = [];
+			_.each(conditions.poligonalCoordinates, function(data) {
+				qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_polygon"]["location"]["points"][orCounter] = {"lat": data.lat, "lon": data.lng};
+				orCounter+=1;
+			});
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1]["term"] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1]["term"]["cell_id"] = conditions.cellid;
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][2] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][2]["term"] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][2]["term"]["pointfive_cell_id"] = conditions.pointfivecellid;
+		}
+		if(conditions.radialCoordinates) {
+			qryObj["query"]["filtered"]["filter"] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"] = [];
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][0] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_distance"] = {};
+			_.each(conditions.radialCoordinates, function(data) {
+				qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_distance"]["distance"] = data.radius + "m";
+				qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_distance"]["location"] = {"lat": data.lat, "lon": data.lng};
+			});
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1]["term"] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1]["term"]["cell_id"] = conditions.cellid;
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][2] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][2]["term"] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][2]["term"]["pointfive_cell_id"] = conditions.pointfivecellid;
+		}
+	}
+	if(qryObj["query"]["filtered"]["query"]["bool"]["must"].length === 0) {
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["match_all"] = {};
 		andCounter+=1;
 	}
 	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
@@ -1314,6 +1396,50 @@ exports.getDistributionStatsWithSearchPointOneDegree = function(conditions) {
 		});
 		andCounter+=1;
 	}
+	if(conditions.poligonalCoordinates || conditions.radialCoordinates) {
+		if(conditions.poligonalCoordinates) {
+			orCounter = 0;
+			qryObj["query"]["filtered"]["filter"] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"] = [];
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][0] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_polygon"] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_polygon"]["location"] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_polygon"]["location"]["points"] = [];
+			_.each(conditions.poligonalCoordinates, function(data) {
+				qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_polygon"]["location"]["points"][orCounter] = {"lat": data.lat, "lon": data.lng};
+				orCounter+=1;
+			});
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1]["term"] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1]["term"]["cell_id"] = conditions.cellid;
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][2] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][2]["term"] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][2]["term"]["centi_cell_id"] = conditions.pointonecellid;
+		}
+		if(conditions.radialCoordinates) {
+			qryObj["query"]["filtered"]["filter"] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"] = [];
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][0] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_distance"] = {};
+			_.each(conditions.radialCoordinates, function(data) {
+				qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_distance"]["distance"] = data.radius + "m";
+				qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_distance"]["location"] = {"lat": data.lat, "lon": data.lng};
+			});
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1]["term"] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1]["term"]["cell_id"] = conditions.cellid;
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][2] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][2]["term"] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][2]["term"]["centi_cell_id"] = conditions.pointonecellid;
+		}
+	}
+	if(qryObj["query"]["filtered"]["query"]["bool"]["must"].length === 0) {
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["match_all"] = {};
+		andCounter+=1;
+	}
 	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
 	return mySearchCall;
 };
@@ -1640,6 +1766,50 @@ exports.getDistributionStatsWithSearchPointTwoDegree = function(conditions) {
 		});
 		andCounter+=1;
 	}
+	if(conditions.poligonalCoordinates || conditions.radialCoordinates) {
+		if(conditions.poligonalCoordinates) {
+			orCounter = 0;
+			qryObj["query"]["filtered"]["filter"] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"] = [];
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][0] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_polygon"] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_polygon"]["location"] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_polygon"]["location"]["points"] = [];
+			_.each(conditions.poligonalCoordinates, function(data) {
+				qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_polygon"]["location"]["points"][orCounter] = {"lat": data.lat, "lon": data.lng};
+				orCounter+=1;
+			});
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1]["term"] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1]["term"]["cell_id"] = conditions.cellid;
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][2] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][2]["term"] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][2]["term"]["pointtwo_cell_id"] = conditions.pointtwocellid;
+		}
+		if(conditions.radialCoordinates) {
+			qryObj["query"]["filtered"]["filter"] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"] = [];
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][0] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_distance"] = {};
+			_.each(conditions.radialCoordinates, function(data) {
+				qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_distance"]["distance"] = data.radius + "m";
+				qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_distance"]["location"] = {"lat": data.lat, "lon": data.lng};
+			});
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1]["term"] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1]["term"]["cell_id"] = conditions.cellid;
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][2] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][2]["term"] = {};
+			qryObj["query"]["filtered"]["filter"]["bool"]["must"][2]["term"]["pointtwo_cell_id"] = conditions.pointtwocellid;
+		}
+	}
+	if(qryObj["query"]["filtered"]["query"]["bool"]["must"].length === 0) {
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["match_all"] = {};
+		andCounter+=1;
+	}
 	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
 	return mySearchCall;
 };
@@ -1649,11 +1819,6 @@ exports.getDistributionWithFilter = function(conditions) {
 		"fields": [],
 		"query": {
 			"filtered": {
-				"filter": {
-					"exists" : {
-						"field": "cell_id"
-					}
-				},
 				"query" : {
 					"bool": {
 						"must": []
@@ -1793,6 +1958,36 @@ exports.getDistributionWithFilter = function(conditions) {
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["data_resource_name.exactWords"] = data.textObject.toLowerCase();
 			orCounter+=1;
 		});
+		andCounter+=1;
+	}
+	if(conditions.poligonalCoordinates || conditions.radialCoordinates) {
+		if(conditions.poligonalCoordinates) {
+			orCounter = 0;
+			qryObj["query"]["filtered"]["filter"] = {};
+			qryObj["query"]["filtered"]["filter"]["geo_polygon"] = {};
+			qryObj["query"]["filtered"]["filter"]["geo_polygon"]["location"] = {};
+			qryObj["query"]["filtered"]["filter"]["geo_polygon"]["location"]["points"] = [];
+			_.each(conditions.poligonalCoordinates, function(data) {
+				qryObj["query"]["filtered"]["filter"]["geo_polygon"]["location"]["points"][orCounter] = {"lat": data.lat, "lon": data.lng};
+				orCounter+=1;
+			});
+		}
+		if(conditions.radialCoordinates) {
+			qryObj["query"]["filtered"]["filter"] = {};
+			qryObj["query"]["filtered"]["filter"]["geo_distance"] = {};
+			_.each(conditions.radialCoordinates, function(data) {
+				qryObj["query"]["filtered"]["filter"]["geo_distance"]["distance"] = data.radius + "m";
+				qryObj["query"]["filtered"]["filter"]["geo_distance"]["location"] = {"lat": data.lat, "lon": data.lng};
+			});
+		}
+	} else {
+		qryObj["query"]["filtered"]["filter"] = {};
+		qryObj["query"]["filtered"]["filter"]["exists"] = {};
+		qryObj["query"]["filtered"]["filter"]["exists"]["field"] = "cell_id";
+	}
+	if(qryObj["query"]["filtered"]["query"]["bool"]["must"].length === 0) {
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["match_all"] = {};
 		andCounter+=1;
 	}
 	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);

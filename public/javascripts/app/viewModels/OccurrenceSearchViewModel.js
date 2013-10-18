@@ -1,4 +1,4 @@
-define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map-initialize", "app/models/occurrence", "app/models/resumeInfo", "app/models/resumeCount", "app/models/resumeScientificName", "app/models/resumeKingdomName", "app/models/resumePhylumName", "app/models/resumeClassName", "app/models/resumeOrderName", "app/models/resumeFamilyName", "app/models/resumeGenusName", "app/models/resumeSpecieName", "app/models/resumeDataProvider", "app/models/resumeDataResource", "app/models/resumeInstitutionCode", "app/models/resumeCollectionCode", "app/models/resumeCountry", "app/models/resumeDepartment", "app/models/resumeCounty", "app/models/county", "app/models/filterSelected", "select2", "knockoutKendoUI", "Leaflet", "jqueryUI", "bootstrap", "customScrollBar"], function($, ko, _, BaseViewModel, map, Occurrence, ResumeInfo, ResumeCount, ResumeScientificName, ResumeKingdomName, ResumePhylumName, ResumeClassName, ResumeOrderName, ResumeFamilyName, ResumeGenusName, ResumeSpecieName, ResumeDataProvider, ResumeDataResource, ResumeInstitutionCode, ResumeCollectionCode, ResumeCountry, ResumeDepartment, ResumeCounty, County, FilterSelected, select2) {
+define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map-initialize", "app/models/occurrence", "app/models/resumeInfo", "app/models/resumeCount", "app/models/resumeScientificName", "app/models/resumeKingdomName", "app/models/resumePhylumName", "app/models/resumeClassName", "app/models/resumeOrderName", "app/models/resumeFamilyName", "app/models/resumeGenusName", "app/models/resumeSpecieName", "app/models/resumeDataProvider", "app/models/resumeDataResource", "app/models/resumeInstitutionCode", "app/models/resumeCollectionCode", "app/models/resumeCountry", "app/models/resumeDepartment", "app/models/resumeCounty", "app/models/county", "app/models/coordinate", "app/models/radialCoordinate", "app/models/filterSelected", "select2", "knockoutKendoUI", "Leaflet", "jqueryUI", "bootstrap", "customScrollBar"], function($, ko, _, BaseViewModel, map, Occurrence, ResumeInfo, ResumeCount, ResumeScientificName, ResumeKingdomName, ResumePhylumName, ResumeClassName, ResumeOrderName, ResumeFamilyName, ResumeGenusName, ResumeSpecieName, ResumeDataProvider, ResumeDataResource, ResumeInstitutionCode, ResumeCollectionCode, ResumeCountry, ResumeDepartment, ResumeCounty, County, Coordinate, RadialCoordinate, FilterSelected, select2) {
 	var OccurrenceSearchViewModel = function() {
 		var self = this;
 		self.densityCellsOneDegree = new L.FeatureGroup();
@@ -73,6 +73,8 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		self.selectedInstitutionCodes = [];
 		self.selectedCollectionCodes = [];
 		self.selectedCatalogNumbers = [];
+		self.selectedOnMapPoligonCoordinates = [];
+		self.selectedOnMapRadialCoordinates = [];
 
 		// Array of current occurrences details
 		self.occurrencesDetails = [];
@@ -106,6 +108,46 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			this.loadCellDensityPointFiveDegree();
 			this.loadCellDensityPointTwoDegree();
 			this.loadCellDensityPointOneDegree();
+
+			map.on('draw:created', function(e) {
+				var type = e.layerType;
+				if(featureGroup.getLayers().length > 0)
+					self.totalFilters(self.totalFilters()-1);
+				featureGroup.clearLayers();
+				self.selectedOnMapPoligonCoordinates.removeAll();
+				self.selectedOnMapRadialCoordinates.removeAll();
+				if(type === 'circle') {
+					self.selectedOnMapRadialCoordinates.push(new RadialCoordinate({lat: e.layer._latlng.lat, lng: e.layer._latlng.lng, radius: e.layer._mRadius}));
+				} else {
+					_.each(e.layer._latlngs, function(location) {
+						self.selectedOnMapPoligonCoordinates.push(new Coordinate({lat: location.lat, lng: location.lng}));
+					});
+				}
+				featureGroup.addLayer(e.layer);
+				self.totalFilters(self.totalFilters()+1);
+			});
+
+			map.on('draw:edited', function (e) {
+				var layers = e.layers;
+				self.selectedOnMapPoligonCoordinates.removeAll();
+				self.selectedOnMapRadialCoordinates.removeAll();
+				layers.eachLayer(function (layer) {
+					if(typeof layer._mRadius !== 'undefined') {
+						self.selectedOnMapRadialCoordinates.push(new RadialCoordinate({lat: layer._latlng.lat, lng: layer._latlng.lng, radius: layer._mRadius}));
+					} else {
+						_.each(layer._latlngs, function(location) {
+							self.selectedOnMapPoligonCoordinates.push(new Coordinate({lat: location.lat, lng: location.lng}));
+						});
+					}
+				});
+			});
+
+			map.on('draw:deleted', function (e) {
+				self.selectedOnMapPoligonCoordinates.removeAll();
+				self.selectedOnMapRadialCoordinates.removeAll();
+				self.totalFilters(self.totalFilters()-1);
+			});
+
 			var timeout;
 
 			var searchParamsResume = function() {
@@ -788,7 +830,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				}
 			}
 		},
-		startSearch: function() {
+		fillSearchConditions: function() {
 			var response = {};
 			var self = this;
 			if(self.selectedScientificNames().length !== 0)
@@ -815,7 +857,15 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				response['providers'] = self.selectedProviders();
 			if(self.selectedResources().length !== 0)
 				response['resources'] = self.selectedResources();
-			var data = ko.toJSON(response);
+			if(self.selectedOnMapPoligonCoordinates().length !== 0)
+				response['poligonalCoordinates'] = self.selectedOnMapPoligonCoordinates();
+			if(self.selectedOnMapRadialCoordinates().length !== 0)
+				response['radialCoordinates'] = self.selectedOnMapRadialCoordinates();
+			return response;
+		},
+		startSearch: function() {
+			var self = this;
+			var data = ko.toJSON(self.fillSearchConditions());
 			$.ajax({
 				contentType: 'application/json',
 				type: 'POST',
@@ -863,8 +913,9 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 						self.densityCellsOneDegree().addLayer(densityCell);
 					});
 					self.densityCellsOneDegree().on('click', function (a) {
-						response["cellid"] = a.layer.options.cellID;
-						data = ko.toJSON(response);
+						data = self.fillSearchConditions();
+						data["cellid"] = a.layer.options.cellID;
+						data = ko.toJSON(data);
 						$.ajax({
 							contentType: 'application/json',
 							type: 'POST',
@@ -907,9 +958,10 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 						self.densityCellsPointFiveDegree().addLayer(densityCell);
 					});
 					self.densityCellsPointFiveDegree().on('click', function (a) {
-						response["cellid"] = a.layer.options.cellID;
-						response["pointfivecellid"] = a.layer.options.pointfivecellID;
-						data = ko.toJSON(response);
+						data = self.fillSearchConditions();
+						data["cellid"] = a.layer.options.cellID;
+						data["pointfivecellid"] = a.layer.options.pointfivecellID;
+						data = ko.toJSON(data);
 						$.ajax({
 							contentType: 'application/json',
 							type: 'POST',
@@ -952,9 +1004,10 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 						self.densityCellsPointTwoDegree().addLayer(densityCell);
 					});
 					self.densityCellsPointTwoDegree().on('click', function (a) {
-						response["cellid"] = a.layer.options.cellID;
-						response["pointtwocellid"] = a.layer.options.pointtwocellID;
-						data = ko.toJSON(response);
+						data = self.fillSearchConditions();
+						data["cellid"] = a.layer.options.cellID;
+						data["pointtwocellid"] = a.layer.options.pointtwocellID;
+						data = ko.toJSON(data);
 						$.ajax({
 							contentType: 'application/json',
 							type: 'POST',
@@ -997,9 +1050,10 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 						self.densityCellsPointOneDegree().addLayer(densityCell);
 					});
 					self.densityCellsPointOneDegree().on('click', function (a) {
-						response["cellid"] = a.layer.options.cellID;
-						response["pointonecellid"] = a.layer.options.pointonecellID;
-						data = ko.toJSON(response);
+						data = self.fillSearchConditions();
+						data["cellid"] = a.layer.options.cellID;
+						data["pointonecellid"] = a.layer.options.pointonecellID;
+						data = ko.toJSON(data);
 						$.ajax({
 							contentType: 'application/json',
 							type: 'POST',
@@ -3372,6 +3426,18 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 
 			// Disable download options
 			self.hideAdditionalInfoPane();
+		},
+		removePoligonalCoordinateFilter: function() {
+			var self = this;
+			featureGroup.clearLayers();
+			self.selectedOnMapPoligonCoordinates.removeAll();
+			self.totalFilters(self.totalFilters()-1);
+		},
+		removeRadialCoordinateFilter: function() {
+			var self = this;
+			featureGroup.clearLayers();
+			self.selectedOnMapRadialCoordinates.removeAll();
+			self.totalFilters(self.totalFilters()-1);
 		},
 		showAdditionalInfoPane: function() {
 			$("#additionalInfoPane").removeClass("occult-element");
