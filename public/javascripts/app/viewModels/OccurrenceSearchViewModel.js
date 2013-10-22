@@ -24,6 +24,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		self.isFiltered = false;
 		self.helpSearchText = "<p>Escriba un nombre científico y pulse en Agregar filtro.</p><p>Este filtro devolverá cualquier registro que posea un nombre que concuerde con el identificador dado del organismo, sin importar como está clasificado el organismo.</p>";
 		self.totalFilters = 0;
+		self.isRectangle = false;
 
 		// Total occurrences data
 		self.totalOccurrences = 0;
@@ -110,6 +111,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			this.loadCellDensityPointOneDegree();
 
 			map.on('draw:created', function(e) {
+				self.isRectangle(false);
 				var type = e.layerType;
 				if(featureGroup.getLayers().length > 0)
 					self.totalFilters(self.totalFilters()-1);
@@ -122,6 +124,8 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					_.each(e.layer._latlngs, function(location) {
 						self.selectedOnMapPoligonCoordinates.push(new Coordinate({lat: location.lat, lng: location.lng}));
 					});
+					if(type === "rectangle")
+						self.isRectangle(true);
 				}
 				featureGroup.addLayer(e.layer);
 				self.totalFilters(self.totalFilters()+1);
@@ -146,6 +150,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				self.selectedOnMapPoligonCoordinates.removeAll();
 				self.selectedOnMapRadialCoordinates.removeAll();
 				self.totalFilters(self.totalFilters()-1);
+				self.isRectangle(false);
 			});
 
 			var timeout;
@@ -3423,6 +3428,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			self.currentActiveDistribution("oneDegree");
 
 			self.isFiltered(false);
+			self.isRectangle(false);
 
 			// Disable download options
 			self.hideAdditionalInfoPane();
@@ -3448,6 +3454,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		generateURLSpreadsheet: function() {
 			var self = this;
 			var counter = 0;
+			self.hideAdditionalInfoPane();
 			var url = "http://data.sibcolombia.net/occurrences/downloadSpreadsheet.htm?";
 			_.each(self.selectedScientificNames(), function(scientificName) {
 				url += ((counter > 0) ? "&" : "")+"c["+counter+"].s="+scientificName.subject+"&"+"c["+counter+"].p="+self.dataPortalConditionCodes(scientificName.predicate)+"&"+"c["+counter+"].o="+scientificName.textObject;
@@ -3479,13 +3486,44 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				url += ((counter > 0) ? "&" : "")+"c["+counter+"].s="+resource.subject+"&"+"c["+counter+"].p="+self.dataPortalConditionCodes(resource.predicate)+"&"+"c["+counter+"].o="+resource.id;
 				counter++;
 			});
+			_.each(self.selectedLatitudes(), function(latitude) {
+				url += ((counter > 0) ? "&" : "")+"c["+counter+"].s="+latitude.subject+"&"+"c["+counter+"].p="+self.dataPortalConditionCodes(latitude.predicate)+"&"+"c["+counter+"].o="+latitude.textObject;
+				counter++;
+			});
+			_.each(self.selectedLongitudes(), function(longitude) {
+				url += ((counter > 0) ? "&" : "")+"c["+counter+"].s="+longitude.subject+"&"+"c["+counter+"].p="+self.dataPortalConditionCodes(longitude.predicate)+"&"+"c["+counter+"].o="+longitude.textObject;
+				counter++;
+			});
+			_.each(self.selectedAltitudes(), function(altitude) {
+				url += ((counter > 0) ? "&" : "")+"c["+counter+"].s="+altitude.subject+"&"+"c["+counter+"].p="+self.dataPortalConditionCodes(altitude.predicate)+"&"+"c["+counter+"].o="+altitude.textObject;
+				counter++;
+			});
+			_.each(self.selectedDeeps(), function(deep) {
+				url += ((counter > 0) ? "&" : "")+"c["+counter+"].s="+deep.subject+"&"+"c["+counter+"].p="+self.dataPortalConditionCodes(deep.predicate)+"&"+"c["+counter+"].o="+deep.textObject;
+				counter++;
+			});
+			if(self.isRectangle()) {
+				url += ((counter > 0) ? "&" : "")+"c["+counter+"].s=1&c["+counter+"].p=1&c["+counter+"].o="+self.selectedOnMapPoligonCoordinates()[0].lat;
+				counter++;
+				url += "&c["+counter+"].s=1&c["+counter+"].p=2&c["+counter+"].o="+self.selectedOnMapPoligonCoordinates()[1].lat;
+				counter++;
+				url += "&c["+counter+"].s=2&c["+counter+"].p=1&c["+counter+"].o="+self.selectedOnMapPoligonCoordinates()[2].lng;
+				counter++;
+				url += "&c["+counter+"].s=2&c["+counter+"].p=2&c["+counter+"].o="+self.selectedOnMapPoligonCoordinates()[0].lng;
+				counter++;
+			}
 			self.urlDownloadSpreadsheet(url);
 			self.urlDownloadSpreadsheetWithURL(url+"&c["+counter+"].s=28&c["+counter+"].p=0&c["+counter+"].o=0");
-			self.showAdditionalInfoPane();
+			if( (counter !== 0 && self.selectedOnMapRadialCoordinates().length === 0 && self.selectedOnMapPoligonCoordinates().length === 0) || (counter !== 0 && self.selectedOnMapPoligonCoordinates().length !== 0 && self.isRectangle()) )
+				self.showAdditionalInfoPane();
 		},
 		dataPortalConditionCodes: function(condition) {
 			if(condition=="eq") {
 				return 0;
+			} else if(condition=="gt") {
+				return 1;
+			} else if(condition=="lt") {
+				return 2;
 			}
 		}
 	});

@@ -2,16 +2,16 @@ var express = require('express')
   , path = require('path');
 
 module.exports = function(parent) {
+	var oneMonth = 2592000;
 	parent.set('port', process.env.PORT || 3000);
 	parent.set('view engine', 'jade');
 	parent.set('jsonp callback', true );
+	parent.use(express.compress());
 	parent.use(express.favicon());
 	parent.use(express.logger('dev'));
 	parent.use(express.bodyParser());
 	parent.use(express.methodOverride());
 	parent.use(require('stylus').middleware(__dirname + '/../../public'));
-	parent.use(express.static(path.join(__dirname, '/../../public')));
-	parent.use(express.compress());
 
 	var env = process.env.NODE_ENV || 'development';
 

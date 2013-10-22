@@ -985,13 +985,13 @@ block filterWindow
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedLatitudes, visible: selectedLatitudes().length > 0')
 							li(class='alteredFilter')
 								span(data-bind='visible: $index() == 0') Latitud 
-									span(data-bind='visible: predicate == 0') es 
-									span(data-bind='visible: predicate == 1') mayor que 
-									span(data-bind='visible: predicate == 2') menor que 
+									span(data-bind='visible: predicate == "eq"') es 
+									span(data-bind='visible: predicate == "gt"') mayor que 
+									span(data-bind='visible: predicate == "lt"') menor que 
 								span(data-bind='visible: $index() != 0') y 
-									span(data-bind='visible: predicate == 0') es 
-									span(data-bind='visible: predicate == 1') mayor que 
-									span(data-bind='visible: predicate == 2') menor que 
+									span(data-bind='visible: predicate == "eq"') es 
+									span(data-bind='visible: predicate == "gt"') mayor que 
+									span(data-bind='visible: predicate == "lt"') menor que 
 								span(data-bind='text: $parent.parsedLatitudeText($data)')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeLatitudeNumber($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
@@ -999,13 +999,13 @@ block filterWindow
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedLongitudes, visible: selectedLongitudes().length > 0')
 							li(class='alteredFilter')
 								span(data-bind='visible: $index() == 0') Longitud 
-									span(data-bind='visible: predicate == 0') es 
-									span(data-bind='visible: predicate == 1') mayor que 
-									span(data-bind='visible: predicate == 2') menor que 
+									span(data-bind='visible: predicate == "eq"') es 
+									span(data-bind='visible: predicate == "gt"') mayor que 
+									span(data-bind='visible: predicate == "lt"') menor que 
 								span(data-bind='visible: $index() != 0') y 
-									span(data-bind='visible: predicate == 0') es 
-									span(data-bind='visible: predicate == 1') mayor que 
-									span(data-bind='visible: predicate == 2') menor que 
+									span(data-bind='visible: predicate == "eq"') es 
+									span(data-bind='visible: predicate == "gt"') mayor que 
+									span(data-bind='visible: predicate == "lt"') menor que 
 								span(data-bind='text: $parent.parsedLongitudeText($data)')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeLongitudeNumber($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
@@ -1013,13 +1013,13 @@ block filterWindow
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedAltitudes, visible: selectedAltitudes().length > 0')
 							li(class='alteredFilter')
 								span(data-bind='visible: $index() == 0') Altitud 
-									span(data-bind='visible: predicate == 0') es 
-									span(data-bind='visible: predicate == 1') mayor que 
-									span(data-bind='visible: predicate == 2') menor que 
+									span(data-bind='visible: predicate == "eq"') es 
+									span(data-bind='visible: predicate == "gt"') mayor que 
+									span(data-bind='visible: predicate == "lt"') menor que 
 								span(data-bind='visible: $index() != 0') y 
-									span(data-bind='visible: predicate == 0') es 
-									span(data-bind='visible: predicate == 1') mayor que 
-									span(data-bind='visible: predicate == 2') menor que 
+									span(data-bind='visible: predicate == "eq"') es 
+									span(data-bind='visible: predicate == "gt"') mayor que 
+									span(data-bind='visible: predicate == "lt"') menor que 
 								span(data-bind='text: $parent.parsedHeightText($data)')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeAltitudeNumber($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
@@ -1027,13 +1027,13 @@ block filterWindow
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedDeeps, visible: selectedDeeps().length > 0')
 							li(class='alteredFilter')
 								span(data-bind='visible: $index() == 0') Profundidad 
-									span(data-bind='visible: predicate == 0') es 
-									span(data-bind='visible: predicate == 1') mayor que 
-									span(data-bind='visible: predicate == 2') menor que 
+									span(data-bind='visible: predicate == "eq"') es 
+									span(data-bind='visible: predicate == "gt"') mayor que 
+									span(data-bind='visible: predicate == "lt"') menor que 
 								span(data-bind='visible: $index() != 0') y 
-									span(data-bind='visible: predicate == 0') es 
-									span(data-bind='visible: predicate == 1') mayor que 
-									span(data-bind='visible: predicate == 2') menor que 
+									span(data-bind='visible: predicate == "eq"') es 
+									span(data-bind='visible: predicate == "gt"') mayor que 
+									span(data-bind='visible: predicate == "lt"') menor que 
 								span(data-bind='text: $parent.parsedHeightText($data)')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeDeepNumber($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
@@ -1088,10 +1088,10 @@ block filterWindow
 				#additionalInfoPane.occult-element
 					#downloadResults
 						.downloadItem
-							a(target="_blank", data-bind="visible: totalGeoOccurrences() != 0, attr: { href: urlDownloadSpreadsheetWithURL }")
+							a(target="_blank", data-bind="visible: totalGeoOccurrences() != 0 && totalFilters() != 0, attr: { href: urlDownloadSpreadsheetWithURL }")
 								i(class="icon-download-alt icon-white")
-								span Descargar resultados con coordenadas.
+								span Descargar solo resultados con coordenadas.
 						.downloadItem
-							a(target="_blank", data-bind="attr: { href: urlDownloadSpreadsheet }")
+							a(target="_blank", data-bind="visible: totalGeoOccurrences() != 0 && totalFilters() != 0, attr: { href: urlDownloadSpreadsheet }")
 								i(class="icon-download-alt icon-white")
 								span Descargar todos los resultados.

@@ -1149,7 +1149,8 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                     }
             },
             "location" : {
-                "type" : "geo_point"
+                "type" : "geo_point",
+                "lat_lon": true
             },
             "location_cell" : {
                 "type" : "geo_point"
