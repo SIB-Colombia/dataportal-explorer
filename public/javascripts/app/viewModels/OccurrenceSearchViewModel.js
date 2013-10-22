@@ -1,4 +1,4 @@
-define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map-initialize", "app/models/occurrence", "app/models/resumeInfo", "app/models/resumeCount", "app/models/resumeScientificName", "app/models/resumeKingdomName", "app/models/resumePhylumName", "app/models/resumeClassName", "app/models/resumeOrderName", "app/models/resumeFamilyName", "app/models/resumeGenusName", "app/models/resumeSpecieName", "app/models/resumeDataProvider", "app/models/resumeDataResource", "app/models/resumeInstitutionCode", "app/models/resumeCollectionCode", "app/models/resumeCountry", "app/models/resumeDepartment", "app/models/resumeCounty", "app/models/county", "app/models/coordinate", "app/models/radialCoordinate", "app/models/filterSelected", "select2", "knockoutKendoUI", "Leaflet", "jqueryUI", "bootstrap", "customScrollBar"], function($, ko, _, BaseViewModel, map, Occurrence, ResumeInfo, ResumeCount, ResumeScientificName, ResumeKingdomName, ResumePhylumName, ResumeClassName, ResumeOrderName, ResumeFamilyName, ResumeGenusName, ResumeSpecieName, ResumeDataProvider, ResumeDataResource, ResumeInstitutionCode, ResumeCollectionCode, ResumeCountry, ResumeDepartment, ResumeCounty, County, Coordinate, RadialCoordinate, FilterSelected, select2) {
+define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map-initialize", "app/models/occurrence", "app/models/resumeInfo", "app/models/resumeCount", "app/models/resumeScientificName", "app/models/resumeKingdomName", "app/models/resumePhylumName", "app/models/resumeClassName", "app/models/resumeOrderName", "app/models/resumeFamilyName", "app/models/resumeGenusName", "app/models/resumeSpecieName", "app/models/resumeDataProvider", "app/models/resumeDataResource", "app/models/resumeInstitutionCode", "app/models/resumeCollectionCode", "app/models/resumeCountry", "app/models/resumeDepartment", "app/models/resumeCounty", "app/models/county", "app/models/coordinate", "app/models/radialCoordinate", "app/models/filterSelected", "select2", "knockoutKendoUI", "Leaflet", "jqueryUI", "bootstrap", "customScrollBar", "kendoSpanishCulture"], function($, ko, _, BaseViewModel, map, Occurrence, ResumeInfo, ResumeCount, ResumeScientificName, ResumeKingdomName, ResumePhylumName, ResumeClassName, ResumeOrderName, ResumeFamilyName, ResumeGenusName, ResumeSpecieName, ResumeDataProvider, ResumeDataResource, ResumeInstitutionCode, ResumeCollectionCode, ResumeCountry, ResumeDepartment, ResumeCounty, County, Coordinate, RadialCoordinate, FilterSelected, select2) {
 	var OccurrenceSearchViewModel = function() {
 		var self = this;
 		self.densityCellsOneDegree = new L.FeatureGroup();
@@ -311,6 +311,8 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					}
 				});
 			});
+
+			kendo.culture("es-CO");
 		},
 		loadGridData: function() {
 			var self = this;
@@ -437,26 +439,16 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 
 			function basisOfRecordFilter(element) {
 				var data = [
-					{ text: "Desconocido", value: "desconocido" },
-					{ text: "Espécimen", value: "espécimen" },
-					{ text: "Espécimen Fosilizado", value: "espécimen fosilizado" },
 					{ text: "Espécimen Preservado", value: "espécimen preservado" },
+					{ text: "Espécimen Fosilizado", value: "espécimen fosilizado" },
 					{ text: "Espécimen Vivo", value: "espécimen vivo" },
-					{ text: "Fosil", value: "fosil" },
-					{ text: "Germoplasmo", value: "germoplasmo" },
-					{ text: "Grabación de Sonido", value: "grabación de sonido" },
-					{ text: "Imagen en Movimiento", value: "imagen en movimiento" },
-					{ text: "Imagen Fija", value: "imagen fija" },
-					{ text: "Lista legislativa", value: "lista legislativa" },
-					{ text: "Lista regional", value: "lista regional" },
-					{ text: "Literatura", value: "literatura" },
-					{ text: "Nomenclaturador", value: "nomenclaturador" },
-					{ text: "Observación", value: "observación" },
-					{ text: "Observación con Máquina", value: "observación con máquina" },
 					{ text: "Observación Humana", value: "observación humana" },
+					{ text: "Observación con Máquina", value: "observación con máquina" },
+					{ text: "Imagen Fija", value: "imagen fija" },
+					{ text: "Imagen en Movimiento", value: "imagen en movimiento" },
+					{ text: "Grabación de Sonido", value: "grabación de sonido" },
 					{ text: "Otro Espécimen", value: "otro espécimen" },
-					{ text: "Taxonomía", value: "taxonomía" },
-					{ text: "Viviendo", value: "viviendo" }
+					{ text: "Desconocido", value: "desconocido" }
 				];
 				element.kendoDropDownList({
 					dataTextField: "text",

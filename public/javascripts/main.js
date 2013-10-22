@@ -24,6 +24,7 @@ requirejs.config({
         'customScrollBarMouseWheel': 'custom-scrollbar/jquery.mousewheel.min',
         'kendo': 'kendo/kendo.web.min',
         'kendoGrid': 'kendo/kendo.grid.min',
+        'kendoSpanishCulture': 'kendo/cultures/kendo.culture.es-CO.min',
         'select2': 'select2/select2.min'
     },
     shim: {
@@ -59,6 +60,9 @@ requirejs.config({
         },
         'select2': {
             deps: ['jquery']
+        },
+        'kendoSpanishCulture': {
+            deps: ['kendo']
         }
     }
 });
