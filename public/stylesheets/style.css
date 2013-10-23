@@ -228,7 +228,7 @@ p margin 10px010px0 a:link {
 .sib:after {
   content: "";
   display: block;
-  height: 20px;
+  height: 8px;
   width: 100%;
   background: url("/images/standard/shadow_top_clear.png") no-repeat top center;
   margin-top: 0px;
@@ -1157,7 +1157,7 @@ h4#currentSearch {
 }
 .ribbon-wrapper-green {
   width: 85px;
-  height: 88px;
+  height: 56px;
   overflow: hidden;
   position: absolute;
   top: -3px;
@@ -1228,3 +1228,9 @@ h4#currentSearch {
   margin-bottom: 10px;
 }
 /* End request processing window */
+/* Unselect layers button */
+#unselect_all_layers {
+  margin-bottom: 5px;
+  margin-left: 60px;
+}
+/* End unselect layers button */

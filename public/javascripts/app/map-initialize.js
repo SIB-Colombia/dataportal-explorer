@@ -223,35 +223,6 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 		layers: [googleTerrain]
 	});
 
-	/*var drawControl = new L.Control.Draw({
-		draw: {
-			position: 'topleft',
-			polygon: {
-				title: 'Draw a sexy polygon!',
-				allowIntersection: false,
-				drawError: {
-					color: '#b00b00',
-					timeout: 1000
-				},
-				shapeOptions: {
-					color: '#bada55'
-				},
-				showArea: true
-			},
-			polyline: {
-				metric: false
-			},
-			circle: {
-				shapeOptions: {
-					color: '#662d91'
-				}
-			}
-		},
-		edit: {
-			featureGroup: drawnItems
-		}
-	});*/
-
 	var wmsLayers = {
 		'Invemar: Ecorregiones': invemarEcoregiones,
 		'Invemar: Ecozonas': invemarEcozonas,
@@ -288,7 +259,7 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 		title: 'Mostrar mapa en pantalla completa'
 	}).addTo(map);
 
-	var featureGroup = new L.FeatureGroup().addTo(map);
+	featureGroup = new L.FeatureGroup().addTo(map);
 
 	L.control.scale().addTo(map);
 
@@ -412,11 +383,6 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 			featureGroup: featureGroup
 		}
 	}).addTo(map);
-
-	map.on('draw:created', function(e) {
-		featureGroup.clearLayers();
-		featureGroup.addLayer(e.layer);
-	});
 
 	// Enable floating windows for search floating window
 	$(function() {
