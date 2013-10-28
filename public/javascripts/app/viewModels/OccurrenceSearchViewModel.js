@@ -555,8 +555,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				self.showMapAreaWithSpinner();
 				$("#oneDegree").button('toggle');
 				self.currentActiveDistribution("oneDegree");
-				//$("#oneDegree").button('self');
-				//toggle.currentActiveDistribution("oneDegree");
 				jQuery.extend(self.densityCellsPointOneDegreeCache(),self.densityCellsPointOneDegree());
 			});
 		},
@@ -812,6 +810,9 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				} else if(self.selectedSubject() == 38) {
 					// Adding department filter
 					self.addDepartmentID();
+				} else if(self.selectedSubject() == 39) {
+					// Adding county filter
+					self.addCountyID();
 				} else if(self.selectedSubject() == 1) {
 					// Adding latitude filter
 					self.addLatitudeNumber();
@@ -2795,7 +2796,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		// Add Country filter
 		addCountryID: function() {
 			var self = this;
-			self.selectedCountriesIDs.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: self.selectedCountry(), textName: $("#dropDownCountry").select2('data').text}));
+			self.selectedCountriesIDs.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: $("#dropDownCountry").select2('data').id, textName: $("#dropDownCountry").select2('data').text}));
 			self.totalFilters(self.totalFilters()+1);
 		},
 		addCountryIDFromHelp: function(parent, selectedFilter) {
@@ -2812,7 +2813,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		// Add Department filter
 		addDepartmentID: function() {
 			var self = this;
-			self.selectedDepartmentsIDs.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: self.selectedDepartment(), textName: $("#dropDownDepartment").select2('data').text}));
+			self.selectedDepartmentsIDs.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: $("#dropDownDepartment").select2('data').id, textName: $("#dropDownDepartment").select2('data').text}));
 			self.totalFilters(self.totalFilters()+1);
 		},
 		addDepartmentIDFromHelp: function(parent, selectedFilter) {
@@ -2829,7 +2830,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		// Add County filter
 		addCountyID: function() {
 			var self = this;
-			self.selectedCountiesIDs.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: self.selectedDepartment(), textName: $("#dropDownCounty").select2('data').text}));
+			self.selectedCountiesIDs.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: $("#dropDownCounty").select2('data').id, textName: $("#dropDownCounty").select2('data').text}));
 			self.totalFilters(self.totalFilters()+1);
 		},
 		addCountyIDFromHelp: function(parent, selectedFilter) {
