@@ -411,7 +411,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				},
 				groupable: {
 					messages: {
-						empty: "Arrastre un encabezado de calumna a esta zona para agrupar por dicha columna."
+						empty: "Arrastre un encabezado de columna a esta zona para agrupar por dicha columna."
 					}
 				},
 				columns: [
@@ -513,6 +513,9 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 						self.fillCellDensityOneDegreeData(allData, a);
 					});
 				});
+				self.showMapAreaWithSpinner();
+				$("#oneDegree").button('toggle');
+				self.currentActiveDistribution("oneDegree");
 				jQuery.extend(self.densityCellsOneDegreeCache(),self.densityCellsOneDegree());
 			});
 		},
@@ -552,9 +555,9 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					});
 				});
 				// Show map area
-				self.showMapAreaWithSpinner();
-				$("#oneDegree").button('toggle');
-				self.currentActiveDistribution("oneDegree");
+				//self.showMapAreaWithSpinner();
+				//$("#oneDegree").button('toggle');
+				//self.currentActiveDistribution("oneDegree");
 				jQuery.extend(self.densityCellsPointOneDegreeCache(),self.densityCellsPointOneDegree());
 			});
 		},
