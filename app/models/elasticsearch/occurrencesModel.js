@@ -28,6 +28,60 @@ exports.getCounties = function() {
 	return mySearchCall;
 };
 
+exports.getParamos = function() {
+	qryObj = {
+		"fields": [],
+		"query": {
+			"filtered": {
+				"filter": {
+					"exists": {
+						"field": "paramo_code"
+					}
+				}
+			}
+		},
+		"facets": {
+			"paramos": {
+				"terms": {
+					"field": "paramo_group.untouched",
+					"size": 10000000,
+					"order": "term"
+				}
+			}
+		}
+	};
+
+	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
+	return mySearchCall;
+};
+
+exports.getMarineZones = function() {
+	qryObj = {
+		"fields": [],
+		"query": {
+			"filtered": {
+				"filter": {
+					"exists": {
+						"field": "marine_zone_code"
+					}
+				}
+			}
+		},
+		"facets": {
+			"marinezones": {
+				"terms": {
+					"field": "marine_zone_group.untouched",
+					"size": 10000000,
+					"order": "term"
+				}
+			}
+		}
+	};
+
+	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
+	return mySearchCall;
+};
+
 exports.getOccurrencesResumeName = function(name, type) {
 	qryObj = {
 		"fields": [],
@@ -35,6 +89,12 @@ exports.getOccurrencesResumeName = function(name, type) {
 			"canonical": {
 				"terms": {
 					"field": "canonical.untouched",
+					"size" : 10
+				}
+			},
+			"common": {
+				"terms": {
+					"field": "nombre_comun.untouched",
 					"size" : 10
 				}
 			},
@@ -124,6 +184,44 @@ exports.getOccurrencesResumeName = function(name, type) {
 					"regex_flags" : "CANON_EQ"
 				}
 			},
+			"paramo_group": {
+				"terms": {
+					"field": "paramo_group.untouched",
+					"size": 10,
+					"regex": "[\\D]+~~~[\\D]+",
+					"regex_flags" : "CANON_EQ"
+				}
+			},
+			"marine_zone_group": {
+				"terms": {
+					"field": "marine_zone_group.untouched",
+					"size": 10
+				}
+			},
+			"paramo_name": {
+				"terms": {
+					"field": "paramo_name.untouched",
+					"size" : 10
+				}
+			},
+			"paramo_code": {
+				"terms": {
+					"field": "paramo_code.untouched",
+					"size" : 10
+				}
+			},
+			"marine_zone_name": {
+				"terms": {
+					"field": "marine_zone_name.untouched",
+					"size" : 10
+				}
+			},
+			"marine_zone_code": {
+				"terms": {
+					"field": "marine_zone_code.untouched",
+					"size" : 10
+				}
+			},
 			"data_provider_name": {
 				"terms": {
 					"field": "data_provider_name.untouched",
@@ -181,6 +279,8 @@ exports.getOccurrencesResumeName = function(name, type) {
 	qryObj["query"]["filtered"]["query"]["wildcard"] = {};
 	if(type == "scientific") {
 		qryObj["query"]["filtered"]["query"]["wildcard"]["canonical.exactWords"] = "*"+ name.toLowerCase() +"*";
+	} else if(type == "common") {
+		qryObj["query"]["filtered"]["query"]["wildcard"]["nombre_comun.exactWords"] = "*"+ name.toLowerCase() +"*";
 	} else if(type == "kingdom") {
 		qryObj["query"]["filtered"]["query"]["wildcard"]["kingdom.exactWords"] = "*"+ name.toLowerCase() +"*";
 	} else if(type == "phylum") {
@@ -209,6 +309,10 @@ exports.getOccurrencesResumeName = function(name, type) {
 		qryObj["query"]["filtered"]["query"]["wildcard"]["iso_department_code.exactWords"] = "*"+ name.toLowerCase() +"*";
 	} else if(type == "county") {
 		qryObj["query"]["filtered"]["query"]["wildcard"]["iso_county_code.exactWords"] = "*"+ name.toLowerCase() +"*";
+	} else if(type == "paramo") {
+		qryObj["query"]["filtered"]["query"]["wildcard"]["paramo_code.exactWords"] = "*"+ name.toLowerCase() +"*";
+	} else if(type == "marineZone") {
+		qryObj["query"]["filtered"]["query"]["wildcard"]["marine_zone_code.exactWords"] = "*"+ name.toLowerCase() +"*";
 	}
 
 	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
@@ -233,7 +337,7 @@ exports.getSearchText = function(subjectID) {
 
 exports.getOccurrences = function() {
 	qryObj = {
-		"fields": ["id", "canonical", "data_resource_name", "institution_code", "collection_code", "catalogue_number", "occurrence_date", "modified", "location", "country_name", "department_name", "county_name", "basis_of_record_name_spanish"],
+		"fields": ["id", "canonical", "nombre_comun", "data_resource_name", "institution_code", "collection_code", "catalogue_number", "occurrence_date", "modified", "location", "country_name", "department_name", "county_name", "paramo_name", "marine_zone_name", "basis_of_record_name_spanish"],
 		"from": 0,
 		"size" : 20,
 		"sort": [ { "canonical.untouched": "asc" } ],
@@ -373,6 +477,12 @@ exports.getDistributionStatsOneDegree = function(cellid) {
 					"size" : 10
 				}
 			},
+			"common": {
+				"terms": {
+					"field": "nombre_comun.untouched",
+					"size" : 10
+				}
+			},
 			"kingdom": {
 				"terms": {
 					"field": "kingdom_group.untouched",
@@ -442,6 +552,18 @@ exports.getDistributionStatsOneDegree = function(cellid) {
 			"county_name": {
 				"terms": {
 					"field": "county_name.untouched",
+					"size" : 10
+				}
+			},
+			"paramo_name": {
+				"terms": {
+					"field": "paramo_name.untouched",
+					"size" : 10
+				}
+			},
+			"marine_zone_name": {
+				"terms": {
+					"field": "marine_zone_name.untouched",
 					"size" : 10
 				}
 			}
@@ -481,6 +603,12 @@ exports.getDistributionStatsWithSearchOneDegree = function(conditions) {
 					"size" : 10
 				}
 			},
+			"common": {
+				"terms": {
+					"field": "nombre_comun.untouched",
+					"size" : 10
+				}
+			},
 			"kingdom": {
 				"terms": {
 					"field": "kingdom_group.untouched",
@@ -552,6 +680,18 @@ exports.getDistributionStatsWithSearchOneDegree = function(conditions) {
 					"field": "county_name.untouched",
 					"size" : 10
 				}
+			},
+			"paramo_name": {
+				"terms": {
+					"field": "paramo_name.untouched",
+					"size" : 10
+				}
+			},
+			"marine_zone_name": {
+				"terms": {
+					"field": "marine_zone_name.untouched",
+					"size" : 10
+				}
 			}
 		}
 	};
@@ -567,6 +707,18 @@ exports.getDistributionStatsWithSearchOneDegree = function(conditions) {
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["canonical.exactWords"] = data.textObject.toLowerCase();
+			orCounter+=1;
+		});
+		andCounter+=1;
+	}
+	if(conditions.commonNames) {
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
+		_.each(conditions.commonNames, function(data) {
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["nombre_comun.exactWords"] = data.textObject.toLowerCase();
 			orCounter+=1;
 		});
 		andCounter+=1;
@@ -632,6 +784,32 @@ exports.getDistributionStatsWithSearchOneDegree = function(conditions) {
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["iso_county_code.exactWords"] = data.textObject.toLowerCase();
+			orCounter+=1;
+		});
+		andCounter+=1;
+	}
+	if(conditions.paramos) {
+		orCounter = 0;
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
+		_.each(conditions.paramos, function(data) {
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["paramo_code.exactWords"] = data.textObject.toLowerCase();
+			orCounter+=1;
+		});
+		andCounter+=1;
+	}
+	if(conditions.marineZones) {
+		orCounter = 0;
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
+		_.each(conditions.marineZones, function(data) {
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["marine_zone_code.exactWords"] = data.textObject.toLowerCase();
 			orCounter+=1;
 		});
 		andCounter+=1;
@@ -823,6 +1001,12 @@ exports.getDistributionStatsPointFiveDegree = function(cellid, pointfivecellid) 
 					"size" : 10
 				}
 			},
+			"common": {
+				"terms": {
+					"field": "nombre_comun.untouched",
+					"size" : 10
+				}
+			},
 			"kingdom": {
 				"terms": {
 					"field": "kingdom_group.untouched",
@@ -892,6 +1076,18 @@ exports.getDistributionStatsPointFiveDegree = function(cellid, pointfivecellid) 
 			"county_name": {
 				"terms": {
 					"field": "county_name.untouched",
+					"size" : 10
+				}
+			},
+			"paramo_name": {
+				"terms": {
+					"field": "paramo_name.untouched",
+					"size" : 10
+				}
+			},
+			"marine_zone_name": {
+				"terms": {
+					"field": "marine_zone_name.untouched",
 					"size" : 10
 				}
 			}
@@ -945,6 +1141,12 @@ exports.getDistributionStatsWithSearchPointFiveDegree = function(conditions) {
 					"size" : 10
 				}
 			},
+			"common": {
+				"terms": {
+					"field": "nombre_comun.untouched",
+					"size" : 10
+				}
+			},
 			"kingdom": {
 				"terms": {
 					"field": "kingdom_group.untouched",
@@ -1016,6 +1218,18 @@ exports.getDistributionStatsWithSearchPointFiveDegree = function(conditions) {
 					"field": "county_name.untouched",
 					"size" : 10
 				}
+			},
+			"paramo_name": {
+				"terms": {
+					"field": "paramo_name.untouched",
+					"size" : 10
+				}
+			},
+			"marine_zone_name": {
+				"terms": {
+					"field": "marine_zone_name.untouched",
+					"size" : 10
+				}
 			}
 		}
 	};
@@ -1031,6 +1245,18 @@ exports.getDistributionStatsWithSearchPointFiveDegree = function(conditions) {
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["canonical.exactWords"] = data.textObject.toLowerCase();
+			orCounter+=1;
+		});
+		andCounter+=1;
+	}
+	if(conditions.commonNames) {
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
+		_.each(conditions.commonNames, function(data) {
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["nombre_comun.exactWords"] = data.textObject.toLowerCase();
 			orCounter+=1;
 		});
 		andCounter+=1;
@@ -1096,6 +1322,32 @@ exports.getDistributionStatsWithSearchPointFiveDegree = function(conditions) {
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["iso_county_code.exactWords"] = data.textObject.toLowerCase();
+			orCounter+=1;
+		});
+		andCounter+=1;
+	}
+	if(conditions.paramos) {
+		orCounter = 0;
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
+		_.each(conditions.paramos, function(data) {
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["paramo_code.exactWords"] = data.textObject.toLowerCase();
+			orCounter+=1;
+		});
+		andCounter+=1;
+	}
+	if(conditions.marineZones) {
+		orCounter = 0;
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
+		_.each(conditions.marineZones, function(data) {
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["marine_zone_code.exactWords"] = data.textObject.toLowerCase();
 			orCounter+=1;
 		});
 		andCounter+=1;
@@ -1293,6 +1545,12 @@ exports.getDistributionStatsPointOneDegree = function(cellid, centicellid) {
 					"size" : 10
 				}
 			},
+			"common": {
+				"terms": {
+					"field": "nombre_comun.untouched",
+					"size" : 10
+				}
+			},
 			"kingdom": {
 				"terms": {
 					"field": "kingdom_group.untouched",
@@ -1362,6 +1620,18 @@ exports.getDistributionStatsPointOneDegree = function(cellid, centicellid) {
 			"county_name": {
 				"terms": {
 					"field": "county_name.untouched",
+					"size" : 10
+				}
+			},
+			"paramo_name": {
+				"terms": {
+					"field": "paramo_name.untouched",
+					"size" : 10
+				}
+			},
+			"marine_zone_name": {
+				"terms": {
+					"field": "marine_zone_name.untouched",
 					"size" : 10
 				}
 			}
@@ -1415,6 +1685,12 @@ exports.getDistributionStatsWithSearchPointOneDegree = function(conditions) {
 					"size" : 10
 				}
 			},
+			"common": {
+				"terms": {
+					"field": "nombre_comun.untouched",
+					"size" : 10
+				}
+			},
 			"kingdom": {
 				"terms": {
 					"field": "kingdom_group.untouched",
@@ -1486,6 +1762,18 @@ exports.getDistributionStatsWithSearchPointOneDegree = function(conditions) {
 					"field": "county_name.untouched",
 					"size" : 10
 				}
+			},
+			"paramo_name": {
+				"terms": {
+					"field": "paramo_name.untouched",
+					"size" : 10
+				}
+			},
+			"marine_zone_name": {
+				"terms": {
+					"field": "marine_zone_name.untouched",
+					"size" : 10
+				}
 			}
 		}
 	};
@@ -1501,6 +1789,18 @@ exports.getDistributionStatsWithSearchPointOneDegree = function(conditions) {
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["canonical.exactWords"] = data.textObject.toLowerCase();
+			orCounter+=1;
+		});
+		andCounter+=1;
+	}
+	if(conditions.commonNames) {
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
+		_.each(conditions.commonNames, function(data) {
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["nombre_comun.exactWords"] = data.textObject.toLowerCase();
 			orCounter+=1;
 		});
 		andCounter+=1;
@@ -1566,6 +1866,32 @@ exports.getDistributionStatsWithSearchPointOneDegree = function(conditions) {
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["iso_county_code.exactWords"] = data.textObject.toLowerCase();
+			orCounter+=1;
+		});
+		andCounter+=1;
+	}
+	if(conditions.paramos) {
+		orCounter = 0;
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
+		_.each(conditions.paramos, function(data) {
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["paramo_code.exactWords"] = data.textObject.toLowerCase();
+			orCounter+=1;
+		});
+		andCounter+=1;
+	}
+	if(conditions.marineZones) {
+		orCounter = 0;
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
+		_.each(conditions.marineZones, function(data) {
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["marine_zone_code.exactWords"] = data.textObject.toLowerCase();
 			orCounter+=1;
 		});
 		andCounter+=1;
@@ -1763,6 +2089,12 @@ exports.getDistributionStatsPointTwoDegree = function(cellid, pointtwocellid) {
 					"size" : 10
 				}
 			},
+			"common": {
+				"terms": {
+					"field": "nombre_comun.untouched",
+					"size" : 10
+				}
+			},
 			"kingdom": {
 				"terms": {
 					"field": "kingdom_group.untouched",
@@ -1832,6 +2164,18 @@ exports.getDistributionStatsPointTwoDegree = function(cellid, pointtwocellid) {
 			"county_name": {
 				"terms": {
 					"field": "county_name.untouched",
+					"size" : 10
+				}
+			},
+			"paramo_name": {
+				"terms": {
+					"field": "paramo_name.untouched",
+					"size" : 10
+				}
+			},
+			"marine_zone_name": {
+				"terms": {
+					"field": "marine_zone_name.untouched",
 					"size" : 10
 				}
 			}
@@ -1885,6 +2229,12 @@ exports.getDistributionStatsWithSearchPointTwoDegree = function(conditions) {
 					"size" : 10
 				}
 			},
+			"common": {
+				"terms": {
+					"field": "nombre_comun.untouched",
+					"size" : 10
+				}
+			},
 			"kingdom": {
 				"terms": {
 					"field": "kingdom_group.untouched",
@@ -1956,6 +2306,18 @@ exports.getDistributionStatsWithSearchPointTwoDegree = function(conditions) {
 					"field": "county_name.untouched",
 					"size" : 10
 				}
+			},
+			"paramo_name": {
+				"terms": {
+					"field": "paramo_name.untouched",
+					"size" : 10
+				}
+			},
+			"marine_zone_name": {
+				"terms": {
+					"field": "marine_zone_name.untouched",
+					"size" : 10
+				}
 			}
 		}
 	};
@@ -1971,6 +2333,18 @@ exports.getDistributionStatsWithSearchPointTwoDegree = function(conditions) {
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["canonical.exactWords"] = data.textObject.toLowerCase();
+			orCounter+=1;
+		});
+		andCounter+=1;
+	}
+	if(conditions.commonNames) {
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
+		_.each(conditions.commonNames, function(data) {
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["nombre_comun.exactWords"] = data.textObject.toLowerCase();
 			orCounter+=1;
 		});
 		andCounter+=1;
@@ -2036,6 +2410,32 @@ exports.getDistributionStatsWithSearchPointTwoDegree = function(conditions) {
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["iso_county_code.exactWords"] = data.textObject.toLowerCase();
+			orCounter+=1;
+		});
+		andCounter+=1;
+	}
+	if(conditions.paramos) {
+		orCounter = 0;
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
+		_.each(conditions.paramos, function(data) {
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["paramo_code.exactWords"] = data.textObject.toLowerCase();
+			orCounter+=1;
+		});
+		andCounter+=1;
+	}
+	if(conditions.marineZones) {
+		orCounter = 0;
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
+		_.each(conditions.marineZones, function(data) {
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["marine_zone_code.exactWords"] = data.textObject.toLowerCase();
 			orCounter+=1;
 		});
 		andCounter+=1;
@@ -2269,6 +2669,18 @@ exports.getDistributionWithFilter = function(conditions) {
 		});
 		andCounter+=1;
 	}
+	if(conditions.commonNames) {
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
+		_.each(conditions.commonNames, function(data) {
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["nombre_comun.exactWords"] = data.textObject.toLowerCase();
+			orCounter+=1;
+		});
+		andCounter+=1;
+	}
 	if(conditions.taxons) {
 		orCounter = 0;
 		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
@@ -2330,6 +2742,32 @@ exports.getDistributionWithFilter = function(conditions) {
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["iso_county_code.exactWords"] = data.textObject.toLowerCase();
+			orCounter+=1;
+		});
+		andCounter+=1;
+	}
+	if(conditions.paramos) {
+		orCounter = 0;
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
+		_.each(conditions.paramos, function(data) {
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["paramo_code.exactWords"] = data.textObject.toLowerCase();
+			orCounter+=1;
+		});
+		andCounter+=1;
+	}
+	if(conditions.marineZones) {
+		orCounter = 0;
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
+		_.each(conditions.marineZones, function(data) {
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["marine_zone_code.exactWords"] = data.textObject.toLowerCase();
 			orCounter+=1;
 		});
 		andCounter+=1;
@@ -2504,7 +2942,7 @@ exports.getOccurrencesWithFilter = function(conditions) {
 	  , logic2;
 	var haveQuery = false;
 	var countFilter = 0;
-	qryObj["fields"] = ["id", "canonical", "data_resource_name", "institution_code", "collection_code", "catalogue_number", "occurrence_date", "modified", "location", "country_name", "department_name", "basis_of_record_name_spanish"];
+	qryObj["fields"] = ["id", "canonical", "nombre_comun", "data_resource_name", "institution_code", "collection_code", "catalogue_number", "occurrence_date", "modified", "location", "country_name", "department_name", "basis_of_record_name_spanish"];
 	
 	if((typeof conditions.filter != 'undefined') && (typeof conditions.filter.filters != 'undefined')) {
 		qryObj["query"] = {};
@@ -2908,6 +3346,13 @@ exports.geoJsonMapPoints = function(parameters) {
 		andCounter+=1;
 	}
 
+	if(parameters.commonname) {
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["wildcard"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["wildcard"]["nombre_comun.exactWords"] = parameters.commonname.toLowerCase();
+		andCounter+=1;
+	}
+
 	if(parameters.dataproviderkey) {
 		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
 		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["term"] = {};
@@ -2947,6 +3392,20 @@ exports.geoJsonMapPoints = function(parameters) {
 		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
 		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["wildcard"] = {};
 		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["wildcard"]["iso_county_code.exactWords"] = parameters.originisocountycode.toLowerCase();
+		andCounter+=1;
+	}
+
+	if(parameters.originparamocode) {
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["wildcard"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["wildcard"]["paramo_code.exactWords"] = parameters.originparamocode.toLowerCase();
+		andCounter+=1;
+	}
+
+	if(parameters.originmarinezonecode) {
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["wildcard"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["wildcard"]["marine_zone_code.exactWords"] = parameters.originmarinezonecode.toLowerCase();
 		andCounter+=1;
 	}
 

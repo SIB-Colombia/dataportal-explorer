@@ -1,101 +1,114 @@
 -- ----------------------------
 SET character_set_client = utf8;
 
+UPDATE marine_zone set description="Cayo Bajo Nuevo, 15° 51' 0'' N, 78° 38' 0'' W" where description="Cayo Bajo Nuevo";
+UPDATE marine_zone set description="Cayo Serranilla, 15° 47' 50'' N, 79° 51' 20'' W" where description="Cayo Serranilla";
+UPDATE marine_zone set description="Revisar límites" where description="Revisar limites";
+UPDATE marine_zone set description="Mar Caribe" where description="Mar Caibe";
+UPDATE marine_zone set description="Océano Pacífico" where description="Oceano Pacifico";
+UPDATE marine_zone set description="Área de régimen común" where description="Area de regimen comun";
+
 -- Table structure for `geo_occurrence_record_denormalized`
 -- ----------------------------
-select concat('Deleting geo_occurrence_record_denormalized table: ', now()) as debug;
-DROP TABLE IF EXISTS `geo_occurrence_record_denormalized`;
+-- select concat('Deleting geo_occurrence_record_denormalized table: ', now()) as debug;
+-- DROP TABLE IF EXISTS `geo_occurrence_record_denormalized`;
 
-select concat('Creating geo occurrence records denormalized, table geo_occurrence_record_denormalized: ', now()) as debug;
-CREATE TABLE geo_occurrence_record_denormalized
-AS (SELECT
-occurrence_record.id,
-taxon_name.canonical,
-Count(*) AS num_occurrences,
-occurrence_record.latitude,
-occurrence_record.longitude,
-occurrence_record.cell_id,
-occurrence_record.centi_cell_id,
-occurrence_record.pointfive_cell_id,
-occurrence_record.pointtwo_cell_id,
-occurrence_record.mod360_cell_id,
-occurrence_record.data_provider_id,
-data_provider.`name` AS data_provider_name,
-occurrence_record.data_resource_id,
-data_resource.`name` AS data_resource_name,
-data_resource.rights,
-occurrence_record.institution_code_id,
-institution_code.`code` AS institution_code,
-occurrence_record.collection_code_id,
-collection_code.`code` AS collection_code,
-occurrence_record.catalogue_number_id,
-catalogue_number.`code` AS catalogue_number,
-data_resource.citation,
-data_resource.created,
-data_resource.modified,
-taxon_concept_phylum.partner_concept_id AS phylum_concept_id,
-taxon_concept_kingdom.partner_concept_id AS kingdom_concept_id,
-taxon_concept_class.partner_concept_id AS class_concept_id,
-taxon_concept_order.partner_concept_id AS order_concept_id,
-taxon_concept_family.partner_concept_id AS family_concept_id,
-taxon_concept_genus.partner_concept_id AS genus_concept_id,
-taxon_concept_species.partner_concept_id AS species_concept_id,
-occurrence_record.iso_country_code,
-country_name.`name` AS country_name,
-occurrence_record.iso_department_code,
-department.department_name AS department_name,
-occurrence_record.iso_county_code,
-county.county_name AS county_name,
-occurrence_record.basis_of_record AS basis_of_record_id,
-lookup_basis_of_record.br_value AS basis_of_record_name,
-occurrence_record.`year`,
-occurrence_record.`month`,
-occurrence_record.occurrence_date,
-occurrence_record.altitude_metres,
-occurrence_record.depth_centimetres
-FROM
-occurrence_record
-INNER JOIN taxon_name ON occurrence_record.taxon_name_id = taxon_name.id
-INNER JOIN data_provider ON occurrence_record.data_provider_id = data_provider.id
-INNER JOIN data_resource ON occurrence_record.data_resource_id = data_resource.id
-INNER JOIN institution_code ON occurrence_record.institution_code_id = institution_code.id
-INNER JOIN collection_code ON occurrence_record.collection_code_id = collection_code.id
-INNER JOIN catalogue_number ON occurrence_record.catalogue_number_id = catalogue_number.id
-INNER JOIN lookup_basis_of_record ON occurrence_record.basis_of_record = lookup_basis_of_record.br_key
-LEFT JOIN taxon_concept ON occurrence_record.taxon_concept_id = taxon_concept.id
-LEFT JOIN taxon_concept AS taxon_concept_phylum ON taxon_concept.phylum_concept_id = taxon_concept_phylum.id
-LEFT JOIN taxon_concept AS taxon_concept_kingdom ON taxon_concept.kingdom_concept_id = taxon_concept_kingdom.id
-LEFT JOIN taxon_concept AS taxon_concept_class ON taxon_concept.class_concept_id = taxon_concept_class.id
-LEFT JOIN taxon_concept AS taxon_concept_order ON taxon_concept.order_concept_id = taxon_concept_order.id
-LEFT JOIN taxon_concept AS taxon_concept_family ON taxon_concept.family_concept_id = taxon_concept_family.id
-LEFT JOIN taxon_concept AS taxon_concept_genus ON taxon_concept.genus_concept_id = taxon_concept_genus.id
-LEFT JOIN taxon_concept AS taxon_concept_species ON taxon_concept.species_concept_id = taxon_concept_species.id
-LEFT JOIN country_name ON occurrence_record.iso_country_code = country_name.iso_country_code
-LEFT JOIN department ON occurrence_record.iso_department_code = department.iso_department_code
-LEFT JOIN county ON occurrence_record.iso_county_code = county.iso_county_code
-WHERE
-occurrence_record.centi_cell_id is not null AND
-occurrence_record.geospatial_issue=0 AND
-occurrence_record.deleted IS NULL
-GROUP BY
-occurrence_record.taxon_name_id,
-occurrence_record.latitude,
-occurrence_record.longitude,
-occurrence_record.cell_id,
-occurrence_record.centi_cell_id,
-occurrence_record.pointfive_cell_id,
-occurrence_record.pointtwo_cell_id,
-occurrence_record.mod360_cell_id,
-occurrence_record.kingdom_concept_id,
-occurrence_record.phylum_concept_id,
-occurrence_record.class_concept_id,
-occurrence_record.order_concept_id,
-occurrence_record.family_concept_id,
-occurrence_record.genus_concept_id,
-occurrence_record.species_concept_id);
+-- select concat('Creating geo occurrence records denormalized, table geo_occurrence_record_denormalized: ', now()) as debug;
+-- CREATE TABLE geo_occurrence_record_denormalized
+-- AS (SELECT
+-- occurrence_record.id,
+-- taxon_name.canonical,
+-- Count(*) AS num_occurrences,
+-- occurrence_record.latitude,
+-- occurrence_record.longitude,
+-- occurrence_record.cell_id,
+-- occurrence_record.centi_cell_id,
+-- occurrence_record.pointfive_cell_id,
+-- occurrence_record.pointtwo_cell_id,
+-- occurrence_record.mod360_cell_id,
+-- occurrence_record.data_provider_id,
+-- data_provider.`name` AS data_provider_name,
+-- occurrence_record.data_resource_id,
+-- data_resource.`name` AS data_resource_name,
+-- data_resource.rights,
+-- occurrence_record.institution_code_id,
+-- institution_code.`code` AS institution_code,
+-- occurrence_record.collection_code_id,
+-- collection_code.`code` AS collection_code,
+-- occurrence_record.catalogue_number_id,
+-- catalogue_number.`code` AS catalogue_number,
+-- data_resource.citation,
+-- data_resource.created,
+-- data_resource.modified,
+-- taxon_concept_phylum.partner_concept_id AS phylum_concept_id,
+-- taxon_concept_kingdom.partner_concept_id AS kingdom_concept_id,
+-- taxon_concept_class.partner_concept_id AS class_concept_id,
+-- taxon_concept_order.partner_concept_id AS order_concept_id,
+-- taxon_concept_family.partner_concept_id AS family_concept_id,
+-- taxon_concept_genus.partner_concept_id AS genus_concept_id,
+-- taxon_concept_species.partner_concept_id AS species_concept_id,
+-- occurrence_record.iso_country_code,
+-- country_name.`name` AS country_name,
+-- occurrence_record.iso_department_code,
+-- department.department_name AS department_name,
+-- paramo.complex AS paramo_name,
+-- marine_zone.description AS marine_zone_name,
+-- occurrence_record.iso_county_code,
+-- occurrence_record.paramo AS paramo_code,
+-- occurrence_record.marine_zone AS marine_zone_code,
+-- county.county_name AS county_name,
+-- occurrence_record.basis_of_record AS basis_of_record_id,
+-- lookup_basis_of_record.br_value AS basis_of_record_name,
+-- occurrence_record.`year`,
+-- occurrence_record.`month`,
+-- occurrence_record.occurrence_date,
+-- occurrence_record.altitude_metres,
+-- occurrence_record.depth_centimetres
+-- FROM
+-- occurrence_record
+-- INNER JOIN taxon_name ON occurrence_record.taxon_name_id = taxon_name.id
+-- INNER JOIN data_provider ON occurrence_record.data_provider_id = data_provider.id
+-- INNER JOIN data_resource ON occurrence_record.data_resource_id = data_resource.id
+-- INNER JOIN institution_code ON occurrence_record.institution_code_id = institution_code.id
+-- INNER JOIN collection_code ON occurrence_record.collection_code_id = collection_code.id
+-- INNER JOIN catalogue_number ON occurrence_record.catalogue_number_id = catalogue_number.id
+-- INNER JOIN lookup_basis_of_record ON occurrence_record.basis_of_record = lookup_basis_of_record.br_key
+-- LEFT JOIN taxon_concept ON occurrence_record.taxon_concept_id = taxon_concept.id
+-- LEFT JOIN taxon_concept AS taxon_concept_phylum ON taxon_concept.phylum_concept_id = taxon_concept_phylum.id
+-- LEFT JOIN taxon_concept AS taxon_concept_kingdom ON taxon_concept.kingdom_concept_id = taxon_concept_kingdom.id
+-- LEFT JOIN taxon_concept AS taxon_concept_class ON taxon_concept.class_concept_id = taxon_concept_class.id
+-- LEFT JOIN taxon_concept AS taxon_concept_order ON taxon_concept.order_concept_id = taxon_concept_order.id
+-- LEFT JOIN taxon_concept AS taxon_concept_family ON taxon_concept.family_concept_id = taxon_concept_family.id
+-- LEFT JOIN taxon_concept AS taxon_concept_genus ON taxon_concept.genus_concept_id = taxon_concept_genus.id
+-- LEFT JOIN taxon_concept AS taxon_concept_species ON taxon_concept.species_concept_id = taxon_concept_species.id
+-- LEFT JOIN country_name ON occurrence_record.iso_country_code = country_name.iso_country_code
+-- LEFT JOIN department ON occurrence_record.iso_department_code = department.iso_department_code
+-- LEFT JOIN county ON occurrence_record.iso_county_code = county.iso_county_code
+-- LEFT JOIN paramo ON occurrence_record.paramo = paramo.complex_id
+-- LEFT JOIN marine_zone ON occurrence_record.marine_zone = marine_zone.mask
+-- WHERE
+-- occurrence_record.centi_cell_id is not null AND
+-- occurrence_record.geospatial_issue=0 AND
+-- occurrence_record.deleted IS NULL
+-- GROUP BY
+-- occurrence_record.taxon_name_id,
+-- occurrence_record.latitude,
+-- occurrence_record.longitude,
+-- occurrence_record.cell_id,
+-- occurrence_record.centi_cell_id,
+-- occurrence_record.pointfive_cell_id,
+-- occurrence_record.pointtwo_cell_id,
+-- occurrence_record.mod360_cell_id,
+-- occurrence_record.kingdom_concept_id,
+-- occurrence_record.phylum_concept_id,
+-- occurrence_record.class_concept_id,
+-- occurrence_record.order_concept_id,
+-- occurrence_record.family_concept_id,
+-- occurrence_record.genus_concept_id,
+-- occurrence_record.species_concept_id);
 
-select concat('Including primary key in table geo_occurrence_record_denormalized: ', now()) as debug;
-alter table geo_occurrence_record_denormalized add primary key(id);
+-- select concat('Including primary key in table geo_occurrence_record_denormalized: ', now()) as debug;
+-- alter table geo_occurrence_record_denormalized add primary key(id);
 
 -- ----------------------------
 -- Table structure for `occurrence_record_denormalized`
@@ -132,6 +145,8 @@ data_resource.created,
 data_resource.modified,
 department.department_name AS department_name,
 county.county_name AS county_name,
+paramo.complex AS paramo_name,
+marine_zone.description AS marine_zone_name,
 taxon_concept_phylum.partner_concept_id AS phylum_concept_id,
 taxon_name_phylum.canonical AS phylum,
 taxon_concept_kingdom.partner_concept_id AS kingdom_concept_id,
@@ -149,13 +164,16 @@ taxon_name_species.canonical AS species,
 occurrence_record.iso_country_code,
 occurrence_record.iso_department_code,
 occurrence_record.iso_county_code,
+occurrence_record.paramo AS paramo_code,
+occurrence_record.marine_zone AS marine_zone_code,
 occurrence_record.basis_of_record AS basis_of_record_id,
 lookup_basis_of_record.`br_value` AS basis_of_record_name,
 occurrence_record.`year`,
 occurrence_record.`month`,
 occurrence_record.occurrence_date,
 occurrence_record.altitude_metres,
-occurrence_record.depth_centimetres
+occurrence_record.depth_centimetres,
+common_name.`name` AS nombre_comun
 FROM
 occurrence_record
 INNER JOIN taxon_name ON occurrence_record.taxon_name_id = taxon_name.id
@@ -164,9 +182,11 @@ INNER JOIN data_resource ON occurrence_record.data_resource_id = data_resource.i
 INNER JOIN institution_code ON occurrence_record.institution_code_id = institution_code.id
 INNER JOIN collection_code ON occurrence_record.collection_code_id = collection_code.id
 INNER JOIN catalogue_number ON occurrence_record.catalogue_number_id = catalogue_number.id
-INNER JOIN lookup_basis_of_record ON occurrence_record.basis_of_record = lookup_basis_of_record.br_key
+LEFT JOIN lookup_basis_of_record ON occurrence_record.basis_of_record = lookup_basis_of_record.br_key
 LEFT JOIN department ON occurrence_record.iso_department_code = department.iso_department_code
 LEFT JOIN county ON occurrence_record.iso_county_code = county.iso_county_code
+LEFT JOIN paramo ON occurrence_record.paramo = paramo.complex_id
+LEFT JOIN marine_zone ON occurrence_record.marine_zone = marine_zone.mask
 LEFT JOIN taxon_concept ON occurrence_record.taxon_concept_id = taxon_concept.id
 LEFT JOIN taxon_concept AS taxon_concept_phylum ON taxon_concept.phylum_concept_id = taxon_concept_phylum.id
 LEFT JOIN taxon_name AS taxon_name_phylum ON taxon_concept_phylum.taxon_name_id = taxon_name_phylum.id
@@ -182,6 +202,7 @@ LEFT JOIN taxon_concept AS taxon_concept_genus ON taxon_concept.genus_concept_id
 LEFT JOIN taxon_name AS taxon_name_genus ON taxon_concept_genus.taxon_name_id = taxon_name_genus.id
 LEFT JOIN taxon_concept AS taxon_concept_species ON taxon_concept.species_concept_id = taxon_concept_species.id
 LEFT JOIN taxon_name AS taxon_name_species ON taxon_concept_species.taxon_name_id = taxon_name_species.id
+LEFT JOIN common_name ON taxon_concept.partner_concept_id = common_name.taxon_concept_id
 WHERE
 occurrence_record.deleted IS NULL);
 

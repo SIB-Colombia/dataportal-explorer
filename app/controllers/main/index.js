@@ -189,7 +189,7 @@ exports.convertFromMysqlToMongoDB = function(req, res) {
 	c.connect({
 		host: '127.0.0.1',
 		user: 'root',
-		password: 'h4s1p8k2',
+		password: 'h4s1p8k21078!',
 		db: 'dataportal'
 	});
 
@@ -203,7 +203,7 @@ exports.convertFromMysqlToMongoDB = function(req, res) {
 		logger.info('Client closed');
 	});
 
-	/*c.query('SELECT * FROM occurrence_record order by id limit 100000 offset 1400000')
+	/*c.query('SELECT * FROM occurrence_record order by id limit 100000 offset 1600000')
 		.on('result', function(result) {
 			result.on('row', function(row) {
 				var pointFiveCell = null;
@@ -225,7 +225,7 @@ exports.convertFromMysqlToMongoDB = function(req, res) {
 			logger.info('Done with all results');
 		});*/
 
-	MongoClient.connect('mongodb://localhost/sibexplorer_dev', function(error, db) {
+	/*MongoClient.connect('mongodb://localhost/sibexplorer_dev', function(error, db) {
 		if (error) console.info(error);
 		db.createCollection("occurrences", function(err, collection) {
 			c.query('SELECT * FROM occurrence_record_denormalized order by id limit 100000 offset 1400000')
@@ -248,7 +248,9 @@ exports.convertFromMysqlToMongoDB = function(req, res) {
 						var pointtwo_group = row.cell_id + "~~~" + row.pointtwo_cell_id + "~~~" + locationPointTwoCellId.lat + "~~~" + locationPointTwoCellId.lon;
 						var centi_group = row.cell_id + "~~~" + row.centi_cell_id + "~~~" + locationCentiCellId.lat + "~~~" + locationCentiCellId.lon;
 						var county_group = row.department_name + "~~~" + row.county_name + "~~~" + row.iso_county_code;
-						var document = {id:row.id, canonical:row.canonical, location: {lat: row.latitude, lon: row.longitude}, cell_id: row.cell_id, centi_cell_id: row.centi_cell_id, pointfive_cell_id: row.pointfive_cell_id, pointtwo_cell_id: row.pointtwo_cell_id, mod360_cell_id: row.mod360_cell_id, location_cell: locationCellId, location_centi_cell: locationCentiCellId, location_pointfive_cell: locationPointFiveCellId, location_pointtwo_cell: locationPointTwoCellId, data_provider_id: row.data_provider_id, data_provider_name: row.data_provider_name, data_resource_id: row.data_resource_id, data_resource_name: row.data_resource_name, rights: row.rights, institution_code_id: row.institution_code_id, institution_code: row.institution_code, collection_code_id: row.collection_code_id, collection_code: row.collection_code, catalogue_number_id: row.catalogue_number_id, catalogue_number: row.catalogue_number, citation: row.citation, created: row.created, modified: row.modified, kingdom_concept_id: row.kingdom_concept_id, phylum_concept_id: row.phylum_concept_id,class_concept_id: row.class_concept_id, order_concept_id: row.order_concept_id, family_concept_id: row.family_concept_id, genus_concept_id: row.genus_concept_id, species_concept_id: row.species_concept_id, iso_country_code: row.iso_country_code, iso_department_code: row.iso_department_code, iso_county_code: row.iso_county_code, year: row.year, month: row.month, occurrence_date: row.occurrence_date, altitude_metres: row.altitude_metres, depth_centimetres: row.depth_centimetres, kingdom: row.kingdom, phylum: row.phylum, taxonClass: row.class, order_rank: row.order_rank, family: row.family, genus: row.genus, species: row.species, country_name: row.country_name, department_name: row.department_name, county_name: row.county_name, basis_of_record_id: row.basis_of_record_id, basis_of_record_name: row.basis_of_record_name, basis_of_record_name_spanish: row.basis_of_record_name_spanish, kingdom_group: kingdom_group, phylum_group: phylum_group, taxonClass_group: taxonClass_group, order_rank_group: order_rank_group, family_group: family_group, genus_group: genus_group, species_group: species_group, cell_group: cell_group, pointfive_group: pointfive_group, pointtwo_group: pointtwo_group, centi_group: centi_group, county_group: county_group};
+						var paramo_group = row.paramo_name + "~~~" + row.paramo_code;
+						var marine_zone_group = row.marine_zone_name + "~~~" + row.marine_zone_code;
+						var document = {id:row.id, canonical:row.canonical, location: {lat: row.latitude, lon: row.longitude}, cell_id: row.cell_id, centi_cell_id: row.centi_cell_id, pointfive_cell_id: row.pointfive_cell_id, pointtwo_cell_id: row.pointtwo_cell_id, mod360_cell_id: row.mod360_cell_id, location_cell: locationCellId, location_centi_cell: locationCentiCellId, location_pointfive_cell: locationPointFiveCellId, location_pointtwo_cell: locationPointTwoCellId, data_provider_id: row.data_provider_id, data_provider_name: row.data_provider_name, data_resource_id: row.data_resource_id, data_resource_name: row.data_resource_name, rights: row.rights, institution_code_id: row.institution_code_id, institution_code: row.institution_code, collection_code_id: row.collection_code_id, collection_code: row.collection_code, catalogue_number_id: row.catalogue_number_id, catalogue_number: row.catalogue_number, citation: row.citation, created: row.created, modified: row.modified, kingdom_concept_id: row.kingdom_concept_id, phylum_concept_id: row.phylum_concept_id,class_concept_id: row.class_concept_id, order_concept_id: row.order_concept_id, family_concept_id: row.family_concept_id, genus_concept_id: row.genus_concept_id, species_concept_id: row.species_concept_id, iso_country_code: row.iso_country_code, iso_department_code: row.iso_department_code, iso_county_code: row.iso_county_code, year: row.year, month: row.month, occurrence_date: row.occurrence_date, altitude_metres: row.altitude_metres, depth_centimetres: row.depth_centimetres, kingdom: row.kingdom, phylum: row.phylum, taxonClass: row.class, order_rank: row.order_rank, family: row.family, genus: row.genus, species: row.species, country_name: row.country_name, department_name: row.department_name, county_name: row.county_name, paramo_name: row.paramo_name, marine_zone_name: row.marine_zone_name, paramo_code: row.paramo_code, marine_zone_code: row.marine_zone_code, nombre_comun: row.nombre_comun, basis_of_record_id: row.basis_of_record_id, basis_of_record_name: row.basis_of_record_name, basis_of_record_name_spanish: row.basis_of_record_name_spanish, kingdom_group: kingdom_group, phylum_group: phylum_group, taxonClass_group: taxonClass_group, order_rank_group: order_rank_group, family_group: family_group, genus_group: genus_group, species_group: species_group, cell_group: cell_group, pointfive_group: pointfive_group, pointtwo_group: pointtwo_group, centi_group: centi_group, county_group: county_group, paramo_group: paramo_group, marine_zone_group: marine_zone_group};
 						collection.insert(document, function(err, records) {
 							if (err) throw err;
 						});
@@ -264,7 +266,7 @@ exports.convertFromMysqlToMongoDB = function(req, res) {
 					logger.info('Done with all results');
 				});
 		});
-	});
+	});*/
 
 	/*MongoClient.connect('mongodb://localhost/sibexplorer_dev', function(error, db) {
 		if (error) console.info(error);
@@ -547,117 +549,119 @@ exports.updatemongodb = function(req, res) {
 		})
 	})*/
 	// Generate total occurrences stats
-	dbWrapper.getCountAllOccurrences(function(rows) {
+	/*dbWrapper.getCountAllOccurrences(function(rows) {
 		var generalIndicator = new GeneralIndicator({name: "Total occurrences", value: rows[0].total_occurrences});
 		generalIndicator.save();
 		console.info(rows);
-	});
+	});*/
 	// Generate total georeferenced occurrences stats
-	dbWrapper.getCountAllGeoreferencedOccurrences(function(rows) {
+	/*dbWrapper.getCountAllGeoreferencedOccurrences(function(rows) {
 		var generalIndicator = new GeneralIndicator({name: "Total georeferenced occurrences", value: rows[0].total_occurrences});
 		generalIndicator.save();
 		console.info(rows);
-	});
+	});*/
 	// Generate canonical groups data
-	dbWrapper.getCanonicalNameGroups(function(rows) {
+	/*dbWrapper.getCanonicalNameGroups(function(rows) {
 		for (var i = 0; i < rows.length; i++) {
 			var canonicalGroup = new CanonicalGroup({canonical: rows[i].canonical, occurrences: rows[i].Occurrences});
 			canonicalGroup.save();
 		}
-	});
+	});*/
 	// Generate kingdom groups data
-	dbWrapper.getKingdomNameGroups(function(rows) {
+	/*dbWrapper.getKingdomNameGroups(function(rows) {
 		for (var i = 0; i < rows.length; i++) {
 			var kingdomGroup = new KingdomGroup({kingdom: rows[i].kingdom, occurrences: rows[i].occurrences});
 			kingdomGroup.save();
 		}
-	});
+	});*/
 	// Generate phylum groups data
-	dbWrapper.getPhylumNameGroups(function(rows) {
+	/*dbWrapper.getPhylumNameGroups(function(rows) {
 		for (var i = 0; i < rows.length; i++) {
 			var phylumGroup = new PhylumGroup({phylum: rows[i].phylum, occurrences: rows[i].occurrences});
 			phylumGroup.save();
 		}
-	});
+	});*/
 	// Generate class groups data
-	dbWrapper.getClassNameGroups(function(rows) {
+	/*dbWrapper.getClassNameGroups(function(rows) {
 		for (var i = 0; i < rows.length; i++) {
 			var classGroup = new ClassGroup({nameClass: rows[i].nameClass, occurrences: rows[i].occurrences});
 			classGroup.save();
 		}
-	});
+	});*/
 	// Generate order_rank groups data
-	dbWrapper.getOrderRankNameGroups(function(rows) {
+	/*dbWrapper.getOrderRankNameGroups(function(rows) {
 		for (var i = 0; i < rows.length; i++) {
 			var orderRankGroup = new OrderRankGroup({order_rank: rows[i].order_rank, occurrences: rows[i].occurrences});
 			orderRankGroup.save();
 		}
-	});
+	});*/
 	// Generate family groups data
-	dbWrapper.getFamilyNameGroups(function(rows) {
+	/*dbWrapper.getFamilyNameGroups(function(rows) {
 		for (var i = 0; i < rows.length; i++) {
 			var familyGroup = new FamilyGroup({family: rows[i].family, occurrences: rows[i].occurrences});
 			familyGroup.save();
 		}
-	});
+	});*/
 	// Generate Genus groups data
-	dbWrapper.getGenusNameGroups(function(rows) {
+	/*dbWrapper.getGenusNameGroups(function(rows) {
 		for (var i = 0; i < rows.length; i++) {
 			var genusGroup = new GenusGroup({genus: rows[i].genus, occurrences: rows[i].occurrences});
 			genusGroup.save();
 		}
-	});
+	});*/
 	// Generate species groups data
-	dbWrapper.getSpeciesNameGroups(function(rows) {
+	/*dbWrapper.getSpeciesNameGroups(function(rows) {
 		for (var i = 0; i < rows.length; i++) {
 			var speciesGroup = new SpeciesGroup({species: rows[i].species, occurrences: rows[i].occurrences});
 			speciesGroup.save();
 		}
-	});
+	});*/
 	// Generate country occurrences groups data
-	dbWrapper.getCountryNameGroups(function(rows) {
+	/*dbWrapper.getCountryNameGroups(function(rows) {
 		for (var i = 0; i < rows.length; i++) {
 			var countriesGroup = new CountriesGroup({countryName: rows[i].countryName, isoCountryCode: rows[i].iso_country_code, occurrences: rows[i].occurrences});
 			countriesGroup.save();
 		}
-	});
+	});*/
 	// Generate departments occurrences groups data
-	dbWrapper.getDepartmentNameGroups(function(rows) {
+	/*dbWrapper.getDepartmentNameGroups(function(rows) {
 		for (var i = 0; i < rows.length; i++) {
 			var departmentsGroup = new DepartmentsGroup({departmentName: rows[i].departmentName, isoDepartmentCode: rows[i].iso_department_code, occurrences: rows[i].occurrences});
 			departmentsGroup.save();
 		}
-	});
+	});*/
 	// Generate providers occurrences groups data
-	dbWrapper.getDataProviderNameGroups(function(rows) {
+	/*dbWrapper.getDataProviderNameGroups(function(rows) {
 		for (var i = 0; i < rows.length; i++) {
 			var dataProvidersGroup = new DataProvidersGroup({providerName: rows[i].providerName, providerID: rows[i].providerID, occurrences: rows[i].occurrences});
 			dataProvidersGroup.save();
 		}
-	});
+	});*/
 	// Generate resources occurrences groups data
-	dbWrapper.getDataResourceNameGroups(function(rows) {
+	/*dbWrapper.getDataResourceNameGroups(function(rows) {
 		for (var i = 0; i < rows.length; i++) {
 			var dataResourcesGroup = new DataResourcesGroup({resourceName: rows[i].resourceName, resourceID: rows[i].resourceID, occurrences: rows[i].occurrences, providerID: rows[i].providerID});
 			dataResourcesGroup.save();
 		}
-	});
+	});*/
 	// Generate institution code groups data
-	dbWrapper.getInstitutionCodeGroups(function(rows) {
+	/*dbWrapper.getInstitutionCodeGroups(function(rows) {
 		for (var i = 0; i < rows.length; i++) {
 			var institutionCodeGroup = new InstitutionCodeGroup({institutionCode: rows[i].institutionCode, institutionCodeID: rows[i].institutionCodeID, occurrences: rows[i].occurrences});
 			institutionCodeGroup.save();
 		}
-	});
+	});*/
 	// Generate collection code groups data
-	dbWrapper.getCollectionCodeGroups(function(rows) {
+	/*dbWrapper.getCollectionCodeGroups(function(rows) {
 		for (var i = 0; i < rows.length; i++) {
 			var collectionCodeGroup = new CollectionCodeGroup({collectionCode: rows[i].collectionCode, collectionCodeID: rows[i].collectionCodeID, occurrences: rows[i].occurrences});
 			collectionCodeGroup.save();
 		}
-	});
+	});*/
 	// Generate help search data
 	var helpSearchText = new HelpSearchText({subjectName: "canonical", subjectID: 0, text: "<p>Escriba un nombre científico y pulse en Agregar filtro.</p><p>Este filtro devolverá cualquier registro que posea un nombre que concuerde con el identificador dado del organismo, sin importar como está clasificado el organismo.</p>"});
+	helpSearchText.save();
+	helpSearchText = new HelpSearchText({subjectName: "commonname", subjectID: 31, text: "<p>Escriba un nombre común y pulse en Agregar filtro.</p><p>Este filtro devolverá cualquier registro que posea un nombre común que concuerde con el identificador dado del organismo, sin importar como está clasificado el organismo.</p>"});
 	helpSearchText.save();
 	helpSearchText = new HelpSearchText({subjectName: "kingdom", subjectID: 100, text: "<p>Escriba un nombre de reino y pulse en Agregar filtro.</p><p>Este filtro devolverá cualquier registro que posea un reino que concuerde con el organismo.</p>"});
 	helpSearchText.save();
@@ -682,6 +686,10 @@ exports.updatemongodb = function(req, res) {
 	helpSearchText = new HelpSearchText({subjectName: "departments", subjectID: 38, text: "<p>Seleccione un departamento de la lista y oprima en Agregar filtro para acotar su búsqueda a uno o más departamentos.</p><p>Este filtro retorna los registros que pertenecen al departamento, independientemente de si estos tienen o no coordenadas; tenga en cuenta que al adicionar un filtro de coordenadas (Condición de selección, Latitud o Longitud) limitará los resultados a los registros georeferenciados.</p>"});
 	helpSearchText.save();
 	helpSearchText = new HelpSearchText({subjectName: "counties", subjectID: 39, text: "<p>Seleccione un municipio de la lista y oprima en Agregar filtro para acotar su búsqueda a uno o más municipios.</p><p>Este filtro retorna los registros que pertenecen al municipio, independientemente de si estos tienen o no coordenadas; tenga en cuenta que al adicionar un filtro de coordenadas (Condición de selección, Latitud o Longitud) limitará los resultados a los registros georeferenciados.</p>"});
+	helpSearchText.save();
+	helpSearchText = new HelpSearchText({subjectName: "paramo", subjectID: 40, text: "<p>Seleccione un páramo de la lista y dar clic en Agregar filtro para filtrar su búsqueda a uno o más páramos.</p><p>Este filtro retornará registros del páramo identificado, sin importar si poseen coordenadas; pero note que al agregar un filtro de coordenadas (Bounding box, Latitud o Longitud) limitará los resultados a registros georreferenciados.</p>"});
+	helpSearchText.save();
+	helpSearchText = new HelpSearchText({subjectName: "seazone", subjectID: 41, text: "<p>Seleccione una área marítima de la lista y dar clic en Agregar filtro para filtrar su búsqueda a una o más áreas marítimas.</p><p>Este filtro retornará registros de la área marítima identificada, sin importar si poseen coordenadas; pero note que al agregar un filtro de coordenadas (Bounding box, Latitud o Longitud) limitará los resultados a registros georreferenciados.</p>"});
 	helpSearchText.save();
 	helpSearchText = new HelpSearchText({subjectName: "coordinatesState", subjectID: 28, text: '<p></p><p>Seleccione "incluye coordenadas" para filtrar aquellos registros que no están georreferenciados; alternativamente, seleccione "no incluye coordenadas" para excluir registros georreferenciados. Para ver todos los registros, no utilize este filtro.</p>'});
 	helpSearchText.save();

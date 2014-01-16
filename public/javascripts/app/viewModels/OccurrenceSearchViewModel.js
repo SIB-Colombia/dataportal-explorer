@@ -1,4 +1,4 @@
-define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map-initialize", "app/models/occurrence", "app/models/resumeInfo", "app/models/resumeCount", "app/models/resumeScientificName", "app/models/resumeKingdomName", "app/models/resumePhylumName", "app/models/resumeClassName", "app/models/resumeOrderName", "app/models/resumeFamilyName", "app/models/resumeGenusName", "app/models/resumeSpecieName", "app/models/resumeDataProvider", "app/models/resumeDataResource", "app/models/resumeInstitutionCode", "app/models/resumeCollectionCode", "app/models/resumeCountry", "app/models/resumeDepartment", "app/models/resumeCounty", "app/models/county", "app/models/coordinate", "app/models/radialCoordinate", "app/models/filterSelected", "select2", "knockoutKendoUI", "Leaflet", "jqueryUI", "bootstrap", "customScrollBar", "kendoSpanishCulture"], function($, ko, _, BaseViewModel, map, Occurrence, ResumeInfo, ResumeCount, ResumeScientificName, ResumeKingdomName, ResumePhylumName, ResumeClassName, ResumeOrderName, ResumeFamilyName, ResumeGenusName, ResumeSpecieName, ResumeDataProvider, ResumeDataResource, ResumeInstitutionCode, ResumeCollectionCode, ResumeCountry, ResumeDepartment, ResumeCounty, County, Coordinate, RadialCoordinate, FilterSelected, select2) {
+define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map-initialize", "app/models/occurrence", "app/models/resumeInfo", "app/models/resumeCount", "app/models/resumeScientificName", "app/models/resumeCommonName", "app/models/resumeKingdomName", "app/models/resumePhylumName", "app/models/resumeClassName", "app/models/resumeOrderName", "app/models/resumeFamilyName", "app/models/resumeGenusName", "app/models/resumeSpecieName", "app/models/resumeDataProvider", "app/models/resumeDataResource", "app/models/resumeInstitutionCode", "app/models/resumeCollectionCode", "app/models/resumeCountry", "app/models/resumeDepartment", "app/models/resumeCounty", "app/models/resumeParamo", "app/models/resumeMarineZone", "app/models/county", "app/models/paramo", "app/models/marineZone", "app/models/coordinate", "app/models/radialCoordinate", "app/models/filterSelected", "select2", "knockoutKendoUI", "Leaflet", "jqueryUI", "bootstrap", "customScrollBar", "kendoSpanishCulture"], function($, ko, _, BaseViewModel, map, Occurrence, ResumeInfo, ResumeCount, ResumeScientificName, ResumeCommonName, ResumeKingdomName, ResumePhylumName, ResumeClassName, ResumeOrderName, ResumeFamilyName, ResumeGenusName, ResumeSpecieName, ResumeDataProvider, ResumeDataResource, ResumeInstitutionCode, ResumeCollectionCode, ResumeCountry, ResumeDepartment, ResumeCounty, ResumeParamo, ResumeMarineZone, County, Paramo, MarineZone, Coordinate, RadialCoordinate, FilterSelected, select2) {
 	var OccurrenceSearchViewModel = function() {
 		var self = this;
 		self.densityCellsOneDegree = new L.FeatureGroup();
@@ -34,9 +34,12 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 
 		// Arrays for dropdowns
 		self.countyDropdown = [];
+		self.paramoDropdown = [];
+		self.marineZoneDropdown = [];
 
 		// Arrays for resume help windows
 		self.resumeScientificNames = [];
+		self.resumeCommonNames = [];
 		self.resumeKingdomNames = [];
 		self.resumePhylumNames = [];
 		self.resumeClassNames = [];
@@ -51,15 +54,20 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		self.resumeCountries = [];
 		self.resumeDepartments = [];
 		self.resumeCounties = [];
+		self.resumeParamos = [];
+		self.resumeMarineZones = [];
 		self.isObjectNameHelpSelected = false;
 		self.predicateOptions = "[{value: 'eq', name: 'es'}]";
 
 		// Arrays of selected filters by kind
 		self.selectedScientificNames = [];
+		self.selectedCommonNames = [];
 		self.selectedTaxonNames = [];
 		self.selectedCountriesIDs = [];
 		self.selectedDepartmentsIDs = [];
 		self.selectedCountiesIDs = [];
+		self.selectedParamosIDs = [];
+		self.selectedMarineZonesIDs = [];
 		self.selectedLatitudes = [];
 		self.selectedLongitudes = [];
 		self.selectedAltitudes = [];
@@ -87,6 +95,8 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		self.selectedCountry = "";
 		self.selectedDepartment = "";
 		self.selectedCounty = "";
+		self.selectedParamo = "";
+		self.selectedMarineZone = "";
 		self.selectedCoordinateState = "";
 
 		// Download URLs
@@ -104,6 +114,8 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		initialize: function() {
 			var self = this;
 			this.loadCountyDropdownData();
+			this.loadParamoDropdownData();
+			this.loadMarineZoneDropdownData();
 			this.loadGridData();
 			this.loadCellDensityOneDegree();
 			this.loadCellDensityPointFiveDegree();
@@ -160,6 +172,10 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					// Load new scientific name data
 					self.hideResumeContainer();
 					self.getScientificNamesData();
+				} else if(self.selectedSubject() == 31) {
+					// Load new common name data
+					self.hideResumeContainer();
+					self.getCommonNamesData();
 				} else if(self.selectedSubject() == 100) {
 					// Get resume kingdom data
 					self.hideResumeContainer();
@@ -294,6 +310,52 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 							self.objectNameValue(e.val);
 							self.hideResumeContainer();
 							self.getCountiesData();
+							self.enableFilterHelp();
+						}
+					});
+				},
+				update: function(element) {
+					$(element).trigger('change');
+				}
+			};
+
+			ko.bindingHandlers.selectParamo = {
+				init: function(element, valueAccessor, allBindingsAccessor) {
+					var obj = valueAccessor();
+					$(element).select2(obj);
+
+					ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
+						$(element).select2('destroy');
+					});
+
+					$(element).on("change", function(e) {
+						if(typeof e.val !== 'undefined') {
+							self.objectNameValue(e.val);
+							self.hideResumeContainer();
+							self.getParamosData();
+							self.enableFilterHelp();
+						}
+					});
+				},
+				update: function(element) {
+					$(element).trigger('change');
+				}
+			};
+
+			ko.bindingHandlers.selectMarineZone = {
+				init: function(element, valueAccessor, allBindingsAccessor) {
+					var obj = valueAccessor();
+					$(element).select2(obj);
+
+					ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
+						$(element).select2('destroy');
+					});
+
+					$(element).on("change", function(e) {
+						if(typeof e.val !== 'undefined') {
+							self.objectNameValue(e.val);
+							self.hideResumeContainer();
+							self.getMarineZonesData();
 							self.enableFilterHelp();
 						}
 					});
@@ -468,6 +530,36 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					$.each(allData.facets.counties.terms, function(i, county) {
 						var countyData = county.term.split("~~~");
 						self.countyDropdown.push(new County({departmentName: countyData[0], countyName: countyData[1], isoCountyCode: countyData[2]}));
+					});
+				},
+				dataType: 'jsonp'
+			});
+		},
+		loadParamoDropdownData: function() {
+			var self = this;
+			$.ajax({
+				contentType: 'application/json',
+				type: 'GET',
+				url: '/rest/occurrences/paramos/list',
+				success: function(allData) {
+					$.each(allData.facets.paramos.terms, function(i, paramo) {
+						var paramoData = paramo.term.split("~~~");
+						self.paramoDropdown.push(new Paramo({paramoName: paramoData[0], paramoCode: paramoData[1]}));
+					});
+				},
+				dataType: 'jsonp'
+			});
+		},
+		loadMarineZoneDropdownData: function() {
+			var self = this;
+			$.ajax({
+				contentType: 'application/json',
+				type: 'GET',
+				url: '/rest/occurrences/marinezones/list',
+				success: function(allData) {
+					$.each(allData.facets.marinezones.terms, function(i, marinezone) {
+						var marineZoneData = marinezone.term.split("~~~");
+						self.marineZoneDropdown.push(new MarineZone({marineZoneName: marineZoneData[0], marineZoneCode: marineZoneData[1]}));
 					});
 				},
 				dataType: 'jsonp'
@@ -662,6 +754,14 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				$("#dropDownCounty").select2('destroy');
 				$("#dropDownCounty").css({display: 'none'});
 			}
+			if($("#s2id_dropDownParamo").length && self.selectedSubject() != 40) {
+				$("#dropDownParamo").select2('destroy');
+				$("#dropDownParamo").css({display: 'none'});
+			}
+			if($("#s2id_dropDownMarineZone").length && self.selectedSubject() != 41) {
+				$("#dropDownMarineZone").select2('destroy');
+				$("#dropDownMarineZone").css({display: 'none'});
+			}
 			$("#filtersContainerHelp").css({display: 'none'});
 			// Clear actual resume filter
 			self.objectNameValue("");
@@ -672,6 +772,9 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			if(self.selectedSubject() == "0") {
 				// Get Scientific Name resume data
 				self.getScientificNamesData();
+			} else if(self.selectedSubject() == 31) {
+				// Get common name resume data
+				self.getCommonNamesData();
 			} else if(self.selectedSubject() == 100) {
 				// Get kingdom resume data
 				self.getKingdomNamesData();
@@ -761,6 +864,42 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				$(".select2-input").on("click", function(event) {
 					self.enableFilterHelp();
 				});
+			} else if(self.selectedSubject() == 40) {
+				// Get countries resume data
+				self.getParamosData();
+				self.isObjectNameHelpSelected = ko.observable(true);
+				$("#filtersContainerHelp").animate({width: 'toggle'}, 500, "swing", function() {
+					if(self.firstScrollRun) {
+						$("#contentFiltersContainerHelp").mCustomScrollbar({
+							theme:"dark"
+						});
+						self.firstScrollRun = false;
+					} else {
+						$("#contentFiltersContainerHelp").mCustomScrollbar("update");
+					}
+				});
+				$("#dropDownParamo").select2();
+				$(".select2-input").on("click", function(event) {
+					self.enableFilterHelp();
+				});
+			} else if(self.selectedSubject() == 41) {
+				// Get countries resume data
+				self.getMarineZonesData();
+				self.isObjectNameHelpSelected = ko.observable(true);
+				$("#filtersContainerHelp").animate({width: 'toggle'}, 500, "swing", function() {
+					if(self.firstScrollRun) {
+						$("#contentFiltersContainerHelp").mCustomScrollbar({
+							theme:"dark"
+						});
+						self.firstScrollRun = false;
+					} else {
+						$("#contentFiltersContainerHelp").mCustomScrollbar("update");
+					}
+				});
+				$("#dropDownMarineZone").select2();
+				$(".select2-input").on("click", function(event) {
+					self.enableFilterHelp();
+				});
 			}
 			self.getHelpSearchText();
 		},
@@ -793,6 +932,9 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				if(self.selectedSubject() == "0") {
 					// Adding scientific name filter
 					self.addScientificName();
+				} else if(self.selectedSubject() == 31) {
+					// Adding common name filter
+					self.addCommonName();
 				} else if(self.selectedSubject() == 100) {
 					self.addTaxonName(self.selectedSubject(), "kingdom");
 				} else if(self.selectedSubject() == 101) {
@@ -816,6 +958,12 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				} else if(self.selectedSubject() == 39) {
 					// Adding county filter
 					self.addCountyID();
+				} else if(self.selectedSubject() == 40) {
+					// Adding paramo filter
+					self.addParamoID();
+				} else if(self.selectedSubject() == 41) {
+					// Adding paramo filter
+					self.addMarineZoneID();
 				} else if(self.selectedSubject() == 1) {
 					// Adding latitude filter
 					self.addLatitudeNumber();
@@ -845,6 +993,8 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			var self = this;
 			if(self.selectedScientificNames().length !== 0)
 				response['scientificNames'] = self.selectedScientificNames();
+			if(self.selectedCommonNames().length !== 0)
+				response['commonNames'] = self.selectedCommonNames();
 			if(self.selectedTaxonNames().length !== 0)
 				response['taxons'] = self.selectedTaxonNames();
 			if(self.selectedCountriesIDs().length !== 0)
@@ -853,6 +1003,10 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				response['departments'] = self.selectedDepartmentsIDs();
 			if(self.selectedCountiesIDs().length !== 0)
 				response['counties'] = self.selectedCountiesIDs();
+			if(self.selectedParamosIDs().length !== 0)
+				response['paramos'] = self.selectedParamosIDs();
+			if(self.selectedMarineZonesIDs().length !== 0)
+				response['marineZones'] = self.selectedMarineZonesIDs();
 			if(self.selectedLatitudes().length !== 0)
 				response['latitudes'] = self.selectedLatitudes();
 			if(self.selectedLongitudes().length !== 0)
@@ -1250,8 +1404,142 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					var countyData = data.term.split("~~~");
 					counties.push(new ResumeCount({id: countyData[2], name: countyData[0] + " - " + countyData[1], count: data.count}));
 				});
+				var paramos = ko.observableArray();
+				_.each(allData.facets.paramo_group.terms, function(data) {
+					var paramoData = data.term.split("~~~");
+					paramos.push(new ResumeCount({id: paramoData[1], name: paramoData[0], count: data.count}));
+				});
+				var marineZones = ko.observableArray();
+				_.each(allData.facets.marine_zone_group.terms, function(data) {
+					var marineZoneData = data.term.split("~~~");
+					marineZones.push(new ResumeCount({id: marineZoneData[1], name: marineZoneData[0], count: data.count}));
+				});
+				var commons = ko.observableArray();
+				_.each(allData.facets.common.terms, function(data) {
+					commons.push(new ResumeCount({name: data.term, count: data.count}));
+				});
 				self.resumesInfoFilter.removeAll();
-				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties}));
+				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
+				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
+				self.showResumeContainer();
+			});
+		},
+		getCommonNamesData: function() {
+			var self = this;
+			$.getJSON("/rest/occurrences/resume/commonname/name/"+((typeof self.objectNameValue() === "undefined")?"":self.objectNameValue()), function(allData) {
+				self.resumeCommonNames.removeAll();
+				_.each(allData.facets.common.terms, function(data) {
+					self.resumeCommonNames.push(new ResumeCommonName({canonical: data.term, occurrences: data.count}));
+				});
+				var commons = ko.observableArray();
+				var kingdoms = ko.observableArray();
+				_.each(allData.facets.kingdom.terms, function(data) {
+					var nameAndID = data.term.split("~~~");
+					if(nameAndID[1] != "null") {
+						kingdoms.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.count}));
+					} else {
+						kingdoms.push(new ResumeCount({name: nameAndID[0], count: data.count}));
+					}
+				});
+				var canonicals = ko.observableArray();
+				_.each(allData.facets.canonical.terms, function(data) {
+					canonicals.push(new ResumeCount({name: data.term, count: data.count}));
+				});
+				var count = 0;
+				var providers = ko.observableArray();
+				_.each(allData.facets.data_provider_name.terms, function(data) {
+					providers.push(new ResumeCount({id: allData.facets.data_provider_id.terms[count].term, url: "http://data.sibcolombia.net/publicadores/provider/"+allData.facets.data_provider_id.terms[count].term, name: data.term, count: data.count}));
+					count++;
+				});
+				count = 0;
+				var resources = ko.observableArray();
+				_.each(allData.facets.data_resource_name.terms, function(data) {
+					resources.push(new ResumeCount({id: allData.facets.data_resource_id.terms[count].term, url: "http://data.sibcolombia.net/conjuntos/resource/"+allData.facets.data_resource_id.terms[count].term, name: data.term, count: data.count}));
+					count++;
+				});
+				var phylums = ko.observableArray();
+				_.each(allData.facets.phylum.terms, function(data) {
+					var nameAndID = data.term.split("~~~");
+					if(nameAndID[1] != "null") {
+						phylums.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.count}));
+					} else {
+						phylums.push(new ResumeCount({name: nameAndID[0], count: data.count}));
+					}
+				});
+				var taxonClasses = ko.observableArray();
+				_.each(allData.facets.taxonClass.terms, function(data) {
+					var nameAndID = data.term.split("~~~");
+					if(nameAndID[1] != "null") {
+						taxonClasses.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.count}));
+					} else {
+						taxonClasses.push(new ResumeCount({name: nameAndID[0], count: data.count}));
+					}
+				});
+				var order_ranks = ko.observableArray();
+				_.each(allData.facets.order_rank.terms, function(data) {
+					var nameAndID = data.term.split("~~~");
+					if(nameAndID[1] != "null") {
+						order_ranks.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.count}));
+					} else {
+						order_ranks.push(new ResumeCount({name: nameAndID[0], count: data.count}));
+					}
+				});
+				var families = ko.observableArray();
+				_.each(allData.facets.family.terms, function(data) {
+					var nameAndID = data.term.split("~~~");
+					if(nameAndID[1] != "null") {
+						families.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.count}));
+					} else {
+						families.push(new ResumeCount({name: nameAndID[0], count: data.count}));
+					}
+				});
+				var genuses = ko.observableArray();
+				_.each(allData.facets.genus.terms, function(data) {
+					var nameAndID = data.term.split("~~~");
+					if(nameAndID[1] != "null") {
+						genuses.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.count}));
+					} else {
+						genuses.push(new ResumeCount({name: nameAndID[0], count: data.count}));
+					}
+				});
+				var species = ko.observableArray();
+				_.each(allData.facets.species.terms, function(data) {
+					var nameAndID = data.term.split("~~~");
+					if(nameAndID[1] != "null") {
+						species.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.count}));
+					} else {
+						species.push(new ResumeCount({name: nameAndID[0], count: data.count}));
+					}
+				});
+				count = 0;
+				var countries = ko.observableArray();
+				_.each(allData.facets.country_name.terms, function(data) {
+					countries.push(new ResumeCount({id: allData.facets.iso_country_code.terms[count].term, url: "http://data.sibcolombia.net/countries/"+allData.facets.iso_country_code.terms[count].term, name: data.term, count: data.count}));
+					count++;
+				});
+				count = 0;
+				var departments = ko.observableArray();
+				_.each(allData.facets.department_name.terms, function(data) {
+					departments.push(new ResumeCount({id: allData.facets.iso_department_code.terms[count].term, url: "http://data.sibcolombia.net/departments/"+allData.facets.iso_department_code.terms[count].term, name: data.term, count: data.count}));
+					count++;
+				});
+				var counties = ko.observableArray();
+				_.each(allData.facets.county_group.terms, function(data) {
+					var countyData = data.term.split("~~~");
+					counties.push(new ResumeCount({id: countyData[2], name: countyData[0] + " - " + countyData[1], count: data.count}));
+				});
+				var paramos = ko.observableArray();
+				_.each(allData.facets.paramo_group.terms, function(data) {
+					var paramoData = data.term.split("~~~");
+					paramos.push(new ResumeCount({id: paramoData[1], name: paramoData[0], count: data.count}));
+				});
+				var marineZones = ko.observableArray();
+				_.each(allData.facets.marine_zone_group.terms, function(data) {
+					var marineZoneData = data.term.split("~~~");
+					marineZones.push(new ResumeCount({id: marineZoneData[1], name: marineZoneData[0], count: data.count}));
+				});
+				self.resumesInfoFilter.removeAll();
+				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
 				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
 				self.showResumeContainer();
 			});
@@ -1354,8 +1642,22 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					var countyData = data.term.split("~~~");
 					counties.push(new ResumeCount({id: countyData[2], name: countyData[0] + " - " + countyData[1], count: data.count}));
 				});
+				var paramos = ko.observableArray();
+				_.each(allData.facets.paramo_group.terms, function(data) {
+					var paramoData = data.term.split("~~~");
+					paramos.push(new ResumeCount({id: paramoData[1], name: paramoData[0], count: data.count}));
+				});
+				var marineZones = ko.observableArray();
+				_.each(allData.facets.marine_zone_group.terms, function(data) {
+					var marineZoneData = data.term.split("~~~");
+					marineZones.push(new ResumeCount({id: marineZoneData[1], name: marineZoneData[0], count: data.count}));
+				});
+				var commons = ko.observableArray();
+				_.each(allData.facets.common.terms, function(data) {
+					commons.push(new ResumeCount({name: data.term, count: data.count}));
+				});
 				self.resumesInfoFilter.removeAll();
-				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties}));
+				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
 				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
 				self.showResumeContainer();
 			});
@@ -1458,8 +1760,22 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					var countyData = data.term.split("~~~");
 					counties.push(new ResumeCount({id: countyData[2], name: countyData[0] + " - " + countyData[1], count: data.count}));
 				});
+				var paramos = ko.observableArray();
+				_.each(allData.facets.paramo_group.terms, function(data) {
+					var paramoData = data.term.split("~~~");
+					paramos.push(new ResumeCount({id: paramoData[1], name: paramoData[0], count: data.count}));
+				});
+				var marineZones = ko.observableArray();
+				_.each(allData.facets.marine_zone_group.terms, function(data) {
+					var marineZoneData = data.term.split("~~~");
+					marineZones.push(new ResumeCount({id: marineZoneData[1], name: marineZoneData[0], count: data.count}));
+				});
+				var commons = ko.observableArray();
+				_.each(allData.facets.common.terms, function(data) {
+					commons.push(new ResumeCount({name: data.term, count: data.count}));
+				});
 				self.resumesInfoFilter.removeAll();
-				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties}));
+				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
 				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
 				self.showResumeContainer();
 			});
@@ -1562,8 +1878,22 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					var countyData = data.term.split("~~~");
 					counties.push(new ResumeCount({id: countyData[2], name: countyData[0] + " - " + countyData[1], count: data.count}));
 				});
+				var paramos = ko.observableArray();
+				_.each(allData.facets.paramo_group.terms, function(data) {
+					var paramoData = data.term.split("~~~");
+					paramos.push(new ResumeCount({id: paramoData[1], name: paramoData[0], count: data.count}));
+				});
+				var marineZones = ko.observableArray();
+				_.each(allData.facets.marine_zone_group.terms, function(data) {
+					var marineZoneData = data.term.split("~~~");
+					marineZones.push(new ResumeCount({id: marineZoneData[1], name: marineZoneData[0], count: data.count}));
+				});
+				var commons = ko.observableArray();
+				_.each(allData.facets.common.terms, function(data) {
+					commons.push(new ResumeCount({name: data.term, count: data.count}));
+				});
 				self.resumesInfoFilter.removeAll();
-				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties}));
+				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
 				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
 				self.showResumeContainer();
 			});
@@ -1666,8 +1996,22 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					var countyData = data.term.split("~~~");
 					counties.push(new ResumeCount({id: countyData[2], name: countyData[0] + " - " + countyData[1], count: data.count}));
 				});
+				var paramos = ko.observableArray();
+				_.each(allData.facets.paramo_group.terms, function(data) {
+					var paramoData = data.term.split("~~~");
+					paramos.push(new ResumeCount({id: paramoData[1], name: paramoData[0], count: data.count}));
+				});
+				var marineZones = ko.observableArray();
+				_.each(allData.facets.marine_zone_group.terms, function(data) {
+					var marineZoneData = data.term.split("~~~");
+					marineZones.push(new ResumeCount({id: marineZoneData[1], name: marineZoneData[0], count: data.count}));
+				});
+				var commons = ko.observableArray();
+				_.each(allData.facets.common.terms, function(data) {
+					commons.push(new ResumeCount({name: data.term, count: data.count}));
+				});
 				self.resumesInfoFilter.removeAll();
-				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties}));
+				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
 				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
 				self.showResumeContainer();
 			});
@@ -1770,8 +2114,22 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					var countyData = data.term.split("~~~");
 					counties.push(new ResumeCount({id: countyData[2], name: countyData[0] + " - " + countyData[1], count: data.count}));
 				});
+				var paramos = ko.observableArray();
+				_.each(allData.facets.paramo_group.terms, function(data) {
+					var paramoData = data.term.split("~~~");
+					paramos.push(new ResumeCount({id: paramoData[1], name: paramoData[0], count: data.count}));
+				});
+				var marineZones = ko.observableArray();
+				_.each(allData.facets.marine_zone_group.terms, function(data) {
+					var marineZoneData = data.term.split("~~~");
+					marineZones.push(new ResumeCount({id: marineZoneData[1], name: marineZoneData[0], count: data.count}));
+				});
+				var commons = ko.observableArray();
+				_.each(allData.facets.common.terms, function(data) {
+					commons.push(new ResumeCount({name: data.term, count: data.count}));
+				});
 				self.resumesInfoFilter.removeAll();
-				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties}));
+				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
 				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
 				self.showResumeContainer();
 			});
@@ -1874,8 +2232,22 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					var countyData = data.term.split("~~~");
 					counties.push(new ResumeCount({id: countyData[2], name: countyData[0] + " - " + countyData[1], count: data.count}));
 				});
+				var paramos = ko.observableArray();
+				_.each(allData.facets.paramo_group.terms, function(data) {
+					var paramoData = data.term.split("~~~");
+					paramos.push(new ResumeCount({id: paramoData[1], name: paramoData[0], count: data.count}));
+				});
+				var marineZones = ko.observableArray();
+				_.each(allData.facets.marine_zone_group.terms, function(data) {
+					var marineZoneData = data.term.split("~~~");
+					marineZones.push(new ResumeCount({id: marineZoneData[1], name: marineZoneData[0], count: data.count}));
+				});
+				var commons = ko.observableArray();
+				_.each(allData.facets.common.terms, function(data) {
+					commons.push(new ResumeCount({name: data.term, count: data.count}));
+				});
 				self.resumesInfoFilter.removeAll();
-				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties}));
+				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
 				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
 				self.showResumeContainer();
 			});
@@ -1978,8 +2350,22 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					var countyData = data.term.split("~~~");
 					counties.push(new ResumeCount({id: countyData[2], name: countyData[0] + " - " + countyData[1], count: data.count}));
 				});
+				var paramos = ko.observableArray();
+				_.each(allData.facets.paramo_group.terms, function(data) {
+					var paramoData = data.term.split("~~~");
+					paramos.push(new ResumeCount({id: paramoData[1], name: paramoData[0], count: data.count}));
+				});
+				var marineZones = ko.observableArray();
+				_.each(allData.facets.marine_zone_group.terms, function(data) {
+					var marineZoneData = data.term.split("~~~");
+					marineZones.push(new ResumeCount({id: marineZoneData[1], name: marineZoneData[0], count: data.count}));
+				});
+				var commons = ko.observableArray();
+				_.each(allData.facets.common.terms, function(data) {
+					commons.push(new ResumeCount({name: data.term, count: data.count}));
+				});
 				self.resumesInfoFilter.removeAll();
-				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties}));
+				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
 				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
 				self.showResumeContainer();
 			});
@@ -2086,8 +2472,22 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					var countyData = data.term.split("~~~");
 					counties.push(new ResumeCount({id: countyData[2], name: countyData[0] + " - " + countyData[1], count: data.count}));
 				});
+				var paramos = ko.observableArray();
+				_.each(allData.facets.paramo_group.terms, function(data) {
+					var paramoData = data.term.split("~~~");
+					paramos.push(new ResumeCount({id: paramoData[1], name: paramoData[0], count: data.count}));
+				});
+				var marineZones = ko.observableArray();
+				_.each(allData.facets.marine_zone_group.terms, function(data) {
+					var marineZoneData = data.term.split("~~~");
+					marineZones.push(new ResumeCount({id: marineZoneData[1], name: marineZoneData[0], count: data.count}));
+				});
+				var commons = ko.observableArray();
+				_.each(allData.facets.common.terms, function(data) {
+					commons.push(new ResumeCount({name: data.term, count: data.count}));
+				});
 				self.resumesInfoFilter.removeAll();
-				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties}));
+				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
 				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
 				self.showResumeContainer();
 			});
@@ -2194,8 +2594,22 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					var countyData = data.term.split("~~~");
 					counties.push(new ResumeCount({id: countyData[2], name: countyData[0] + " - " + countyData[1], count: data.count}));
 				});
+				var paramos = ko.observableArray();
+				_.each(allData.facets.paramo_group.terms, function(data) {
+					var paramoData = data.term.split("~~~");
+					paramos.push(new ResumeCount({id: paramoData[1], name: paramoData[0], count: data.count}));
+				});
+				var marineZones = ko.observableArray();
+				_.each(allData.facets.marine_zone_group.terms, function(data) {
+					var marineZoneData = data.term.split("~~~");
+					marineZones.push(new ResumeCount({id: marineZoneData[1], name: marineZoneData[0], count: data.count}));
+				});
+				var commons = ko.observableArray();
+				_.each(allData.facets.common.terms, function(data) {
+					commons.push(new ResumeCount({name: data.term, count: data.count}));
+				});
 				self.resumesInfoFilter.removeAll();
-				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties}));
+				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
 				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
 				self.showResumeContainer();
 			});
@@ -2307,8 +2721,22 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					var countyData = data.term.split("~~~");
 					counties.push(new ResumeCount({id: countyData[2], name: countyData[0] + " - " + countyData[1], count: data.count}));
 				});
+				var paramos = ko.observableArray();
+				_.each(allData.facets.paramo_group.terms, function(data) {
+					var paramoData = data.term.split("~~~");
+					paramos.push(new ResumeCount({id: paramoData[1], name: paramoData[0], count: data.count}));
+				});
+				var marineZones = ko.observableArray();
+				_.each(allData.facets.marine_zone_group.terms, function(data) {
+					var marineZoneData = data.term.split("~~~");
+					marineZones.push(new ResumeCount({id: marineZoneData[1], name: marineZoneData[0], count: data.count}));
+				});
+				var commons = ko.observableArray();
+				_.each(allData.facets.common.terms, function(data) {
+					commons.push(new ResumeCount({name: data.term, count: data.count}));
+				});
 				self.resumesInfoFilter.removeAll();
-				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties}));
+				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
 				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
 				self.showResumeContainer();
 			});
@@ -2420,8 +2848,22 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					var countyData = data.term.split("~~~");
 					counties.push(new ResumeCount({id: countyData[2], name: countyData[0] + " - " + countyData[1], count: data.count}));
 				});
+				var paramos = ko.observableArray();
+				_.each(allData.facets.paramo_group.terms, function(data) {
+					var paramoData = data.term.split("~~~");
+					paramos.push(new ResumeCount({id: paramoData[1], name: paramoData[0], count: data.count}));
+				});
+				var marineZones = ko.observableArray();
+				_.each(allData.facets.marine_zone_group.terms, function(data) {
+					var marineZoneData = data.term.split("~~~");
+					marineZones.push(new ResumeCount({id: marineZoneData[1], name: marineZoneData[0], count: data.count}));
+				});
+				var commons = ko.observableArray();
+				_.each(allData.facets.common.terms, function(data) {
+					commons.push(new ResumeCount({name: data.term, count: data.count}));
+				});
 				self.resumesInfoFilter.removeAll();
-				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties}));
+				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
 				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
 				self.showResumeContainer();
 			});
@@ -2528,8 +2970,22 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					var countyData = data.term.split("~~~");
 					counties.push(new ResumeCount({id: countyData[2], name: countyData[0] + " - " + countyData[1], count: data.count}));
 				});
+				var paramos = ko.observableArray();
+				_.each(allData.facets.paramo_group.terms, function(data) {
+					var paramoData = data.term.split("~~~");
+					paramos.push(new ResumeCount({id: paramoData[1], name: paramoData[0], count: data.count}));
+				});
+				var marineZones = ko.observableArray();
+				_.each(allData.facets.marine_zone_group.terms, function(data) {
+					var marineZoneData = data.term.split("~~~");
+					marineZones.push(new ResumeCount({id: marineZoneData[1], name: marineZoneData[0], count: data.count}));
+				});
+				var commons = ko.observableArray();
+				_.each(allData.facets.common.terms, function(data) {
+					commons.push(new ResumeCount({name: data.term, count: data.count}));
+				});
 				self.resumesInfoFilter.removeAll();
-				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties}));
+				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
 				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
 				self.showResumeContainer();
 			});
@@ -2636,8 +3092,22 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					var countyData = data.term.split("~~~");
 					counties.push(new ResumeCount({id: countyData[2], name: countyData[0] + " - " + countyData[1], count: data.count}));
 				});
+				var paramos = ko.observableArray();
+				_.each(allData.facets.paramo_group.terms, function(data) {
+					var paramoData = data.term.split("~~~");
+					paramos.push(new ResumeCount({id: paramoData[1], name: paramoData[0], count: data.count}));
+				});
+				var marineZones = ko.observableArray();
+				_.each(allData.facets.marine_zone_group.terms, function(data) {
+					var marineZoneData = data.term.split("~~~");
+					marineZones.push(new ResumeCount({id: marineZoneData[1], name: marineZoneData[0], count: data.count}));
+				});
+				var commons = ko.observableArray();
+				_.each(allData.facets.common.terms, function(data) {
+					commons.push(new ResumeCount({name: data.term, count: data.count}));
+				});
 				self.resumesInfoFilter.removeAll();
-				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties}));
+				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
 				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
 				self.showResumeContainer();
 			});
@@ -2742,8 +3212,262 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					departments.push(new ResumeCount({id: allData.facets.iso_department_code.terms[count].term, url: "http://data.sibcolombia.net/departments/"+allData.facets.iso_department_code.terms[count].term, name: data.term, count: data.count}));
 					count++;
 				});
+				var paramos = ko.observableArray();
+				_.each(allData.facets.paramo_group.terms, function(data) {
+					var paramoData = data.term.split("~~~");
+					paramos.push(new ResumeCount({id: paramoData[1], name: paramoData[0], count: data.count}));
+				});
+				var marineZones = ko.observableArray();
+				_.each(allData.facets.marine_zone_group.terms, function(data) {
+					var marineZoneData = data.term.split("~~~");
+					marineZones.push(new ResumeCount({id: marineZoneData[1], name: marineZoneData[0], count: data.count}));
+				});
+				var commons = ko.observableArray();
+				_.each(allData.facets.common.terms, function(data) {
+					commons.push(new ResumeCount({name: data.term, count: data.count}));
+				});
 				self.resumesInfoFilter.removeAll();
-				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties}));
+				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
+				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
+				self.showResumeContainer();
+			});
+		},
+		getParamosData: function() {
+			var self = this;
+			$.getJSON("/rest/occurrences/resume/paramos/name/"+((typeof self.objectNameValue() === "undefined")?"":self.objectNameValue()), function(allData) {
+				self.resumeParamos.removeAll();
+				_.each(allData.facets.paramo_group.terms, function(data) {
+					var paramoData = data.term.split("~~~");
+					self.resumeParamos.push(new ResumeParamo({paramoCode: paramoData[1], paramoName: paramoData[0], occurrences: data.count}));
+				});
+				var paramos = ko.observableArray();
+				var canonicals = ko.observableArray();
+				_.each(allData.facets.canonical.terms, function(data) {
+					canonicals.push(new ResumeCount({name: data.term, count: data.count}));
+				});
+				var count = 0;
+				var providers = ko.observableArray();
+				_.each(allData.facets.data_provider_name.terms, function(data) {
+					providers.push(new ResumeCount({id: allData.facets.data_provider_id.terms[count].term, url: "http://data.sibcolombia.net/publicadores/provider/"+allData.facets.data_provider_id.terms[count].term, name: data.term, count: data.count}));
+					count++;
+				});
+				count = 0;
+				var resources = ko.observableArray();
+				_.each(allData.facets.data_resource_name.terms, function(data) {
+					resources.push(new ResumeCount({id: allData.facets.data_resource_id.terms[count].term, url: "http://data.sibcolombia.net/conjuntos/resource/"+allData.facets.data_resource_id.terms[count].term, name: data.term, count: data.count}));
+					count++;
+				});
+				var kingdoms = ko.observableArray();
+				_.each(allData.facets.kingdom.terms, function(data) {
+					var nameAndID = data.term.split("~~~");
+					if(nameAndID[1] != "null") {
+						kingdoms.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.count}));
+					} else {
+						kingdoms.push(new ResumeCount({name: nameAndID[0], count: data.count}));
+					}
+				});
+				var phylums = ko.observableArray();
+				_.each(allData.facets.phylum.terms, function(data) {
+					var nameAndID = data.term.split("~~~");
+					if(nameAndID[1] != "null") {
+						phylums.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.count}));
+					} else {
+						phylums.push(new ResumeCount({name: nameAndID[0], count: data.count}));
+					}
+				});
+				var taxonClasses = ko.observableArray();
+				_.each(allData.facets.taxonClass.terms, function(data) {
+					var nameAndID = data.term.split("~~~");
+					if(nameAndID[1] != "null") {
+						taxonClasses.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.count}));
+					} else {
+						taxonClasses.push(new ResumeCount({name: nameAndID[0], count: data.count}));
+					}
+				});
+				var order_ranks = ko.observableArray();
+				_.each(allData.facets.order_rank.terms, function(data) {
+					var nameAndID = data.term.split("~~~");
+					if(nameAndID[1] != "null") {
+						order_ranks.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.count}));
+					} else {
+						order_ranks.push(new ResumeCount({name: nameAndID[0], count: data.count}));
+					}
+				});
+				var families = ko.observableArray();
+				_.each(allData.facets.family.terms, function(data) {
+					var nameAndID = data.term.split("~~~");
+					if(nameAndID[1] != "null") {
+						families.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.count}));
+					} else {
+						families.push(new ResumeCount({name: nameAndID[0], count: data.count}));
+					}
+				});
+				var genuses = ko.observableArray();
+				_.each(allData.facets.genus.terms, function(data) {
+					var nameAndID = data.term.split("~~~");
+					if(nameAndID[1] != "null") {
+						genuses.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.count}));
+					} else {
+						genuses.push(new ResumeCount({name: nameAndID[0], count: data.count}));
+					}
+				});
+				var species = ko.observableArray();
+				_.each(allData.facets.species.terms, function(data) {
+					var nameAndID = data.term.split("~~~");
+					if(nameAndID[1] != "null") {
+						species.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.count}));
+					} else {
+						species.push(new ResumeCount({name: nameAndID[0], count: data.count}));
+					}
+				});
+				count = 0;
+				var countries = ko.observableArray();
+				_.each(allData.facets.country_name.terms, function(data) {
+					countries.push(new ResumeCount({id: allData.facets.iso_country_code.terms[count].term, url: "http://data.sibcolombia.net/countries/"+allData.facets.iso_country_code.terms[count].term, name: data.term, count: data.count}));
+					count++;
+				});
+				count = 0;
+				var departments = ko.observableArray();
+				_.each(allData.facets.department_name.terms, function(data) {
+					departments.push(new ResumeCount({id: allData.facets.iso_department_code.terms[count].term, url: "http://data.sibcolombia.net/departments/"+allData.facets.iso_department_code.terms[count].term, name: data.term, count: data.count}));
+					count++;
+				});
+				var counties = ko.observableArray();
+				_.each(allData.facets.county_group.terms, function(data) {
+					var countyData = data.term.split("~~~");
+					counties.push(new ResumeCount({id: countyData[2], name: countyData[0] + " - " + countyData[1], count: data.count}));
+				});
+				var marineZones = ko.observableArray();
+				_.each(allData.facets.marine_zone_group.terms, function(data) {
+					var marineZoneData = data.term.split("~~~");
+					marineZones.push(new ResumeCount({id: marineZoneData[1], name: marineZoneData[0], count: data.count}));
+				});
+				var commons = ko.observableArray();
+				_.each(allData.facets.common.terms, function(data) {
+					commons.push(new ResumeCount({name: data.term, count: data.count}));
+				});
+				self.resumesInfoFilter.removeAll();
+				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
+				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
+				self.showResumeContainer();
+			});
+		},
+		getMarineZonesData: function() {
+			var self = this;
+			$.getJSON("/rest/occurrences/resume/marinezones/name/"+((typeof self.objectNameValue() === "undefined")?"":self.objectNameValue()), function(allData) {
+				self.resumeMarineZones.removeAll();
+				_.each(allData.facets.marine_zone_group.terms, function(data) {
+					var marineZoneData = data.term.split("~~~");
+					self.resumeMarineZones.push(new ResumeMarineZone({marineZoneCode: marineZoneData[1], marineZoneName: marineZoneData[0], occurrences: data.count}));
+				});
+				var marineZones = ko.observableArray();
+				var canonicals = ko.observableArray();
+				_.each(allData.facets.canonical.terms, function(data) {
+					canonicals.push(new ResumeCount({name: data.term, count: data.count}));
+				});
+				var count = 0;
+				var providers = ko.observableArray();
+				_.each(allData.facets.data_provider_name.terms, function(data) {
+					providers.push(new ResumeCount({id: allData.facets.data_provider_id.terms[count].term, url: "http://data.sibcolombia.net/publicadores/provider/"+allData.facets.data_provider_id.terms[count].term, name: data.term, count: data.count}));
+					count++;
+				});
+				count = 0;
+				var resources = ko.observableArray();
+				_.each(allData.facets.data_resource_name.terms, function(data) {
+					resources.push(new ResumeCount({id: allData.facets.data_resource_id.terms[count].term, url: "http://data.sibcolombia.net/conjuntos/resource/"+allData.facets.data_resource_id.terms[count].term, name: data.term, count: data.count}));
+					count++;
+				});
+				var kingdoms = ko.observableArray();
+				_.each(allData.facets.kingdom.terms, function(data) {
+					var nameAndID = data.term.split("~~~");
+					if(nameAndID[1] != "null") {
+						kingdoms.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.count}));
+					} else {
+						kingdoms.push(new ResumeCount({name: nameAndID[0], count: data.count}));
+					}
+				});
+				var phylums = ko.observableArray();
+				_.each(allData.facets.phylum.terms, function(data) {
+					var nameAndID = data.term.split("~~~");
+					if(nameAndID[1] != "null") {
+						phylums.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.count}));
+					} else {
+						phylums.push(new ResumeCount({name: nameAndID[0], count: data.count}));
+					}
+				});
+				var taxonClasses = ko.observableArray();
+				_.each(allData.facets.taxonClass.terms, function(data) {
+					var nameAndID = data.term.split("~~~");
+					if(nameAndID[1] != "null") {
+						taxonClasses.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.count}));
+					} else {
+						taxonClasses.push(new ResumeCount({name: nameAndID[0], count: data.count}));
+					}
+				});
+				var order_ranks = ko.observableArray();
+				_.each(allData.facets.order_rank.terms, function(data) {
+					var nameAndID = data.term.split("~~~");
+					if(nameAndID[1] != "null") {
+						order_ranks.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.count}));
+					} else {
+						order_ranks.push(new ResumeCount({name: nameAndID[0], count: data.count}));
+					}
+				});
+				var families = ko.observableArray();
+				_.each(allData.facets.family.terms, function(data) {
+					var nameAndID = data.term.split("~~~");
+					if(nameAndID[1] != "null") {
+						families.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.count}));
+					} else {
+						families.push(new ResumeCount({name: nameAndID[0], count: data.count}));
+					}
+				});
+				var genuses = ko.observableArray();
+				_.each(allData.facets.genus.terms, function(data) {
+					var nameAndID = data.term.split("~~~");
+					if(nameAndID[1] != "null") {
+						genuses.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.count}));
+					} else {
+						genuses.push(new ResumeCount({name: nameAndID[0], count: data.count}));
+					}
+				});
+				var species = ko.observableArray();
+				_.each(allData.facets.species.terms, function(data) {
+					var nameAndID = data.term.split("~~~");
+					if(nameAndID[1] != "null") {
+						species.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.count}));
+					} else {
+						species.push(new ResumeCount({name: nameAndID[0], count: data.count}));
+					}
+				});
+				count = 0;
+				var countries = ko.observableArray();
+				_.each(allData.facets.country_name.terms, function(data) {
+					countries.push(new ResumeCount({id: allData.facets.iso_country_code.terms[count].term, url: "http://data.sibcolombia.net/countries/"+allData.facets.iso_country_code.terms[count].term, name: data.term, count: data.count}));
+					count++;
+				});
+				count = 0;
+				var departments = ko.observableArray();
+				_.each(allData.facets.department_name.terms, function(data) {
+					departments.push(new ResumeCount({id: allData.facets.iso_department_code.terms[count].term, url: "http://data.sibcolombia.net/departments/"+allData.facets.iso_department_code.terms[count].term, name: data.term, count: data.count}));
+					count++;
+				});
+				var counties = ko.observableArray();
+				_.each(allData.facets.county_group.terms, function(data) {
+					var countyData = data.term.split("~~~");
+					counties.push(new ResumeCount({id: countyData[2], name: countyData[0] + " - " + countyData[1], count: data.count}));
+				});
+				var paramos = ko.observableArray();
+				_.each(allData.facets.paramo_group.terms, function(data) {
+					var paramoData = data.term.split("~~~");
+					paramos.push(new ResumeCount({id: paramoData[1], name: paramoData[0], count: data.count}));
+				});
+				var commons = ko.observableArray();
+				_.each(allData.facets.common.terms, function(data) {
+					commons.push(new ResumeCount({name: data.term, count: data.count}));
+				});
+				self.resumesInfoFilter.removeAll();
+				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
 				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
 				self.showResumeContainer();
 			});
@@ -2764,6 +3488,23 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		removeScientificName: function(parent, selectedFilter) {
 			var self = parent;
 			self.selectedScientificNames.remove(selectedFilter);
+			self.totalFilters(self.totalFilters()-1);
+		},
+		// Add CommonName filter
+		addCommonName: function() {
+			var self = this;
+			self.selectedCommonNames.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: self.objectNameValue(), textName: "CommonName"}));
+			self.totalFilters(self.totalFilters()+1);
+		},
+		addCommonNameFromHelp: function(parent, selectedFilter) {
+			var self = parent;
+			self.selectedCommonNames.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.canonical, textName: "CommonName"}));
+			self.totalFilters(self.totalFilters()+1);
+		},
+		// Removes CommonName filter
+		removeCommonName: function(parent, selectedFilter) {
+			var self = parent;
+			self.selectedCommonNames.remove(selectedFilter);
 			self.totalFilters(self.totalFilters()-1);
 		},
 		// Add Taxon filter
@@ -2845,6 +3586,40 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		removeCountyID: function(parent, selectedFilter) {
 			var self = this;
 			self.selectedCountiesIDs.remove(selectedFilter);
+			self.totalFilters(self.totalFilters()-1);
+		},
+		// Add paramo filter
+		addParamoID: function() {
+			var self = this;
+			self.selectedParamosIDs.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: $("#dropDownParamo").select2('data').id, textName: $("#dropDownParamo").select2('data').text}));
+			self.totalFilters(self.totalFilters()+1);
+		},
+		addParamoIDFromHelp: function(parent, selectedFilter) {
+			var self = parent;
+			self.selectedParamosIDs.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.paramoCode, textName: selectedFilter.paramoName}));
+			self.totalFilters(self.totalFilters()+1);
+		},
+		// Removes paramo filter
+		removeParamoID: function(parent, selectedFilter) {
+			var self = this;
+			self.selectedParamosIDs.remove(selectedFilter);
+			self.totalFilters(self.totalFilters()-1);
+		},
+		// Add marineZone filter
+		addMarineZoneID: function() {
+			var self = this;
+			self.selectedMarineZonesIDs.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: $("#dropDownMarineZone").select2('data').id, textName: $("#dropDownMarineZone").select2('data').text}));
+			self.totalFilters(self.totalFilters()+1);
+		},
+		addMarineZoneIDFromHelp: function(parent, selectedFilter) {
+			var self = parent;
+			self.selectedMarineZonesIDs.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.marineZoneCode, textName: selectedFilter.marineZoneName}));
+			self.totalFilters(self.totalFilters()+1);
+		},
+		// Removes paramo filter
+		removeMarineZoneID: function(parent, selectedFilter) {
+			var self = this;
+			self.selectedMarineZonesIDs.remove(selectedFilter);
 			self.totalFilters(self.totalFilters()-1);
 		},
 		// Add Latitude filter
@@ -2991,6 +3766,10 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			_.each(allData.facets.canonical.terms, function(data) {
 				canonicals.push(new ResumeCount({name: data.term, count: data.count}));
 			});
+			var commons = ko.observableArray();
+			_.each(allData.facets.common.terms, function(data) {
+				commons.push(new ResumeCount({name: data.term, count: data.count}));
+			});
 			var kingdoms = ko.observableArray();
 			_.each(allData.facets.kingdom.terms, function(data) {
 				var nameAndID = data.term.split("~~~");
@@ -3070,8 +3849,16 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			_.each(allData.facets.county_name.terms, function(data) {
 				counties.push(new ResumeCount({name: data.term, count: data.count}));
 			});
+			var paramos = ko.observableArray();
+			_.each(allData.facets.paramo_name.terms, function(data) {
+				paramos.push(new ResumeCount({name: data.term, count: data.count}));
+			});
+			var marineZones = ko.observableArray();
+			_.each(allData.facets.marine_zone_name.terms, function(data) {
+				marineZones.push(new ResumeCount({name: data.term, count: data.count}));
+			});
 			self.resumesInfo.removeAll();
-			self.resumesInfo.push(new ResumeInfo({cellID: a.layer.options.cellID, canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, counties: counties}));
+			self.resumesInfo.push(new ResumeInfo({cellID: a.layer.options.cellID, canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, counties: counties, paramos: paramos, marineZones: marineZones}));
 			if($("#resumeDetail").is(':hidden')) {
 				$("#resumeDetail").animate({width: 'toggle'}, 500, "swing", function() {
 					if(self.resumeFirstScrollRun) {
@@ -3095,6 +3882,10 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			_.each(allData.facets.canonical.terms, function(data) {
 				canonicals.push(new ResumeCount({name: data.term, count: data.count}));
 			});
+			var commons = ko.observableArray();
+			_.each(allData.facets.common.terms, function(data) {
+				commons.push(new ResumeCount({name: data.term, count: data.count}));
+			});
 			var kingdoms = ko.observableArray();
 			_.each(allData.facets.kingdom.terms, function(data) {
 				var nameAndID = data.term.split("~~~");
@@ -3174,8 +3965,16 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			_.each(allData.facets.county_name.terms, function(data) {
 				counties.push(new ResumeCount({name: data.term, count: data.count}));
 			});
+			var paramos = ko.observableArray();
+			_.each(allData.facets.paramo_name.terms, function(data) {
+				paramos.push(new ResumeCount({name: data.term, count: data.count}));
+			});
+			var marineZones = ko.observableArray();
+			_.each(allData.facets.marine_zone_name.terms, function(data) {
+				marineZones.push(new ResumeCount({name: data.term, count: data.count}));
+			});
 			self.resumesInfo.removeAll();
-			self.resumesInfo.push(new ResumeInfo({cellID: a.layer.options.cellID, canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, counties: counties}));
+			self.resumesInfo.push(new ResumeInfo({cellID: a.layer.options.cellID, canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, counties: counties, paramos: paramos, marineZones: marineZones}));
 
 			if($("#resumeDetail").is(':hidden')) {
 				$("#resumeDetail").animate({width: 'toggle'}, 500, "swing", function() {
@@ -3200,6 +3999,10 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			_.each(allData.facets.canonical.terms, function(data) {
 				canonicals.push(new ResumeCount({name: data.term, count: data.count}));
 			});
+			var commons = ko.observableArray();
+			_.each(allData.facets.common.terms, function(data) {
+				commons.push(new ResumeCount({name: data.term, count: data.count}));
+			});
 			var kingdoms = ko.observableArray();
 			_.each(allData.facets.kingdom.terms, function(data) {
 				var nameAndID = data.term.split("~~~");
@@ -3279,8 +4082,16 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			_.each(allData.facets.county_name.terms, function(data) {
 				counties.push(new ResumeCount({name: data.term, count: data.count}));
 			});
+			var paramos = ko.observableArray();
+			_.each(allData.facets.paramo_name.terms, function(data) {
+				paramos.push(new ResumeCount({name: data.term, count: data.count}));
+			});
+			var marineZones = ko.observableArray();
+			_.each(allData.facets.marine_zone_name.terms, function(data) {
+				marineZones.push(new ResumeCount({name: data.term, count: data.count}));
+			});
 			self.resumesInfo.removeAll();
-			self.resumesInfo.push(new ResumeInfo({cellID: a.layer.options.cellID, canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, counties: counties}));
+			self.resumesInfo.push(new ResumeInfo({cellID: a.layer.options.cellID, canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, counties: counties, paramos: paramos, marineZones: marineZones}));
 
 			if($("#resumeDetail").is(':hidden')) {
 				$("#resumeDetail").animate({width: 'toggle'}, 500, "swing", function() {
@@ -3305,6 +4116,10 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			_.each(allData.facets.canonical.terms, function(data) {
 				canonicals.push(new ResumeCount({name: data.term, count: data.count}));
 			});
+			var commons = ko.observableArray();
+			_.each(allData.facets.common.terms, function(data) {
+				commons.push(new ResumeCount({name: data.term, count: data.count}));
+			});
 			var kingdoms = ko.observableArray();
 			_.each(allData.facets.kingdom.terms, function(data) {
 				var nameAndID = data.term.split("~~~");
@@ -3384,8 +4199,16 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			_.each(allData.facets.county_name.terms, function(data) {
 				counties.push(new ResumeCount({name: data.term, count: data.count}));
 			});
+			var paramos = ko.observableArray();
+			_.each(allData.facets.paramo_name.terms, function(data) {
+				paramos.push(new ResumeCount({name: data.term, count: data.count}));
+			});
+			var marineZones = ko.observableArray();
+			_.each(allData.facets.marine_zone_name.terms, function(data) {
+				marineZones.push(new ResumeCount({name: data.term, count: data.count}));
+			});
 			self.resumesInfo.removeAll();
-			self.resumesInfo.push(new ResumeInfo({cellID: a.layer.options.cellID, canonicals: canonicals, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, counties: counties}));
+			self.resumesInfo.push(new ResumeInfo({cellID: a.layer.options.cellID, canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, counties: counties, paramos: paramos, marineZones: marineZones}));
 
 			if($("#resumeDetail").is(':hidden')) {
 				$("#resumeDetail").animate({width: 'toggle'}, 500, "swing", function() {
@@ -3465,6 +4288,10 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				url += ((counter > 0) ? "&" : "")+"c["+counter+"].s="+scientificName.subject+"&"+"c["+counter+"].p="+self.dataPortalConditionCodes(scientificName.predicate)+"&"+"c["+counter+"].o="+scientificName.textObject;
 				counter++;
 			});
+			_.each(self.selectedCommonNames(), function(commonName) {
+				url += ((counter > 0) ? "&" : "")+"c["+counter+"].s="+commonName.subject+"&"+"c["+counter+"].p="+self.dataPortalConditionCodes(commonName.predicate)+"&"+"c["+counter+"].o="+commonName.textObject;
+				counter++;
+			});
 			_.each(self.selectedTaxonNames(), function(taxonName) {
 				if(taxonName.id !== "null") {
 					url += ((counter > 0) ? "&" : "")+"c["+counter+"].s=20&"+"c["+counter+"].p="+self.dataPortalConditionCodes(taxonName.predicate)+"&"+"c["+counter+"].o="+taxonName.id;
@@ -3481,6 +4308,14 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			});
 			_.each(self.selectedCountiesIDs(), function(county) {
 				url += ((counter > 0) ? "&" : "")+"c["+counter+"].s="+county.subject+"&"+"c["+counter+"].p="+self.dataPortalConditionCodes(county.predicate)+"&"+"c["+counter+"].o="+county.textObject;
+				counter++;
+			});
+			_.each(self.selectedParamosIDs(), function(paramo) {
+				url += ((counter > 0) ? "&" : "")+"c["+counter+"].s="+paramo.subject+"&"+"c["+counter+"].p="+self.dataPortalConditionCodes(paramo.predicate)+"&"+"c["+counter+"].o="+paramo.textObject;
+				counter++;
+			});
+			_.each(self.selectedMarineZonesIDs(), function(marineZone) {
+				url += ((counter > 0) ? "&" : "")+"c["+counter+"].s="+marineZone.subject+"&"+"c["+counter+"].p="+self.dataPortalConditionCodes(marineZone.predicate)+"&"+"c["+counter+"].o="+marineZone.textObject;
 				counter++;
 			});
 			_.each(self.selectedProviders(), function(provider) {
