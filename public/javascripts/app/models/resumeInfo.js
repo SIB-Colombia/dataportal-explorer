@@ -8,6 +8,7 @@ define(["knockout"], function(ko) {
 		this.providers = data.providers || null;
 		this.resources = data.resources || null;
 		this.canonicals = data.canonicals || null;
+		this.commons = data.commons || null;
 		this.kingdoms = data.kingdoms || null;
 		this.phylums = data.phylums || null;
 		this.taxonClasses = data.taxonClasses || null;
@@ -17,6 +18,8 @@ define(["knockout"], function(ko) {
 		this.species = data.species || null;
 		this.countries = data.countries || null;
 		this.counties = data.counties || null;
+		this.paramos = data.paramos || null;
+		this.marineZones = data.marineZones || null;
 		this.departments = data.departments || null;
 	};
 

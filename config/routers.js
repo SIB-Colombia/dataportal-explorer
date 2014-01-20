@@ -78,6 +78,14 @@ module.exports = function(parent, options) {
 					method = 'get';
 					path = '/rest/' + name + '/counties/list';
 					break;
+				case 'listParamos':
+					method = 'get';
+					path = '/rest/' + name + '/paramos/list';
+					break;
+				case 'listMarineZones':
+					method = 'get';
+					path = '/rest/' + name + '/marinezones/list';
+					break;
 				case 'getDistributionStatsWithSearchPointOneDegree':
 					method = 'post';
 					path = '/' + name + '/pointonedegree/stats';
@@ -149,6 +157,14 @@ module.exports = function(parent, options) {
 				case 'searchResumeScientificName':
 					method = 'get';
 					path = '/rest/' + name + '/resume/scientificname/name';
+					break;
+				case 'searchResumeCommonNameByName':
+					method = 'get';
+					path = '/rest/' + name + '/resume/commonname/name/:' + '_name';
+					break;
+				case 'searchResumeCommonName':
+					method = 'get';
+					path = '/rest/' + name + '/resume/commonname/name';
 					break;
 				case 'searchResumeKingdomNameByName':
 					method = 'get';
@@ -261,6 +277,22 @@ module.exports = function(parent, options) {
 				case 'searchResumeCounties':
 					method = 'get';
 					path = '/rest/' + name + '/resume/counties/name';
+					break;
+				case 'searchResumeParamosByName':
+					method = 'get';
+					path = '/rest/' + name + '/resume/paramos/name/:' + '_name';
+					break;
+				case 'searchResumeParamos':
+					method = 'get';
+					path = '/rest/' + name + '/resume/paramos/name';
+					break;
+				case 'searchResumeMarineZonesByName':
+					method = 'get';
+					path = '/rest/' + name + '/resume/marinezones/name/:' + '_name';
+					break;
+				case 'searchResumeMarineZones':
+					method = 'get';
+					path = '/rest/' + name + '/resume/marinezones/name';
 					break;
 				case 'searchSearchHelpTextByName':
 					method = 'get';

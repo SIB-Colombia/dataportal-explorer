@@ -101,7 +101,7 @@ function OccurrenceSearchViewModel() {
 		sortable: true,
 		groupable: {
 			messages: {
-				empty: "Arrastre un encabezado de calumna a esta zona para agrupar por dicha columna."
+				empty: "Arrastre un encabezado de columna a esta zona para agrupar por dicha columna."
 			}
 		},
 		scrollable: true,

@@ -36,6 +36,21 @@ exports.searchResumeScientificNameByName = function(req, res) {
 	});
 };
 
+// Resume Common Name data JSON response
+exports.searchResumeCommonName = function(req, res) {
+	occurrences = occurrencesES.getOccurrencesResumeName("*", "common");
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
+	});
+};
+
+exports.searchResumeCommonNameByName = function(req, res) {
+	occurrences = occurrencesES.getOccurrencesResumeName(req.params._name, "common");
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
+	});
+};
+
 // Resume kingdom data JSON response
 exports.searchResumeKingdomName = function(req, res) {
 	occurrences = occurrencesES.getOccurrencesResumeName("*", "kingdom");
@@ -246,6 +261,36 @@ exports.searchResumeCountiesByName = function(req, res) {
 	});
 };
 
+// Resume paramos data JSON response
+exports.searchResumeParamos = function(req, res) {
+	occurrences = occurrencesES.getOccurrencesResumeName("*", "paramo");
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
+	});
+};
+
+exports.searchResumeParamosByName = function(req, res) {
+	occurrences = occurrencesES.getOccurrencesResumeName(req.params._name, "paramo");
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
+	});
+};
+
+// Resume marine zones data JSON response
+exports.searchResumeMarineZones = function(req, res) {
+	occurrences = occurrencesES.getOccurrencesResumeName("*", "marineZone");
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
+	});
+};
+
+exports.searchResumeMarineZonesByName = function(req, res) {
+	occurrences = occurrencesES.getOccurrencesResumeName(req.params._name, "marineZone");
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
+	});
+};
+
 // Search help text JSON response
 exports.searchSearchHelpTextByName = function(req, res) {
 	occurrences = occurrencesES.getSearchText(req.params._name);
@@ -257,6 +302,22 @@ exports.searchSearchHelpTextByName = function(req, res) {
 // Get all the counties for dropdown list
 exports.listCounties = function(req, res) {
 	occurrences = occurrencesES.getCounties();
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
+	});
+};
+
+// Get all the paramos for dropdown list
+exports.listParamos = function(req, res) {
+	occurrences = occurrencesES.getParamos();
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
+	});
+};
+
+// Get all the paramos for dropdown list
+exports.listMarineZones = function(req, res) {
+	occurrences = occurrencesES.getMarineZones();
 	occurrences.exec(function(err, data){
 		res.jsonp(JSON.parse(data));
 	});

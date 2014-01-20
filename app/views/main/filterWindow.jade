@@ -100,6 +100,22 @@ block filterWindow
 									li
 										span(data-bind="text: name")
 							dd.cuenta(data-bind="text: count")
+						span.headerDistribution(data-bind="visible: paramos().length > 0") Páramos:
+						span.headerCount(data-bind="visible: paramos().length > 0") # Registros
+						dl.preview-data(data-bind="foreach: paramos")
+							dt
+								ul
+									li
+										span(data-bind="text: name")
+							dd.cuenta(data-bind="text: count")
+						span.headerDistribution(data-bind="visible: marineZones().length > 0") Zonas marítimas:
+						span.headerCount(data-bind="visible: marineZones().length > 0") # Registros
+						dl.preview-data(data-bind="foreach: marineZones")
+							dt
+								ul
+									li
+										span(data-bind="text: name")
+							dd.cuenta(data-bind="text: count")
 						span.headerDistribution(data-bind="visible: canonicals().length > 0") Reino:
 						span.headerCount(data-bind="visible: canonicals().length > 0") # Registros
 						dl.preview-data(data-bind="foreach: kingdoms")
@@ -206,6 +222,14 @@ block filterWindow
 									li
 										span(data-bind="text: name")
 							dd.cuenta(data-bind="text: count")
+						span.headerDistribution(data-bind="visible: commons().length > 0") Nombre común:
+						span.headerCount(data-bind="visible: commons().length > 0") # Registros
+						dl.preview-data(data-bind="foreach: commons")
+							dt
+								ul
+									li
+										span(data-bind="text: name")
+							dd.cuenta(data-bind="text: count")
 		#filtersContainerHelp(data-bind="visible: isObjectNameHelpSelected", style="display: none")
 			#topFiltersContainerHelp
 				a.close-icon-filter-help(data-bind="click: disableFilterHelp")
@@ -220,6 +244,13 @@ block filterWindow
 					.item
 						span(data-bind="html: canonicalWithBold")
 						a(href='#', title='Adicionar este filtro', data-bind='click: function () { $parent.addScientificNameFromHelp($parent, this); }')
+							img(alt='Adicionar este filtro', src='/images/icons/redplus.png')
+						em(data-bind="text: occurrences")
+				// Common Names resume data
+				.contentFiltersContainerHelpContainer(data-bind="foreach: resumeCommonNames, visible: resumeCommonNames().length > 0 && selectedSubject() == 31")
+					.item
+						span(data-bind="html: canonicalWithBold")
+						a(href='#', title='Adicionar este filtro', data-bind='click: function () { $parent.addCommonNameFromHelp($parent, this); }')
 							img(alt='Adicionar este filtro', src='/images/icons/redplus.png')
 						em(data-bind="text: occurrences")
 				// Kingdom resume data
@@ -320,6 +351,20 @@ block filterWindow
 						a(href='#', title='Adicionar este filtro', data-bind='click: function () { $parent.addCountyIDFromHelp($parent, this); }')
 							img(alt='Adicionar este filtro', src='/images/icons/redplus.png')
 						em(data-bind="text: occurrences")
+				// Paramos resume data
+				.contentFiltersContainerHelpContainer(data-bind="foreach: resumeParamos, visible: resumeParamos().length > 0 && selectedSubject() == 40")
+					.item
+						span(data-bind="html: paramoNameWithBold")
+						a(href='#', title='Adicionar este filtro', data-bind='click: function () { $parent.addParamoIDFromHelp($parent, this); }')
+							img(alt='Adicionar este filtro', src='/images/icons/redplus.png')
+						em(data-bind="text: occurrences")
+				// MarineZones resume data
+				.contentFiltersContainerHelpContainer(data-bind="foreach: resumeMarineZones, visible: resumeMarineZones().length > 0 && selectedSubject() == 41")
+					.item
+						span(data-bind="html: marineZoneNameWithBold")
+						a(href='#', title='Adicionar este filtro', data-bind='click: function () { $parent.addMarineZoneIDFromHelp($parent, this); }')
+							img(alt='Adicionar este filtro', src='/images/icons/redplus.png')
+						em(data-bind="text: occurrences")
 				.resumeHeader
 					h2 Distribución de registros encontrados
 				.resume(data-bind="foreach: resumesInfoFilter")
@@ -362,6 +407,22 @@ block filterWindow
 					span.headerDistribution(data-bind="visible: counties().length > 0") Municipio:
 					span.headerCount(data-bind="visible: counties().length > 0") # Registros
 					dl.preview-data(data-bind="foreach: counties")
+						dt
+							ul
+								li
+									span(data-bind="text: name")
+						dd.cuenta(data-bind="text: count")
+					span.headerDistribution(data-bind="visible: paramos().length > 0") Páramo:
+					span.headerCount(data-bind="visible: paramos().length > 0") # Registros
+					dl.preview-data(data-bind="foreach: paramos")
+						dt
+							ul
+								li
+									span(data-bind="text: name")
+						dd.cuenta(data-bind="text: count")
+					span.headerDistribution(data-bind="visible: marineZones().length > 0") Zona marítima:
+					span.headerCount(data-bind="visible: marineZones().length > 0") # Registros
+					dl.preview-data(data-bind="foreach: marineZones")
 						dt
 							ul
 								li
@@ -473,6 +534,14 @@ block filterWindow
 								li
 									span(data-bind="text: name")
 						dd.cuenta(data-bind="text: count")
+					span.headerDistribution(data-bind="visible: commons().length > 0") Nombre común:
+					span.headerCount(data-bind="visible: commons().length > 0") # Registros
+					dl.preview-data(data-bind="foreach: commons")
+						dt
+							ul
+								li
+									span(data-bind="text: name")
+						dd.cuenta(data-bind="text: count")
 		#filtersContainer
 			#explorerFiltersAndEditor
 				#filterEditorPane
@@ -482,6 +551,7 @@ block filterWindow
 								select(name='c[0].s', id='newFilterSubject', data-bind="value: selectedSubject, event: {change: changeFilterHelp}")
 									optgroup(label='Taxonomía')
 										option(value='0', selected='true') Nombre Científico
+										option(value='31') Nombre común
 										option(value='100') Reino
 										option(value='101') Filo
 										option(value='102') Clase
@@ -493,6 +563,8 @@ block filterWindow
 										option(value='5') País
 										option(value='38') Departamento
 										option(value='39') Municipio
+										option(value='40') Páramo
+										option(value='41') Área marítima
 										option(value='1') Latitud
 										option(value='2') Longitud
 										option(value='34') Altitud
@@ -513,7 +585,7 @@ block filterWindow
 								select(name='c[0].p', id='newFilterPredicate', data-bind="options: predicateOptions, optionsText: 'name', optionsValue: 'value', value: selectedPredicate")
 							span(id='newFilterValue', class='value')
 								// Input for simple text
-								input(name='c[0].o', type='text', id='statesInput', class='input-medium search-query', autocomplete='off', data-bind="click: enableFilterHelp, value: objectNameValue, valueUpdate: 'afterkeydown', visible: selectedSubject() == 0 || selectedSubject() == 100 || selectedSubject() == 101 || selectedSubject() == 102 || selectedSubject() == 103 || selectedSubject() == 104 || selectedSubject() == 105 || selectedSubject() == 106 || selectedSubject() == 1 || selectedSubject() == 2 || selectedSubject() == 34 || selectedSubject() == 35 || selectedSubject() == 24 || selectedSubject() == 25 || selectedSubject() == 21 || selectedSubject() == 12 || selectedSubject() == 13 || selectedSubject() == 14", style="display: none")
+								input(name='c[0].o', type='text', id='statesInput', class='input-medium search-query', autocomplete='off', data-bind="click: enableFilterHelp, value: objectNameValue, valueUpdate: 'afterkeydown', visible: selectedSubject() == 0 || selectedSubject() == 31 || selectedSubject() == 100 || selectedSubject() == 101 || selectedSubject() == 102 || selectedSubject() == 103 || selectedSubject() == 104 || selectedSubject() == 105 || selectedSubject() == 106 || selectedSubject() == 1 || selectedSubject() == 2 || selectedSubject() == 34 || selectedSubject() == 35 || selectedSubject() == 24 || selectedSubject() == 25 || selectedSubject() == 21 || selectedSubject() == 12 || selectedSubject() == 13 || selectedSubject() == 14", style="display: none")
 								// Input for country
 								select(name='c[0].o', id='dropDownCountry', data-bind='visible: selectedSubject() == 5, value: selectedCountry, selectCountry: {}',  style='display: none')
 									option(value="AF") Afganistán
@@ -803,6 +875,12 @@ block filterWindow
 								// Input for county
 								select(name="c[0].o", id="dropDownCounty", data-bind="foreach: countyDropdown, visible: selectedSubject() == 39, value: selectedCounty, selectCounty: {}",  style="display: none")
 									option(data-bind="attr: { value: isoCountyCode }, text: departmentAndCountyName")
+								// Input for paramo
+								select(name="c[0].o", id="dropDownParamo", data-bind="foreach: paramoDropdown, visible: selectedSubject() == 40, value: selectedParamo, selectParamo: {}",  style="display: none")
+									option(data-bind="attr: { value: paramoCode }, text: paramoName")
+								// Input for marine zone
+								select(name="c[0].o", id="dropDownMarineZone", data-bind="foreach: marineZoneDropdown, visible: selectedSubject() == 41, value: selectedMarineZone, selectMarineZone: {}",  style="display: none")
+									option(data-bind="attr: { value: marineZoneCode }, text: marineZoneName")
 								// Input for coordinates data
 								select(name="c[0].o", id="dropDownCoordinateState", data-bind="visible: selectedSubject() == 28, value: selectedCoordinateState",  style="display: none")
 									option(value="0") Incluye coordenadas
@@ -948,6 +1026,14 @@ block filterWindow
 								span(data-bind='text: textObject')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeScientificName($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
+						// Include CommonName filters
+						ul(style="display: none", class='filterItem', data-bind='foreach: selectedCommonNames, visible: selectedCommonNames().length > 0')
+							li(class='alteredFilter')
+								span(data-bind='visible: $index() == 0') Nombre común es 
+								span(data-bind='visible: $index() != 0') o es 
+								span(data-bind='text: textObject')
+								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeCommonName($parent, this); }')
+									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include Taxon filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedTaxonNames, visible: selectedTaxonNames().length > 0')
 							li(class='alteredFilter')
@@ -980,6 +1066,22 @@ block filterWindow
 								span(data-bind='visible: $index() != 0') o es 
 								span(data-bind='text: textName')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeCountyID($parent, this); }')
+									img(alt='Quitar este filtro', src='/images/grey_minus.png')
+						// Include paramos filters
+						ul(style="display: none", class='filterItem', data-bind='foreach: selectedParamosIDs, visible: selectedParamosIDs().length > 0')
+							li(class='alteredFilter')
+								span(data-bind='visible: $index() == 0') Páramo es 
+								span(data-bind='visible: $index() != 0') o es 
+								span(data-bind='text: textName')
+								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeParamoID($parent, this); }')
+									img(alt='Quitar este filtro', src='/images/grey_minus.png')
+						// Include marine zones filters
+						ul(style="display: none", class='filterItem', data-bind='foreach: selectedMarineZonesIDs, visible: selectedMarineZonesIDs().length > 0')
+							li(class='alteredFilter')
+								span(data-bind='visible: $index() == 0') Zona marítima es 
+								span(data-bind='visible: $index() != 0') o es 
+								span(data-bind='text: textName')
+								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeMarineZoneID($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include Latitude filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedLatitudes, visible: selectedLatitudes().length > 0')
@@ -1080,11 +1182,11 @@ block filterWindow
 						button(style="display: none", class='btn btn-small btn-add-filter', type='button', data-bind='visible: isFiltered(), click: removeFilter') Quitar filtro actual
 				#densityButtonsPane
 					#densityButtons
-						span.detailDensity Nivel de detalle de celda:
-						button(id='oneDegree', class='btn btn-primary btn-small', type='button', data-toggle="button", data-bind='click: toggleDistribution') 1x1 &deg;
-						button(id='pointFiveDegree',class='btn btn-primary btn-small', type='button', data-toggle="button", data-bind='click: toggleDistribution') 0.5x0.5 &deg;
-						button(id='pointTwoDegree', class='btn btn-primary btn-small', type='button', data-toggle="button", data-bind='click: toggleDistribution') 0.2x0.2 &deg;
-						button(id='pointOneDegree', class='btn btn-primary btn-small', type='button', data-toggle="button", data-bind='click: toggleDistribution') 0.1x0.1 &deg;
+						span.detailDensity Tamaño de la celda:
+						button(id='oneDegree', class='btn btn-primary btn-small', type='button', data-toggle="button", data-bind='click: toggleDistribution') 1&deg;x1&deg;
+						button(id='pointFiveDegree',class='btn btn-primary btn-small', type='button', data-toggle="button", data-bind='click: toggleDistribution') 0.5&deg;x0.5&deg;
+						button(id='pointTwoDegree', class='btn btn-primary btn-small', type='button', data-toggle="button", data-bind='click: toggleDistribution') 0.2&deg;x0.2&deg;
+						button(id='pointOneDegree', class='btn btn-primary btn-small', type='button', data-toggle="button", data-bind='click: toggleDistribution') 0.1&deg;x0.1&deg;
 				#additionalInfoPane.occult-element
 					#downloadResults
 						.downloadItem
