@@ -1,0 +1,17 @@
+{
+  "name": "Dataportal-Explorer",
+  "version": "0.2.0",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "public/components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "bootstrap": "~3.1.1",
+    "seiyria-bootstrap-slider": "~3.1.0",
+    "jquery": "~2.1.0",
+    "jquery.ui": "~1.10.4"
+  }
+}

@@ -265,17 +265,17 @@ curl -XPUT 'http://localhost:9200/_river/river-mongodb-pointtwo_cell_density/_me
 # Mapping for geo_distance, geo_bbox, geo_distance_range, geo_polygon and geo_shape support
 curl -XPUT 'http://localhost:9200/sibexplorer/cell_density/_mapping' -d '
 {
-    "cell_density" :  { 
+    "cell_density" :  {
         "properties": {
             "type": {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "type": { 
-                            "type": "integer" 
+                "type": "multi_field",
+                    "fields" : {
+                        "type": {
+                            "type": "integer"
                         },
                         "untouched" : {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -284,14 +284,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/cell_density/_mapping' -d '
                     }
             },
             "entity_id": {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "entity_id": { 
-                            "type": "integer" 
+                "type": "multi_field",
+                    "fields" : {
+                        "entity_id": {
+                            "type": "integer"
                         },
                         "untouched" : {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -300,14 +300,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/cell_density/_mapping' -d '
                     }
             },
             "cell_id": {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "cell_id": { 
-                            "type": "integer" 
+                "type": "multi_field",
+                    "fields" : {
+                        "cell_id": {
+                            "type": "integer"
                         },
                         "untouched" : {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -329,17 +329,17 @@ curl -XPUT 'http://localhost:9200/sibexplorer/cell_density/_mapping' -d '
 
 curl -XPUT 'http://localhost:9200/sibexplorer/centi_cell_density/_mapping' -d '
 {
-    "centi_cell_density" :  { 
+    "centi_cell_density" :  {
         "properties": {
             "type": {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "type": { 
-                            "type": "integer" 
+                "type": "multi_field",
+                    "fields" : {
+                        "type": {
+                            "type": "integer"
                         },
                         "untouched" : {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -348,14 +348,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/centi_cell_density/_mapping' -d '
                     }
             },
             "entity_id": {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "entity_id": { 
-                            "type": "integer" 
+                "type": "multi_field",
+                    "fields" : {
+                        "entity_id": {
+                            "type": "integer"
                         },
                         "untouched" : {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -364,14 +364,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/centi_cell_density/_mapping' -d '
                     }
             },
             "cell_id": {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "cell_id": { 
-                            "type": "integer" 
+                "type": "multi_field",
+                    "fields" : {
+                        "cell_id": {
+                            "type": "integer"
                         },
                         "untouched" : {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -380,14 +380,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/centi_cell_density/_mapping' -d '
                     }
             },
             "centi_cell_id": {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "centi_cell_id": { 
-                            "type": "integer" 
+                "type": "multi_field",
+                    "fields" : {
+                        "centi_cell_id": {
+                            "type": "integer"
                         },
                         "untouched" : {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -416,17 +416,17 @@ curl -XPUT 'http://localhost:9200/sibexplorer/centi_cell_density/_mapping' -d '
 
 curl -XPUT 'http://localhost:9200/sibexplorer/pointfive_cell_density/_mapping' -d '
 {
-    "pointfive_cell_density" :  { 
+    "pointfive_cell_density" :  {
         "properties": {
             "type": {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "type": { 
-                            "type": "integer" 
+                "type": "multi_field",
+                    "fields" : {
+                        "type": {
+                            "type": "integer"
                         },
                         "untouched" : {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -435,14 +435,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/pointfive_cell_density/_mapping' -
                     }
             },
             "entity_id": {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "entity_id": { 
-                            "type": "integer" 
+                "type": "multi_field",
+                    "fields" : {
+                        "entity_id": {
+                            "type": "integer"
                         },
                         "untouched" : {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -451,14 +451,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/pointfive_cell_density/_mapping' -
                     }
             },
             "cell_id": {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "cell_id": { 
-                            "type": "integer" 
+                "type": "multi_field",
+                    "fields" : {
+                        "cell_id": {
+                            "type": "integer"
                         },
                         "untouched" : {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -467,14 +467,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/pointfive_cell_density/_mapping' -
                     }
             },
             "pointfive_cell_id": {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "centi_cell_id": { 
-                            "type": "integer" 
+                "type": "multi_field",
+                    "fields" : {
+                        "centi_cell_id": {
+                            "type": "integer"
                         },
                         "untouched" : {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -503,17 +503,17 @@ curl -XPUT 'http://localhost:9200/sibexplorer/pointfive_cell_density/_mapping' -
 
 curl -XPUT 'http://localhost:9200/sibexplorer/pointtwo_cell_density/_mapping' -d '
 {
-    "pointtwo_cell_density" :  { 
+    "pointtwo_cell_density" :  {
         "properties": {
             "type": {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "type": { 
-                            "type": "integer" 
+                "type": "multi_field",
+                    "fields" : {
+                        "type": {
+                            "type": "integer"
                         },
                         "untouched" : {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -522,14 +522,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/pointtwo_cell_density/_mapping' -d
                     }
             },
             "entity_id": {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "entity_id": { 
-                            "type": "integer" 
+                "type": "multi_field",
+                    "fields" : {
+                        "entity_id": {
+                            "type": "integer"
                         },
                         "untouched" : {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -538,14 +538,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/pointtwo_cell_density/_mapping' -d
                     }
             },
             "cell_id": {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "cell_id": { 
-                            "type": "integer" 
+                "type": "multi_field",
+                    "fields" : {
+                        "cell_id": {
+                            "type": "integer"
                         },
                         "untouched" : {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -554,14 +554,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/pointtwo_cell_density/_mapping' -d
                     }
             },
             "pointtwo_cell_id": {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "centi_cell_id": { 
-                            "type": "integer" 
+                "type": "multi_field",
+                    "fields" : {
+                        "centi_cell_id": {
+                            "type": "integer"
                         },
                         "untouched" : {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -590,17 +590,17 @@ curl -XPUT 'http://localhost:9200/sibexplorer/pointtwo_cell_density/_mapping' -d
 
 curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
 {
-    "occurrences" :  { 
+    "occurrences" :  {
         "properties": {
         	"id": {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "id": { 
-                            "type": "integer" 
+                "type": "multi_field",
+                    "fields" : {
+                        "id": {
+                            "type": "integer"
                         },
                         "untouched" : {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -630,18 +630,18 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
             },
             "altitude_metres": {"type" : "integer"},
             "depth_centimetres": {"type" : "integer"},
-        	"data_provider_id": {"type" : "integer"},
-        	"data_resource_id": {"type" : "integer"},
-        	"institution_code_id": {"type" : "integer"},
-        	"collection_code_id": {"type" : "integer"},
-        	"catalogue_number_id": {"type" : "integer"},
-        	"kingdom_concept_id": {"type" : "integer"},
-        	"phylum_concept_id": {"type" : "integer"},
-        	"class_concept_id": {"type" : "integer"},
-        	"order_concept_id": {"type" : "integer"},
-        	"family_concept_id": {"type" : "integer"},
-        	"genus_concept_id": {"type" : "integer"},
-        	"species_concept_id": {"type" : "integer"},
+						"data_provider_id": {"type" : "integer"},
+						"data_resource_id": {"type" : "integer"},
+						"institution_code_id": {"type" : "integer"},
+						"collection_code_id": {"type" : "integer"},
+						"catalogue_number_id": {"type" : "integer"},
+						"kingdom_concept_id": {"type" : "integer"},
+						"phylum_concept_id": {"type" : "integer"},
+						"class_concept_id": {"type" : "integer"},
+						"order_concept_id": {"type" : "integer"},
+						"family_concept_id": {"type" : "integer"},
+						"genus_concept_id": {"type" : "integer"},
+						"species_concept_id": {"type" : "integer"},
             "basis_or_record_id": {"type" : "integer"},
             "cell_id": {"type" : "integer"},
             "centi_cell_id": {"type" : "integer"},
@@ -649,14 +649,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
             "pointtwo_cell_id": {"type" : "integer"},
             "mod360_cell_id": {"type" : "integer"},
             "canonical" :  {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "canonical": { 
-                            "type": "string" 
+                "type": "multi_field",
+                    "fields" : {
+                        "canonical": {
+                            "type": "string"
                         },
                         "untouched" : {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -665,14 +665,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                     }
             },
             "nombre_comun" :  {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "nombre_comun": { 
-                            "type": "string" 
+                "type": "multi_field",
+                    "fields" : {
+                        "nombre_comun": {
+                            "type": "string"
                         },
                         "untouched" : {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -681,14 +681,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                     }
             },
             "data_provider_name" :  {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "data_provider_name": { 
-                            "type": "string" 
+                "type": "multi_field",
+                    "fields" : {
+                        "data_provider_name": {
+                            "type": "string"
                         },
                         "untouched": {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -697,14 +697,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                     }
             },
             "data_resource_name" :  {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "data_resource_name": { 
-                            "type": "string" 
+                "type": "multi_field",
+                    "fields" : {
+                        "data_resource_name": {
+                            "type": "string"
                         },
                         "untouched": {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -713,14 +713,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                     }
             },
             "institution_code" :  {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "institution_code": { 
-                            "type": "string" 
+                "type": "multi_field",
+                    "fields" : {
+                        "institution_code": {
+                            "type": "string"
                         },
                         "untouched": {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -729,14 +729,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                     }
             },
             "collection_code" :  {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "collection_code": { 
-                            "type": "string" 
+                "type": "multi_field",
+                    "fields" : {
+                        "collection_code": {
+                            "type": "string"
                         },
                         "untouched": {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -745,14 +745,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                     }
             },
             "catalogue_number" :  {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "catalogue_number": { 
-                            "type": "string" 
+                "type": "multi_field",
+                    "fields" : {
+                        "catalogue_number": {
+                            "type": "string"
                         },
                         "untouched": {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -761,14 +761,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                     }
             },
             "iso_country_code" :  {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "iso_country_code": { 
-                            "type": "string" 
+                "type": "multi_field",
+                    "fields" : {
+                        "iso_country_code": {
+                            "type": "string"
                         },
                         "untouched": {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -777,14 +777,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                     }
             },
             "iso_department_code" :  {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "iso_department_code": { 
-                            "type": "string" 
+                "type": "multi_field",
+                    "fields" : {
+                        "iso_department_code": {
+                            "type": "string"
                         },
                         "untouched": {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -793,14 +793,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                     }
             },
             "iso_county_code" :  {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "iso_county_code": { 
-                            "type": "string" 
+                "type": "multi_field",
+                    "fields" : {
+                        "iso_county_code": {
+                            "type": "string"
                         },
                         "untouched": {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -809,14 +809,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                     }
             },
             "paramo_code" :  {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "paramo_code": { 
-                            "type": "string" 
+                "type": "multi_field",
+                    "fields" : {
+                        "paramo_code": {
+                            "type": "string"
                         },
                         "untouched": {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -825,14 +825,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                     }
             },
             "marine_zone_code" :  {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "marine_zone_code": { 
-                            "type": "string" 
+                "type": "multi_field",
+                    "fields" : {
+                        "marine_zone_code": {
+                            "type": "string"
                         },
                         "untouched": {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -841,14 +841,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                     }
             },
             "kingdom" :  {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "kingdom": { 
-                            "type": "string" 
+                "type": "multi_field",
+                    "fields" : {
+                        "kingdom": {
+                            "type": "string"
                         },
                         "untouched": {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -857,14 +857,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                     }
             },
             "phylum" :  {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "phylum": { 
-                            "type": "string" 
+                "type": "multi_field",
+                    "fields" : {
+                        "phylum": {
+                            "type": "string"
                         },
                         "untouched": {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -873,14 +873,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                     }
             },
             "taxonClass" :  {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "taxonClass": { 
-                            "type": "string" 
+                "type": "multi_field",
+                    "fields" : {
+                        "taxonClass": {
+                            "type": "string"
                         },
                         "untouched": {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -889,14 +889,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                     }
             },
             "order_rank" :  {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "order_rank": { 
-                            "type": "string" 
+                "type": "multi_field",
+                    "fields" : {
+                        "order_rank": {
+                            "type": "string"
                         },
                         "untouched": {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -905,14 +905,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                     }
             },
             "family" :  {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "family": { 
-                            "type": "string" 
+                "type": "multi_field",
+                    "fields" : {
+                        "family": {
+                            "type": "string"
                         },
                         "untouched": {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -921,14 +921,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                     }
             },
             "genus" :  {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "genus": { 
-                            "type": "string" 
+                "type": "multi_field",
+                    "fields" : {
+                        "genus": {
+                            "type": "string"
                         },
                         "untouched": {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -937,14 +937,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                     }
             },
             "species" :  {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "species": { 
-                            "type": "string" 
+                "type": "multi_field",
+                    "fields" : {
+                        "species": {
+                            "type": "string"
                         },
                         "untouched": {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -953,14 +953,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                     }
             },
             "kingdom_group" :  {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "kingdom_group": { 
-                            "type": "string" 
+                "type": "multi_field",
+                    "fields" : {
+                        "kingdom_group": {
+                            "type": "string"
                         },
                         "untouched": {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -969,14 +969,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                     }
             },
             "phylum_group" :  {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "phylum_group": { 
-                            "type": "string" 
+                "type": "multi_field",
+                    "fields" : {
+                        "phylum_group": {
+                            "type": "string"
                         },
                         "untouched": {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -985,14 +985,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                     }
             },
             "taxonClass_group" :  {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "taxonClass_group": { 
-                            "type": "string" 
+                "type": "multi_field",
+                    "fields" : {
+                        "taxonClass_group": {
+                            "type": "string"
                         },
                         "untouched": {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -1001,14 +1001,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                     }
             },
             "order_rank_group" :  {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "order_rank_group": { 
-                            "type": "string" 
+                "type": "multi_field",
+                    "fields" : {
+                        "order_rank_group": {
+                            "type": "string"
                         },
                         "untouched": {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -1017,14 +1017,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                     }
             },
             "family_group" :  {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "family_group": { 
-                            "type": "string" 
+                "type": "multi_field",
+                    "fields" : {
+                        "family_group": {
+                            "type": "string"
                         },
                         "untouched": {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -1033,14 +1033,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                     }
             },
             "genus_group" :  {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "genus_group": { 
-                            "type": "string" 
+                "type": "multi_field",
+                    "fields" : {
+                        "genus_group": {
+                            "type": "string"
                         },
                         "untouched": {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -1049,14 +1049,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                     }
             },
             "species_group" :  {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "species_group": { 
-                            "type": "string" 
+                "type": "multi_field",
+                    "fields" : {
+                        "species_group": {
+                            "type": "string"
                         },
                         "untouched": {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -1065,14 +1065,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                     }
             },
             "pointfive_group" :  {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "pointfive_group": { 
-                            "type": "string" 
+                "type": "multi_field",
+                    "fields" : {
+                        "pointfive_group": {
+                            "type": "string"
                         },
                         "untouched": {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -1081,14 +1081,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                     }
             },
             "pointtwo_group" :  {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "pointtwo_group": { 
-                            "type": "string" 
+                "type": "multi_field",
+                    "fields" : {
+                        "pointtwo_group": {
+                            "type": "string"
                         },
                         "untouched": {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -1097,14 +1097,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                     }
             },
             "centi_group" :  {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "centi_group": { 
-                            "type": "string" 
+                "type": "multi_field",
+                    "fields" : {
+                        "centi_group": {
+                            "type": "string"
                         },
                         "untouched": {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -1113,14 +1113,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                     }
             },
             "cell_group" :  {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "cell_group": { 
-                            "type": "string" 
+                "type": "multi_field",
+                    "fields" : {
+                        "cell_group": {
+                            "type": "string"
                         },
                         "untouched": {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -1129,14 +1129,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                     }
             },
             "county_group" :  {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "county_group": { 
-                            "type": "string" 
+                "type": "multi_field",
+                    "fields" : {
+                        "county_group": {
+                            "type": "string"
                         },
                         "untouched": {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -1145,14 +1145,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                     }
             },
             "paramo_group" :  {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "paramo_group": { 
-                            "type": "string" 
+                "type": "multi_field",
+                    "fields" : {
+                        "paramo_group": {
+                            "type": "string"
                         },
                         "untouched": {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -1161,14 +1161,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                     }
             },
             "marine_zone_group" :  {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "marine_zone_group": { 
-                            "type": "string" 
+                "type": "multi_field",
+                    "fields" : {
+                        "marine_zone_group": {
+                            "type": "string"
                         },
                         "untouched": {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -1177,14 +1177,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                     }
             },
             "country_name" :  {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "country_name": { 
-                            "type": "string" 
+                "type": "multi_field",
+                    "fields" : {
+                        "country_name": {
+                            "type": "string"
                         },
                         "untouched": {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -1193,14 +1193,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                     }
             },
             "department_name" :  {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "department_name": { 
-                            "type": "string" 
+                "type": "multi_field",
+                    "fields" : {
+                        "department_name": {
+                            "type": "string"
                         },
                         "untouched": {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -1209,14 +1209,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                     }
             },
             "county_name" :  {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "county_name": { 
-                            "type": "string" 
+                "type": "multi_field",
+                    "fields" : {
+                        "county_name": {
+                            "type": "string"
                         },
                         "untouched": {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -1225,14 +1225,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                     }
             },
             "paramo_name" : {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "paramo_name": { 
-                            "type": "string" 
+                "type": "multi_field",
+                    "fields" : {
+                        "paramo_name": {
+                            "type": "string"
                         },
                         "untouched": {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -1241,14 +1241,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                     }
             },
             "marine_zone_name" : {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "marine_zone_name": { 
-                            "type": "string" 
+                "type": "multi_field",
+                    "fields" : {
+                        "marine_zone_name": {
+                            "type": "string"
                         },
                         "untouched": {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -1257,14 +1257,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                     }
             },
             "basis_of_record_name" :  {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "basis_of_record_name": { 
-                            "type": "string" 
+                "type": "multi_field",
+                    "fields" : {
+                        "basis_of_record_name": {
+                            "type": "string"
                         },
                         "untouched": {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -1273,14 +1273,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
                     }
             },
             "basis_of_record_name_spanish" :  {
-                "type": "multi_field", 
-                    "fields" : { 
-                        "basis_of_record_name_spanish": { 
-                            "type": "string" 
+                "type": "multi_field",
+                    "fields" : {
+                        "basis_of_record_name_spanish": {
+                            "type": "string"
                         },
                         "untouched": {
                             "type": "string",
-                            "index": "not_analyzed" 
+                            "index": "not_analyzed"
                         },
                         "exactWords": {
                             "type": "string",
@@ -1303,7 +1303,92 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
             },
             "location_pointtwo_cell" : {
                 "type" : "geo_point"
-            }
+            },
+						"common_names": {
+							"type": "nested",
+							"properties": {
+								"name": {
+									"type": "multi_field",
+										"fields" : {
+												"name": {
+														"type": "string"
+												},
+												"untouched": {
+														"type": "string",
+														"index": "not_analyzed"
+												},
+												"exactWords": {
+														"type": "string",
+														"analyzer": "string_lowercase"
+												}
+										}
+								},
+								"transliteration": {
+									"type": "multi_field",
+										"fields" : {
+												"transliteration": {
+														"type": "string"
+												},
+												"untouched": {
+														"type": "string",
+														"index": "not_analyzed"
+												},
+												"exactWords": {
+														"type": "string",
+														"analyzer": "string_lowercase"
+												}
+										}
+								},
+								"iso_language_code": {
+									"type": "multi_field",
+										"fields" : {
+												"iso_language_code": {
+														"type": "string"
+												},
+												"untouched": {
+														"type": "string",
+														"index": "not_analyzed"
+												},
+												"exactWords": {
+														"type": "string",
+														"analyzer": "string_lowercase"
+												}
+										}
+								},
+								"iso_country_code": {
+									"type": "multi_field",
+										"fields" : {
+												"iso_country_code": {
+														"type": "string"
+												},
+												"untouched": {
+														"type": "string",
+														"index": "not_analyzed"
+												},
+												"exactWords": {
+														"type": "string",
+														"analyzer": "string_lowercase"
+												}
+										}
+								},
+								"language_name": {
+									"type": "multi_field",
+										"fields" : {
+												"language_name": {
+														"type": "string"
+												},
+												"untouched": {
+														"type": "string",
+														"index": "not_analyzed"
+												},
+												"exactWords": {
+														"type": "string",
+														"analyzer": "string_lowercase"
+												}
+										}
+								}
+							}
+						}
         }
     }
 }'
@@ -1313,14 +1398,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
 #     "geooccurrences" : {
 #         "properties" : {
 #         	"id": {
-#                 "type": "multi_field", 
-#                     "fields" : { 
-#                         "id": { 
-#                             "type": "integer" 
+#                 "type": "multi_field",
+#                     "fields" : {
+#                         "id": {
+#                             "type": "integer"
 #                         },
 #                         "untouched" : {
 #                             "type": "string",
-#                             "index": "not_analyzed" 
+#                             "index": "not_analyzed"
 #                         },
 #                         "exactWords": {
 #                             "type": "string",
@@ -1369,14 +1454,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
 #             "pointtwo_cell_id": {"type" : "integer"},
 #             "mod360_cell_id": {"type" : "integer"},
 #             "canonical" :  {
-#                 "type": "multi_field", 
-#                     "fields" : { 
-#                         "canonical": { 
-#                             "type": "string" 
+#                 "type": "multi_field",
+#                     "fields" : {
+#                         "canonical": {
+#                             "type": "string"
 #                         },
 #                         "untouched": {
 #                             "type": "string",
-#                             "index": "not_analyzed" 
+#                             "index": "not_analyzed"
 #                         },
 #                         "exactWords": {
 #                             "type": "string",
@@ -1385,14 +1470,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
 #                     }
 #             },
 #             "data_provider_name" :  {
-#                 "type": "multi_field", 
-#                     "fields" : { 
-#                         "data_provider_name": { 
-#                             "type": "string" 
+#                 "type": "multi_field",
+#                     "fields" : {
+#                         "data_provider_name": {
+#                             "type": "string"
 #                         },
 #                         "untouched": {
 #                             "type": "string",
-#                             "index": "not_analyzed" 
+#                             "index": "not_analyzed"
 #                         },
 #                         "exactWords": {
 #                             "type": "string",
@@ -1401,14 +1486,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
 #                     }
 #             },
 #             "data_resource_name" :  {
-#                 "type": "multi_field", 
-#                     "fields" : { 
-#                         "data_resource_name": { 
-#                             "type": "string" 
+#                 "type": "multi_field",
+#                     "fields" : {
+#                         "data_resource_name": {
+#                             "type": "string"
 #                         },
 #                         "untouched": {
 #                             "type": "string",
-#                             "index": "not_analyzed" 
+#                             "index": "not_analyzed"
 #                         },
 #                         "exactWords": {
 #                             "type": "string",
@@ -1417,14 +1502,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
 #                     }
 #             },
 #             "institution_code" :  {
-#                 "type": "multi_field", 
-#                     "fields" : { 
-#                         "institution_code": { 
-#                             "type": "string" 
+#                 "type": "multi_field",
+#                     "fields" : {
+#                         "institution_code": {
+#                             "type": "string"
 #                         },
 #                         "untouched" : {
 #                             "type": "string",
-#                             "index": "not_analyzed" 
+#                             "index": "not_analyzed"
 #                         },
 #                         "exactWords": {
 #                             "type": "string",
@@ -1433,14 +1518,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
 #                     }
 #             },
 #             "collection_code" :  {
-#                 "type": "multi_field", 
-#                     "fields" : { 
-#                         "collection_code": { 
-#                             "type": "string" 
+#                 "type": "multi_field",
+#                     "fields" : {
+#                         "collection_code": {
+#                             "type": "string"
 #                         },
 #                         "untouched": {
 #                             "type": "string",
-#                             "index": "not_analyzed" 
+#                             "index": "not_analyzed"
 #                         },
 #                         "exactWords": {
 #                             "type": "string",
@@ -1449,14 +1534,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
 #                     }
 #             },
 #             "catalogue_number" :  {
-#                 "type": "multi_field", 
-#                     "fields" : { 
-#                         "catalogue_number": { 
-#                             "type": "string" 
+#                 "type": "multi_field",
+#                     "fields" : {
+#                         "catalogue_number": {
+#                             "type": "string"
 #                         },
 #                         "untouched": {
 #                             "type": "string",
-#                             "index": "not_analyzed" 
+#                             "index": "not_analyzed"
 #                         },
 #                         "exactWords": {
 #                             "type": "string",
@@ -1465,14 +1550,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
 #                     }
 #             },
 #             "iso_country_code" :  {
-#                 "type": "multi_field", 
-#                     "fields" : { 
-#                         "iso_country_code": { 
-#                             "type": "string" 
+#                 "type": "multi_field",
+#                     "fields" : {
+#                         "iso_country_code": {
+#                             "type": "string"
 #                         },
 #                         "untouched": {
 #                             "type": "string",
-#                             "index": "not_analyzed" 
+#                             "index": "not_analyzed"
 #                         },
 #                         "exactWords": {
 #                             "type": "string",
@@ -1481,14 +1566,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
 #                     }
 #             },
 #             "iso_department_code" :  {
-#                 "type": "multi_field", 
-#                     "fields" : { 
-#                         "iso_department_code": { 
-#                             "type": "string" 
+#                 "type": "multi_field",
+#                     "fields" : {
+#                         "iso_department_code": {
+#                             "type": "string"
 #                         },
 #                         "untouched": {
 #                             "type": "string",
-#                             "index": "not_analyzed" 
+#                             "index": "not_analyzed"
 #                         },
 #                         "exactWords": {
 #                             "type": "string",
@@ -1497,14 +1582,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
 #                     }
 #             },
 #             "iso_county_code" :  {
-#                 "type": "multi_field", 
-#                     "fields" : { 
-#                         "iso_county_code": { 
-#                             "type": "string" 
+#                 "type": "multi_field",
+#                     "fields" : {
+#                         "iso_county_code": {
+#                             "type": "string"
 #                         },
 #                         "untouched": {
 #                             "type": "string",
-#                             "index": "not_analyzed" 
+#                             "index": "not_analyzed"
 #                         },
 #                         "exactWords": {
 #                             "type": "string",
@@ -1513,14 +1598,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
 #                     }
 #             },
 #             "country_name" :  {
-#                 "type": "multi_field", 
-#                     "fields" : { 
-#                         "country_name": { 
-#                             "type": "string" 
+#                 "type": "multi_field",
+#                     "fields" : {
+#                         "country_name": {
+#                             "type": "string"
 #                         },
 #                         "untouched": {
 #                             "type": "string",
-#                             "index": "not_analyzed" 
+#                             "index": "not_analyzed"
 #                         },
 #                         "exactWords": {
 #                             "type": "string",
@@ -1529,14 +1614,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
 #                     }
 #             },
 #             "department_name" :  {
-#                 "type": "multi_field", 
-#                     "fields" : { 
-#                         "department_name": { 
-#                             "type": "string" 
+#                 "type": "multi_field",
+#                     "fields" : {
+#                         "department_name": {
+#                             "type": "string"
 #                         },
 #                         "untouched": {
 #                             "type": "string",
-#                             "index": "not_analyzed" 
+#                             "index": "not_analyzed"
 #                         },
 #                         "exactWords": {
 #                             "type": "string",
@@ -1545,14 +1630,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
 #                     }
 #             },
 #             "county_name" :  {
-#                 "type": "multi_field", 
-#                     "fields" : { 
-#                         "county_name": { 
-#                             "type": "string" 
+#                 "type": "multi_field",
+#                     "fields" : {
+#                         "county_name": {
+#                             "type": "string"
 #                         },
 #                         "untouched": {
 #                             "type": "string",
-#                             "index": "not_analyzed" 
+#                             "index": "not_analyzed"
 #                         },
 #                         "exactWords": {
 #                             "type": "string",

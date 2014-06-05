@@ -1,10 +1,10 @@
 {
   "name": "sib-colombia-dataportal-explorer",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "author": "Valentinilla <valegrajales@gmail.com>",
   "description": "Web application for SIB Colombia dataportal map data exploration",
-  "contributors": [ 
+  "contributors": [
     {
       "name": "Daniel Amariles",
       "email": "damariles@humboldt.org.co"
@@ -15,7 +15,7 @@
     }
   ],
   "scripts": {
-    "start": "./node_modules/.bin/nodemon app.js",
+    "start": "./node_modules/.bin/nodemon -e jade,js,styl app.js",
     "test": "set NODE_ENV=test; ./node_modules/.bin/mocha --reporter spec test/test-*.js"
   },
   "keywords": [
@@ -25,20 +25,27 @@
     "sib-map-explorer"
   ],
   "dependencies": {
-    "express": "latest",
-    "async": "latest",
-    "stylus": "latest",
-    "jade": "latest",
-    "request": "latest",
-    "q": "latest",
-    "elasticsearchclient": "latest",
-    "mysql": "latest",
-    "mariasql": "latest",
-    "mongodb": "latest",
-    "mongoose": "latest",
-    "moment": "latest",
-    "winston": "latest",
-    "underscore": "latest"
+    "express": "4.4.1",
+    "compression": "1.0.2",
+    "serve-favicon": "2.0.0",
+    "morgan": "1.1.1",
+    "body-parser": "1.3.0",
+    "method-override": "2.0.1",
+    "errorhandler": "1.0.1",
+    "serve-static": "1.2.1",
+    "async": "0.9.0",
+    "stylus": "0.46.0",
+    "jade": "1.3.1",
+    "request": "2.36.0",
+    "q": "1.0.1",
+    "elasticsearchclient": "0.5.3",
+    "mysql": "2.3.2",
+    "mariasql": "0.1.21",
+    "mongodb": "1.4.5",
+    "mongoose": "3.8.12",
+    "moment": "2.6.0",
+    "winston": "0.7.3",
+    "underscore": "1.6.0"
   },
   "devDependencies": {
     "supertest": "latest",
@@ -48,6 +55,6 @@
   },
   "license": "MIT",
   "engines": {
-    "node": ">=0.10.4"
+    "node": ">=0.10.28"
   }
 }

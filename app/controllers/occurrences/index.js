@@ -1,23 +1,3 @@
-/*var mongoose = require('mongoose')
-  , CanonicalGroup = mongoose.model('CanonicalGroup')
-  , KingdomGroup = mongoose.model('KingdomGroup')
-  , PhylumGroup = mongoose.model('PhylumGroup')
-  , ClassGroup = mongoose.model('ClassGroup')
-  , OrderRankGroup = mongoose.model('OrderRankGroup')
-  , FamilyGroup = mongoose.model('FamilyGroup')
-  , GenusGroup = mongoose.model('GenusGroup')
-  , SpeciesGroup = mongoose.model('SpeciesGroup')
-  , DataProvidersGroup = mongoose.model('DataProvidersGroup')
-  , DataResourcesGroup = mongoose.model('DataResourcesGroup')
-  , DataResourcesGroup = mongoose.model('DataResourcesGroup')
-  , InstitutionCodeGroup = mongoose.model('InstitutionCodeGroup')
-  , CollectionCodeGroup = mongoose.model('CollectionCodeGroup')
-  , CountriesGroup = mongoose.model('CountriesGroup')
-  , DepartmentsGroup = mongoose.model('DepartmentsGroup')
-  , GeoOccurrence = mongoose.model('GeoOccurrence')
-  , Occurrence = mongoose.model('Occurrence')
-  , HelpSearchText = mongoose.model('HelpSearchText')*/
-
 var occurrencesES = require("../../models/elasticsearch/occurrencesModel");
 var _ = require('underscore');
 

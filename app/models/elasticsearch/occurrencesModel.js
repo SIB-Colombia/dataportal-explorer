@@ -3,25 +3,27 @@ var _ = require('underscore');
 
 exports.getCounties = function() {
 	qryObj = {
-		"fields": [],
-		"query": {
-			"filtered": {
-				"filter": {
-					"exists": {
-						"field": "iso_county_code"
-					}
-				}
-			}
-		},
-		"facets": {
-			"counties": {
-				"terms": {
-					"field": "county_group.untouched",
-					"size": 10000000,
-					"order": "term"
-				}
-			}
-		}
+	  "_source": false,
+	  "query": {
+	    "filtered": {
+	      "filter": {
+	        "exists": {
+	          "field": "iso_county_code"
+	        }
+	      }
+	    }
+	  },
+	  "aggs": {
+	    "counties": {
+	      "terms": {
+	        "field": "county_group.untouched",
+	        "size": 0,
+	        "order": {
+	        	"_term": "asc"
+	        }
+	      }
+	    }
+	  }
 	};
 
 	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
@@ -30,7 +32,7 @@ exports.getCounties = function() {
 
 exports.getParamos = function() {
 	qryObj = {
-		"fields": [],
+		"_source": false,
 		"query": {
 			"filtered": {
 				"filter": {
@@ -40,12 +42,14 @@ exports.getParamos = function() {
 				}
 			}
 		},
-		"facets": {
+		"aggs": {
 			"paramos": {
 				"terms": {
 					"field": "paramo_group.untouched",
-					"size": 10000000,
-					"order": "term"
+					"size": 0,
+					"order": {
+	        	"_term": "asc"
+	        }
 				}
 			}
 		}
@@ -57,7 +61,7 @@ exports.getParamos = function() {
 
 exports.getMarineZones = function() {
 	qryObj = {
-		"fields": [],
+		"_source": false,
 		"query": {
 			"filtered": {
 				"filter": {
@@ -67,12 +71,14 @@ exports.getMarineZones = function() {
 				}
 			}
 		},
-		"facets": {
+		"aggs": {
 			"marinezones": {
 				"terms": {
 					"field": "marine_zone_group.untouched",
-					"size": 10000000,
-					"order": "term"
+					"size": 0,
+					"order": {
+	        	"_term": "asc"
+	        }
 				}
 			}
 		}
@@ -84,8 +90,8 @@ exports.getMarineZones = function() {
 
 exports.getOccurrencesResumeName = function(name, type) {
 	qryObj = {
-		"fields": [],
-		"facets": {
+		"_source": false,
+		"aggs": {
 			"canonical": {
 				"terms": {
 					"field": "canonical.untouched",
@@ -180,16 +186,20 @@ exports.getOccurrencesResumeName = function(name, type) {
 				"terms": {
 					"field": "county_group.untouched",
 					"size": 10,
-					"regex": "[\\D]+~~~[\\D]+~~~[\\d]+",
-					"regex_flags" : "CANON_EQ"
+					"include": {
+						"pattern": "[\\D]+~~~[\\D]+~~~[\\d]+",
+						"flags" : "CANON_EQ"
+					}
 				}
 			},
 			"paramo_group": {
 				"terms": {
 					"field": "paramo_group.untouched",
 					"size": 10,
-					"regex": "[\\D]+~~~[\\D]+",
-					"regex_flags" : "CANON_EQ"
+					"include": {
+						"pattern": "[\\D]+~~~[\\D]+",
+						"flags" : "CANON_EQ"
+					}
 				}
 			},
 			"marine_zone_group": {
@@ -321,7 +331,7 @@ exports.getOccurrencesResumeName = function(name, type) {
 
 exports.getSearchText = function(subjectID) {
 	qryObj = {
-		"fields": ["text"],
+		"_source": ["text"],
 		"query" : {
 			"filtered": {
 				"filter": {
@@ -337,7 +347,7 @@ exports.getSearchText = function(subjectID) {
 
 exports.getOccurrences = function() {
 	qryObj = {
-		"fields": ["id", "canonical", "nombre_comun", "data_resource_name", "institution_code", "collection_code", "catalogue_number", "occurrence_date", "modified", "location", "country_name", "department_name", "county_name", "paramo_name", "marine_zone_name", "basis_of_record_name_spanish"],
+		"_source": ["id", "canonical", "nombre_comun", "data_resource_name", "institution_code", "collection_code", "catalogue_number", "occurrence_date", "modified", "location", "country_name", "department_name", "county_name", "paramo_name", "marine_zone_name", "basis_of_record_name_spanish"],
 		"from": 0,
 		"size" : 20,
 		"sort": [ { "canonical.untouched": "asc" } ],
@@ -352,7 +362,7 @@ exports.getOccurrences = function() {
 
 exports.getDistributionsOneDegree = function() {
 	qryObj = {
-		"fields": ["cell_id", "location_cell", "count"],
+		"_source": ["cell_id", "location_cell", "count"],
 		"size": 10000000,
 		"query": {
 			"filtered" : {
@@ -362,11 +372,11 @@ exports.getDistributionsOneDegree = function() {
 				"filter": {
 					"term": {"type": "0"}
 				}
-            }
-        },
-        "facets": {
+			}
+		},
+		"aggs": {
 			"stats": {
-				"statistical": {
+				"stats": {
 					"field": "count"
 				}
 			}
@@ -379,7 +389,7 @@ exports.getDistributionsOneDegree = function() {
 
 exports.getDistributionsCentiDegree = function() {
 	qryObj = {
-		"fields": ["cell_id", "centi_cell_id", "location_centi_cell", "count"],
+		"_source": ["cell_id", "centi_cell_id", "location_centi_cell", "count"],
 		"size": 10000000,
 		"query": {
 			"filtered" : {
@@ -389,11 +399,11 @@ exports.getDistributionsCentiDegree = function() {
 				"filter": {
 					"term": {"type": "0"}
 				}
-            }
-        },
-        "facets": {
+      }
+    },
+    "aggs": {
 			"stats": {
-				"statistical": {
+				"stats": {
 					"field": "count"
 				}
 			}
@@ -406,7 +416,7 @@ exports.getDistributionsCentiDegree = function() {
 
 exports.getDistributionsPointFiveDegree = function() {
 	qryObj = {
-		"fields": ["cell_id", "pointfive_cell_id", "location_pointfive_cell", "count"],
+		"_source": ["cell_id", "pointfive_cell_id", "location_pointfive_cell", "count"],
 		"size": 10000000,
 		"query": {
 			"filtered" : {
@@ -416,11 +426,11 @@ exports.getDistributionsPointFiveDegree = function() {
 				"filter": {
 					"term": {"type": "0"}
 				}
-            }
-        },
-        "facets": {
+      }
+    },
+    "aggs": {
 			"stats": {
-				"statistical": {
+				"stats": {
 					"field": "count"
 				}
 			}
@@ -433,7 +443,7 @@ exports.getDistributionsPointFiveDegree = function() {
 
 exports.getDistributionsPointTwoDegree = function() {
 	qryObj = {
-		"fields": ["cell_id", "pointtwo_cell_id", "location_pointtwo_cell", "count"],
+		"_source": ["cell_id", "pointtwo_cell_id", "location_pointtwo_cell", "count"],
 		"size": 10000000,
 		"query": {
 			"filtered" : {
@@ -443,11 +453,11 @@ exports.getDistributionsPointTwoDegree = function() {
 				"filter": {
 					"term": {"type": "0"}
 				}
-            }
-        },
-        "facets": {
+      }
+    },
+    "aggs": {
 			"stats": {
-				"statistical": {
+				"stats": {
 					"field": "count"
 				}
 			}
@@ -461,7 +471,7 @@ exports.getDistributionsPointTwoDegree = function() {
 // Returns cell stats for one degree
 exports.getDistributionStatsOneDegree = function(cellid) {
 	qryObj = {
-		"fields": ["id"],
+		"_source": ["id"],
 		"size": 0,
 		"query": {
 			"filtered" : {
@@ -470,7 +480,7 @@ exports.getDistributionStatsOneDegree = function(cellid) {
 				}
 			}
 		},
-		"facets": {
+		"aggs": {
 			"canonical": {
 				"terms": {
 					"field": "canonical.untouched",
@@ -581,7 +591,7 @@ exports.getDistributionStatsOneDegree = function(cellid) {
 // Returns cell stats for one degree with search conditions
 exports.getDistributionStatsWithSearchOneDegree = function(conditions) {
 	var qryObj = {
-		"fields": [],
+		"_source": false,
 		"query": {
 			"filtered": {
 				"filter": {
@@ -596,7 +606,7 @@ exports.getDistributionStatsWithSearchOneDegree = function(conditions) {
 				}
 			}
 		},
-		"facets": {
+		"aggs": {
 			"canonical": {
 				"terms": {
 					"field": "canonical.untouched",
@@ -985,7 +995,7 @@ exports.getDistributionStatsWithSearchOneDegree = function(conditions) {
 // Returns cell stats for point five degree
 exports.getDistributionStatsPointFiveDegree = function(cellid, pointfivecellid) {
 	qryObj = {
-		"fields": ["id"],
+		"_source": ["id"],
 		"size": 0,
 		"query": {
 			"filtered" : {
@@ -994,7 +1004,7 @@ exports.getDistributionStatsPointFiveDegree = function(cellid, pointfivecellid) 
 				}
 			}
 		},
-		"facets": {
+		"aggs": {
 			"canonical": {
 				"terms": {
 					"field": "canonical.untouched",
@@ -1110,7 +1120,7 @@ exports.getDistributionStatsPointFiveDegree = function(cellid, pointfivecellid) 
 // Returns cell stats for point five degree with search conditions
 exports.getDistributionStatsWithSearchPointFiveDegree = function(conditions) {
 	var qryObj = {
-		"fields": [],
+		"_source": false,
 		"query": {
 			"filtered": {
 				"filter": {
@@ -1134,7 +1144,7 @@ exports.getDistributionStatsWithSearchPointFiveDegree = function(conditions) {
 				}
 			}
 		},
-		"facets": {
+		"aggs": {
 			"canonical": {
 				"terms": {
 					"field": "canonical.untouched",
@@ -1529,7 +1539,7 @@ exports.getDistributionStatsWithSearchPointFiveDegree = function(conditions) {
 // Returns cell stats for point one degree
 exports.getDistributionStatsPointOneDegree = function(cellid, centicellid) {
 	qryObj = {
-		"fields": ["id"],
+		"_source": ["id"],
 		"size": 0,
 		"query": {
 			"filtered" : {
@@ -1538,7 +1548,7 @@ exports.getDistributionStatsPointOneDegree = function(cellid, centicellid) {
 				}
 			}
 		},
-		"facets": {
+		"aggs": {
 			"canonical": {
 				"terms": {
 					"field": "canonical.untouched",
@@ -1654,7 +1664,7 @@ exports.getDistributionStatsPointOneDegree = function(cellid, centicellid) {
 // Returns cell stats for point one degree with search conditions
 exports.getDistributionStatsWithSearchPointOneDegree = function(conditions) {
 	var qryObj = {
-		"fields": [],
+		"_source": false,
 		"query": {
 			"filtered": {
 				"filter": {
@@ -1678,7 +1688,7 @@ exports.getDistributionStatsWithSearchPointOneDegree = function(conditions) {
 				}
 			}
 		},
-		"facets": {
+		"aggs": {
 			"canonical": {
 				"terms": {
 					"field": "canonical.untouched",
@@ -2073,7 +2083,7 @@ exports.getDistributionStatsWithSearchPointOneDegree = function(conditions) {
 // Returns cell stats for point two degree
 exports.getDistributionStatsPointTwoDegree = function(cellid, pointtwocellid) {
 	qryObj = {
-		"fields": ["id"],
+		"_source": ["id"],
 		"size": 0,
 		"query": {
 			"filtered" : {
@@ -2082,7 +2092,7 @@ exports.getDistributionStatsPointTwoDegree = function(cellid, pointtwocellid) {
 				}
 			}
 		},
-		"facets": {
+		"aggs": {
 			"canonical": {
 				"terms": {
 					"field": "canonical.untouched",
@@ -2198,7 +2208,7 @@ exports.getDistributionStatsPointTwoDegree = function(cellid, pointtwocellid) {
 // Returns cell stats for point two degree with query conditions
 exports.getDistributionStatsWithSearchPointTwoDegree = function(conditions) {
 	var qryObj = {
-		"fields": [],
+		"_source": [],
 		"query": {
 			"filtered": {
 				"filter": {
@@ -2222,7 +2232,7 @@ exports.getDistributionStatsWithSearchPointTwoDegree = function(conditions) {
 				}
 			}
 		},
-		"facets": {
+		"aggs": {
 			"canonical": {
 				"terms": {
 					"field": "canonical.untouched",
@@ -2616,7 +2626,7 @@ exports.getDistributionStatsWithSearchPointTwoDegree = function(conditions) {
 
 exports.getDistributionWithFilter = function(conditions) {
 	var qryObj = {
-		"fields": [],
+		"_source": false,
 		"query": {
 			"filtered": {
 				"query" : {
@@ -2626,7 +2636,7 @@ exports.getDistributionWithFilter = function(conditions) {
 				}
 			}
 		},
-		"facets": {
+		"aggs": {
 			"cellgroup": {
 				"terms": {
 					"field": "cell_group.untouched",
@@ -2942,8 +2952,8 @@ exports.getOccurrencesWithFilter = function(conditions) {
 	  , logic2;
 	var haveQuery = false;
 	var countFilter = 0;
-	qryObj["fields"] = ["id", "canonical", "nombre_comun", "data_resource_name", "institution_code", "collection_code", "catalogue_number", "occurrence_date", "modified", "location", "country_name", "department_name", "basis_of_record_name_spanish"];
-	
+	qryObj["_source"] = ["id", "canonical", "nombre_comun", "data_resource_name", "institution_code", "collection_code", "catalogue_number", "occurrence_date", "modified", "location", "country_name", "department_name", "basis_of_record_name_spanish"];
+
 	if((typeof conditions.filter != 'undefined') && (typeof conditions.filter.filters != 'undefined')) {
 		qryObj["query"] = {};
 		qryObj["query"]["filtered"] = {};
@@ -3159,7 +3169,7 @@ exports.getOccurrencesWithFilter = function(conditions) {
 			} else {
 				// External condition of single logic operator
 				//console.log(conditions.filter.filters[counter].operator);
-				
+
 				if(conditions.filter.filters[counter].operator == 'eq' || conditions.filter.filters[counter].operator == 'neq') {
 					if(conditions.filter.filters[counter].field == 'occurrence_date') {
 						var date = moment(conditions.filter.filters[counter].value);
@@ -3297,7 +3307,7 @@ exports.getOccurrencesWithFilter = function(conditions) {
 
 exports.geoJsonMapPoints = function(parameters) {
 	var qryObj = {
-		"fields": ["id", "canonical", "location"],
+		"_source": ["id", "canonical", "location"],
 		"sort": [ { "canonical.untouched": "asc" } ],
 		"from": 0,
 		"size" : 1000,

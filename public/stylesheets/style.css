@@ -1,13 +1,13 @@
 @import url("http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,400,300");
 @import url("http://fonts.googleapis.com/css?family=Economica:400,700,400italic,700italic");
-/* 
+/*
 html5doctor.com Reset Stylesheet
 v1.6.1
 Last Updated: 2010-09-17
-Author: Richard Clark - http://richclarkdesign.com 
+Author: Richard Clark - http://richclarkdesign.com
 Twitter: @rich_clark
 
-Stylus-ized by 
+Stylus-ized by
 dale tan
 http://www.whatthedale.com
 @HellaTan
@@ -197,19 +197,19 @@ h6 {
 p {
   line-height: 1.3em;
 }
-p margin 10px010px0 a {
+p margin 10px 0 10px 0 a {
   border: 0;
   color: #2288c9;
   padding: 0 5px;
 }
-p margin 10px010px0 a:hover,
-p margin 10px010px0 a input[type=submit]:hover {
+p margin 10px 0 10px 0 a:hover,
+p margin 10px 0 10px 0 a input[type=submit]:hover {
   border: 0;
   opacity: 0.6;
   background: #2288c9;
   color: #fff;
 }
-p margin 10px010px0 a:link {
+p margin 10px 0 10px 0 a:link {
   border-bottom: 0px dashed transparent;
   text-decoration: none;
 }
@@ -283,7 +283,7 @@ p margin 10px010px0 a:link {
   -moz-opacity: 1;
   opacity: 1;
 }
-.sib .logo:hover -webkit-box-shadow 0px0px5px0pxrgba(0,
+.sib .logo:hover -webkit-box-shadow 0px 0px 5px 0px rgba(0,
 .sib .logo:hover 0,
 .sib .logo:hover 0.2) {
   box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.2);
@@ -1233,3 +1233,15 @@ h4#currentSearch {
   margin-left: 60px;
 }
 /* End unselect layers button */
+/* Density selector slider */
+#densitySelectorSlider .slider-selection {
+  background: #9bd4ff;
+}
+#densitySelectorSlider {
+  width: 280px;
+  margin-left: 20px;
+}
+#densitySelectorSlider .slider.slider-horizontal .slider-handle {
+  background: #fff;
+}
+/* End density selector slider */
