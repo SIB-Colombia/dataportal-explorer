@@ -1,4 +1,4 @@
-define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map-initialize", "app/models/occurrence", "app/models/resumeInfo", "app/models/resumeCount", "app/models/resumeScientificName", "app/models/resumeCommonName", "app/models/resumeKingdomName", "app/models/resumePhylumName", "app/models/resumeClassName", "app/models/resumeOrderName", "app/models/resumeFamilyName", "app/models/resumeGenusName", "app/models/resumeSpecieName", "app/models/resumeDataProvider", "app/models/resumeDataResource", "app/models/resumeInstitutionCode", "app/models/resumeCollectionCode", "app/models/resumeCountry", "app/models/resumeDepartment", "app/models/resumeCounty", "app/models/resumeParamo", "app/models/resumeMarineZone", "app/models/county", "app/models/paramo", "app/models/marineZone", "app/models/coordinate", "app/models/radialCoordinate", "app/models/filterSelected", "select2", "knockoutKendoUI", "Leaflet", "jqueryUI", "bootstrap", "customScrollBar", "kendoSpanishCulture", "bootstrap-slider"], function($, ko, _, BaseViewModel, map, Occurrence, ResumeInfo, ResumeCount, ResumeScientificName, ResumeCommonName, ResumeKingdomName, ResumePhylumName, ResumeClassName, ResumeOrderName, ResumeFamilyName, ResumeGenusName, ResumeSpecieName, ResumeDataProvider, ResumeDataResource, ResumeInstitutionCode, ResumeCollectionCode, ResumeCountry, ResumeDepartment, ResumeCounty, ResumeParamo, ResumeMarineZone, County, Paramo, MarineZone, Coordinate, RadialCoordinate, FilterSelected, select2) {
+define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map-initialize", "app/models/occurrence", "app/models/resumeInfo", "app/models/resumeCount", "app/models/resumeScientificName", "app/models/resumeCommonName", "app/models/resumeKingdomName", "app/models/resumePhylumName", "app/models/resumeClassName", "app/models/resumeOrderName", "app/models/resumeFamilyName", "app/models/resumeGenusName", "app/models/resumeSpecieName", "app/models/resumeDataProvider", "app/models/resumeDataResource", "app/models/resumeInstitutionCode", "app/models/resumeCollectionCode", "app/models/resumeCountry", "app/models/resumeDepartment", "app/models/resumeCounty", "app/models/resumeParamo", "app/models/resumeMarineZone", "app/models/county", "app/models/paramo", "app/models/marineZone", "app/models/coordinate", "app/models/radialCoordinate", "app/models/filterSelected", "select2", "knockoutKendoUI", "Leaflet", "jqueryUI", "bootstrap", "kendoSpanishCulture", "bootstrap-slider"], function($, ko, _, BaseViewModel, map, Occurrence, ResumeInfo, ResumeCount, ResumeScientificName, ResumeCommonName, ResumeKingdomName, ResumePhylumName, ResumeClassName, ResumeOrderName, ResumeFamilyName, ResumeGenusName, ResumeSpecieName, ResumeDataProvider, ResumeDataResource, ResumeInstitutionCode, ResumeCollectionCode, ResumeCountry, ResumeDepartment, ResumeCounty, ResumeParamo, ResumeMarineZone, County, Paramo, MarineZone, Coordinate, RadialCoordinate, FilterSelected, select2) {
 	var OccurrenceSearchViewModel = function() {
 		var self = this;
 		self.densityCellsOneDegree = new L.FeatureGroup();
@@ -168,6 +168,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			var timeout;
 
 			var searchParamsResume = function() {
+				self.predicateOptions([{value: 'eq', name: 'es'}]);
 				if(self.selectedSubject() == "0") {
 					// Load new scientific name data
 					self.hideResumeContainer();
@@ -245,6 +246,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				debounce(searchParamsResume, 500)();
 			});
 
+			searchParamsResume();
 			// Selected department filter name
 			self.dropDownCoordinateStateText = ko.computed(function() {
 				return $("#dropDownCoordinateState option[value='" + self.selectedCoordinateState() + "']").text();
@@ -868,17 +870,10 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				// Get countries resume data
 				self.getCountriesData();
 				self.isObjectNameHelpSelected = ko.observable(true);
-				$("#filtersContainerHelp").animate({width: 'toggle'}, 500, "swing", function() {
-					if(self.firstScrollRun) {
-						$("#contentFiltersContainerHelp").mCustomScrollbar({
-							theme:"dark"
-						});
-						self.firstScrollRun = false;
-					} else {
-						$("#contentFiltersContainerHelp").mCustomScrollbar("update");
-					}
+				$("#filtersContainerHelp").animate({width: 'toggle'}, 500, "swing");
+				$("#dropDownCountry").select2({
+					placeholder: "Seleccione un país"
 				});
-				$("#dropDownCountry").select2();
 				$(".select2-input").on("click", function(event) {
 					self.enableFilterHelp();
 				});
@@ -886,17 +881,10 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				// Get countries resume data
 				self.getDepartmentsData();
 				self.isObjectNameHelpSelected = ko.observable(true);
-				$("#filtersContainerHelp").animate({width: 'toggle'}, 500, "swing", function() {
-					if(self.firstScrollRun) {
-						$("#contentFiltersContainerHelp").mCustomScrollbar({
-							theme:"dark"
-						});
-						self.firstScrollRun = false;
-					} else {
-						$("#contentFiltersContainerHelp").mCustomScrollbar("update");
-					}
+				$("#filtersContainerHelp").animate({width: 'toggle'}, 500, "swing");
+				$("#dropDownDepartment").select2({
+					placeholder: "Seleccione un departamento"
 				});
-				$("#dropDownDepartment").select2();
 				$(".select2-input").on("click", function(event) {
 					self.enableFilterHelp();
 				});
@@ -904,17 +892,10 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				// Get countries resume data
 				self.getCountiesData();
 				self.isObjectNameHelpSelected = ko.observable(true);
-				$("#filtersContainerHelp").animate({width: 'toggle'}, 500, "swing", function() {
-					if(self.firstScrollRun) {
-						$("#contentFiltersContainerHelp").mCustomScrollbar({
-							theme:"dark"
-						});
-						self.firstScrollRun = false;
-					} else {
-						$("#contentFiltersContainerHelp").mCustomScrollbar("update");
-					}
+				$("#filtersContainerHelp").animate({width: 'toggle'}, 500, "swing");
+				$("#dropDownCounty").select2({
+					placeholder: "Seleccione un municipio"
 				});
-				$("#dropDownCounty").select2();
 				$(".select2-input").on("click", function(event) {
 					self.enableFilterHelp();
 				});
@@ -922,17 +903,10 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				// Get countries resume data
 				self.getParamosData();
 				self.isObjectNameHelpSelected = ko.observable(true);
-				$("#filtersContainerHelp").animate({width: 'toggle'}, 500, "swing", function() {
-					if(self.firstScrollRun) {
-						$("#contentFiltersContainerHelp").mCustomScrollbar({
-							theme:"dark"
-						});
-						self.firstScrollRun = false;
-					} else {
-						$("#contentFiltersContainerHelp").mCustomScrollbar("update");
-					}
+				$("#filtersContainerHelp").animate({width: 'toggle'}, 500, "swing");
+				$("#dropDownParamo").select2({
+					placeholder: "Seleccione un páramo"
 				});
-				$("#dropDownParamo").select2();
 				$(".select2-input").on("click", function(event) {
 					self.enableFilterHelp();
 				});
@@ -940,17 +914,10 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				// Get countries resume data
 				self.getMarineZonesData();
 				self.isObjectNameHelpSelected = ko.observable(true);
-				$("#filtersContainerHelp").animate({width: 'toggle'}, 500, "swing", function() {
-					if(self.firstScrollRun) {
-						$("#contentFiltersContainerHelp").mCustomScrollbar({
-							theme:"dark"
-						});
-						self.firstScrollRun = false;
-					} else {
-						$("#contentFiltersContainerHelp").mCustomScrollbar("update");
-					}
+				$("#filtersContainerHelp").animate({width: 'toggle'}, 500, "swing");
+				$("#dropDownMarineZone").select2({
+					placeholder: "Seleccione una zona marina"
 				});
-				$("#dropDownMarineZone").select2();
 				$(".select2-input").on("click", function(event) {
 					self.enableFilterHelp();
 				});
@@ -968,16 +935,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			self.disableResumeDetail();
 			if((self.isObjectNameHelpSelected() === false || $("#filtersContainerHelp").is(':hidden')) && self.selectedSubject() != 1 && self.selectedSubject() != 2 && self.selectedSubject() != 34 && self.selectedSubject() != 35 && self.selectedSubject() != 21 && self.selectedSubject() != 14) {
 				self.isObjectNameHelpSelected = ko.observable(true);
-				$("#filtersContainerHelp").animate({width: 'toggle'}, 500, "swing", function() {
-					if(self.firstScrollRun) {
-						$("#contentFiltersContainerHelp").mCustomScrollbar({
-							theme:"dark"
-						});
-						self.firstScrollRun = false;
-					} else {
-						$("#contentFiltersContainerHelp").mCustomScrollbar("update");
-					}
-				});
+				$("#filtersContainerHelp").animate({width: 'toggle'}, 500, "swing");
 			}
 		},
 		addFilterItem: function() {
@@ -1291,13 +1249,8 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					});
 
 					self.totalGeoOccurrences(returnedData.hits.total);
-					// Show map area
-					//self.showMapAreaWithSpinner();
-					if(self.currentActiveDistribution() != "none") {
-						$("#"+self.currentActiveDistribution()).button('toggle');
-					}
-					$("#oneDegree").button('toggle');
-					self.currentActiveDistribution("oneDegree");
+					
+					$("#densitySelector").slider('setValue', 3);
 					self.isFiltered(true);
 
 					// Enable download links
@@ -1428,7 +1381,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				});
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
-				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
 				self.showResumeContainer();
 			});
 		},
@@ -1548,7 +1500,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				});
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
-				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
 				self.showResumeContainer();
 			});
 		},
@@ -1666,7 +1617,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				});
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
-				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
 				self.showResumeContainer();
 			});
 		},
@@ -1784,7 +1734,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				});
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
-				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
 				self.showResumeContainer();
 			});
 		},
@@ -1902,7 +1851,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				});
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
-				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
 				self.showResumeContainer();
 			});
 		},
@@ -2020,7 +1968,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				});
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
-				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
 				self.showResumeContainer();
 			});
 		},
@@ -2138,7 +2085,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				});
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
-				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
 				self.showResumeContainer();
 			});
 		},
@@ -2256,7 +2202,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				});
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
-				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
 				self.showResumeContainer();
 			});
 		},
@@ -2374,7 +2319,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				});
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
-				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
 				self.showResumeContainer();
 			});
 		},
@@ -2496,7 +2440,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				});
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
-				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
 				self.showResumeContainer();
 			});
 		},
@@ -2618,7 +2561,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				});
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
-				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
 				self.showResumeContainer();
 			});
 		},
@@ -2745,7 +2687,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				});
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
-				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
 				self.showResumeContainer();
 			});
 		},
@@ -2872,7 +2813,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				});
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
-				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
 				self.showResumeContainer();
 			});
 		},
@@ -2994,7 +2934,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				});
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
-				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
 				self.showResumeContainer();
 			});
 		},
@@ -3116,7 +3055,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				});
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
-				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
 				self.showResumeContainer();
 			});
 		},
@@ -3236,7 +3174,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				});
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
-				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
 				self.showResumeContainer();
 			});
 		},
@@ -3356,7 +3293,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				});
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
-				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
 				self.showResumeContainer();
 			});
 		},
@@ -3476,7 +3412,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				});
 				self.resumesInfoFilter.removeAll();
 				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
-				$("#contentFiltersContainerHelp").mCustomScrollbar("update");
 				self.showResumeContainer();
 			});
 		},
@@ -3868,18 +3803,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			self.resumesInfo.removeAll();
 			self.resumesInfo.push(new ResumeInfo({cellID: a.layer.options.cellID, canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, counties: counties, paramos: paramos, marineZones: marineZones}));
 			if($("#resumeDetail").is(':hidden')) {
-				$("#resumeDetail").animate({width: 'toggle'}, 500, "swing", function() {
-					if(self.resumeFirstScrollRun) {
-						$("#resumeInfoDetailContainer").mCustomScrollbar({
-							theme:"dark"
-						});
-						self.resumeFirstScrollRun = false;
-					} else {
-						$("#resumeInfoDetailContainer").mCustomScrollbar("update");
-					}
-				});
-			} else {
-				$("#resumeInfoDetailContainer").mCustomScrollbar("update");
+				$("#resumeDetail").animate({width: 'toggle'}, 500, "swing");
 			}
 			// Show map area
 			self.showMapAreaWithSpinner();
@@ -3985,18 +3909,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			self.resumesInfo.push(new ResumeInfo({cellID: a.layer.options.cellID, canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, counties: counties, paramos: paramos, marineZones: marineZones}));
 
 			if($("#resumeDetail").is(':hidden')) {
-				$("#resumeDetail").animate({width: 'toggle'}, 500, "swing", function() {
-					if(self.resumeFirstScrollRun) {
-						$("#resumeInfoDetailContainer").mCustomScrollbar({
-							theme:"dark"
-						});
-						self.resumeFirstScrollRun = false;
-					} else {
-						$("#resumeInfoDetailContainer").mCustomScrollbar("update");
-					}
-				});
-			} else {
-				$("#resumeInfoDetailContainer").mCustomScrollbar("update");
+				$("#resumeDetail").animate({width: 'toggle'}, 500, "swing");
 			}
 			// Show map area
 			self.showMapAreaWithSpinner();
@@ -4102,18 +4015,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			self.resumesInfo.push(new ResumeInfo({cellID: a.layer.options.cellID, canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, counties: counties, paramos: paramos, marineZones: marineZones}));
 
 			if($("#resumeDetail").is(':hidden')) {
-				$("#resumeDetail").animate({width: 'toggle'}, 500, "swing", function() {
-					if(self.resumeFirstScrollRun) {
-						$("#resumeInfoDetailContainer").mCustomScrollbar({
-							theme:"dark"
-						});
-						self.resumeFirstScrollRun = false;
-					} else {
-						$("#resumeInfoDetailContainer").mCustomScrollbar("update");
-					}
-				});
-			} else {
-				$("#resumeInfoDetailContainer").mCustomScrollbar("update");
+				$("#resumeDetail").animate({width: 'toggle'}, 500, "swing");
 			}
 			// Show map area
 			self.showMapAreaWithSpinner();
@@ -4219,18 +4121,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			self.resumesInfo.push(new ResumeInfo({cellID: a.layer.options.cellID, canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, counties: counties, paramos: paramos, marineZones: marineZones}));
 
 			if($("#resumeDetail").is(':hidden')) {
-				$("#resumeDetail").animate({width: 'toggle'}, 500, "swing", function() {
-					if(self.resumeFirstScrollRun) {
-						$("#resumeInfoDetailContainer").mCustomScrollbar({
-							theme:"dark"
-						});
-						self.resumeFirstScrollRun = false;
-					} else {
-						$("#resumeInfoDetailContainer").mCustomScrollbar("update");
-					}
-				});
-			} else {
-				$("#resumeInfoDetailContainer").mCustomScrollbar("update");
+				$("#resumeDetail").animate({width: 'toggle'}, 500, "swing");
 			}
 			// Show map area
 			self.showMapAreaWithSpinner();
@@ -4352,9 +4243,9 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				counter++;
 				url += "&c["+counter+"].s=1&c["+counter+"].p=2&c["+counter+"].o="+self.selectedOnMapPoligonCoordinates()[1].lat;
 				counter++;
-				url += "&c["+counter+"].s=2&c["+counter+"].p=1&c["+counter+"].o="+self.selectedOnMapPoligonCoordinates()[2].lng;
+				url += "&c["+counter+"].s=2&c["+counter+"].p=2&c["+counter+"].o="+self.selectedOnMapPoligonCoordinates()[2].lng;
 				counter++;
-				url += "&c["+counter+"].s=2&c["+counter+"].p=2&c["+counter+"].o="+self.selectedOnMapPoligonCoordinates()[0].lng;
+				url += "&c["+counter+"].s=2&c["+counter+"].p=1&c["+counter+"].o="+self.selectedOnMapPoligonCoordinates()[0].lng;
 				counter++;
 			}
 			self.urlDownloadSpreadsheet(url);
@@ -4366,9 +4257,9 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			if(condition=="eq") {
 				return 0;
 			} else if(condition=="gt") {
-				return 2;
-			} else if(condition=="lt") {
 				return 1;
+			} else if(condition=="lt") {
+				return 2;
 			}
 		}
 	});

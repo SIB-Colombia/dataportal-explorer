@@ -10,8 +10,11 @@
   ],
   "devDependencies": {
     "bootstrap": "~3.1.1",
+    "knockoutjs": "~3.1.0",
     "seiyria-bootstrap-slider": "~3.1.0",
     "jquery": "~2.1.0",
-    "jquery.ui": "~1.10.4"
+    "jquery-ui": "~1.10.4",
+    "leaflet": "~0.7.3",
+    "select2": "~3.4.8"
   }
 }

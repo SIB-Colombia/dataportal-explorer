@@ -582,12 +582,13 @@ block filterWindow
 										option(value='13') Código de la colección
 										option(value='14') Número de catálogo
 							span(id='predicate', class='predicate')
-								select(name='c[0].p', id='newFilterPredicate', data-bind="options: predicateOptions, optionsText: 'name', optionsValue: 'value', value: selectedPredicate")
+								select(name='c[0].p', id='newFilterPredicate', data-bind="value: selectedPredicate, options: predicateOptions, optionsText: 'name', optionsValue: 'value'")
 							span(id='newFilterValue', class='value')
 								// Input for simple text
 								input(name='c[0].o', type='text', id='statesInput', class='input-medium search-query', autocomplete='off', data-bind="click: enableFilterHelp, value: objectNameValue, valueUpdate: 'afterkeydown', visible: selectedSubject() == 0 || selectedSubject() == 31 || selectedSubject() == 100 || selectedSubject() == 101 || selectedSubject() == 102 || selectedSubject() == 103 || selectedSubject() == 104 || selectedSubject() == 105 || selectedSubject() == 106 || selectedSubject() == 1 || selectedSubject() == 2 || selectedSubject() == 34 || selectedSubject() == 35 || selectedSubject() == 24 || selectedSubject() == 25 || selectedSubject() == 21 || selectedSubject() == 12 || selectedSubject() == 13 || selectedSubject() == 14", style="display: none")
 								// Input for country
 								select(name='c[0].o', id='dropDownCountry', data-bind='visible: selectedSubject() == 5, value: selectedCountry, selectCountry: {}',  style='display: none')
+									option(value="", default selected) Seleccione un país
 									option(value="AF") Afganistán
 									option(value="AX") Islas de Åland
 									option(value="AL") Albania
@@ -839,6 +840,7 @@ block filterWindow
 									option(value="ZW") Zimbabue
 								// Input for department
 								select(name="c[0].o", id="dropDownDepartment", data-bind="visible: selectedSubject() == 38, value: selectedDepartment, selectDepartment: {}",  style="display: none")
+									option(value="", default selected) Seleccione un departamento
 									option(value="CO-AMA") Amazonas
 									option(value="CO-ANT") Antioquia
 									option(value="CO-ARA") Arauca
@@ -874,12 +876,21 @@ block filterWindow
 									option(value="CO-VID") Vichada
 								// Input for county
 								select(name="c[0].o", id="dropDownCounty", data-bind="foreach: countyDropdown, visible: selectedSubject() == 39, value: selectedCounty, selectCounty: {}",  style="display: none")
+									<!-- ko if: $index() == 0 -->
+									option(value="", default selected) Seleccione un municipio
+									<!-- /ko -->
 									option(data-bind="attr: { value: isoCountyCode }, text: departmentAndCountyName")
 								// Input for paramo
 								select(name="c[0].o", id="dropDownParamo", data-bind="foreach: paramoDropdown, visible: selectedSubject() == 40, value: selectedParamo, selectParamo: {}",  style="display: none")
+									<!-- ko if: $index() == 0 -->
+									option(value="", default selected) Seleccione un páramo
+									<!-- /ko -->
 									option(data-bind="attr: { value: paramoCode }, text: paramoName")
 								// Input for marine zone
 								select(name="c[0].o", id="dropDownMarineZone", data-bind="foreach: marineZoneDropdown, visible: selectedSubject() == 41, value: selectedMarineZone, selectMarineZone: {}",  style="display: none")
+									<!-- ko if: $index() == 0 -->
+									option(value="", default selected) Seleccione una zona marina
+									<!-- /ko -->
 									option(data-bind="attr: { value: marineZoneCode }, text: marineZoneName")
 								// Input for coordinates data
 								select(name="c[0].o", id="dropDownCoordinateState", data-bind="visible: selectedSubject() == 28, value: selectedCoordinateState",  style="display: none")
@@ -1021,24 +1032,24 @@ block filterWindow
 						// Include ScientificName filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedScientificNames, visible: selectedScientificNames().length > 0')
 							li(class='alteredFilter')
-								span(data-bind='visible: $index() == 0') Nombre Científico es
-								span(data-bind='visible: $index() != 0') o es
+								span(data-bind='visible: $index() == 0') Nombre Científico es 
+								span(data-bind='visible: $index() != 0') o es 
 								span(data-bind='text: textObject')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeScientificName($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include CommonName filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedCommonNames, visible: selectedCommonNames().length > 0')
 							li(class='alteredFilter')
-								span(data-bind='visible: $index() == 0') Nombre común es
-								span(data-bind='visible: $index() != 0') o es
+								span(data-bind='visible: $index() == 0') Nombre común es 
+								span(data-bind='visible: $index() != 0') o es 
 								span(data-bind='text: textObject')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeCommonName($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include Taxon filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedTaxonNames, visible: selectedTaxonNames().length > 0')
 							li(class='alteredFilter')
-								span(data-bind='visible: $index() == 0') Clasificación incluye
-								span(data-bind='visible: $index() != 0') o incluye
+								span(data-bind='visible: $index() == 0') Clasificación incluye 
+								span(data-bind='visible: $index() != 0') o incluye 
 								span(data-bind='text: textName + ": "')
 								span(data-bind='text: textObject')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeTaxonName($parent, this); }')
@@ -1046,96 +1057,96 @@ block filterWindow
 						// Include Country filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedCountriesIDs, visible: selectedCountriesIDs().length > 0')
 							li(class='alteredFilter')
-								span(data-bind='visible: $index() == 0') País es
-								span(data-bind='visible: $index() != 0') o es
+								span(data-bind='visible: $index() == 0') País es 
+								span(data-bind='visible: $index() != 0') o es 
 								span(data-bind='text: textName')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeCountryID($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include Department filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedDepartmentsIDs, visible: selectedDepartmentsIDs().length > 0')
 							li(class='alteredFilter')
-								span(data-bind='visible: $index() == 0') Departamento es
-								span(data-bind='visible: $index() != 0') o es
+								span(data-bind='visible: $index() == 0') Departamento es 
+								span(data-bind='visible: $index() != 0') o es 
 								span(data-bind='text: textName')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeDepartmentID($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include counties filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedCountiesIDs, visible: selectedCountiesIDs().length > 0')
 							li(class='alteredFilter')
-								span(data-bind='visible: $index() == 0') Municipio es
-								span(data-bind='visible: $index() != 0') o es
+								span(data-bind='visible: $index() == 0') Municipio es 
+								span(data-bind='visible: $index() != 0') o es 
 								span(data-bind='text: textName')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeCountyID($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include paramos filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedParamosIDs, visible: selectedParamosIDs().length > 0')
 							li(class='alteredFilter')
-								span(data-bind='visible: $index() == 0') Páramo es
-								span(data-bind='visible: $index() != 0') o es
+								span(data-bind='visible: $index() == 0') Páramo es 
+								span(data-bind='visible: $index() != 0') o es 
 								span(data-bind='text: textName')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeParamoID($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include marine zones filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedMarineZonesIDs, visible: selectedMarineZonesIDs().length > 0')
 							li(class='alteredFilter')
-								span(data-bind='visible: $index() == 0') Zona marítima es
-								span(data-bind='visible: $index() != 0') o es
+								span(data-bind='visible: $index() == 0') Zona marítima es 
+								span(data-bind='visible: $index() != 0') o es 
 								span(data-bind='text: textName')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeMarineZoneID($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include Latitude filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedLatitudes, visible: selectedLatitudes().length > 0')
 							li(class='alteredFilter')
-								span(data-bind='visible: $index() == 0') Latitud
-									span(data-bind='visible: predicate == "eq"') es
-									span(data-bind='visible: predicate == "gt"') mayor que
-									span(data-bind='visible: predicate == "lt"') menor que
+								span(data-bind='visible: $index() == 0') Latitud 
+									span(data-bind='visible: predicate == "eq"') es 
+									span(data-bind='visible: predicate == "gt"') mayor que 
+									span(data-bind='visible: predicate == "lt"') menor que 
 								span(data-bind='visible: $index() != 0') y
-									span(data-bind='visible: predicate == "eq"') es
-									span(data-bind='visible: predicate == "gt"') mayor que
-									span(data-bind='visible: predicate == "lt"') menor que
+									span(data-bind='visible: predicate == "eq"') es 
+									span(data-bind='visible: predicate == "gt"') mayor que 
+									span(data-bind='visible: predicate == "lt"') menor que 
 								span(data-bind='text: $parent.parsedLatitudeText($data)')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeLatitudeNumber($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include longitude filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedLongitudes, visible: selectedLongitudes().length > 0')
 							li(class='alteredFilter')
-								span(data-bind='visible: $index() == 0') Longitud
-									span(data-bind='visible: predicate == "eq"') es
-									span(data-bind='visible: predicate == "gt"') mayor que
-									span(data-bind='visible: predicate == "lt"') menor que
+								span(data-bind='visible: $index() == 0') Longitud 
+									span(data-bind='visible: predicate == "eq"') es 
+									span(data-bind='visible: predicate == "gt"') mayor que 
+									span(data-bind='visible: predicate == "lt"') menor que 
 								span(data-bind='visible: $index() != 0') y
-									span(data-bind='visible: predicate == "eq"') es
-									span(data-bind='visible: predicate == "gt"') mayor que
-									span(data-bind='visible: predicate == "lt"') menor que
+									span(data-bind='visible: predicate == "eq"') es 
+									span(data-bind='visible: predicate == "gt"') mayor que 
+									span(data-bind='visible: predicate == "lt"') menor que 
 								span(data-bind='text: $parent.parsedLongitudeText($data)')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeLongitudeNumber($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include altitude filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedAltitudes, visible: selectedAltitudes().length > 0')
 							li(class='alteredFilter')
-								span(data-bind='visible: $index() == 0') Altitud
-									span(data-bind='visible: predicate == "eq"') es
-									span(data-bind='visible: predicate == "gt"') mayor que
-									span(data-bind='visible: predicate == "lt"') menor que
+								span(data-bind='visible: $index() == 0') Altitud 
+									span(data-bind='visible: predicate == "eq"') es 
+									span(data-bind='visible: predicate == "gt"') mayor que 
+									span(data-bind='visible: predicate == "lt"') menor que 
 								span(data-bind='visible: $index() != 0') y
-									span(data-bind='visible: predicate == "eq"') es
-									span(data-bind='visible: predicate == "gt"') mayor que
-									span(data-bind='visible: predicate == "lt"') menor que
+									span(data-bind='visible: predicate == "eq"') es 
+									span(data-bind='visible: predicate == "gt"') mayor que 
+									span(data-bind='visible: predicate == "lt"') menor que 
 								span(data-bind='text: $parent.parsedHeightText($data)')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeAltitudeNumber($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include deep filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedDeeps, visible: selectedDeeps().length > 0')
 							li(class='alteredFilter')
-								span(data-bind='visible: $index() == 0') Profundidad
-									span(data-bind='visible: predicate == "eq"') es
-									span(data-bind='visible: predicate == "gt"') mayor que
-									span(data-bind='visible: predicate == "lt"') menor que
+								span(data-bind='visible: $index() == 0') Profundidad 
+									span(data-bind='visible: predicate == "eq"') es 
+									span(data-bind='visible: predicate == "gt"') mayor que 
+									span(data-bind='visible: predicate == "lt"') menor que 
 								span(data-bind='visible: $index() != 0') y
-									span(data-bind='visible: predicate == "eq"') es
-									span(data-bind='visible: predicate == "gt"') mayor que
-									span(data-bind='visible: predicate == "lt"') menor que
+									span(data-bind='visible: predicate == "eq"') es 
+									span(data-bind='visible: predicate == "gt"') mayor que 
+									span(data-bind='visible: predicate == "lt"') menor que 
 								span(data-bind='text: $parent.parsedHeightText($data)')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeDeepNumber($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
@@ -1149,16 +1160,16 @@ block filterWindow
 						// Include data providers filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedProviders, visible: selectedProviders().length > 0')
 							li(class='alteredFilter')
-								span(data-bind='visible: $index() == 0') Publicador de datos es
-								span(data-bind='visible: $index() != 0') o es
+								span(data-bind='visible: $index() == 0') Publicador de datos es 
+								span(data-bind='visible: $index() != 0') o es 
 								span(data-bind='text: textObject')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeDataProviderName($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include data resources filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedResources, visible: selectedResources().length > 0')
 							li(class='alteredFilter')
-								span(data-bind='visible: $index() == 0') Recurso de datos es
-								span(data-bind='visible: $index() != 0') o es
+								span(data-bind='visible: $index() == 0') Recurso de datos es 
+								span(data-bind='visible: $index() != 0') o es 
 								span(data-bind='text: textObject')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeDataResourceName($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
