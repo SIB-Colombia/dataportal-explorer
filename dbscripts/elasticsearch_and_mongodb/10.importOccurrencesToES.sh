@@ -781,47 +781,27 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
 			"location" : {
 				"type" : "geo_point",
 				"lat_lon": true,
-				"validate": true,
-				"fielddata": {
-					"format" : "compressed",
-					"precision" : "1cm"
-				}
+				"validate": true
 			},
 			"location_cell" : {
 				"type" : "geo_point",
 				"lat_lon": true,
-				"validate": true,
-				"fielddata": {
-					"format" : "compressed",
-					"precision" : "1cm"
-				}
+				"validate": true
 			},
 			"location_centi_cell" : {
 				"type" : "geo_point",
 				"lat_lon": true,
-				"validate": true,
-				"fielddata": {
-					"format" : "compressed",
-					"precision" : "1cm"
-				}
+				"validate": true
 			},
 			"location_pointfive_cell" : {
 				"type" : "geo_point",
 				"lat_lon": true,
-				"validate": true,
-				"fielddata": {
-					"format" : "compressed",
-					"precision" : "1cm"
-				}
+				"validate": true
 			},
 			"location_pointtwo_cell" : {
 				"type" : "geo_point",
 				"lat_lon": true,
-				"validate": true,
-				"fielddata": {
-					"format" : "compressed",
-					"precision" : "1cm"
-				}
+				"validate": true
 			},
 			"common_names": {
 				"type": "nested",

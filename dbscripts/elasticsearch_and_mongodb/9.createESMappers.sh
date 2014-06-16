@@ -54,11 +54,7 @@ curl -XPUT 'http://localhost:9200/sibexplorer/cell_density/_mapping' -d '
                     }
             },
             "location_cell" : {
-                "type" : "geo_point",
-                "fielddata" : {
-                    "format" : "compressed",
-                    "precision" : "1cm"
-                }
+                "type" : "geo_point"
             },
             "count": {"type" : "integer"}
         }
@@ -134,18 +130,10 @@ curl -XPUT 'http://localhost:9200/sibexplorer/centi_cell_density/_mapping' -d '
                     }
             },
             "location_cell" : {
-                "type" : "geo_point",
-                "fielddata" : {
-                    "format" : "compressed",
-                    "precision" : "1cm"
-                }
+                "type" : "geo_point"
             },
             "location_centi_cell" : {
-                "type" : "geo_point",
-                "fielddata" : {
-                    "format" : "compressed",
-                    "precision" : "1cm"
-                }
+                "type" : "geo_point"
             },
             "count": {"type" : "integer"}
         }
@@ -221,18 +209,10 @@ curl -XPUT 'http://localhost:9200/sibexplorer/pointfive_cell_density/_mapping' -
                     }
             },
             "location_cell" : {
-                "type" : "geo_point",
-                "fielddata" : {
-                    "format" : "compressed",
-                    "precision" : "1cm"
-                }
+                "type" : "geo_point"
             },
             "location_pointfive_cell" : {
-                "type" : "geo_point",
-                "fielddata" : {
-                    "format" : "compressed",
-                    "precision" : "1cm"
-                }
+                "type" : "geo_point"
             },
             "count": {"type" : "integer"}
         }
@@ -308,18 +288,10 @@ curl -XPUT 'http://localhost:9200/sibexplorer/pointtwo_cell_density/_mapping' -d
                     }
             },
             "location_cell" : {
-                "type" : "geo_point",
-                "fielddata" : {
-                    "format" : "compressed",
-                    "precision" : "1cm"
-                }
+                "type" : "geo_point"
             },
             "location_pointtwo_cell" : {
-                "type" : "geo_point",
-                "fielddata" : {
-                    "format" : "compressed",
-                    "precision" : "1cm"
-                }
+                "type" : "geo_point"
             },
             "count": {"type" : "integer"}
         }

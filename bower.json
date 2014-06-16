@@ -15,6 +15,8 @@
     "jquery": "~2.1.0",
     "jquery-ui": "~1.10.4",
     "leaflet": "~0.7.3",
-    "select2": "~3.4.8"
+    "select2": "~3.4.8",
+    "leaflet.markercluster": "~0.4.0",
+    "leaflet-sidebar": "~0.1.5"
   }
 }

@@ -1,4 +1,4 @@
-define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map-initialize", "app/models/occurrence", "app/models/resumeInfo", "app/models/resumeCount", "app/models/resumeScientificName", "app/models/resumeCommonName", "app/models/resumeKingdomName", "app/models/resumePhylumName", "app/models/resumeClassName", "app/models/resumeOrderName", "app/models/resumeFamilyName", "app/models/resumeGenusName", "app/models/resumeSpecieName", "app/models/resumeDataProvider", "app/models/resumeDataResource", "app/models/resumeInstitutionCode", "app/models/resumeCollectionCode", "app/models/resumeCountry", "app/models/resumeDepartment", "app/models/resumeCounty", "app/models/resumeParamo", "app/models/resumeMarineZone", "app/models/county", "app/models/paramo", "app/models/marineZone", "app/models/coordinate", "app/models/radialCoordinate", "app/models/filterSelected", "select2", "knockoutKendoUI", "Leaflet", "jqueryUI", "bootstrap", "kendoSpanishCulture", "bootstrap-slider"], function($, ko, _, BaseViewModel, map, Occurrence, ResumeInfo, ResumeCount, ResumeScientificName, ResumeCommonName, ResumeKingdomName, ResumePhylumName, ResumeClassName, ResumeOrderName, ResumeFamilyName, ResumeGenusName, ResumeSpecieName, ResumeDataProvider, ResumeDataResource, ResumeInstitutionCode, ResumeCollectionCode, ResumeCountry, ResumeDepartment, ResumeCounty, ResumeParamo, ResumeMarineZone, County, Paramo, MarineZone, Coordinate, RadialCoordinate, FilterSelected, select2) {
+define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map-initialize", "app/models/occurrence", "app/models/resumeInfo", "app/models/resumeCount", "app/models/resumeScientificName", "app/models/resumeCommonName", "app/models/resumeKingdomName", "app/models/resumePhylumName", "app/models/resumeClassName", "app/models/resumeOrderName", "app/models/resumeFamilyName", "app/models/resumeGenusName", "app/models/resumeSpecieName", "app/models/resumeDataProvider", "app/models/resumeDataResource", "app/models/resumeInstitutionCode", "app/models/resumeCollectionCode", "app/models/resumeCountry", "app/models/resumeDepartment", "app/models/resumeCounty", "app/models/resumeParamo", "app/models/resumeMarineZone", "app/models/county", "app/models/paramo", "app/models/marineZone", "app/models/coordinate", "app/models/radialCoordinate", "app/models/filterSelected", "select2", "knockoutKendoUI", "Leaflet", "jqueryUI", "bootstrap", "kendoSpanishCulture", "bootstrap-slider", "LeafletMarkerCluster"], function($, ko, _, BaseViewModel, map, Occurrence, ResumeInfo, ResumeCount, ResumeScientificName, ResumeCommonName, ResumeKingdomName, ResumePhylumName, ResumeClassName, ResumeOrderName, ResumeFamilyName, ResumeGenusName, ResumeSpecieName, ResumeDataProvider, ResumeDataResource, ResumeInstitutionCode, ResumeCollectionCode, ResumeCountry, ResumeDepartment, ResumeCounty, ResumeParamo, ResumeMarineZone, County, Paramo, MarineZone, Coordinate, RadialCoordinate, FilterSelected, select2) {
 	var OccurrenceSearchViewModel = function() {
 		var self = this;
 		self.densityCellsOneDegree = new L.FeatureGroup();
@@ -107,6 +107,8 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		self.resumesInfo = [];
 		self.resumesInfoFilter = [];
 
+		self.occurrence = {};
+
 		BaseViewModel.apply( this, arguments );
 	};
 
@@ -121,6 +123,126 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			this.loadCellDensityPointFiveDegree();
 			this.loadCellDensityPointTwoDegree();
 			this.loadCellDensityPointOneDegree();
+
+			markers = new L.MarkerClusterGroup({
+				spiderfyOnMaxZoom: true,
+				showCoverageOnHover: true,
+				zoomToBoundsOnClick: true
+			});
+
+			map.on('zoomend', function(e) {
+				if(e.target._zoom >= 13) {
+					$("#densityInstructionsCellSelection").removeClass("occult-element");
+					switch(self.currentActiveDistribution()) {
+						case "oneDegree":
+							map.removeLayer(self.densityCellsOneDegree());
+							break;
+						case "pointOneDegree":
+							map.removeLayer(self.densityCellsPointOneDegree());
+							break;
+						case "pointFiveDegree":
+							map.removeLayer(self.densityCellsPointFiveDegree());
+							break;
+						case "pointTwoDegree":
+							map.removeLayer(self.densityCellsPointTwoDegree());
+							break;
+					}
+				} else {
+					if(map.hasLayer(markers)) {
+						map.removeLayer(markers);
+					}
+					$("#distributionCells").prop('checked', false);
+					$("#occurrenceRecord").prop('checked', true);
+					$("#densityInstructionsCellSelection").addClass("occult-element");
+					switch(self.currentActiveDistribution()) {
+						case "oneDegree":
+							map.addLayer(self.densityCellsOneDegree());
+							break;
+						case "pointOneDegree":
+							map.addLayer(self.densityCellsPointOneDegree());
+							break;
+						case "pointFiveDegree":
+							map.addLayer(self.densityCellsPointFiveDegree());
+							break;
+						case "pointTwoDegree":
+							map.addLayer(self.densityCellsPointTwoDegree());
+							break;
+					}
+				}
+		  });
+
+		  map.on('moveend', function(e) {
+		  	if(e.target._zoom >= 13 && !sidebar.isVisible()) {
+		  		if(map.hasLayer(markers)) {
+						map.removeLayer(markers);
+						markers.clearLayers();
+					}
+					$.getJSON("/rest/occurrences/boundingbox/"+map.getBounds()._northEast.lat+"/"+map.getBounds()._southWest.lat+"/"+map.getBounds()._southWest.lng+"/"+map.getBounds()._northEast.lng, function(allData) {
+						$.each(allData.hits.hits, function(i, occurrence) {
+							var marker = new L.Marker([occurrence._source.location.lat, occurrence._source.location.lon], {clickable: true, zIndexOffset: 1000, title: occurrence._source.canonical});
+							marker.bindPopup("<strong>Nombre científico</strong></br><strong><a href=\"http://data.sibcolombia.net/occurrences/"+occurrence._source.id+"\" target=\"_blank\">"+occurrence._source.canonical.toUpperCase()+"</a></strong></br></br><strong>Ubicación:</strong></br>Latitud: "+occurrence._source.location.lat+"</br>Longitud: "+occurrence._source.location.lon);
+							marker.on('click', function (a) {
+								$.getJSON("/rest/occurrences/id/"+occurrence._source.id, function(allData) {
+									self.occurrence(new Occurrence(allData.hits.hits[0]._source));
+									console.log(self.occurrence().canonical);
+								});
+							});
+							marker.on('popupopen', function (a) {
+								sidebar.show();
+							});
+							marker.on('popupclose', function (a) {
+								sidebar.hide();
+							});
+							markers.addLayer(marker);
+						});
+						if($("#occurrenceRecord").is(':checked')) {
+							map.addLayer(markers);
+						}
+					});
+		  	}
+		  });
+
+			$('#distributionCells').click(function () {
+				if(this.checked) {
+					switch(self.currentActiveDistribution()) {
+						case "oneDegree":
+							map.addLayer(self.densityCellsOneDegree());
+							break;
+						case "pointOneDegree":
+							map.addLayer(self.densityCellsPointOneDegree());
+							break;
+						case "pointFiveDegree":
+							map.addLayer(self.densityCellsPointFiveDegree());
+							break;
+						case "pointTwoDegree":
+							map.addLayer(self.densityCellsPointTwoDegree());
+							break;
+					}
+				} else {
+					switch(self.currentActiveDistribution()) {
+						case "oneDegree":
+							map.removeLayer(self.densityCellsOneDegree());
+							break;
+						case "pointOneDegree":
+							map.removeLayer(self.densityCellsPointOneDegree());
+							break;
+						case "pointFiveDegree":
+							map.removeLayer(self.densityCellsPointFiveDegree());
+							break;
+						case "pointTwoDegree":
+							map.removeLayer(self.densityCellsPointTwoDegree());
+							break;
+					}
+				}
+			});
+
+			$('#occurrenceRecord').click(function () {
+				if(this.checked) {
+					map.addLayer(markers);
+				} else {
+					map.removeLayer(markers);
+				}
+			});
 
 			map.on('draw:created', function(e) {
 				self.isRectangle(false);
@@ -421,18 +543,22 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					case 0:
 						map.addLayer(self.densityCellsPointOneDegree());
 						self.currentActiveDistribution("pointOneDegree");
+						$("#distributionCells").prop('checked', true);
 						break;
 					case 1:
 						map.addLayer(self.densityCellsPointTwoDegree());
 						self.currentActiveDistribution("pointTwoDegree");
+						$("#distributionCells").prop('checked', true);
 						break;
 					case 2:
 						map.addLayer(self.densityCellsPointFiveDegree());
 						self.currentActiveDistribution("pointFiveDegree");
+						$("#distributionCells").prop('checked', true);
 						break;
 					case 3:
 						map.addLayer(self.densityCellsOneDegree());
 						self.currentActiveDistribution("oneDegree");
+						$("#distributionCells").prop('checked', true);
 						break;
 				}
 			});
@@ -1376,7 +1502,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					marineZones.push(new ResumeCount({id: marineZoneData[1], name: marineZoneData[0], count: data.doc_count}));
 				});
 				var commons = ko.observableArray();
-				_.each(allData.aggregations.common.buckets, function(data) {
+				_.each(allData.aggregations.common_names.common.buckets, function(data) {
 					commons.push(new ResumeCount({name: data.key, count: data.doc_count}));
 				});
 				self.resumesInfoFilter.removeAll();
@@ -1388,7 +1514,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			var self = this;
 			$.getJSON("/rest/occurrences/resume/commonname/name/"+((typeof self.objectNameValue() === "undefined")?"":self.objectNameValue()), function(allData) {
 				self.resumeCommonNames.removeAll();
-				_.each(allData.aggregations.common.buckets, function(data) {
+				_.each(allData.aggregations.common_names.common.buckets, function(data) {
 					self.resumeCommonNames.push(new ResumeCommonName({canonical: data.key, occurrences: data.doc_count}));
 				});
 				var commons = ko.observableArray();
@@ -1612,7 +1738,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					marineZones.push(new ResumeCount({id: marineZoneData[1], name: marineZoneData[0], count: data.doc_count}));
 				});
 				var commons = ko.observableArray();
-				_.each(allData.aggregations.common.buckets, function(data) {
+				_.each(allData.aggregations.common_names.common.buckets, function(data) {
 					commons.push(new ResumeCount({name: data.key, count: data.doc_count}));
 				});
 				self.resumesInfoFilter.removeAll();
@@ -1729,7 +1855,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					marineZones.push(new ResumeCount({id: marineZoneData[1], name: marineZoneData[0], count: data.doc_count}));
 				});
 				var commons = ko.observableArray();
-				_.each(allData.aggregations.common.buckets, function(data) {
+				_.each(allData.aggregations.common_names.common.buckets, function(data) {
 					commons.push(new ResumeCount({name: data.key, count: data.doc_count}));
 				});
 				self.resumesInfoFilter.removeAll();
@@ -1846,7 +1972,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					marineZones.push(new ResumeCount({id: marineZoneData[1], name: marineZoneData[0], count: data.doc_count}));
 				});
 				var commons = ko.observableArray();
-				_.each(allData.aggregations.common.buckets, function(data) {
+				_.each(allData.aggregations.common_names.common.buckets, function(data) {
 					commons.push(new ResumeCount({name: data.key, count: data.doc_count}));
 				});
 				self.resumesInfoFilter.removeAll();
@@ -1963,7 +2089,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					marineZones.push(new ResumeCount({id: marineZoneData[1], name: marineZoneData[0], count: data.doc_count}));
 				});
 				var commons = ko.observableArray();
-				_.each(allData.aggregations.common.buckets, function(data) {
+				_.each(allData.aggregations.common_names.common.buckets, function(data) {
 					commons.push(new ResumeCount({name: data.key, count: data.doc_count}));
 				});
 				self.resumesInfoFilter.removeAll();
@@ -2080,7 +2206,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					marineZones.push(new ResumeCount({id: marineZoneData[1], name: marineZoneData[0], count: data.doc_count}));
 				});
 				var commons = ko.observableArray();
-				_.each(allData.aggregations.common.buckets, function(data) {
+				_.each(allData.aggregations.common_names.common.buckets, function(data) {
 					commons.push(new ResumeCount({name: data.key, count: data.doc_count}));
 				});
 				self.resumesInfoFilter.removeAll();
@@ -2197,7 +2323,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					marineZones.push(new ResumeCount({id: marineZoneData[1], name: marineZoneData[0], count: data.doc_count}));
 				});
 				var commons = ko.observableArray();
-				_.each(allData.aggregations.common.buckets, function(data) {
+				_.each(allData.aggregations.common_names.common.buckets, function(data) {
 					commons.push(new ResumeCount({name: data.key, count: data.doc_count}));
 				});
 				self.resumesInfoFilter.removeAll();
@@ -2314,7 +2440,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					marineZones.push(new ResumeCount({id: marineZoneData[1], name: marineZoneData[0], count: data.doc_count}));
 				});
 				var commons = ko.observableArray();
-				_.each(allData.aggregations.common.buckets, function(data) {
+				_.each(allData.aggregations.common_names.common.buckets, function(data) {
 					commons.push(new ResumeCount({name: data.key, count: data.doc_count}));
 				});
 				self.resumesInfoFilter.removeAll();
@@ -2435,7 +2561,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					marineZones.push(new ResumeCount({id: marineZoneData[1], name: marineZoneData[0], count: data.doc_count}));
 				});
 				var commons = ko.observableArray();
-				_.each(allData.aggregations.common.buckets, function(data) {
+				_.each(allData.aggregations.common_names.common.buckets, function(data) {
 					commons.push(new ResumeCount({name: data.key, count: data.doc_count}));
 				});
 				self.resumesInfoFilter.removeAll();
@@ -2556,7 +2682,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					marineZones.push(new ResumeCount({id: marineZoneData[1], name: marineZoneData[0], count: data.doc_count}));
 				});
 				var commons = ko.observableArray();
-				_.each(allData.aggregations.common.buckets, function(data) {
+				_.each(allData.aggregations.common_names.common.buckets, function(data) {
 					commons.push(new ResumeCount({name: data.key, count: data.doc_count}));
 				});
 				self.resumesInfoFilter.removeAll();
@@ -2682,7 +2808,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					marineZones.push(new ResumeCount({id: marineZoneData[1], name: marineZoneData[0], count: data.doc_count}));
 				});
 				var commons = ko.observableArray();
-				_.each(allData.aggregations.common.buckets, function(data) {
+				_.each(allData.aggregations.common_names.common.buckets, function(data) {
 					commons.push(new ResumeCount({name: data.key, count: data.doc_count}));
 				});
 				self.resumesInfoFilter.removeAll();
@@ -2808,7 +2934,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					marineZones.push(new ResumeCount({id: marineZoneData[1], name: marineZoneData[0], count: data.doc_count}));
 				});
 				var commons = ko.observableArray();
-				_.each(allData.aggregations.common.buckets, function(data) {
+				_.each(allData.aggregations.common_names.common.buckets, function(data) {
 					commons.push(new ResumeCount({name: data.key, count: data.doc_count}));
 				});
 				self.resumesInfoFilter.removeAll();
@@ -2929,7 +3055,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					marineZones.push(new ResumeCount({id: marineZoneData[1], name: marineZoneData[0], count: data.doc_count}));
 				});
 				var commons = ko.observableArray();
-				_.each(allData.aggregations.common.buckets, function(data) {
+				_.each(allData.aggregations.common_names.common.buckets, function(data) {
 					commons.push(new ResumeCount({name: data.key, count: data.doc_count}));
 				});
 				self.resumesInfoFilter.removeAll();
@@ -3050,7 +3176,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					marineZones.push(new ResumeCount({id: marineZoneData[1], name: marineZoneData[0], count: data.doc_count}));
 				});
 				var commons = ko.observableArray();
-				_.each(allData.aggregations.common.buckets, function(data) {
+				_.each(allData.aggregations.common_names.common.buckets, function(data) {
 					commons.push(new ResumeCount({name: data.key, count: data.doc_count}));
 				});
 				self.resumesInfoFilter.removeAll();
@@ -3169,7 +3295,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					marineZones.push(new ResumeCount({id: marineZoneData[1], name: marineZoneData[0], count: data.doc_count}));
 				});
 				var commons = ko.observableArray();
-				_.each(allData.aggregations.common.buckets, function(data) {
+				_.each(allData.aggregations.common_names.common.buckets, function(data) {
 					commons.push(new ResumeCount({name: data.key, count: data.doc_count}));
 				});
 				self.resumesInfoFilter.removeAll();
@@ -3288,7 +3414,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					marineZones.push(new ResumeCount({id: marineZoneData[1], name: marineZoneData[0], count: data.doc_count}));
 				});
 				var commons = ko.observableArray();
-				_.each(allData.aggregations.common.buckets, function(data) {
+				_.each(allData.aggregations.common_names.common.buckets, function(data) {
 					commons.push(new ResumeCount({name: data.key, count: data.doc_count}));
 				});
 				self.resumesInfoFilter.removeAll();
@@ -3407,7 +3533,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					paramos.push(new ResumeCount({id: paramoData[1], name: paramoData[0], count: data.doc_count}));
 				});
 				var commons = ko.observableArray();
-				_.each(allData.aggregations.common.buckets, function(data) {
+				_.each(allData.aggregations.common_names.common.buckets, function(data) {
 					commons.push(new ResumeCount({name: data.key, count: data.doc_count}));
 				});
 				self.resumesInfoFilter.removeAll();
@@ -3710,7 +3836,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				canonicals.push(new ResumeCount({name: data.key, count: data.doc_count}));
 			});
 			var commons = ko.observableArray();
-			_.each(allData.aggregations.common.buckets, function(data) {
+			_.each(allData.aggregations.common_names.common.buckets, function(data) {
 				commons.push(new ResumeCount({name: data.key, count: data.doc_count}));
 			});
 			var kingdoms = ko.observableArray();
@@ -3815,7 +3941,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				canonicals.push(new ResumeCount({name: data.key, count: data.doc_count}));
 			});
 			var commons = ko.observableArray();
-			_.each(allData.aggregations.common.buckets, function(data) {
+			_.each(allData.aggregations.common_names.common.buckets, function(data) {
 				commons.push(new ResumeCount({name: data.key, count: data.doc_count}));
 			});
 			var kingdoms = ko.observableArray();
@@ -3921,7 +4047,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				canonicals.push(new ResumeCount({name: data.key, count: data.doc_count}));
 			});
 			var commons = ko.observableArray();
-			_.each(allData.aggregations.common.buckets, function(data) {
+			_.each(allData.aggregations.common_names.common.buckets, function(data) {
 				commons.push(new ResumeCount({name: data.key, count: data.doc_count}));
 			});
 			var kingdoms = ko.observableArray();
@@ -4027,7 +4153,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				canonicals.push(new ResumeCount({name: data.key, count: data.doc_count}));
 			});
 			var commons = ko.observableArray();
-			_.each(allData.aggregations.common.buckets, function(data) {
+			_.each(allData.aggregations.common_names.common.buckets, function(data) {
 				commons.push(new ResumeCount({name: data.key, count: data.doc_count}));
 			});
 			var kingdoms = ko.observableArray();

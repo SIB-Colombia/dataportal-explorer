@@ -17,6 +17,8 @@ requirejs.config({
     'LeafletGoogleTiles': 'leaflet/plugins/layer/tile/Google',
     'LeafletBingTiles': 'leaflet/plugins/layer/tile/Bing',
     'LeafletDraw': 'leaflet/plugins/draw/leaflet.draw',
+    'LeafletMarkerCluster': '../../components/leaflet.markercluster/dist/leaflet.markercluster',
+    'LeafletSidebar': '../../components/leaflet-sidebar/src/L.Control.Sidebar',
     'bootstrap': 'bootstrap/bootstrap.min',
     'knockout': '../../components/knockoutjs/dist/knockout',
     'knockoutKendoUI': 'knockout-kendoui/knockout-kendo.min',
@@ -24,7 +26,8 @@ requirejs.config({
     'kendoGrid': 'kendo/kendo.grid.min',
     'kendoSpanishCulture': 'kendo/cultures/kendo.culture.es-CO.min',
     'select2': '../../components/select2/select2.min',
-    'bootstrap-slider': '../../components/seiyria-bootstrap-slider/dist/bootstrap-slider.min'
+    'bootstrap-slider': '../../components/seiyria-bootstrap-slider/dist/bootstrap-slider.min',
+    'LeafletZoomSlider': 'leaflet/plugins/zoomslider/zoomslider'
   },
   shim: {
     'Leaflet': {
@@ -43,6 +46,15 @@ requirejs.config({
       deps: ['Leaflet']
     },
     'LeafletDraw': {
+      deps: ['Leaflet']
+    },
+    'LeafletZoomSlider': {
+      deps: ['Leaflet']
+    },
+    'LeafletMarkerCluster': {
+      deps: ['Leaflet']
+    },
+    'LeafletSidebar': {
       deps: ['Leaflet']
     },
     'jqueryUI': {

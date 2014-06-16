@@ -1,4 +1,4 @@
-define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles", "LeafletProviders", "LeafletControlFullScreen", "LeafletDraw"], function($) {
+define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles", "LeafletProviders", "LeafletControlFullScreen", "LeafletDraw", "LeafletZoomSlider", "LeafletSidebar"], function($) {
 	
 	L.Control.MousePosition = L.Control.extend({
 	  options: {
@@ -266,6 +266,7 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 	var map = L.map('mapa', {
 		center: [4.781505, -79.804687],
 		zoom: 6,
+		zoomControl: false,
 		//crs: L.CRS.EPSG4326,
 		layers: [googleTerrain]
 	});
@@ -300,6 +301,7 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 	};
 	
 	baseAndFirstOverlays = L.control.layers(baseLayers, wmsLayers, {collapsed: true}).addTo(map);
+	
 	//L.control.layers(wmsLayers).addTo(map);
 	L.control.fullscreen({
 		position: 'topleft',
@@ -310,7 +312,14 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 
 	L.control.scale().addTo(map);
 
+	// Leaflet mouse position
 	L.control.mousePosition().addTo(map);
+
+	// Sidebar control
+	sidebar = L.control.sidebar('sidebar', {
+		position: 'left'
+	});
+	map.addControl(sidebar);
 
 	// Set toolbar draw to spanish
 	L.drawLocal = {
@@ -431,6 +440,12 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 		edit: {
 			featureGroup: featureGroup
 		}
+	}).addTo(map);
+
+	// Zoom slider control
+	L.control.zoomslider({
+		position: 'topleft',
+		title: 'Cambiar nivel de acercamiento.'
 	}).addTo(map);
 
 	// Enable floating windows for search floating window

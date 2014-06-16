@@ -1205,6 +1205,14 @@ block filterWindow
 							span(style="font-size: 11px;padding-left:37px;") 0.2&deg; x 0.2&deg;
 							span(style="font-size: 11px;padding-left:40px;") 0.5&deg; x 0.5&deg;
 							span(style="font-size: 11px;padding-left:35px;") 1.0&deg; x 1.0&deg;
+							#densityInstructionsCellSelection.occult-element
+								form
+									label.checkbox
+										input#distributionCells(type="checkbox", name="distributionCells", value="distributionCells")
+										| Ver celdas de distribución
+									label.checkbox
+										input#occurrenceRecord(type="checkbox", name="occurrenceRecord", value="occurrenceRecord", checked)
+										| Ver registros biológicos
 				#additionalInfoPane.occult-element
 					#downloadResults
 						.downloadItem

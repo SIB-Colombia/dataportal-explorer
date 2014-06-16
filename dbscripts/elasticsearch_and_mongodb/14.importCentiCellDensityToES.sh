@@ -1,6 +1,6 @@
-curl -XPUT 'http://localhost:9200/sibexplorer/pointtwo_cell_density/_mapping' -d '
+curl -XPUT 'http://localhost:9200/sibexplorer/centi_cell_density/_mapping' -d '
 {
-	"pointtwo_cell_density" :  {
+	"centi_cell_density" :  {
 		"properties": {
 			"type": {
 				"type": "string",
@@ -44,7 +44,7 @@ curl -XPUT 'http://localhost:9200/sibexplorer/pointtwo_cell_density/_mapping' -d
 					}
 				}
 			},
-			"pointtwo_cell_id": {
+			"centi_cell_id": {
 				"type": "string",
 				"index": "analyzed",
 				"fields" : {
@@ -59,18 +59,10 @@ curl -XPUT 'http://localhost:9200/sibexplorer/pointtwo_cell_density/_mapping' -d
 				}
 			},
 			"location_cell" : {
-				"type" : "geo_point",
-				"fielddata" : {
-					"format" : "compressed",
-					"precision" : "1cm"
-				}
+				"type" : "geo_point"
 			},
-			"location_pointtwo_cell" : {
-				"type" : "geo_point",
-				"fielddata" : {
-					"format" : "compressed",
-					"precision" : "1cm"
-				}
+			"location_centi_cell" : {
+				"type" : "geo_point"
 			},
 			"count": {
 				"type" : "integer"
@@ -79,14 +71,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/pointtwo_cell_density/_mapping' -d
 	}
 }'
 
-curl -XPUT 'http://localhost:9200/_river/river-mongodb-pointtwo_cell_density/_meta' -d '{
+curl -XPUT 'http://localhost:9200/_river/river-mongodb-centi_cell_density/_meta' -d '{
 	"type": "mongodb",
 	"mongodb": {
 		"db": "sibexplorer_dev",
-		"collection": "pointtwo_cell_density"
+		"collection": "centi_cell_density"
 	},
 	"index": {
 		"name": "sibexplorer",
-		"type": "pointtwo_cell_density"
+		"type": "centi_cell_density"
 	}
 }'

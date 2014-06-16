@@ -1,6 +1,37 @@
 var moment = require('moment');
 var _ = require('underscore');
 
+exports.getOccurrencesInBoundingBox = function(top, bottom, left, right) {
+	qryObj = {
+		"_source": ["location", "canonical", "id"],
+		"size": 1000000,
+	  "query": {
+	    "filtered": {
+	      "query": {
+	        "match_all": {}
+	      },
+	      "filter": {
+	        "geo_bounding_box": {
+	          "location": {
+	            "top_left" : {
+	              "lat": top,
+	              "lon": left
+	            },
+	            "bottom_right" : {
+	              "lat": bottom,
+	              "lon": right
+	            }
+	          }
+	        }
+	      }
+	    }
+	  }
+	};
+
+	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
+	return mySearchCall;
+};
+
 exports.getCounties = function() {
 	qryObj = {
 	  "_source": false,
@@ -98,12 +129,19 @@ exports.getOccurrencesResumeName = function(name, type) {
 					"size" : 10
 				}
 			},
-			"common": {
-				"terms": {
-					"field": "nombre_comun.untouched",
-					"size" : 10
-				}
-			},
+			"common_names": {
+	      "nested" : {
+	        "path" : "common_names"
+	      },
+	      "aggs" : {
+	        "common": {
+	          "terms": {
+	            "field": "common_names.name.untouched",
+	            "size" : 10
+	          }
+	        }
+	      }
+	    },
 			"kingdom": {
 				"terms": {
 					"field": "kingdom_group.untouched",
@@ -284,13 +322,20 @@ exports.getOccurrencesResumeName = function(name, type) {
 	};
 
 	qryObj["query"] = {};
-	qryObj["query"]["filtered"] = {};
-	qryObj["query"]["filtered"]["query"] = {};
-	qryObj["query"]["filtered"]["query"]["wildcard"] = {};
+	if(type == "common") {
+		qryObj["query"]["nested"] = {};
+		qryObj["query"]["nested"]["path"] = "common_names";
+		qryObj["query"]["nested"]["query"] = {};
+		qryObj["query"]["nested"]["query"]["wildcard"] = {};
+	} else {
+		qryObj["query"]["filtered"] = {};
+		qryObj["query"]["filtered"]["query"] = {};
+		qryObj["query"]["filtered"]["query"]["wildcard"] = {};
+	}
 	if(type == "scientific") {
 		qryObj["query"]["filtered"]["query"]["wildcard"]["canonical.exactWords"] = "*"+ name.toLowerCase() +"*";
 	} else if(type == "common") {
-		qryObj["query"]["filtered"]["query"]["wildcard"]["nombre_comun.exactWords"] = "*"+ name.toLowerCase() +"*";
+		qryObj["query"]["nested"]["query"]["wildcard"]["common_names.name.exactWords"] = "*"+ name.toLowerCase() +"*";
 	} else if(type == "kingdom") {
 		qryObj["query"]["filtered"]["query"]["wildcard"]["kingdom.exactWords"] = "*"+ name.toLowerCase() +"*";
 	} else if(type == "phylum") {
@@ -347,12 +392,26 @@ exports.getSearchText = function(subjectID) {
 
 exports.getOccurrences = function() {
 	qryObj = {
-		"_source": ["id", "canonical", "nombre_comun", "data_resource_name", "institution_code", "collection_code", "catalogue_number", "occurrence_date", "modified", "location", "country_name", "department_name", "county_name", "paramo_name", "marine_zone_name", "basis_of_record_name_spanish"],
+		"_source": ["id", "canonical", "data_resource_name", "institution_code", "collection_code", "catalogue_number", "occurrence_date", "modified", "location", "country_name", "department_name", "county_name", "paramo_name", "marine_zone_name", "basis_of_record_name_spanish"],
 		"from": 0,
 		"size" : 20,
 		"sort": [ { "canonical.untouched": "asc" } ],
 		"query" : {
 			"match_all" : {}
+		}
+	};
+
+	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
+	return mySearchCall;
+};
+
+exports.getOccurrence = function(id) {
+	qryObj = {
+		"_source": ["id", "canonical", "location", "rights", "catalogue_number_id", "catalogue_number", "iso_country_code", "country_name", "institution_code_id", "institution_code", "created", "kingdom", "phylum", "taxonClass", "order_rank", "family", "genus", "species", "year", "iso_department_code", "department_name", "citation", "data_resource_id", "data_resource_name", "marine_zone_name", "modified", "paramo_name", "month", "depth_centimetres", "iso_county_code", "county_name", "altitude_metres", "data_provider_id", "data_provider_name", "occurrence_date", "basis_of_record_name_spanish", "common_names", "collection_code_id", "collection_code", "kingdom_concept_id", "phylum_concept_id", "class_concept_id", "order_concept_id", "family_concept_id", "genus_concept_id", "species_concept_id"],
+		"query" : {
+			"match" : {
+        "id.untouched" : id
+      }
 		}
 	};
 
@@ -487,12 +546,19 @@ exports.getDistributionStatsOneDegree = function(cellid) {
 					"size" : 10
 				}
 			},
-			"common": {
-				"terms": {
-					"field": "nombre_comun.untouched",
-					"size" : 10
-				}
-			},
+			"common_names": {
+	      "nested" : {
+	        "path" : "common_names"
+	      },
+	      "aggs" : {
+	        "common": {
+	          "terms": {
+	            "field": "common_names.name.untouched",
+	            "size" : 10
+	          }
+	        }
+	      }
+	    },
 			"kingdom": {
 				"terms": {
 					"field": "kingdom_group.untouched",
@@ -613,12 +679,19 @@ exports.getDistributionStatsWithSearchOneDegree = function(conditions) {
 					"size" : 10
 				}
 			},
-			"common": {
-				"terms": {
-					"field": "nombre_comun.untouched",
-					"size" : 10
-				}
-			},
+			"common_names": {
+	      "nested" : {
+	        "path" : "common_names"
+	      },
+	      "aggs" : {
+	        "common": {
+	          "terms": {
+	            "field": "common_names.name.untouched",
+	            "size" : 10
+	          }
+	        }
+	      }
+	    },
 			"kingdom": {
 				"terms": {
 					"field": "kingdom_group.untouched",
@@ -1011,12 +1084,19 @@ exports.getDistributionStatsPointFiveDegree = function(cellid, pointfivecellid) 
 					"size" : 10
 				}
 			},
-			"common": {
-				"terms": {
-					"field": "nombre_comun.untouched",
-					"size" : 10
-				}
-			},
+			"common_names": {
+	      "nested" : {
+	        "path" : "common_names"
+	      },
+	      "aggs" : {
+	        "common": {
+	          "terms": {
+	            "field": "common_names.name.untouched",
+	            "size" : 10
+	          }
+	        }
+	      }
+	    },
 			"kingdom": {
 				"terms": {
 					"field": "kingdom_group.untouched",
@@ -1151,12 +1231,19 @@ exports.getDistributionStatsWithSearchPointFiveDegree = function(conditions) {
 					"size" : 10
 				}
 			},
-			"common": {
-				"terms": {
-					"field": "nombre_comun.untouched",
-					"size" : 10
-				}
-			},
+			"common_names": {
+	      "nested" : {
+	        "path" : "common_names"
+	      },
+	      "aggs" : {
+	        "common": {
+	          "terms": {
+	            "field": "common_names.name.untouched",
+	            "size" : 10
+	          }
+	        }
+	      }
+	    },
 			"kingdom": {
 				"terms": {
 					"field": "kingdom_group.untouched",
@@ -1555,12 +1642,19 @@ exports.getDistributionStatsPointOneDegree = function(cellid, centicellid) {
 					"size" : 10
 				}
 			},
-			"common": {
-				"terms": {
-					"field": "nombre_comun.untouched",
-					"size" : 10
-				}
-			},
+			"common_names": {
+	      "nested" : {
+	        "path" : "common_names"
+	      },
+	      "aggs" : {
+	        "common": {
+	          "terms": {
+	            "field": "common_names.name.untouched",
+	            "size" : 10
+	          }
+	        }
+	      }
+	    },
 			"kingdom": {
 				"terms": {
 					"field": "kingdom_group.untouched",
@@ -1695,12 +1789,19 @@ exports.getDistributionStatsWithSearchPointOneDegree = function(conditions) {
 					"size" : 10
 				}
 			},
-			"common": {
-				"terms": {
-					"field": "nombre_comun.untouched",
-					"size" : 10
-				}
-			},
+			"common_names": {
+	      "nested" : {
+	        "path" : "common_names"
+	      },
+	      "aggs" : {
+	        "common": {
+	          "terms": {
+	            "field": "common_names.name.untouched",
+	            "size" : 10
+	          }
+	        }
+	      }
+	    },
 			"kingdom": {
 				"terms": {
 					"field": "kingdom_group.untouched",
@@ -2099,12 +2200,19 @@ exports.getDistributionStatsPointTwoDegree = function(cellid, pointtwocellid) {
 					"size" : 10
 				}
 			},
-			"common": {
-				"terms": {
-					"field": "nombre_comun.untouched",
-					"size" : 10
-				}
-			},
+			"common_names": {
+	      "nested" : {
+	        "path" : "common_names"
+	      },
+	      "aggs" : {
+	        "common": {
+	          "terms": {
+	            "field": "common_names.name.untouched",
+	            "size" : 10
+	          }
+	        }
+	      }
+	    },
 			"kingdom": {
 				"terms": {
 					"field": "kingdom_group.untouched",
@@ -2239,12 +2347,19 @@ exports.getDistributionStatsWithSearchPointTwoDegree = function(conditions) {
 					"size" : 10
 				}
 			},
-			"common": {
-				"terms": {
-					"field": "nombre_comun.untouched",
-					"size" : 10
-				}
-			},
+			"common_names": {
+	      "nested" : {
+	        "path" : "common_names"
+	      },
+	      "aggs" : {
+	        "common": {
+	          "terms": {
+	            "field": "common_names.name.untouched",
+	            "size" : 10
+	          }
+	        }
+	      }
+	    },
 			"kingdom": {
 				"terms": {
 					"field": "kingdom_group.untouched",

@@ -1,6 +1,14 @@
 var occurrencesES = require("../../models/elasticsearch/occurrencesModel");
 var _ = require('underscore');
 
+// Get single occurrence data
+exports.searchOccurrence = function(req, res) {
+	occurrences = occurrencesES.getOccurrence(req.params._id);
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
+	});
+};
+
 // Resume Canonical Name data JSON response
 exports.searchResumeScientificName = function(req, res) {
 	occurrences = occurrencesES.getOccurrencesResumeName("*", "scientific");
@@ -298,6 +306,14 @@ exports.listParamos = function(req, res) {
 // Get all the paramos for dropdown list
 exports.listMarineZones = function(req, res) {
 	occurrences = occurrencesES.getMarineZones();
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
+	});
+};
+
+// Get all occurrences inside a bounding box
+exports.getOccurrencesInBoundingBox = function(req, res) {
+	occurrences = occurrencesES.getOccurrencesInBoundingBox(req.params._top, req.params._bottom, req.params._left, req.params._right);
 	occurrences.exec(function(err, data){
 		res.jsonp(JSON.parse(data));
 	});

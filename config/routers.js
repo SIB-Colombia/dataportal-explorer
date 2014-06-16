@@ -66,6 +66,10 @@ module.exports = function(parent, options) {
 					method = 'get';
 					path = '/rest/' + name + '/pointfivedegree/stats/:' + '_cellid' + '/:' + '_pointfivecellid';
 					break;
+				case 'getOccurrencesInBoundingBox':
+					method = 'get';
+					path = '/rest/' + name + '/boundingbox/:' + '_top' + '/:' + '_bottom' + '/:' + '_left' + '/:' + '_right';
+					break;
 				case 'getDistributionStatsWithSearchPointFiveDegree':
 					method = 'post';
 					path = '/' + name + '/pointfivedegree/stats';
@@ -297,6 +301,10 @@ module.exports = function(parent, options) {
 				case 'searchSearchHelpTextByName':
 					method = 'get';
 					path = '/rest/' + name + '/searchhelptext/name/:' + '_name';
+					break;
+				case 'searchOccurrence':
+					method = 'get';
+					path = '/rest/' + name + '/id/:' + '_id';
 					break;
 				case 'updatemongodb':
 					method = 'get';

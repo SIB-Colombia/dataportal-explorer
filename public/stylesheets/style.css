@@ -838,6 +838,9 @@ h4#currentSearch {
   padding-left: 6px;
   padding-right: 6px;
 }
+#filtersContainer #explorerFiltersAndEditor #densityButtonsPane #densityButtons #densityInstructionsCellSelection {
+  padding: 10px;
+}
 #filtersContainer #explorerFiltersAndEditor #additionalInfoPane {
   width: 100%;
 }
@@ -1269,3 +1272,44 @@ h4#currentSearch {
   font: 11px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif;
 }
 /* End mouse position leaflet control style */
+#sidebar #contentDetails #occurrenceBlock fieldset.occurrenceFieldset {
+  margin: 0px 0 10px 0;
+  padding: 10px;
+  min-height: 80px;
+  background: #faf9f3;
+  -webkit-border-radius: 20px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
+  position: relative;
+}
+#sidebar #contentDetails #occurrenceBlock fieldset.occurrenceFieldset p {
+  border-bottom: 1px solid #ded3cc;
+  padding-top: 6px;
+  min-height: 20px;
+  display: block;
+  clear: left;
+  float: left;
+  width: 100%;
+}
+#sidebar #contentDetails #occurrenceBlock fieldset.occurrenceFieldset label {
+  font-weight: bold;
+  display: block;
+  float: left;
+  margin-bottom: 5px;
+  margin-right: 5px;
+  text-align: left;
+  width: 80px;
+  padding-right: 20px;
+  padding-bottom: 5px;
+  line-height: 1.3em;
+}
+#sidebar #contentDetails #occurrenceBlock h2 {
+  font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  line-height: 20px;
+}
+#sidebar h1 {
+  font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  font-size: 14px;
+}
