@@ -1272,6 +1272,7 @@ h4#currentSearch {
   font: 11px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif;
 }
 /* End mouse position leaflet control style */
+/* Occurrence sidebar details styles */
 #sidebar #contentDetails #occurrenceBlock fieldset.occurrenceFieldset {
   margin: 0px 0 10px 0;
   padding: 10px;
@@ -1313,3 +1314,4 @@ h4#currentSearch {
   font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
   font-size: 14px;
 }
+/* End occurrence sidebar details styles */

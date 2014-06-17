@@ -188,9 +188,11 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 								});
 							});
 							marker.on('popupopen', function (a) {
+								$("#contentDetails").removeClass("occult-element");
 								sidebar.show();
 							});
 							marker.on('popupclose', function (a) {
+								$("#contentDetails").addClass("occult-element");
 								sidebar.hide();
 							});
 							markers.addLayer(marker);
