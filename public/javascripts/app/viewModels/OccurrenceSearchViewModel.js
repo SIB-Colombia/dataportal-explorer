@@ -127,7 +127,8 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			markers = new L.MarkerClusterGroup({
 				spiderfyOnMaxZoom: true,
 				showCoverageOnHover: true,
-				zoomToBoundsOnClick: true
+				zoomToBoundsOnClick: true,
+				removeOutsideVisibleBounds: true
 			});
 
 			map.on('zoomend', function(e) {

@@ -1,6 +1,6 @@
 curl -XPUT 'http://localhost:9200/sibexplorer'
 
-curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
+curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 {
 	"occurrences" :  {
 		"properties": {
@@ -58,6 +58,7 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
 			"pointfive_cell_id": {"type" : "integer"},
 			"pointtwo_cell_id": {"type" : "integer"},
 			"mod360_cell_id": {"type" : "integer"},
+			"geospatial_issue": {"type" : "integer"},
 			"canonical":  {
 				"type": "string",
 				"index": "analyzed",
@@ -761,6 +762,24 @@ curl -XPUT 'http://localhost:9200/sibexplorer/occurrences/_mapping' -d '
 				}
 			},
 			"basis_of_record_name_spanish" :  {
+				"type": "string",
+				"index": "analyzed",
+				"fields" : {
+					"untouched": {
+						"type": "string",
+						"index": "not_analyzed"
+					},
+					"exactWords": {
+						"type": "string",
+						"analyzer": "string_lowercase"
+					},
+					"spanish": {
+						"type": "string",
+						"analyzer": "spanish_analyzer"
+					}
+				}
+			},
+			"locality" :  {
 				"type": "string",
 				"index": "analyzed",
 				"fields" : {

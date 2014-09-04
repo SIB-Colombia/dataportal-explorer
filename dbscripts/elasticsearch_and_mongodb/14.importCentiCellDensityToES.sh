@@ -1,4 +1,4 @@
-curl -XPUT 'http://localhost:9200/sibexplorer/centi_cell_density/_mapping' -d '
+curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/centi_cell_density' -d '
 {
 	"centi_cell_density" :  {
 		"properties": {

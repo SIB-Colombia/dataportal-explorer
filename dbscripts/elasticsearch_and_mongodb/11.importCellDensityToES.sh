@@ -1,5 +1,5 @@
 # Mapping for geo_distance, geo_bbox, geo_distance_range, geo_polygon and geo_shape support
-curl -XPUT 'http://localhost:9200/sibexplorer/cell_density/_mapping' -d '
+curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/cell_density' -d '
 {
 	"cell_density" :  {
 		"properties": {

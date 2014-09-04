@@ -185,6 +185,7 @@ data_resource.created,
 data_resource.modified,
 department.department_name AS department_name,
 county.county_name AS county_name,
+raw_occurrence_record.locality AS locality,
 paramo.complex AS paramo_name,
 marine_zone.description AS marine_zone_name,
 taxon_concept_phylum.partner_concept_id AS phylum_concept_id,
@@ -221,6 +222,7 @@ INNER JOIN data_resource ON occurrence_record.data_resource_id = data_resource.i
 INNER JOIN institution_code ON occurrence_record.institution_code_id = institution_code.id
 INNER JOIN collection_code ON occurrence_record.collection_code_id = collection_code.id
 INNER JOIN catalogue_number ON occurrence_record.catalogue_number_id = catalogue_number.id
+INNER JOIN raw_occurrence_record ON occurrence_record.id = raw_occurrence_record.id
 LEFT JOIN lookup_basis_of_record ON occurrence_record.basis_of_record = lookup_basis_of_record.br_key
 LEFT JOIN department ON occurrence_record.iso_department_code = department.iso_department_code
 LEFT JOIN county ON occurrence_record.iso_county_code = county.iso_county_code

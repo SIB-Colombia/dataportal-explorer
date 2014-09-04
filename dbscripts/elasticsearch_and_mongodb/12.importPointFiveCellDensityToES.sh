@@ -1,4 +1,4 @@
-curl -XPUT 'http://localhost:9200/sibexplorer/pointfive_cell_density/_mapping' -d '
+curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/pointfive_cell_density' -d '
 {
 	"pointfive_cell_density" :  {
 		"properties": {
