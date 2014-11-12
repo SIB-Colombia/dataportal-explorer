@@ -712,47 +712,32 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		},
 		loadCountyDropdownData: function() {
 			var self = this;
-			$.ajax({
-				contentType: 'application/json',
-				type: 'GET',
-				url: '/rest/occurrences/counties/list',
-				success: function(allData) {
-					$.each(allData.aggregations.counties.buckets, function(i, county) {
-						var countyData = county.key.split("~~~");
-						self.countyDropdown.push(new County({departmentName: countyData[0], countyName: countyData[1], isoCountyCode: countyData[2]}));
-					});
-				},
-				dataType: 'jsonp'
+			$.getJSON("/rest/occurrences/counties/list", function(allData) {
+				var newCounties = ko.utils.arrayMap(allData.aggregations.counties.buckets, function(county) {
+					var countyData = county.key.split("~~~");
+					return new County({departmentName: countyData[0], countyName: countyData[1], isoCountyCode: countyData[2]});
+				});
+				self.countyDropdown.push.apply(self.countyDropdown, newCounties);
 			});
 		},
 		loadParamoDropdownData: function() {
 			var self = this;
-			$.ajax({
-				contentType: 'application/json',
-				type: 'GET',
-				url: '/rest/occurrences/paramos/list',
-				success: function(allData) {
-					$.each(allData.aggregations.paramos.buckets, function(i, paramo) {
-						var paramoData = paramo.key.split("~~~");
-						self.paramoDropdown.push(new Paramo({paramoName: paramoData[0], paramoCode: paramoData[1]}));
-					});
-				},
-				dataType: 'jsonp'
+			$.getJSON("/rest/occurrences/paramos/list", function(allData) {
+				var newParamos = ko.utils.arrayMap(allData.aggregations.paramos.buckets, function(paramo) {
+					var paramoData = paramo.key.split("~~~");
+					return new Paramo({paramoName: paramoData[0], paramoCode: paramoData[1]});
+				});
+				self.paramoDropdown.push.apply(self.paramoDropdown, newParamos);
 			});
 		},
 		loadMarineZoneDropdownData: function() {
 			var self = this;
-			$.ajax({
-				contentType: 'application/json',
-				type: 'GET',
-				url: '/rest/occurrences/marinezones/list',
-				success: function(allData) {
-					$.each(allData.aggregations.marinezones.buckets, function(i, marinezone) {
-						var marineZoneData = marinezone.key.split("~~~");
-						self.marineZoneDropdown.push(new MarineZone({marineZoneName: marineZoneData[0], marineZoneCode: marineZoneData[1]}));
-					});
-				},
-				dataType: 'jsonp'
+			$.getJSON("/rest/occurrences/marinezones/list", function(allData) {
+				var newMarineZones = ko.utils.arrayMap(allData.aggregations.marinezones.buckets, function(marinezone) {
+					var marineZoneData = marinezone.key.split("~~~");
+					return new MarineZone({marineZoneName: marineZoneData[0], marineZoneCode: marineZoneData[1]});
+				});
+				self.marineZoneDropdown.push.apply(self.marineZoneDropdown, newMarineZones);
 			});
 		},
 		loadCellDensityOneDegree: function() {

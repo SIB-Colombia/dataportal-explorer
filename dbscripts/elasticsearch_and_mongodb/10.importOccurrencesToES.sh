@@ -1,4 +1,61 @@
-curl -XPUT 'http://localhost:9200/sibexplorer'
+curl -XPUT 'http://localhost:9200/sibexplorer/' -d '
+{
+	"settings": {
+		"analysis": {
+			"filter": {
+				"nGram_filter": {
+					"type": "nGram",
+					"min_gram": "2",
+					"max_gram": "20",
+					"token_chars": ["letter", "digit", "punctuation", "symbol"]
+				},
+				"snowball": {
+					"type": "snowball",
+					"language": "Spanish"
+				},
+				"stopwords": {
+					"type": "stop",
+					"stopwords": "_spanish_"
+				},
+				"worddelimiter": {
+					"type": "word_delimiter"
+				},
+				"my_shingle_filter": {
+					"type": "shingle",
+					"min_shingle_size": "2",
+					"max_shingle_size": "5",
+					"output_unigrams": "false",
+					"output_unigrams_if_no_shingles": "false"
+				},
+				"my_ascii_folding": {
+					"type" : "asciifolding",
+					"preserve_original": true
+				}
+			},
+			"analyzer": {
+				"spanish_ngram_analyzer": {
+					"type": "custom",
+					"tokenizer": "whitespace",
+					"filter": ["lowercase", "stopwords", "my_ascii_folding", "nGram_filter"]
+				},
+				"spanish_search_analyzer": {
+					"type": "custom",
+					"tokenizer": "standard",
+					"filter": ["lowercase", "stopwords", "my_ascii_folding", "snowball", "worddelimiter"]
+				},
+				"my_shingle_analyzer": {
+					"type": "custom",
+					"tokenizer": "standard",
+					"filter": ["lowercase", "my_shingle_filter"]
+				},
+				"string_lowercase": {
+					"tokenizer": "keyword",
+					"filter": ["lowercase"]
+				}
+			}
+		}
+	}
+}'
 
 curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 {
@@ -73,7 +130,7 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					},
 					"spanish": {
 						"type": "string",
-						"analyzer": "spanish_analyzer"
+						"analyzer": "spanish_search_analyzer"
 					}
 				}
 			},
@@ -91,7 +148,7 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					},
 					"spanish": {
 						"type": "string",
-						"analyzer": "spanish_analyzer"
+						"analyzer": "spanish_search_analyzer"
 					}
 				}
 			},
@@ -109,7 +166,7 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					},
 					"spanish": {
 						"type": "string",
-						"analyzer": "spanish_analyzer"
+						"analyzer": "spanish_search_analyzer"
 					}
 				}
 			},
@@ -127,7 +184,7 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					},
 					"spanish": {
 						"type": "string",
-						"analyzer": "spanish_analyzer"
+						"analyzer": "spanish_search_analyzer"
 					}
 				}
 			},
@@ -145,7 +202,7 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					},
 					"spanish": {
 						"type": "string",
-						"analyzer": "spanish_analyzer"
+						"analyzer": "spanish_search_analyzer"
 					}
 				}
 			},
@@ -163,7 +220,7 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					},
 					"spanish": {
 						"type": "string",
-						"analyzer": "spanish_analyzer"
+						"analyzer": "spanish_search_analyzer"
 					}
 				}
 			},
@@ -181,7 +238,7 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					},
 					"spanish": {
 						"type": "string",
-						"analyzer": "spanish_analyzer"
+						"analyzer": "spanish_search_analyzer"
 					}
 				}
 			},
@@ -199,7 +256,7 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					},
 					"spanish": {
 						"type": "string",
-						"analyzer": "spanish_analyzer"
+						"analyzer": "spanish_search_analyzer"
 					}
 				}
 			},
@@ -217,7 +274,7 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					},
 					"spanish": {
 						"type": "string",
-						"analyzer": "spanish_analyzer"
+						"analyzer": "spanish_search_analyzer"
 					}
 				}
 			},
@@ -235,7 +292,7 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					},
 					"spanish": {
 						"type": "string",
-						"analyzer": "spanish_analyzer"
+						"analyzer": "spanish_search_analyzer"
 					}
 				}
 			},
@@ -253,7 +310,7 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					},
 					"spanish": {
 						"type": "string",
-						"analyzer": "spanish_analyzer"
+						"analyzer": "spanish_search_analyzer"
 					}
 				}
 			},
@@ -271,7 +328,7 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					},
 					"spanish": {
 						"type": "string",
-						"analyzer": "spanish_analyzer"
+						"analyzer": "spanish_search_analyzer"
 					}
 				}
 			},
@@ -289,7 +346,7 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					},
 					"spanish": {
 						"type": "string",
-						"analyzer": "spanish_analyzer"
+						"analyzer": "spanish_search_analyzer"
 					}
 				}
 			},
@@ -307,7 +364,7 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					},
 					"spanish": {
 						"type": "string",
-						"analyzer": "spanish_analyzer"
+						"analyzer": "spanish_search_analyzer"
 					}
 				}
 			},
@@ -325,7 +382,7 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					},
 					"spanish": {
 						"type": "string",
-						"analyzer": "spanish_analyzer"
+						"analyzer": "spanish_search_analyzer"
 					}
 				}
 			},
@@ -343,7 +400,7 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					},
 					"spanish": {
 						"type": "string",
-						"analyzer": "spanish_analyzer"
+						"analyzer": "spanish_search_analyzer"
 					}
 				}
 			},
@@ -361,7 +418,7 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					},
 					"spanish": {
 						"type": "string",
-						"analyzer": "spanish_analyzer"
+						"analyzer": "spanish_search_analyzer"
 					}
 				}
 			},
@@ -379,7 +436,7 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					},
 					"spanish": {
 						"type": "string",
-						"analyzer": "spanish_analyzer"
+						"analyzer": "spanish_search_analyzer"
 					}
 				}
 			},
@@ -397,7 +454,7 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					},
 					"spanish": {
 						"type": "string",
-						"analyzer": "spanish_analyzer"
+						"analyzer": "spanish_search_analyzer"
 					}
 				}
 			},
@@ -415,7 +472,7 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					},
 					"spanish": {
 						"type": "string",
-						"analyzer": "spanish_analyzer"
+						"analyzer": "spanish_search_analyzer"
 					}
 				}
 			},
@@ -433,7 +490,7 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					},
 					"spanish": {
 						"type": "string",
-						"analyzer": "spanish_analyzer"
+						"analyzer": "spanish_search_analyzer"
 					}
 				}
 			},
@@ -451,7 +508,7 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					},
 					"spanish": {
 						"type": "string",
-						"analyzer": "spanish_analyzer"
+						"analyzer": "spanish_search_analyzer"
 					}
 				}
 			},
@@ -469,7 +526,7 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					},
 					"spanish": {
 						"type": "string",
-						"analyzer": "spanish_analyzer"
+						"analyzer": "spanish_search_analyzer"
 					}
 				}
 			},
@@ -487,7 +544,7 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					},
 					"spanish": {
 						"type": "string",
-						"analyzer": "spanish_analyzer"
+						"analyzer": "spanish_search_analyzer"
 					}
 				}
 			},
@@ -505,7 +562,7 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					},
 					"spanish": {
 						"type": "string",
-						"analyzer": "spanish_analyzer"
+						"analyzer": "spanish_search_analyzer"
 					}
 				}
 			},
@@ -523,7 +580,7 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					},
 					"spanish": {
 						"type": "string",
-						"analyzer": "spanish_analyzer"
+						"analyzer": "spanish_search_analyzer"
 					}
 				}
 			},
@@ -541,7 +598,7 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					},
 					"spanish": {
 						"type": "string",
-						"analyzer": "spanish_analyzer"
+						"analyzer": "spanish_search_analyzer"
 					}
 				}
 			},
@@ -559,7 +616,7 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					},
 					"spanish": {
 						"type": "string",
-						"analyzer": "spanish_analyzer"
+						"analyzer": "spanish_search_analyzer"
 					}
 				}
 			},
@@ -577,7 +634,7 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					},
 					"spanish": {
 						"type": "string",
-						"analyzer": "spanish_analyzer"
+						"analyzer": "spanish_search_analyzer"
 					}
 				}
 			},
@@ -595,7 +652,7 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					},
 					"spanish": {
 						"type": "string",
-						"analyzer": "spanish_analyzer"
+						"analyzer": "spanish_search_analyzer"
 					}
 				}
 			},
@@ -613,7 +670,7 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					},
 					"spanish": {
 						"type": "string",
-						"analyzer": "spanish_analyzer"
+						"analyzer": "spanish_search_analyzer"
 					}
 				}
 			},
@@ -631,7 +688,7 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					},
 					"spanish": {
 						"type": "string",
-						"analyzer": "spanish_analyzer"
+						"analyzer": "spanish_search_analyzer"
 					}
 				}
 			},
@@ -649,7 +706,7 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					},
 					"spanish": {
 						"type": "string",
-						"analyzer": "spanish_analyzer"
+						"analyzer": "spanish_search_analyzer"
 					}
 				}
 			},
@@ -667,7 +724,11 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					},
 					"spanish": {
 						"type": "string",
-						"analyzer": "spanish_analyzer"
+						"analyzer": "spanish_search_analyzer"
+					},
+					"shingles": {
+						"type": "string",
+						"analyzer": "my_shingle_analyzer"
 					}
 				}
 			},
@@ -685,7 +746,11 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					},
 					"spanish": {
 						"type": "string",
-						"analyzer": "spanish_analyzer"
+						"analyzer": "spanish_search_analyzer"
+					},
+					"shingles": {
+						"type": "string",
+						"analyzer": "my_shingle_analyzer"
 					}
 				}
 			},
@@ -703,7 +768,11 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					},
 					"spanish": {
 						"type": "string",
-						"analyzer": "spanish_analyzer"
+						"analyzer": "spanish_search_analyzer"
+					},
+					"shingles": {
+						"type": "string",
+						"analyzer": "my_shingle_analyzer"
 					}
 				}
 			},
@@ -721,7 +790,11 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					},
 					"spanish": {
 						"type": "string",
-						"analyzer": "spanish_analyzer"
+						"analyzer": "spanish_search_analyzer"
+					},
+					"shingles": {
+						"type": "string",
+						"analyzer": "my_shingle_analyzer"
 					}
 				}
 			},
@@ -739,7 +812,7 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					},
 					"spanish": {
 						"type": "string",
-						"analyzer": "spanish_analyzer"
+						"analyzer": "spanish_search_analyzer"
 					}
 				}
 			},
@@ -757,7 +830,7 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					},
 					"spanish": {
 						"type": "string",
-						"analyzer": "spanish_analyzer"
+						"analyzer": "spanish_search_analyzer"
 					}
 				}
 			},
@@ -775,7 +848,7 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					},
 					"spanish": {
 						"type": "string",
-						"analyzer": "spanish_analyzer"
+						"analyzer": "spanish_search_analyzer"
 					}
 				}
 			},
@@ -793,14 +866,21 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					},
 					"spanish": {
 						"type": "string",
-						"analyzer": "spanish_analyzer"
+						"analyzer": "spanish_search_analyzer"
+					},
+					"shingles": {
+						"type": "string",
+						"analyzer": "my_shingle_analyzer"
 					}
 				}
 			},
 			"location" : {
 				"type" : "geo_point",
 				"lat_lon": true,
-				"validate": true
+				"validate": true,
+				"geohash": true,
+				"geohash_prefix": true,
+				"geohash_precision": 8
 			},
 			"location_cell" : {
 				"type" : "geo_point",
@@ -839,7 +919,7 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 							},
 							"spanish": {
 								"type": "string",
-								"analyzer": "spanish_analyzer"
+								"analyzer": "spanish_search_analyzer"
 							}
 						}
 					},
