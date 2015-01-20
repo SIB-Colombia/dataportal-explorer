@@ -115,14 +115,14 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 	_.extend(OccurrenceSearchViewModel.prototype, BaseViewModel.prototype, self.densityCellsOneDegree, {
 		initialize: function() {
 			var self = this;
-			this.loadCountyDropdownData();
-			this.loadParamoDropdownData();
-			this.loadMarineZoneDropdownData();
+			//this.loadCountyDropdownData();
+			//this.loadParamoDropdownData();
+			//this.loadMarineZoneDropdownData();
 			this.loadGridData();
 			this.loadCellDensityOneDegree();
-			this.loadCellDensityPointFiveDegree();
-			this.loadCellDensityPointTwoDegree();
-			this.loadCellDensityPointOneDegree();
+			//this.loadCellDensityPointFiveDegree();
+			//this.loadCellDensityPointTwoDegree();
+			//this.loadCellDensityPointOneDegree();
 
 			markers = new L.MarkerClusterGroup({
 				spiderfyOnMaxZoom: true,
@@ -589,7 +589,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 						data: function(data) {
 							self.gridItems = ko.observableArray();
 							$.each(data.hits.hits, function(i, occurrence) {
-								self.gridItems.push(new Occurrence({id: occurrence._source.id, canonical: occurrence._source.canonical, data_resource_name: occurrence._source.data_resource_name, institution_code: occurrence._source.institution_code, collection_code: occurrence._source.collection_code, catalogue_number: occurrence._source.catalogue_number, occurrence_date: occurrence._source.occurrence_date, latitude: occurrence._source.location.lat, longitude: occurrence._source.location.lon, country_name: occurrence._source.country_name, department_name: occurrence._source.department_name, basis_of_record_name_spanish: occurrence._source.basis_of_record_name_spanish}));
+								self.gridItems.push(new Occurrence({id: occurrence._source.id, canonical: occurrence._source.canonical, data_resource_name: occurrence._source.resource.name, institution_code: occurrence._source.institution.code, collection_code: occurrence._source.collection.code, catalogue_number: occurrence._source.catalogue.number, occurrence_date: occurrence._source.occurrence_date, latitude: occurrence._source.location.lat, longitude: occurrence._source.location.lon, country_name: occurrence._source.country_name, department_name: occurrence._source.department_name, basis_of_record_name_spanish: occurrence._source.basis_of_record.name_spanish}));
 							});
 							self.totalOccurrences(data.hits.total);
 							return self.gridItems();
@@ -675,7 +675,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					{ field: "catalogue_number", title: "Núm. catálogo", width: "10%" },
 					{ field: "basis_of_record_name_spanish", title: "Base registro", width: "10%", filterable: {ui: basisOfRecordFilter} },
 					{ field: "occurrence_date", title: "Fecha", width: "8%", template: '#= kendo.toString(occurrence_date, "yyyy-MM-dd") #', filterable: {ui: dateTimeEditor} },
-					{ field: "location()", title: "Coordenadas", width: "8%", sortable: false },
+					{ field: "location()", title: "Coordenadas", width: "8%", sortable: false, filterable: false },
 					{ field: "country_name", title: "País", width: "6%", sortable: true },
 					{ field: "department_name", title: "Dept.", width: "8%", sortable: true }
 				]

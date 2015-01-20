@@ -1,6 +1,29 @@
 var moment = require('moment');
 var _ = require('underscore');
 
+var databaseSearchMapping = {};
+databaseSearchMapping["id"] = "id";
+databaseSearchMapping["canonical"] = "canonical.exactWords";
+databaseSearchMapping["data_resource_name"] = "resource.name.exactWords";
+databaseSearchMapping["institution_code"] = "institution.code.exactWords";
+databaseSearchMapping["collection_code"] = "collection.code.exactWords";
+databaseSearchMapping["catalogue_number"] = "catalogue.number.exactWords";
+databaseSearchMapping["basis_of_record_name_spanish"] = "basis_of_record.name_spanish.exactWords";
+databaseSearchMapping["country_name"] = "country_name.exactWords";
+databaseSearchMapping["department_name"] = "department_name.exactWords";
+
+var databaseOrderMapping = {};
+databaseOrderMapping["id"] = "id";
+databaseOrderMapping["occurrence_date"] = "occurrence_date";
+databaseOrderMapping["canonical"] = "canonical.untouched";
+databaseOrderMapping["data_resource_name"] = "resource.name.untouched";
+databaseOrderMapping["institution_code"] = "institution.code.untouched";
+databaseOrderMapping["collection_code"] = "collection.code.untouched";
+databaseOrderMapping["catalogue_number"] = "catalogue.number.untouched";
+databaseOrderMapping["basis_of_record_name_spanish"] = "basis_of_record.name_spanish.untouched";
+databaseOrderMapping["country_name"] = "country_name.untouched";
+databaseOrderMapping["department_name"] = "department_name.untouched";
+
 exports.getOccurrencesInBoundingBox = function(top, bottom, left, right) {
 	qryObj = {
 		"_source": ["location", "canonical", "id"],
@@ -3067,11 +3090,25 @@ exports.getOccurrencesWithFilter = function(conditions) {
 	  , logic2;
 	var haveQuery = false;
 	var countFilter = 0;
-	qryObj["_source"] = ["id", "canonical", "nombre_comun", "data_resource_name", "institution_code", "collection_code", "catalogue_number", "occurrence_date", "modified", "location", "country_name", "department_name", "basis_of_record_name_spanish"];
+	qryObj["_source"] = ["id", "canonical", "nombre_comun", "resource.name", "institution.code", "collection.code", "catalogue.number", "occurrence_date", "modified", "location", "country_name", "department_name", "basis_of_record.name_spanish"];
+
+	// Default, filter deleted occurrences
+	qryObj["query"] = {};
+	qryObj["query"]["filtered"] = {};
+	qryObj["query"]["filtered"]["filter"] = {};
+	qryObj["query"]["filtered"]["filter"]["bool"] = {};
+	qryObj["query"]["filtered"]["filter"]["bool"]["must"] = [];
+	qryObj["query"]["filtered"]["filter"]["bool"]["must_not"] = [];
+	qryObj["query"]["filtered"]["filter"]["bool"]["should"] = [];
+	qryObj["query"]["filtered"]["filter"]["bool"]["must"][0] =
+		{
+			missing: {
+				field : "deleted"
+			}
+		};
+	countFilter++;
 
 	if((typeof conditions.filter != 'undefined') && (typeof conditions.filter.filters != 'undefined')) {
-		qryObj["query"] = {};
-		qryObj["query"]["filtered"] = {};
 		qryObj["query"]["filtered"]["query"] = {};
 		qryObj["query"]["filtered"]["query"]["bool"] = {};
 		qryObj["query"]["filtered"]["query"]["bool"]["must"] = [];
@@ -3095,14 +3132,7 @@ exports.getOccurrencesWithFilter = function(conditions) {
 				}
 				if(conditions.filter.filters[counter].filters[0].operator == 'eq' || conditions.filter.filters[counter].filters[0].operator == 'neq') {
 					if(conditions.filter.filters[counter].filters[0].field == 'occurrence_date') {
-						var date = moment(conditions.filter.filters[counter].filters[0].value);
-						if(typeof qryObj["query"]["filtered"]["filter"] == 'undefined') {
-							qryObj["query"]["filtered"]["filter"] = {};
-							qryObj["query"]["filtered"]["filter"]["bool"] = {};
-							qryObj["query"]["filtered"]["filter"]["bool"]["must"] = [];
-							qryObj["query"]["filtered"]["filter"]["bool"]["must_not"] = [];
-							qryObj["query"]["filtered"]["filter"]["bool"]["should"] = [];
-						}
+						var date = moment(new Date(conditions.filter.filters[counter].filters[0].value));
 						if(conditions.filter.filters[counter].filters[0].operator == 'neq') {
 							qryObj["query"]["filtered"]["filter"]["bool"]["must_not"][countFilter] = {};
 							qryObj["query"]["filtered"]["filter"]["bool"]["must_not"][countFilter]["numeric_range"] = {};
@@ -3125,19 +3155,11 @@ exports.getOccurrencesWithFilter = function(conditions) {
 							logic2[0]["bool"] = {};
 							logic2[0]["bool"]["must_not"] = {};
 							logic2[0]["bool"]["must_not"]["term"] = {};
-							if(conditions.filter.filters[counter].filters[0].field == 'id') {
-								logic2[0]["bool"]["must_not"]["term"][conditions.filter.filters[counter].filters[0].field] = conditions.filter.filters[counter].filters[0].value.toLowerCase();
-							} else {
-								logic2[0]["bool"]["must_not"]["term"][conditions.filter.filters[counter].filters[0].field+".exactWords"] = conditions.filter.filters[counter].filters[0].value.toLowerCase();
-							}
+							logic2[0]["bool"]["must_not"]["term"][databaseSearchMapping[conditions.filter.filters[counter].filters[0].field]] = conditions.filter.filters[counter].filters[0].value.toLowerCase();
 						} else {
 							logic2[0] = {};
 							logic2[0]["term"] = {};
-							if(conditions.filter.filters[counter].filters[0].field == 'id') {
-								logic2[0]["term"][conditions.filter.filters[counter].filters[0].field] = conditions.filter.filters[counter].filters[0].value.toLowerCase();
-							} else {
-								logic2[0]["term"][conditions.filter.filters[counter].filters[0].field+".exactWords"] = conditions.filter.filters[counter].filters[0].value.toLowerCase();
-							}
+							logic2[0]["term"][databaseSearchMapping[conditions.filter.filters[counter].filters[0].field]] = conditions.filter.filters[counter].filters[0].value.toLowerCase();
 						}
 					}
 				} else if(conditions.filter.filters[counter].filters[0].operator == 'contains' || conditions.filter.filters[counter].filters[0].operator == 'doesnotcontain') {
@@ -3147,31 +3169,24 @@ exports.getOccurrencesWithFilter = function(conditions) {
 						logic2[0]["bool"] = {};
 						logic2[0]["bool"]["must_not"] = {};
 						logic2[0]["bool"]["must_not"]["wildcard"] = {};
-						logic2[0]["bool"]["must_not"]["wildcard"][conditions.filter.filters[counter].filters[0].field+".exactWords"] = "*"+conditions.filter.filters[counter].filters[0].value.toLowerCase()+"*";
+						logic2[0]["bool"]["must_not"]["wildcard"][databaseSearchMapping[conditions.filter.filters[counter].filters[0].field]] = "*"+conditions.filter.filters[counter].filters[0].value.toLowerCase()+"*";
 					} else {
 						logic2[0] = {};
 						logic2[0]["wildcard"] = {};
-						logic2[0]["wildcard"][conditions.filter.filters[counter].filters[0].field+".exactWords"] = "*"+conditions.filter.filters[counter].filters[0].value.toLowerCase()+"*";
+						logic2[0]["wildcard"][databaseSearchMapping[conditions.filter.filters[counter].filters[0].field]] = "*"+conditions.filter.filters[counter].filters[0].value.toLowerCase()+"*";
 					}
 				} else if(conditions.filter.filters[counter].filters[0].operator == 'startswith') {
 					haveQuery = true;
 					logic2[counter] = {};
 					logic2[counter]["wildcard"] = {};
-					logic2[counter]["wildcard"][conditions.filter.filters[counter].filters[0].field+".exactWords"] = conditions.filter.filters[counter].filters[0].value.toLowerCase()+"*";
+					logic2[counter]["wildcard"][databaseSearchMapping[conditions.filter.filters[counter].filters[0].field]] = conditions.filter.filters[counter].filters[0].value.toLowerCase()+"*";
 				} else if(conditions.filter.filters[counter].filters[0].operator == 'endswith') {
 					haveQuery = true;
 					logic2[counter] = {};
 					logic2[counter]["wildcard"] = {};
-					logic2[counter]["wildcard"][conditions.filter.filters[counter].filters[0].field+".exactWords"] = "*"+conditions.filter.filters[counter].filters[0].value.toLowerCase();
+					logic2[counter]["wildcard"][databaseSearchMapping[conditions.filter.filters[counter].filters[0].field]] = "*"+conditions.filter.filters[counter].filters[0].value.toLowerCase();
 				} else if(conditions.filter.filters[counter].filters[0].operator == 'gt' || conditions.filter.filters[counter].filters[0].operator == 'gte' || conditions.filter.filters[counter].filters[0].operator == 'lt' || conditions.filter.filters[counter].filters[0].operator == 'lte') {
-					var date = moment(conditions.filter.filters[counter].filters[0].value);
-					if(typeof qryObj["query"]["filtered"]["filter"] == 'undefined') {
-						qryObj["query"]["filtered"]["filter"] = {};
-						qryObj["query"]["filtered"]["filter"]["bool"] = {};
-						qryObj["query"]["filtered"]["filter"]["bool"]["must"] = [];
-						qryObj["query"]["filtered"]["filter"]["bool"]["must_not"] = [];
-						qryObj["query"]["filtered"]["filter"]["bool"]["should"] = [];
-					}
+					var date = moment(new Date(conditions.filter.filters[counter].filters[0].value));
 					if(conditions.filter.filters[counter].logic == 'and') {
 						qryObj["query"]["filtered"]["filter"]["bool"]["must"][countFilter] = {};
 						qryObj["query"]["filtered"]["filter"]["bool"]["must"][countFilter]["numeric_range"] = {};
@@ -3187,14 +3202,7 @@ exports.getOccurrencesWithFilter = function(conditions) {
 				}
 				if(conditions.filter.filters[counter].filters[1].operator == 'eq' || conditions.filter.filters[counter].filters[1].operator == 'neq') {
 					if(conditions.filter.filters[counter].filters[1].field == 'occurrence_date') {
-						var date = moment(conditions.filter.filters[counter].filters[1].value);
-						if(typeof qryObj["query"]["filtered"]["filter"] == 'undefined') {
-							qryObj["query"]["filtered"]["filter"] = {};
-							qryObj["query"]["filtered"]["filter"]["bool"] = {};
-							qryObj["query"]["filtered"]["filter"]["bool"]["must"] = [];
-							qryObj["query"]["filtered"]["filter"]["bool"]["must_not"] = [];
-							qryObj["query"]["filtered"]["filter"]["bool"]["should"] = [];
-						}
+						var date = moment(new Date(conditions.filter.filters[counter].filters[1].value));
 						if(conditions.filter.filters[counter].filters[1].operator == 'neq') {
 							qryObj["query"]["filtered"]["filter"]["bool"]["must_not"][countFilter] = {};
 							qryObj["query"]["filtered"]["filter"]["bool"]["must_not"][countFilter]["numeric_range"] = {};
@@ -3217,19 +3225,11 @@ exports.getOccurrencesWithFilter = function(conditions) {
 							logic2[1]["bool"] = {};
 							logic2[1]["bool"]["must_not"] = {};
 							logic2[1]["bool"]["must_not"]["term"] = {};
-							if(conditions.filter.filters[counter].filters[1].field == 'id') {
-								logic2[1]["bool"]["must_not"]["term"][conditions.filter.filters[counter].filters[1].field] = conditions.filter.filters[counter].filters[1].value.toLowerCase();
-							} else {
-								logic2[1]["bool"]["must_not"]["term"][conditions.filter.filters[counter].filters[1].field+".exactWords"] = conditions.filter.filters[counter].filters[1].value.toLowerCase();
-							}
+							logic2[1]["bool"]["must_not"]["term"][databaseSearchMapping[conditions.filter.filters[counter].filters[1].field]] = conditions.filter.filters[counter].filters[1].value.toLowerCase();
 						} else {
 							logic2[1] = {};
 							logic2[1]["term"] = {};
-							if(conditions.filter.filters[counter].filters[1].field == 'id') {
-								logic2[1]["term"][conditions.filter.filters[counter].filters[1].field] = conditions.filter.filters[counter].filters[1].value.toLowerCase();
-							} else {
-								logic2[1]["term"][conditions.filter.filters[counter].filters[1].field+".exactWords"] = conditions.filter.filters[counter].filters[1].value.toLowerCase();
-							}
+							logic2[1]["term"][databaseSearchMapping[conditions.filter.filters[counter].filters[1].field]] = conditions.filter.filters[counter].filters[1].value.toLowerCase();
 						}
 					}
 				} else if(conditions.filter.filters[counter].filters[1].operator == 'contains' || conditions.filter.filters[counter].filters[1].operator == 'doesnotcontain') {
@@ -3239,31 +3239,24 @@ exports.getOccurrencesWithFilter = function(conditions) {
 						logic2[1]["bool"] = {};
 						logic2[1]["bool"]["must_not"] = {};
 						logic2[1]["bool"]["must_not"]["wildcard"] = {};
-						logic2[1]["bool"]["must_not"]["wildcard"][conditions.filter.filters[counter].filters[1].field+".exactWords"] = "*"+conditions.filter.filters[counter].filters[1].value.toLowerCase()+"*";
+						logic2[1]["bool"]["must_not"]["wildcard"][databaseSearchMapping[conditions.filter.filters[counter].filters[1].field]] = "*"+conditions.filter.filters[counter].filters[1].value.toLowerCase()+"*";
 					} else {
 						logic2[1] = {};
 						logic2[1]["wildcard"] = {};
-						logic2[1]["wildcard"][conditions.filter.filters[counter].filters[1].field+".exactWords"] = "*"+conditions.filter.filters[counter].filters[1].value.toLowerCase()+"*";
+						logic2[1]["wildcard"][databaseSearchMapping[conditions.filter.filters[counter].filters[1].field]] = "*"+conditions.filter.filters[counter].filters[1].value.toLowerCase()+"*";
 					}
 				} else if(conditions.filter.filters[counter].filters[1].operator == 'startswith') {
 					haveQuery = true;
 					logic2[counter] = {};
 					logic2[counter]["wildcard"] = {};
-					logic2[counter]["wildcard"][conditions.filter.filters[counter].filters[1].field+".exactWords"] = conditions.filter.filters[counter].filters[1].value.toLowerCase()+"*";
+					logic2[counter]["wildcard"][databaseSearchMapping[conditions.filter.filters[counter].filters[1].field]] = conditions.filter.filters[counter].filters[1].value.toLowerCase()+"*";
 				} else if(conditions.filter.filters[counter].filters[1].operator == 'endswith') {
 					haveQuery = true;
 					logic2[counter] = {};
 					logic2[counter]["wildcard"] = {};
-					logic2[counter]["wildcard"][conditions.filter.filters[counter].filters[1].field+".exactWords"] = "*"+conditions.filter.filters[counter].filters[1].value.toLowerCase();
+					logic2[counter]["wildcard"][databaseSearchMapping[conditions.filter.filters[counter].filters[1].field]] = "*"+conditions.filter.filters[counter].filters[1].value.toLowerCase();
 				} else if(conditions.filter.filters[counter].filters[1].operator == 'gt' || conditions.filter.filters[counter].filters[1].operator == 'gte' || conditions.filter.filters[counter].filters[1].operator == 'lt' || conditions.filter.filters[counter].filters[1].operator == 'lte') {
-					var date = moment(conditions.filter.filters[counter].filters[1].value);
-					if(typeof qryObj["query"]["filtered"]["filter"] == 'undefined') {
-						qryObj["query"]["filtered"]["filter"] = {};
-						qryObj["query"]["filtered"]["filter"]["bool"] = {};
-						qryObj["query"]["filtered"]["filter"]["bool"]["must"] = [];
-						qryObj["query"]["filtered"]["filter"]["bool"]["must_not"] = [];
-						qryObj["query"]["filtered"]["filter"]["bool"]["should"] = [];
-					}
+					var date = moment(new Date(conditions.filter.filters[counter].filters[1].value));
 					if(conditions.filter.filters[counter].logic == 'and') {
 						qryObj["query"]["filtered"]["filter"]["bool"]["must"][countFilter] = {};
 						qryObj["query"]["filtered"]["filter"]["bool"]["must"][countFilter]["numeric_range"] = {};
@@ -3277,24 +3270,14 @@ exports.getOccurrencesWithFilter = function(conditions) {
 					}
 					countFilter++;
 				}
-				//console.log("Must interno");
-				//console.log(logic[counter]["bool"]["must"]);
-				//console.log("Should interno");
-				//console.log(logic[counter]["bool"]["should"]);
+				console.log(qryObj);
+				console.log(JSON.stringify(qryObj));
 			} else {
 				// External condition of single logic operator
-				//console.log(conditions.filter.filters[counter].operator);
 
 				if(conditions.filter.filters[counter].operator == 'eq' || conditions.filter.filters[counter].operator == 'neq') {
 					if(conditions.filter.filters[counter].field == 'occurrence_date') {
-						var date = moment(conditions.filter.filters[counter].value);
-						if(typeof qryObj["query"]["filtered"]["filter"] == 'undefined') {
-							qryObj["query"]["filtered"]["filter"] = {};
-							qryObj["query"]["filtered"]["filter"]["bool"] = {};
-							qryObj["query"]["filtered"]["filter"]["bool"]["must"] = [];
-							qryObj["query"]["filtered"]["filter"]["bool"]["must_not"] = [];
-							qryObj["query"]["filtered"]["filter"]["bool"]["should"] = [];
-						}
+						var date = moment(new Date(conditions.filter.filters[counter].value));
 						if(conditions.filter.filters[counter].operator == 'neq') {
 							qryObj["query"]["filtered"]["filter"]["bool"]["must_not"][countFilter] = {};
 							qryObj["query"]["filtered"]["filter"]["bool"]["must_not"][countFilter]["numeric_range"] = {};
@@ -3317,18 +3300,10 @@ exports.getOccurrencesWithFilter = function(conditions) {
 							logic[counter]["bool"] = {};
 							logic[counter]["bool"]["must_not"] = {};
 							logic[counter]["bool"]["must_not"]["term"] = {};
-							if(conditions.filter.filters[counter].field == 'id') {
-								logic[counter]["bool"]["must_not"]["term"][conditions.filter.filters[counter].field] = conditions.filter.filters[counter].value.toLowerCase();
-							} else {
-								logic[counter]["bool"]["must_not"]["term"][conditions.filter.filters[counter].field+".exactWords"] = conditions.filter.filters[counter].value.toLowerCase();
-							}
+							logic[counter]["bool"]["must_not"]["term"][databaseSearchMapping[conditions.filter.filters[counter].field]] = conditions.filter.filters[counter].value.toLowerCase();
 						} else {
 							logic[counter]["term"] = {};
-							if(conditions.filter.filters[counter].field == 'id') {
-								logic[counter]["term"][conditions.filter.filters[counter].field] = conditions.filter.filters[counter].value.toLowerCase();
-							} else {
-								logic[counter]["term"][conditions.filter.filters[counter].field+".exactWords"] = conditions.filter.filters[counter].value.toLowerCase();
-							}
+							logic[counter]["term"][databaseSearchMapping[conditions.filter.filters[counter].field]] = conditions.filter.filters[counter].value.toLowerCase();
 						}
 					}
 				} else if(conditions.filter.filters[counter].operator == 'contains' || conditions.filter.filters[counter].operator == 'doesnotcontain') {
@@ -3338,30 +3313,23 @@ exports.getOccurrencesWithFilter = function(conditions) {
 						logic[counter]["bool"] = {};
 						logic[counter]["bool"]["must_not"] = {};
 						logic[counter]["bool"]["must_not"]["wildcard"] = {};
-						logic[counter]["bool"]["must_not"]["wildcard"][conditions.filter.filters[counter].field+".exactWords"] = "*"+conditions.filter.filters[counter].value.toLowerCase()+"*";
+						logic[counter]["bool"]["must_not"]["wildcard"][databaseSearchMapping[conditions.filter.filters[counter].field]] = "*"+conditions.filter.filters[counter].value.toLowerCase()+"*";
 					} else {
 						logic[counter]["wildcard"] = {};
-						logic[counter]["wildcard"][conditions.filter.filters[counter].field+".exactWords"] = "*"+conditions.filter.filters[counter].value.toLowerCase()+"*";
+						logic[counter]["wildcard"][databaseSearchMapping[conditions.filter.filters[counter].field]] = "*"+conditions.filter.filters[counter].value.toLowerCase()+"*";
 					}
 				} else if(conditions.filter.filters[counter].operator == 'startswith') {
 					haveQuery = true;
 					logic[counter] = {};
 					logic[counter]["wildcard"] = {};
-					logic[counter]["wildcard"][conditions.filter.filters[counter].field+".exactWords"] = conditions.filter.filters[counter].value.toLowerCase()+"*";
+					logic[counter]["wildcard"][databaseSearchMapping[conditions.filter.filters[counter].field]] = conditions.filter.filters[counter].value.toLowerCase()+"*";
 				} else if(conditions.filter.filters[counter].operator == 'endswith') {
 					haveQuery = true;
 					logic[counter] = {};
 					logic[counter]["wildcard"] = {};
-					logic[counter]["wildcard"][conditions.filter.filters[counter].field+".exactWords"] = "*"+conditions.filter.filters[counter].value.toLowerCase();
+					logic[counter]["wildcard"][databaseSearchMapping[conditions.filter.filters[counter].field]] = "*"+conditions.filter.filters[counter].value.toLowerCase();
 				} else if(conditions.filter.filters[counter].operator == 'gt' || conditions.filter.filters[counter].operator == 'gte' || conditions.filter.filters[counter].operator == 'lt' || conditions.filter.filters[counter].operator == 'lte') {
 					var date = moment(conditions.filter.filters[counter].value);
-					if(typeof qryObj["query"]["filtered"]["filter"] == 'undefined') {
-						qryObj["query"]["filtered"]["filter"] = {};
-						qryObj["query"]["filtered"]["filter"]["bool"] = {};
-						qryObj["query"]["filtered"]["filter"]["bool"]["must"] = [];
-						qryObj["query"]["filtered"]["filter"]["bool"]["must_not"] = [];
-						qryObj["query"]["filtered"]["filter"]["bool"]["should"] = [];
-					}
 					if(conditions.filter.logic == 'and') {
 						qryObj["query"]["filtered"]["filter"]["bool"]["must"][countFilter] = {};
 						qryObj["query"]["filtered"]["filter"]["bool"]["must"][countFilter]["numeric_range"] = {};
@@ -3377,42 +3345,25 @@ exports.getOccurrencesWithFilter = function(conditions) {
 				}
 			}
 		}
-		//console.log("Must");
-		//console.log(qryObj["query"]["filtered"]["query"]["bool"]["must"]);
-		//console.log("Should");
-		//console.log(qryObj["query"]["filtered"]["query"]["bool"]["should"]);
 		if(haveQuery === false) {
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][0] = {};
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][0]["match_all"] = {};
 		}
 	}
-	/*qryObj["query"] = {
-		"constant_score": {
-			"filter": {
-				"match_all": { }
-			}
-		}
-	};*/
+
 	qryObj["from"] = (conditions.page-1)*conditions.pageSize;
 	qryObj["size"] = conditions.pageSize;
 
 	// Sorting
+	qryObj["sort"] = [];
 	if(typeof conditions.sort != 'undefined') {
 		for (var i in conditions.sort) {
-			qryObj["sort"] = [];
 			qryObj["sort"][i] = {};
-			if(conditions.sort[i].field == "id" || conditions.sort[i].field == "occurrence_date") {
-				if(conditions.sort[i].field == "id") {
-					qryObj["sort"][i]["id"] = conditions.sort[i].dir;
-				} else {
-					qryObj["sort"][i][conditions.sort[i].field] = conditions.sort[i].dir;
-				}
-			} else {
-				qryObj["sort"][i][conditions.sort[i].field+".untouched"] = conditions.sort[i].dir;
-			}
+			qryObj["sort"][i][databaseOrderMapping[conditions.sort[i].field]] = conditions.sort[i].dir;
 		}
 	} else {
-		qryObj["sort"] = [ { "canonical.untouched": "asc" } ];
+		qryObj["sort"][0] = {};
+		qryObj["sort"][0][databaseOrderMapping["canonical"]] = "asc";
 	}
 
 	//console.log(qryObj);

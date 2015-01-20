@@ -158,31 +158,31 @@ DROP TABLE IF EXISTS `occurrence_record_denormalized`;
 select concat('Creating occurrence records denormalized, table occurrence_record_denormalized: ', now()) as debug;
 CREATE TABLE occurrence_record_denormalized
 AS (SELECT
-occurrence_record.id,
-taxon_name.canonical,
-occurrence_record.latitude,
-occurrence_record.longitude,
-occurrence_record.cell_id,
-occurrence_record.centi_cell_id,
-occurrence_record.pointfive_cell_id,
-occurrence_record.pointtwo_cell_id,
-occurrence_record.mod360_cell_id,
-occurrence_record.geospatial_issue,
-occurrence_record.taxon_concept_id,
-occurrence_record.data_provider_id,
+occurrence_record.id AS id,
+occurrence_record.latitude AS latitude,
+occurrence_record.longitude AS longitude,
+occurrence_record.cell_id AS cell_id,
+occurrence_record.centi_cell_id AS centi_cell_id,
+occurrence_record.pointfive_cell_id AS pointfive_cell_id,
+occurrence_record.pointtwo_cell_id AS pointtwo_cell_id,
+occurrence_record.mod360_cell_id AS mod360_cell_id,
+occurrence_record.geospatial_issue AS geospatial_issue,
+occurrence_record.taxon_concept_id AS taxon_concept_id,
+occurrence_record.data_provider_id AS data_provider_id,
 data_provider.`name` AS data_provider_name,
-occurrence_record.data_resource_id,
+taxon_name.canonical AS taxon_name_canonical,
+occurrence_record.data_resource_id AS data_resource_id,
 data_resource.`name` AS data_resource_name,
-data_resource.rights,
-occurrence_record.institution_code_id,
+data_resource.rights AS data_resource_rights,
+occurrence_record.institution_code_id AS institution_code_id,
 institution_code.`code` AS institution_code,
-occurrence_record.collection_code_id,
+occurrence_record.collection_code_id AS collection_code_id,
 collection_code.`code` AS collection_code,
-occurrence_record.catalogue_number_id,
+occurrence_record.catalogue_number_id AS catalogue_number_id,
 catalogue_number.`code` AS catalogue_number,
-data_resource.citation,
-data_resource.created,
-data_resource.modified,
+data_resource.citation AS data_resource_citation,
+data_resource.created AS data_resource_created,
+data_resource.modified AS data_resource_modified,
 department.department_name AS department_name,
 county.county_name AS county_name,
 raw_occurrence_record.locality AS locality,
@@ -190,30 +190,69 @@ paramo.complex AS paramo_name,
 marine_zone.description AS marine_zone_name,
 taxon_concept_phylum.partner_concept_id AS phylum_concept_id,
 taxon_name_phylum.canonical AS phylum,
+taxon_name_phylum.author AS phylum_author,
 taxon_concept_kingdom.partner_concept_id AS kingdom_concept_id,
 taxon_name_kingdom.canonical AS kingdom,
+taxon_name_kingdom.author AS kingdom_author,
 taxon_concept_class.partner_concept_id AS class_concept_id,
 taxon_name_class.canonical AS class,
+taxon_name_class.author AS class_author,
 taxon_concept_order.partner_concept_id AS order_concept_id,
 taxon_name_order.canonical AS order_rank,
+taxon_name_order.author AS order_rank_autor,
 taxon_concept_family.partner_concept_id AS family_concept_id,
 taxon_name_family.canonical AS family,
+taxon_name_family.author AS family_author,
 taxon_concept_genus.partner_concept_id AS genus_concept_id,
 taxon_name_genus.canonical AS genus,
+taxon_name_genus.author AS genus_author,
 taxon_concept_species.partner_concept_id AS species_concept_id,
 taxon_name_species.canonical AS species,
-occurrence_record.iso_country_code,
-occurrence_record.iso_department_code,
-occurrence_record.iso_county_code,
+taxon_name_species.author AS species_author,
+occurrence_record.iso_country_code AS iso_country_code,
+occurrence_record.iso_department_code AS iso_department_code,
+occurrence_record.iso_county_code AS iso_county_code,
 occurrence_record.paramo AS paramo_code,
 occurrence_record.marine_zone AS marine_zone_code,
 occurrence_record.basis_of_record AS basis_of_record_id,
 lookup_basis_of_record.`br_value` AS basis_of_record_name,
-occurrence_record.`year`,
-occurrence_record.`month`,
-occurrence_record.occurrence_date,
-occurrence_record.altitude_metres,
-occurrence_record.depth_centimetres
+occurrence_record.`year` AS year,
+occurrence_record.`month` AS month,
+occurrence_record.occurrence_date AS occurrence_date,
+occurrence_record.altitude_metres AS altitude_metres,
+occurrence_record.depth_centimetres AS depth_centimetres,
+occurrence_record.taxonomic_issue AS taxonomic_issue,
+occurrence_record.other_issue AS other_issue,
+occurrence_record.deleted AS deleted,
+occurrence_record.modified AS modified,
+occurrence_record.protected_area AS protected_area,
+occurrence_record.zonificacion AS zonificacion,
+occurrence_record.dry_forest AS dry_forest,
+occurrence_record.iso_country_code_calculated AS iso_country_code_calculated,
+occurrence_record.iso_department_code_calculated AS iso_department_code_calculated,
+data_resource.display_name AS data_resource_display_name,
+data_resource.description AS data_resource_description,
+data_resource.logo_url AS data_resource_logo_url,
+data_resource.deleted AS data_resource_deleted,
+data_resource.website_url AS data_resource_website_url,
+data_resource.gbif_registry_uuid AS data_resource_gbif_registry_uuid,
+data_provider.description AS data_provider_description,
+data_provider.address AS data_provider_address,
+data_provider.city AS data_provider_city,
+data_provider.website_url AS data_provider_website_url,
+data_provider.logo_url AS data_provider_logo_url,
+data_provider.email AS data_provider_email,
+data_provider.telephone AS data_provider_telephone,
+data_provider.uuid AS data_provider_uuid,
+data_provider.created AS data_provider_created,
+data_provider.modified AS data_provider_modified,
+data_provider.deleted AS data_provider_deleted,
+data_provider.iso_country_code AS data_provider_iso_country_code,
+data_provider.gbif_approver AS data_provider_gbif_approver,
+data_provider.type AS data_provider_type,
+taxon_name.author AS taxon_name_author,
+paramo.sector AS paramo_sector,
+paramo.district AS paramo_district
 FROM
 occurrence_record
 INNER JOIN taxon_name ON occurrence_record.taxon_name_id = taxon_name.id
@@ -222,7 +261,7 @@ INNER JOIN data_resource ON occurrence_record.data_resource_id = data_resource.i
 INNER JOIN institution_code ON occurrence_record.institution_code_id = institution_code.id
 INNER JOIN collection_code ON occurrence_record.collection_code_id = collection_code.id
 INNER JOIN catalogue_number ON occurrence_record.catalogue_number_id = catalogue_number.id
-INNER JOIN raw_occurrence_record ON occurrence_record.id = raw_occurrence_record.id
+LEFT JOIN raw_occurrence_record ON occurrence_record.id = raw_occurrence_record.id
 LEFT JOIN lookup_basis_of_record ON occurrence_record.basis_of_record = lookup_basis_of_record.br_key
 LEFT JOIN department ON occurrence_record.iso_department_code = department.iso_department_code
 LEFT JOIN county ON occurrence_record.iso_county_code = county.iso_county_code
@@ -242,9 +281,7 @@ LEFT JOIN taxon_name AS taxon_name_family ON taxon_concept_family.taxon_name_id 
 LEFT JOIN taxon_concept AS taxon_concept_genus ON taxon_concept.genus_concept_id = taxon_concept_genus.id
 LEFT JOIN taxon_name AS taxon_name_genus ON taxon_concept_genus.taxon_name_id = taxon_name_genus.id
 LEFT JOIN taxon_concept AS taxon_concept_species ON taxon_concept.species_concept_id = taxon_concept_species.id
-LEFT JOIN taxon_name AS taxon_name_species ON taxon_concept_species.taxon_name_id = taxon_name_species.id
-WHERE
-occurrence_record.deleted IS NULL);
+LEFT JOIN taxon_name AS taxon_name_species ON taxon_concept_species.taxon_name_id = taxon_name_species.id);
 
 select concat('Including primary key in table occurrence_record_denormalized: ', now()) as debug;
 alter table occurrence_record_denormalized add primary key(id);
@@ -258,6 +295,26 @@ INNER JOIN country_name
 ON occurrence_record_denormalized.iso_country_code = country_name.iso_country_code 
 AND country_name.locale = 'en'
 SET occurrence_record_denormalized.country_name = country_name.name;
+
+select concat('Adding country name calculated column in table occurrence_record_denormalized: ', now()) as debug;
+ALTER TABLE occurrence_record_denormalized ADD country_name_calculated VARCHAR(255);
+
+select concat('Filling country names in table occurrence_record_denormalized: ', now()) as debug;
+UPDATE occurrence_record_denormalized 
+INNER JOIN country_name 
+ON occurrence_record_denormalized.iso_country_code_calculated = country_name.iso_country_code 
+AND country_name.locale = 'en'
+SET occurrence_record_denormalized.country_name_calculated = country_name.name;
+
+select concat('Adding dataprovider country name column in table occurrence_record_denormalized: ', now()) as debug;
+ALTER TABLE occurrence_record_denormalized ADD data_provider_country_name VARCHAR(255);
+
+select concat('Filling country names in table occurrence_record_denormalized: ', now()) as debug;
+UPDATE occurrence_record_denormalized 
+INNER JOIN country_name 
+ON occurrence_record_denormalized.data_provider_iso_country_code = country_name.iso_country_code 
+AND country_name.locale = 'en'
+SET occurrence_record_denormalized.data_provider_country_name = country_name.name;
 
 select concat('Adding basis of record name column in table occurrence_record_denormalized: ', now()) as debug;
 ALTER TABLE occurrence_record_denormalized ADD basis_of_record_name_spanish VARCHAR(255);
