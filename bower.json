@@ -10,7 +10,7 @@
   ],
   "devDependencies": {
     "bootstrap": "~3.1.1",
-    "knockoutjs": "~3.1.0",
+    "knockoutjs": "~3.2.0",
     "seiyria-bootstrap-slider": "~3.1.0",
     "jquery": "~2.1.0",
     "jquery-ui": "~1.10.4",

@@ -1658,6 +1658,9 @@ curl -XPUT 'http://localhost:9200/_river/river-mongodb-occurrences/_meta' -d '{
 	},
 	"index": {
 		"name": "sibexplorer",
-		"type": "occurrences"
+		"type": "occurrences",
+		"bulk": {
+			"concurrent_requests": 1
+		}
 	}
 }'
