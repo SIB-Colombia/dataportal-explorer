@@ -358,15 +358,17 @@ exports.geoJsonMapPoints = function(req, res) {
 				// A new geometry for a new geature
 				currentGeometry = 0;
 				response["features"][currentFeature] = {};
-				response["features"][currentFeature]["taxonName"] = occurrence._source.canonical;
 				response["features"][currentFeature]["type"] = "Feature";
-				response["features"][currentFeature]["key"] = occurrence._source.id;
+				response["features"][currentFeature]["properties"] = {};
+				response["features"][currentFeature]["properties"]["taxonName"] = occurrence._source.canonical;
+				response["features"][currentFeature]["properties"]["key"] = occurrence._source.id;
 				response["features"][currentFeature]["geometry"] = {};
 				response["features"][currentFeature]["geometry"]["type"] = "GeometryCollection";
 				response["features"][currentFeature]["geometry"]["geometries"] = [];
 				response["features"][currentFeature]["geometry"]["geometries"][currentGeometry] = {};
-				response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["occurrenceID"] = occurrence._source.id;
 				response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["type"] = "Point";
+				response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["properties"] = {};
+				response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["properties"]["occurrenceID"] = occurrence._source.id;
 				response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["coordinates"] = [];
 				response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["coordinates"][0] = occurrence._source.location.lon;
 				response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["coordinates"][1] = occurrence._source.location.lat;
@@ -374,8 +376,9 @@ exports.geoJsonMapPoints = function(req, res) {
 			} else {
 				// Existing feature
 				response["features"][currentFeature]["geometry"]["geometries"][currentGeometry] = {};
-				response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["occurrenceID"] = occurrence._source.id;
 				response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["type"] = "Point";
+				response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["properties"] = {};
+				response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["properties"]["occurrenceID"] = occurrence._source.id;
 				response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["coordinates"] = [];
 				response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["coordinates"][0] = occurrence._source.location.lon;
 				response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["coordinates"][1] = occurrence._source.location.lat;
