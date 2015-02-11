@@ -294,62 +294,8 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 
 			var searchParamsResume = function() {
 				self.predicateOptions([{value: 'eq', name: 'es'}]);
-				console.log(self.selectedSubject());
 				self.hideResumeContainer();
 				self.getSearchResumeData();
-				/*if(self.selectedSubject() == "0") {
-					// Load new scientific name data
-					self.hideResumeContainer();
-					self.getScientificNamesData();
-				} else if(self.selectedSubject() == 31) {
-					// Load new common name data
-					self.hideResumeContainer();
-					self.getCommonNamesData();
-				} else if(self.selectedSubject() == 100) {
-					// Get resume kingdom data
-					self.hideResumeContainer();
-					self.getKingdomNamesData();
-				} else if(self.selectedSubject() == 101) {
-					// Get resume phylum data
-					self.hideResumeContainer();
-					self.getPhylumNamesData();
-				} else if(self.selectedSubject() == 102) {
-					// Get resume class data
-					self.hideResumeContainer();
-					self.getClassNamesData();
-				} else if(self.selectedSubject() == 103) {
-					// Get resume order data
-					self.hideResumeContainer();
-					self.getOrderNamesData();
-				} else if(self.selectedSubject() == 104) {
-					// Get resume family data
-					self.hideResumeContainer();
-					self.getFamilyNamesData();
-				} else if(self.selectedSubject() == 105) {
-					// Get resume genus data
-					self.hideResumeContainer();
-					self.getGenusNamesData();
-				} else if(self.selectedSubject() == 106) {
-					// Get resume species data
-					self.hideResumeContainer();
-					self.getSpeciesNamesData();
-				} else if(self.selectedSubject() == 25) {
-					// Get resume data providers data
-					self.hideResumeContainer();
-					self.getDataProvidersData();
-				} else if(self.selectedSubject() == 24) {
-					// Get resume data resources data}
-					self.hideResumeContainer();
-					self.getDataResourcesData();
-				} else if(self.selectedSubject() == 12) {
-					// Get institution codes data
-					self.hideResumeContainer();
-					self.getInstitutionCodesData();
-				} else if(self.selectedSubject() == 13) {
-					// Get collection codes data
-					self.hideResumeContainer();
-					self.getCollectionCodesData();
-				}*/
 			};
 
 			// Underscore.js implementation
@@ -393,7 +339,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 						if(typeof e.val !== 'undefined') {
 							self.objectNameValue(e.val);
 							self.hideResumeContainer();
-							self.getCountriesData();
+							self.getSearchResumeData();
 							self.enableFilterHelp();
 						}
 					});
@@ -416,7 +362,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 						if(typeof e.val !== 'undefined') {
 							self.objectNameValue(e.val);
 							self.hideResumeContainer();
-							self.getDepartmentsData();
+							self.getSearchResumeData();
 							self.enableFilterHelp();
 						}
 					});
@@ -439,7 +385,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 						if(typeof e.val !== 'undefined') {
 							self.objectNameValue(e.val);
 							self.hideResumeContainer();
-							self.getCountiesData();
+							self.getSearchResumeData();
 							self.enableFilterHelp();
 						}
 					});
@@ -462,7 +408,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 						if(typeof e.val !== 'undefined') {
 							self.objectNameValue(e.val);
 							self.hideResumeContainer();
-							self.getParamosData();
+							self.getSearchResumeData();
 							self.enableFilterHelp();
 						}
 					});
@@ -485,7 +431,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 						if(typeof e.val !== 'undefined') {
 							self.objectNameValue(e.val);
 							self.hideResumeContainer();
-							self.getMarineZonesData();
+							self.getSearchResumeData();
 							self.enableFilterHelp();
 						}
 					});
@@ -716,9 +662,8 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		loadCountyDropdownData: function() {
 			var self = this;
 			$.getJSON("/rest/occurrences/counties/list", function(allData) {
-				var newCounties = ko.utils.arrayMap(allData.aggregations.counties.buckets, function(county) {
-					var countyData = county.key.split("~~~");
-					return new County({departmentName: countyData[0], countyName: countyData[1], isoCountyCode: countyData[2]});
+				var newCounties = ko.utils.arrayMap(allData.aggregations.county_name.buckets, function(county) {
+					return new County({departmentName: county.iso_county_code.buckets[0].department_name.buckets[0].key, countyName: county.key, isoCountyCode: county.iso_county_code.buckets[0].key});
 				});
 				self.countyDropdown.push.apply(self.countyDropdown, newCounties);
 			});
@@ -726,9 +671,8 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		loadParamoDropdownData: function() {
 			var self = this;
 			$.getJSON("/rest/occurrences/paramos/list", function(allData) {
-				var newParamos = ko.utils.arrayMap(allData.aggregations.paramos.buckets, function(paramo) {
-					var paramoData = paramo.key.split("~~~");
-					return new Paramo({paramoName: paramoData[0], paramoCode: paramoData[1]});
+				var newParamos = ko.utils.arrayMap(allData.aggregations.paramo_name.buckets, function(paramo) {
+					return new Paramo({paramoName: paramo.key, paramoCode: paramo.paramo_code.buckets[0].key});
 				});
 				self.paramoDropdown.push.apply(self.paramoDropdown, newParamos);
 			});
@@ -736,9 +680,8 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		loadMarineZoneDropdownData: function() {
 			var self = this;
 			$.getJSON("/rest/occurrences/marinezones/list", function(allData) {
-				var newMarineZones = ko.utils.arrayMap(allData.aggregations.marinezones.buckets, function(marinezone) {
-					var marineZoneData = marinezone.key.split("~~~");
-					return new MarineZone({marineZoneName: marineZoneData[0], marineZoneCode: marineZoneData[1]});
+				var newMarineZones = ko.utils.arrayMap(allData.aggregations.marine_zone_name.buckets, function(marinezone) {
+					return new MarineZone({marineZoneName: marinezone.key, marineZoneCode: marinezone.marine_zone_code.buckets[0].key});
 				});
 				self.marineZoneDropdown.push.apply(self.marineZoneDropdown, newMarineZones);
 			});
@@ -943,52 +886,11 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			self.isObjectNameHelpSelected = ko.observable(false);
 			// Default filters predicate
 			self.predicateOptions([{value: 'eq', name: 'es'}]);
-			console.log(self.selectedSubject());
-			self.getSearchResumeData();
-			/*if(self.selectedSubject() == "0") {
-				// Get Scientific Name resume data
-				self.getScientificNamesData();
-			} else if(self.selectedSubject() == 31) {
-				// Get common name resume data
-				self.getCommonNamesData();
-			} else if(self.selectedSubject() == 100) {
-				// Get kingdom resume data
-				self.getKingdomNamesData();
-			} else if(self.selectedSubject() == 101) {
-				// Get phylum resume data
-				self.getPhylumNamesData();
-			} else if(self.selectedSubject() == 102) {
-				// Get class resume data
-				self.getClassNamesData();
-			} else if(self.selectedSubject() == 103) {
-				// Get order resume data
-				self.getOrderNamesData();
-			} else if(self.selectedSubject() == 104) {
-				// Get family resume data
-				self.getFamilyNamesData();
-			} else if(self.selectedSubject() == 105) {
-				// Get genus resume data
-				self.getGenusNamesData();
-			} else if(self.selectedSubject() == 106) {
-				// Get species resume data
-				self.getSpeciesNamesData();
-			} else if(self.selectedSubject() == 25) {
-				// Get data providers resume data
-				self.getDataProvidersData();
-			} else if(self.selectedSubject() == 24) {
-				// Get data resources resume data
-				self.getDataResourcesData();
-			} else if(self.selectedSubject() == 12) {
-				// Get institution codes resume data
-				self.getInstitutionCodesData();
-			} else if(self.selectedSubject() == 13) {
-				// Get collection codes resume data
-				self.getCollectionCodesData();
-			} else if(self.selectedSubject() == 1 || self.selectedSubject() == 2 || self.selectedSubject() == 34 || self.selectedSubject() == 35) {
+			if(self.selectedSubject() == 1 || self.selectedSubject() == 2 || self.selectedSubject() == 34 || self.selectedSubject() == 35) {
 				self.predicateOptions([{value: 'eq', name: 'es'},{value: 'gt', name: 'mayor que'},{value: 'lt', name: 'menor que'}]);
 			} else if(self.selectedSubject() == 5) {
 				// Get countries resume data
-				self.getCountriesData();
+				self.getSearchResumeData();
 				self.isObjectNameHelpSelected = ko.observable(true);
 				$("#filtersContainerHelp").animate({width: 'toggle'}, 500, "swing");
 				$("#dropDownCountry").select2({
@@ -999,7 +901,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				});
 			} else if(self.selectedSubject() == 38) {
 				// Get countries resume data
-				self.getDepartmentsData();
+				self.getSearchResumeData();
 				self.isObjectNameHelpSelected = ko.observable(true);
 				$("#filtersContainerHelp").animate({width: 'toggle'}, 500, "swing");
 				$("#dropDownDepartment").select2({
@@ -1010,7 +912,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				});
 			} else if(self.selectedSubject() == 39) {
 				// Get countries resume data
-				self.getCountiesData();
+				self.getSearchResumeData();
 				self.isObjectNameHelpSelected = ko.observable(true);
 				$("#filtersContainerHelp").animate({width: 'toggle'}, 500, "swing");
 				$("#dropDownCounty").select2({
@@ -1021,7 +923,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				});
 			} else if(self.selectedSubject() == 40) {
 				// Get countries resume data
-				self.getParamosData();
+				self.getSearchResumeData();
 				self.isObjectNameHelpSelected = ko.observable(true);
 				$("#filtersContainerHelp").animate({width: 'toggle'}, 500, "swing");
 				$("#dropDownParamo").select2({
@@ -1032,7 +934,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				});
 			} else if(self.selectedSubject() == 41) {
 				// Get countries resume data
-				self.getMarineZonesData();
+				self.getSearchResumeData();
 				self.isObjectNameHelpSelected = ko.observable(true);
 				$("#filtersContainerHelp").animate({width: 'toggle'}, 500, "swing");
 				$("#dropDownMarineZone").select2({
@@ -1041,7 +943,9 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				$(".select2-input").on("click", function(event) {
 					self.enableFilterHelp();
 				});
-			}*/
+			} else {
+				self.getSearchResumeData();
+			}
 			self.getHelpSearchText();
 		},
 		getHelpSearchText: function() {
@@ -1387,784 +1291,219 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		// Ajax get data functions
 		getSearchResumeData: function() {
 			var self = this;
-			$.getJSON(UrlDataMapping.filterSubject[self.selectedSubject()].resumeApiURL+((typeof self.objectNameValue() === "undefined")?"":self.objectNameValue()), function(allData) {
-				var canonicals = ko.observableArray();
-				var kingdoms = ko.observableArray();
-				var providers = ko.observableArray();
-				var resources = ko.observableArray();
-				var phylums = ko.observableArray();
-				var taxonClasses = ko.observableArray();
-				var order_ranks = ko.observableArray();
-				var families = ko.observableArray();
-				var genuses = ko.observableArray();
-				var species = ko.observableArray();
-				var countries = ko.observableArray();
-				var departments = ko.observableArray();
-				var counties = ko.observableArray();
-				var paramos = ko.observableArray();
-				var marineZones = ko.observableArray();
-				var commons = ko.observableArray();
+			if(typeof UrlDataMapping.filterSubject[self.selectedSubject()] !== "undefined") {
+				$.getJSON(UrlDataMapping.filterSubject[self.selectedSubject()].resumeApiURL+((typeof self.objectNameValue() === "undefined")?"":self.objectNameValue()), function(allData) {
+					var canonicals = ko.observableArray();
+					var kingdoms = ko.observableArray();
+					var providers = ko.observableArray();
+					var resources = ko.observableArray();
+					var phylums = ko.observableArray();
+					var taxonClasses = ko.observableArray();
+					var order_ranks = ko.observableArray();
+					var families = ko.observableArray();
+					var genuses = ko.observableArray();
+					var species = ko.observableArray();
+					var countries = ko.observableArray();
+					var departments = ko.observableArray();
+					var counties = ko.observableArray();
+					var paramos = ko.observableArray();
+					var marineZones = ko.observableArray();
+					var commons = ko.observableArray();
 
-				_.each(allData.aggregations.canonical.buckets, function(data) {
-					canonicals.push(new ResumeCount({name: data.key, count: data.doc_count}));
-				});
+					_.each(allData.aggregations.canonical.buckets, function(data) {
+						canonicals.push(new ResumeCount({name: data.key, count: data.doc_count}));
+					});
 
-				_.each(allData.aggregations.kingdom.buckets, function(data) {
-					kingdoms.push(new ResumeCount({id: ((typeof data.id.buckets[0] !== 'undefined') ? data.id.buckets[0].key : ''), url: ((typeof data.id.buckets[0] !== 'undefined') ? "http://data.sibcolombia.net/species/"+data.id.buckets[0].key : ''), name: data.key, count: data.doc_count}));
-				});
+					_.each(allData.aggregations.kingdom.buckets, function(data) {
+						kingdoms.push(new ResumeCount({id: ((typeof data.id.buckets[0] !== 'undefined') ? data.id.buckets[0].key : ''), url: ((typeof data.id.buckets[0] !== 'undefined') ? "http://data.sibcolombia.net/species/"+data.id.buckets[0].key : ''), name: data.key, count: data.doc_count}));
+					});
 
-				_.each(allData.aggregations.data_provider_id.buckets, function(data) {
-					providers.push(new ResumeCount({id: data.key, url: "http://data.sibcolombia.net/publicadores/provider/"+data.key, name: data.data_provider_name.buckets[0].key, count: data.doc_count}));
-				});
+					_.each(allData.aggregations.data_provider_id.buckets, function(data) {
+						providers.push(new ResumeCount({id: data.key, url: "http://data.sibcolombia.net/publicadores/provider/"+data.key, name: data.data_provider_name.buckets[0].key, count: data.doc_count}));
+					});
 
-				_.each(allData.aggregations.data_resource_id.buckets, function(data) {
-					resources.push(new ResumeCount({id: data.key, url: "http://data.sibcolombia.net/conjuntos/resource/"+data.key, name: data.data_provider_id.buckets[0].data_resource_name.buckets[0].key, count: data.doc_count}));
-				});
+					_.each(allData.aggregations.data_resource_id.buckets, function(data) {
+						resources.push(new ResumeCount({id: data.key, url: "http://data.sibcolombia.net/conjuntos/resource/"+data.key, name: data.data_provider_id.buckets[0].data_resource_name.buckets[0].key, count: data.doc_count}));
+					});
 
-				_.each(allData.aggregations.phylum.buckets, function(data) {
-					phylums.push(new ResumeCount({id: ((typeof data.id.buckets[0] !== 'undefined') ? data.id.buckets[0].key : ''), url: ((typeof data.id.buckets[0] !== 'undefined') ? "http://data.sibcolombia.net/species/"+data.id.buckets[0].key : ''), name: data.key, count: data.doc_count}));
-				});
+					_.each(allData.aggregations.phylum.buckets, function(data) {
+						phylums.push(new ResumeCount({id: ((typeof data.id.buckets[0] !== 'undefined') ? data.id.buckets[0].key : ''), url: ((typeof data.id.buckets[0] !== 'undefined') ? "http://data.sibcolombia.net/species/"+data.id.buckets[0].key : ''), name: data.key, count: data.doc_count}));
+					});
 
-				_.each(allData.aggregations.class.buckets, function(data) {
-					taxonClasses.push(new ResumeCount({id: ((typeof data.id.buckets[0] !== 'undefined') ? data.id.buckets[0].key : ''), url: ((typeof data.id.buckets[0] !== 'undefined') ? "http://data.sibcolombia.net/species/"+data.id.buckets[0].key : ''), name: data.key, count: data.doc_count}));
-				});
+					_.each(allData.aggregations.class.buckets, function(data) {
+						taxonClasses.push(new ResumeCount({id: ((typeof data.id.buckets[0] !== 'undefined') ? data.id.buckets[0].key : ''), url: ((typeof data.id.buckets[0] !== 'undefined') ? "http://data.sibcolombia.net/species/"+data.id.buckets[0].key : ''), name: data.key, count: data.doc_count}));
+					});
 
-				_.each(allData.aggregations.order.buckets, function(data) {
-					order_ranks.push(new ResumeCount({id: ((typeof data.id.buckets[0] !== 'undefined') ? data.id.buckets[0].key : ''), url: ((typeof data.id.buckets[0] !== 'undefined') ? "http://data.sibcolombia.net/species/"+data.id.buckets[0].key : ''), name: data.key, count: data.doc_count}));
-				});
+					_.each(allData.aggregations.order.buckets, function(data) {
+						order_ranks.push(new ResumeCount({id: ((typeof data.id.buckets[0] !== 'undefined') ? data.id.buckets[0].key : ''), url: ((typeof data.id.buckets[0] !== 'undefined') ? "http://data.sibcolombia.net/species/"+data.id.buckets[0].key : ''), name: data.key, count: data.doc_count}));
+					});
 
-				_.each(allData.aggregations.family.buckets, function(data) {
-					families.push(new ResumeCount({id: ((typeof data.id.buckets[0] !== 'undefined') ? data.id.buckets[0].key : ''), url: ((typeof data.id.buckets[0] !== 'undefined') ? "http://data.sibcolombia.net/species/"+data.id.buckets[0].key : ''), name: data.key, count: data.doc_count}));
-				});
+					_.each(allData.aggregations.family.buckets, function(data) {
+						families.push(new ResumeCount({id: ((typeof data.id.buckets[0] !== 'undefined') ? data.id.buckets[0].key : ''), url: ((typeof data.id.buckets[0] !== 'undefined') ? "http://data.sibcolombia.net/species/"+data.id.buckets[0].key : ''), name: data.key, count: data.doc_count}));
+					});
 
-				_.each(allData.aggregations.genus.buckets, function(data) {
-					genuses.push(new ResumeCount({id: ((typeof data.id.buckets[0] !== 'undefined') ? data.id.buckets[0].key : ''), url: ((typeof data.id.buckets[0] !== 'undefined') ? "http://data.sibcolombia.net/species/"+data.id.buckets[0].key : ''), name: data.key, count: data.doc_count}));
-				});
+					_.each(allData.aggregations.genus.buckets, function(data) {
+						genuses.push(new ResumeCount({id: ((typeof data.id.buckets[0] !== 'undefined') ? data.id.buckets[0].key : ''), url: ((typeof data.id.buckets[0] !== 'undefined') ? "http://data.sibcolombia.net/species/"+data.id.buckets[0].key : ''), name: data.key, count: data.doc_count}));
+					});
 
-				_.each(allData.aggregations.species.buckets, function(data) {
-					species.push(new ResumeCount({id: ((typeof data.id.buckets[0] !== 'undefined') ? data.id.buckets[0].key : ''), url: ((typeof data.id.buckets[0] !== 'undefined') ? "http://data.sibcolombia.net/species/"+data.id.buckets[0].key : ''), name: data.key, count: data.doc_count}));
-				});
+					_.each(allData.aggregations.species.buckets, function(data) {
+						species.push(new ResumeCount({id: ((typeof data.id.buckets[0] !== 'undefined') ? data.id.buckets[0].key : ''), url: ((typeof data.id.buckets[0] !== 'undefined') ? "http://data.sibcolombia.net/species/"+data.id.buckets[0].key : ''), name: data.key, count: data.doc_count}));
+					});
 
-				_.each(allData.aggregations.iso_country_code.buckets, function(data) {
-					countries.push(new ResumeCount({id: data.key, url: "http://data.sibcolombia.net/countries/"+data.key, name: data.country_name.buckets[0].key, count: data.doc_count}));
-				});
+					_.each(allData.aggregations.iso_country_code.buckets, function(data) {
+						countries.push(new ResumeCount({id: data.key, url: "http://data.sibcolombia.net/countries/"+data.key, name: data.country_name.buckets[0].key, count: data.doc_count}));
+					});
 
-				_.each(allData.aggregations.iso_department_code.buckets, function(data) {
-					departments.push(new ResumeCount({id: data.key, url: "http://data.sibcolombia.net/departments/"+data.key, name: data.department_name.buckets[0].key, count: data.doc_count}));
-				});
+					_.each(allData.aggregations.iso_department_code.buckets, function(data) {
+						departments.push(new ResumeCount({id: data.key, url: "http://data.sibcolombia.net/departments/"+data.key, name: data.department_name.buckets[0].key, count: data.doc_count}));
+					});
 
-				_.each(allData.aggregations.iso_county_code.buckets, function(data) {
-					counties.push(new ResumeCount({id: data.key, name: data.county_name.buckets[0].department_name.buckets[0].key + " - " + data.county_name.buckets[0].key, count: data.doc_count}));
-				});
+					_.each(allData.aggregations.iso_county_code.buckets, function(data) {
+						counties.push(new ResumeCount({id: data.key, name: data.county_name.buckets[0].department_name.buckets[0].key + " - " + data.county_name.buckets[0].key, count: data.doc_count}));
+					});
 
-				_.each(allData.aggregations.paramo_code.buckets, function(data) {
-					paramos.push(new ResumeCount({id: data.key, name: data.paramo_name.buckets[0].key, count: data.doc_count}));
-				});
+					_.each(allData.aggregations.paramo_code.buckets, function(data) {
+						paramos.push(new ResumeCount({id: data.key, name: data.paramo_name.buckets[0].key, count: data.doc_count}));
+					});
 
-				_.each(allData.aggregations.marine_zone_code.buckets, function(data) {
-					marineZones.push(new ResumeCount({id: data.key, name: data.marine_zone_name.buckets[0].key, count: data.doc_count}));
-				});
+					_.each(allData.aggregations.marine_zone_code.buckets, function(data) {
+						marineZones.push(new ResumeCount({id: data.key, name: data.marine_zone_name.buckets[0].key, count: data.doc_count}));
+					});
 
-				_.each(allData.aggregations.common_names.common.buckets, function(data) {
-					commons.push(new ResumeCount({name: data.key, count: data.doc_count}));
-				});
+					_.each(allData.aggregations.common_names.common.buckets, function(data) {
+						commons.push(new ResumeCount({name: data.key, count: data.doc_count}));
+					});
 
-				switch(self.selectedSubject()) {
-					case "0":
-						self.resumeScientificNames.removeAll();
-						_.each(allData.aggregations.canonical.buckets, function(data) {
-							self.resumeScientificNames.push(new ResumeScientificName({canonical: data.key, occurrences: data.doc_count}));
-						});
-						canonicals.removeAll();
-						break;
-					case "100":
-						self.resumeKingdomNames.removeAll();
-						_.each(allData.aggregations.kingdom.buckets, function(data) {
-							self.resumeKingdomNames.push(new ResumeKingdomName({kingdom: data.key, occurrences: data.doc_count, id: ((typeof data.id.buckets[0] !== 'undefined') ? data.id.buckets[0].key : '')}));
-						});
-						kingdoms.removeAll();
-						break;
-					case "101":
-						self.resumePhylumNames.removeAll();
-						_.each(allData.aggregations.phylum.buckets, function(data) {
-							self.resumePhylumNames.push(new ResumePhylumName({phylum: data.key, occurrences: data.doc_count, id: ((typeof data.id.buckets[0] !== 'undefined') ? data.id.buckets[0].key : '')}));
-						});
-						phylums.removeAll();
-						break;
-					case "102":
-						self.resumeClassNames.removeAll();
-						_.each(allData.aggregations.class.buckets, function(data) {
-							self.resumeClassNames.push(new ResumeClassName({nameClass: data.key, occurrences: data.doc_count, id: ((typeof data.id.buckets[0] !== 'undefined') ? data.id.buckets[0].key : '')}));
-						});
-						taxonClasses.removeAll();
-						break;
-					case "103":
-						self.resumeOrderNames.removeAll();
-						_.each(allData.aggregations.order.buckets, function(data) {
-							self.resumeOrderNames.push(new ResumeOrderName({order_rank: data.key, occurrences: data.doc_count, id: ((typeof data.id.buckets[0] !== 'undefined') ? data.id.buckets[0].key : '')}));
-						});
-						order_ranks.removeAll();
-						break;
-					case "104":
-						self.resumeFamilyNames.removeAll();
-						_.each(allData.aggregations.family.buckets, function(data) {
-							self.resumeFamilyNames.push(new ResumeFamilyName({family: data.key, occurrences: data.doc_count, id: ((typeof data.id.buckets[0] !== 'undefined') ? data.id.buckets[0].key : '')}));
-						});
-						families.removeAll();
-						break;
-					case "105":
-						self.resumeGenusNames.removeAll();
-						_.each(allData.aggregations.genus.buckets, function(data) {
-							self.resumeGenusNames.push(new ResumeGenusName({genus: data.key, occurrences: data.doc_count, id: ((typeof data.id.buckets[0] !== 'undefined') ? data.id.buckets[0].key : '')}));
-						});
-						genuses.removeAll();
-						break;
-					case "106":
-						self.resumeSpeciesNames.removeAll();
-						_.each(allData.aggregations.species.buckets, function(data) {
-							self.resumeSpeciesNames.push(new ResumeSpecieName({species: data.key, occurrences: data.doc_count, id: ((typeof data.id.buckets[0] !== 'undefined') ? data.id.buckets[0].key : '')}));
-						});
-						species.removeAll();
-						break;
-					case "31":
-						self.resumeCommonNames.removeAll();
-						_.each(allData.aggregations.common_names.common.buckets, function(data) {
-							self.resumeCommonNames.push(new ResumeCommonName({canonical: data.key, occurrences: data.doc_count}));
-						});
-						commons.removeAll();
-						break;
-					case "25":
-						self.resumeDataProviders.removeAll();
-						_.each(allData.aggregations.data_provider_id.buckets, function(data) {
-							self.resumeDataProviders.push(new ResumeDataProvider({providerID: data.key, providerName: data.data_provider_name.buckets[0].key, occurrences: data.doc_count}));
-						});
-						providers.removeAll();
-						break;
-					case "24":
-						self.resumeDataResources.removeAll();
-						_.each(allData.aggregations.data_resource_id.buckets, function(data) {
-							self.resumeDataResources.push(new ResumeDataResource({providerID: data.data_provider_id.buckets[0].key, resourceID: data.key, resourceName: data.data_provider_id.buckets[0].data_resource_name.buckets[0].key, occurrences: data.doc_count}));
-						});
-						resources.removeAll();
-						break;
-					case "12":
-						self.resumeInstitutionCodes.removeAll();
-						_.each(allData.aggregations.institution_code_id.buckets, function(data) {
-							self.resumeInstitutionCodes.push(new ResumeInstitutionCode({institutionCodeID: data.key, institutionCode: data.institution_code.buckets[0].key, occurrences: data.doc_count}));
-						});
-						break;
-					case "13": {
-						self.resumeCollectionCodes.removeAll();
-						_.each(allData.aggregations.collection_code_id.buckets, function(data) {
-							self.resumeCollectionCodes.push(new ResumeCollectionCode({collectionCodeID: data.key, collectionCode: data.collection_code.buckets[0].key, occurrences: data.doc_count}));
-						});
-						break;
+					switch(self.selectedSubject()) {
+						case "0":
+							self.resumeScientificNames.removeAll();
+							_.each(allData.aggregations.canonical.buckets, function(data) {
+								self.resumeScientificNames.push(new ResumeScientificName({canonical: data.key, occurrences: data.doc_count}));
+							});
+							canonicals.removeAll();
+							break;
+						case "100":
+							self.resumeKingdomNames.removeAll();
+							_.each(allData.aggregations.kingdom.buckets, function(data) {
+								self.resumeKingdomNames.push(new ResumeKingdomName({kingdom: data.key, occurrences: data.doc_count, id: ((typeof data.id.buckets[0] !== 'undefined') ? data.id.buckets[0].key : '')}));
+							});
+							kingdoms.removeAll();
+							break;
+						case "101":
+							self.resumePhylumNames.removeAll();
+							_.each(allData.aggregations.phylum.buckets, function(data) {
+								self.resumePhylumNames.push(new ResumePhylumName({phylum: data.key, occurrences: data.doc_count, id: ((typeof data.id.buckets[0] !== 'undefined') ? data.id.buckets[0].key : '')}));
+							});
+							phylums.removeAll();
+							break;
+						case "102":
+							self.resumeClassNames.removeAll();
+							_.each(allData.aggregations.class.buckets, function(data) {
+								self.resumeClassNames.push(new ResumeClassName({nameClass: data.key, occurrences: data.doc_count, id: ((typeof data.id.buckets[0] !== 'undefined') ? data.id.buckets[0].key : '')}));
+							});
+							taxonClasses.removeAll();
+							break;
+						case "103":
+							self.resumeOrderNames.removeAll();
+							_.each(allData.aggregations.order.buckets, function(data) {
+								self.resumeOrderNames.push(new ResumeOrderName({order_rank: data.key, occurrences: data.doc_count, id: ((typeof data.id.buckets[0] !== 'undefined') ? data.id.buckets[0].key : '')}));
+							});
+							order_ranks.removeAll();
+							break;
+						case "104":
+							self.resumeFamilyNames.removeAll();
+							_.each(allData.aggregations.family.buckets, function(data) {
+								self.resumeFamilyNames.push(new ResumeFamilyName({family: data.key, occurrences: data.doc_count, id: ((typeof data.id.buckets[0] !== 'undefined') ? data.id.buckets[0].key : '')}));
+							});
+							families.removeAll();
+							break;
+						case "105":
+							self.resumeGenusNames.removeAll();
+							_.each(allData.aggregations.genus.buckets, function(data) {
+								self.resumeGenusNames.push(new ResumeGenusName({genus: data.key, occurrences: data.doc_count, id: ((typeof data.id.buckets[0] !== 'undefined') ? data.id.buckets[0].key : '')}));
+							});
+							genuses.removeAll();
+							break;
+						case "106":
+							self.resumeSpeciesNames.removeAll();
+							_.each(allData.aggregations.species.buckets, function(data) {
+								self.resumeSpeciesNames.push(new ResumeSpecieName({species: data.key, occurrences: data.doc_count, id: ((typeof data.id.buckets[0] !== 'undefined') ? data.id.buckets[0].key : '')}));
+							});
+							species.removeAll();
+							break;
+						case "31":
+							self.resumeCommonNames.removeAll();
+							_.each(allData.aggregations.common_names.common.buckets, function(data) {
+								self.resumeCommonNames.push(new ResumeCommonName({canonical: data.key, occurrences: data.doc_count}));
+							});
+							commons.removeAll();
+							break;
+						case "25":
+							self.resumeDataProviders.removeAll();
+							_.each(allData.aggregations.data_provider_id.buckets, function(data) {
+								self.resumeDataProviders.push(new ResumeDataProvider({providerID: data.key, providerName: data.data_provider_name.buckets[0].key, occurrences: data.doc_count}));
+							});
+							providers.removeAll();
+							break;
+						case "24":
+							self.resumeDataResources.removeAll();
+							_.each(allData.aggregations.data_resource_id.buckets, function(data) {
+								self.resumeDataResources.push(new ResumeDataResource({providerID: data.data_provider_id.buckets[0].key, resourceID: data.key, resourceName: data.data_provider_id.buckets[0].data_resource_name.buckets[0].key, occurrences: data.doc_count}));
+							});
+							resources.removeAll();
+							break;
+						case "12":
+							self.resumeInstitutionCodes.removeAll();
+							_.each(allData.aggregations.institution_code_id.buckets, function(data) {
+								self.resumeInstitutionCodes.push(new ResumeInstitutionCode({institutionCodeID: data.key, institutionCode: data.institution_code.buckets[0].key, occurrences: data.doc_count}));
+							});
+							break;
+						case "13":
+							self.resumeCollectionCodes.removeAll();
+							_.each(allData.aggregations.collection_code_id.buckets, function(data) {
+								self.resumeCollectionCodes.push(new ResumeCollectionCode({collectionCodeID: data.key, collectionCode: data.collection_code.buckets[0].key, occurrences: data.doc_count}));
+							});
+							break;
+						case "5":
+							self.resumeCountries.removeAll();
+							_.each(allData.aggregations.iso_country_code.buckets, function(data) {
+								self.resumeCountries.push(new ResumeCountry({isoCountryCode: data.key, countryName: data.country_name.buckets[0].key, occurrences: data.doc_count}));
+							});
+							countries.removeAll();
+							break;
+						case "38":
+							self.resumeDepartments.removeAll();
+							_.each(allData.aggregations.iso_department_code.buckets, function(data) {
+								self.resumeDepartments.push(new ResumeDepartment({isoDepartmentCode: data.key, departmentName: data.department_name.buckets[0].key, occurrences: data.doc_count}));
+							});
+							departments.removeAll();
+							break;
+						case "39":
+							self.resumeCounties.removeAll();
+							_.each(allData.aggregations.iso_county_code.buckets, function(data) {
+								self.resumeCounties.push(new ResumeCounty({isoCountyCode: data.key, countyName: data.county_name.buckets[0].key, occurrences: data.doc_count, departmentAndCountyName: data.county_name.buckets[0].department_name.buckets[0].key + " - " + data.county_name.buckets[0].key}));
+							});
+							counties.removeAll();
+							break;
+						case "40":
+							self.resumeParamos.removeAll();
+							_.each(allData.aggregations.paramo_code.buckets, function(data) {
+								self.resumeParamos.push(new ResumeParamo({paramoCode: data.key, paramoName: data.paramo_name.buckets[0].key, occurrences: data.doc_count}));
+							});
+							paramos.removeAll();
+							break;
+						case "41":
+							self.resumeMarineZones.removeAll();
+							_.each(allData.aggregations.marine_zone_code.buckets, function(data) {
+								self.resumeMarineZones.push(new ResumeMarineZone({marineZoneCode: data.key, marineZoneName: data.marine_zone_name.buckets[0].key, occurrences: data.doc_count}));
+							});
 					}
-				}
 
-				self.resumesInfoFilter.removeAll();
-				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
-				self.showResumeContainer();
-			});
-		},
-		getCountriesData: function() {
-			var self = this;
-			$.getJSON("/rest/occurrences/resume/countries/name/"+((typeof self.objectNameValue() === "undefined")?"":self.objectNameValue()), function(allData) {
-				self.resumeCountries.removeAll();
-				var count = 0;
-				_.each(allData.aggregations.country_name.buckets, function(data) {
-					self.resumeCountries.push(new ResumeCountry({isoCountryCode: allData.aggregations.iso_country_code.buckets[count].key, countryName: data.key, occurrences: data.doc_count}));
-					count++;
-				});
-				var countries = ko.observableArray();
-				count = 0;
-				var canonicals = ko.observableArray();
-				_.each(allData.aggregations.canonical.buckets, function(data) {
-					canonicals.push(new ResumeCount({name: data.key, count: data.doc_count}));
-					count++;
-				});
-				count = 0;
-				var providers = ko.observableArray();
-				_.each(allData.aggregations.data_provider_name.buckets, function(data) {
-					providers.push(new ResumeCount({id: allData.aggregations.data_provider_id.buckets[count].key, url: "http://data.sibcolombia.net/publicadores/provider/"+allData.aggregations.data_provider_id.buckets[count].key, name: data.key, count: data.doc_count}));
-					count++;
-				});
-				count = 0;
-				var resources = ko.observableArray();
-				_.each(allData.aggregations.data_resource_name.buckets, function(data) {
-					resources.push(new ResumeCount({id: allData.aggregations.data_resource_id.buckets[count].key, url: "http://data.sibcolombia.net/conjuntos/resource/"+allData.aggregations.data_resource_id.buckets[count].key, name: data.key, count: data.doc_count}));
-					count++;
-				});
-				var kingdoms = ko.observableArray();
-				_.each(allData.aggregations.kingdom.buckets, function(data) {
-					var nameAndID = data.key.split("~~~");
-					if(nameAndID[1] != "null") {
-						kingdoms.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.doc_count}));
-					} else {
-						kingdoms.push(new ResumeCount({name: nameAndID[0], count: data.doc_count}));
-					}
-				});
-				var phylums = ko.observableArray();
-				_.each(allData.aggregations.phylum.buckets, function(data) {
-					var nameAndID = data.key.split("~~~");
-					if(nameAndID[1] != "null") {
-						phylums.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.doc_count}));
-					} else {
-						phylums.push(new ResumeCount({name: nameAndID[0], count: data.doc_count}));
-					}
-				});
-				var taxonClasses = ko.observableArray();
-				_.each(allData.aggregations.taxonClass.buckets, function(data) {
-					var nameAndID = data.key.split("~~~");
-					if(nameAndID[1] != "null") {
-						taxonClasses.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.doc_count}));
-					} else {
-						taxonClasses.push(new ResumeCount({name: nameAndID[0], count: data.doc_count}));
-					}
-				});
-				var order_ranks = ko.observableArray();
-				_.each(allData.aggregations.order_rank.buckets, function(data) {
-					var nameAndID = data.key.split("~~~");
-					if(nameAndID[1] != "null") {
-						order_ranks.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.doc_count}));
-					} else {
-						order_ranks.push(new ResumeCount({name: nameAndID[0], count: data.doc_count}));
-					}
-				});
-				var families = ko.observableArray();
-				_.each(allData.aggregations.family.buckets, function(data) {
-					var nameAndID = data.key.split("~~~");
-					if(nameAndID[1] != "null") {
-						families.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.doc_count}));
-					} else {
-						families.push(new ResumeCount({name: nameAndID[0], count: data.doc_count}));
-					}
-				});
-				var genuses = ko.observableArray();
-				_.each(allData.aggregations.genus.buckets, function(data) {
-					var nameAndID = data.key.split("~~~");
-					if(nameAndID[1] != "null") {
-						genuses.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.doc_count}));
-					} else {
-						genuses.push(new ResumeCount({name: nameAndID[0], count: data.doc_count}));
-					}
-				});
-				var species = ko.observableArray();
-				_.each(allData.aggregations.species.buckets, function(data) {
-					var nameAndID = data.key.split("~~~");
-					if(nameAndID[1] != "null") {
-						species.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.doc_count}));
-					} else {
-						species.push(new ResumeCount({name: nameAndID[0], count: data.doc_count}));
-					}
-				});
-				count = 0;
-				var departments = ko.observableArray();
-				_.each(allData.aggregations.department_name.buckets, function(data) {
-					departments.push(new ResumeCount({id: allData.aggregations.iso_department_code.buckets[count].key, url: "http://data.sibcolombia.net/departments/"+allData.aggregations.iso_department_code.buckets[count].key, name: data.key, count: data.doc_count}));
-					count++;
-				});
-				var counties = ko.observableArray();
-				_.each(allData.aggregations.county_group.buckets, function(data) {
-					var countyData = data.key.split("~~~");
-					counties.push(new ResumeCount({id: countyData[2], name: countyData[0] + " - " + countyData[1], count: data.doc_count}));
-				});
-				var paramos = ko.observableArray();
-				_.each(allData.aggregations.paramo_group.buckets, function(data) {
-					var paramoData = data.key.split("~~~");
-					paramos.push(new ResumeCount({id: paramoData[1], name: paramoData[0], count: data.doc_count}));
-				});
-				var marineZones = ko.observableArray();
-				_.each(allData.aggregations.marine_zone_group.buckets, function(data) {
-					var marineZoneData = data.key.split("~~~");
-					marineZones.push(new ResumeCount({id: marineZoneData[1], name: marineZoneData[0], count: data.doc_count}));
-				});
-				var commons = ko.observableArray();
-				_.each(allData.aggregations.common_names.common.buckets, function(data) {
-					commons.push(new ResumeCount({name: data.key, count: data.doc_count}));
-				});
-				self.resumesInfoFilter.removeAll();
-				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
-				self.showResumeContainer();
-			});
-		},
-		getDepartmentsData: function() {
-			var self = this;
-			$.getJSON("/rest/occurrences/resume/departments/name/"+((typeof self.objectNameValue() === "undefined")?"":self.objectNameValue()), function(allData) {
-				self.resumeDepartments.removeAll();
-				var count = 0;
-				_.each(allData.aggregations.department_name.buckets, function(data) {
-					self.resumeDepartments.push(new ResumeDepartment({isoDepartmentCode: allData.aggregations.iso_department_code.buckets[count].key, departmentName: data.key, occurrences: data.doc_count}));
-					count++;
-				});
-				var departments = ko.observableArray();
-				count = 0;
-				var canonicals = ko.observableArray();
-				_.each(allData.aggregations.canonical.buckets, function(data) {
-					canonicals.push(new ResumeCount({name: data.key, count: data.doc_count}));
-					count++;
-				});
-				count = 0;
-				var providers = ko.observableArray();
-				_.each(allData.aggregations.data_provider_name.buckets, function(data) {
-					providers.push(new ResumeCount({id: allData.aggregations.data_provider_id.buckets[count].key, url: "http://data.sibcolombia.net/publicadores/provider/"+allData.aggregations.data_provider_id.buckets[count].key, name: data.key, count: data.doc_count}));
-					count++;
-				});
-				count = 0;
-				var resources = ko.observableArray();
-				_.each(allData.aggregations.data_resource_name.buckets, function(data) {
-					resources.push(new ResumeCount({id: allData.aggregations.data_resource_id.buckets[count].key, url: "http://data.sibcolombia.net/conjuntos/resource/"+allData.aggregations.data_resource_id.buckets[count].key, name: data.key, count: data.doc_count}));
-					count++;
-				});
-				var kingdoms = ko.observableArray();
-				_.each(allData.aggregations.kingdom.buckets, function(data) {
-					var nameAndID = data.key.split("~~~");
-					if(nameAndID[1] != "null") {
-						kingdoms.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.doc_count}));
-					} else {
-						kingdoms.push(new ResumeCount({name: nameAndID[0], count: data.doc_count}));
-					}
-				});
-				var phylums = ko.observableArray();
-				_.each(allData.aggregations.phylum.buckets, function(data) {
-					var nameAndID = data.key.split("~~~");
-					if(nameAndID[1] != "null") {
-						phylums.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.doc_count}));
-					} else {
-						phylums.push(new ResumeCount({name: nameAndID[0], count: data.doc_count}));
-					}
-				});
-				var taxonClasses = ko.observableArray();
-				_.each(allData.aggregations.taxonClass.buckets, function(data) {
-					var nameAndID = data.key.split("~~~");
-					if(nameAndID[1] != "null") {
-						taxonClasses.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.doc_count}));
-					} else {
-						taxonClasses.push(new ResumeCount({name: nameAndID[0], count: data.doc_count}));
-					}
-				});
-				var order_ranks = ko.observableArray();
-				_.each(allData.aggregations.order_rank.buckets, function(data) {
-					var nameAndID = data.key.split("~~~");
-					if(nameAndID[1] != "null") {
-						order_ranks.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.doc_count}));
-					} else {
-						order_ranks.push(new ResumeCount({name: nameAndID[0], count: data.doc_count}));
-					}
-				});
-				var families = ko.observableArray();
-				_.each(allData.aggregations.family.buckets, function(data) {
-					var nameAndID = data.key.split("~~~");
-					if(nameAndID[1] != "null") {
-						families.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.doc_count}));
-					} else {
-						families.push(new ResumeCount({name: nameAndID[0], count: data.doc_count}));
-					}
-				});
-				var genuses = ko.observableArray();
-				_.each(allData.aggregations.genus.buckets, function(data) {
-					var nameAndID = data.key.split("~~~");
-					if(nameAndID[1] != "null") {
-						genuses.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.doc_count}));
-					} else {
-						genuses.push(new ResumeCount({name: nameAndID[0], count: data.doc_count}));
-					}
-				});
-				var species = ko.observableArray();
-				_.each(allData.aggregations.species.buckets, function(data) {
-					var nameAndID = data.key.split("~~~");
-					if(nameAndID[1] != "null") {
-						species.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.doc_count}));
-					} else {
-						species.push(new ResumeCount({name: nameAndID[0], count: data.doc_count}));
-					}
-				});
-				count = 0;
-				var countries = ko.observableArray();
-				_.each(allData.aggregations.country_name.buckets, function(data) {
-					countries.push(new ResumeCount({id: allData.aggregations.iso_country_code.buckets[count].key, url: "http://data.sibcolombia.net/countries/"+allData.aggregations.iso_country_code.buckets[count].key, name: data.key, count: data.doc_count}));
-					count++;
-				});
-				var counties = ko.observableArray();
-				_.each(allData.aggregations.county_group.buckets, function(data) {
-					var countyData = data.key.split("~~~");
-					counties.push(new ResumeCount({id: countyData[2], name: countyData[0] + " - " + countyData[1], count: data.doc_count}));
-				});
-				var paramos = ko.observableArray();
-				_.each(allData.aggregations.paramo_group.buckets, function(data) {
-					var paramoData = data.key.split("~~~");
-					paramos.push(new ResumeCount({id: paramoData[1], name: paramoData[0], count: data.doc_count}));
-				});
-				var marineZones = ko.observableArray();
-				_.each(allData.aggregations.marine_zone_group.buckets, function(data) {
-					var marineZoneData = data.key.split("~~~");
-					marineZones.push(new ResumeCount({id: marineZoneData[1], name: marineZoneData[0], count: data.doc_count}));
-				});
-				var commons = ko.observableArray();
-				_.each(allData.aggregations.common_names.common.buckets, function(data) {
-					commons.push(new ResumeCount({name: data.key, count: data.doc_count}));
-				});
-				self.resumesInfoFilter.removeAll();
-				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
-				self.showResumeContainer();
-			});
-		},
-		getCountiesData: function() {
-			var self = this;
-			$.getJSON("/rest/occurrences/resume/counties/name/"+((typeof self.objectNameValue() === "undefined")?"":self.objectNameValue()), function(allData) {
-				self.resumeCounties.removeAll();
-				_.each(allData.aggregations.county_group.buckets, function(data) {
-					var countyData = data.key.split("~~~");
-					self.resumeCounties.push(new ResumeCounty({isoCountyCode: countyData[2], countyName: countyData[1], occurrences: data.doc_count, departmentAndCountyName: countyData[0] + " - " + countyData[1]}));
-				});
-				var counties = ko.observableArray();
-				var canonicals = ko.observableArray();
-				_.each(allData.aggregations.canonical.buckets, function(data) {
-					canonicals.push(new ResumeCount({name: data.key, count: data.doc_count}));
-				});
-				var count = 0;
-				var providers = ko.observableArray();
-				_.each(allData.aggregations.data_provider_name.buckets, function(data) {
-					providers.push(new ResumeCount({id: allData.aggregations.data_provider_id.buckets[count].key, url: "http://data.sibcolombia.net/publicadores/provider/"+allData.aggregations.data_provider_id.buckets[count].key, name: data.key, count: data.doc_count}));
-					count++;
-				});
-				count = 0;
-				var resources = ko.observableArray();
-				_.each(allData.aggregations.data_resource_name.buckets, function(data) {
-					resources.push(new ResumeCount({id: allData.aggregations.data_resource_id.buckets[count].key, url: "http://data.sibcolombia.net/conjuntos/resource/"+allData.aggregations.data_resource_id.buckets[count].key, name: data.key, count: data.doc_count}));
-					count++;
-				});
-				var kingdoms = ko.observableArray();
-				_.each(allData.aggregations.kingdom.buckets, function(data) {
-					var nameAndID = data.key.split("~~~");
-					if(nameAndID[1] != "null") {
-						kingdoms.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.doc_count}));
-					} else {
-						kingdoms.push(new ResumeCount({name: nameAndID[0], count: data.doc_count}));
-					}
-				});
-				var phylums = ko.observableArray();
-				_.each(allData.aggregations.phylum.buckets, function(data) {
-					var nameAndID = data.key.split("~~~");
-					if(nameAndID[1] != "null") {
-						phylums.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.doc_count}));
-					} else {
-						phylums.push(new ResumeCount({name: nameAndID[0], count: data.doc_count}));
-					}
-				});
-				var taxonClasses = ko.observableArray();
-				_.each(allData.aggregations.taxonClass.buckets, function(data) {
-					var nameAndID = data.key.split("~~~");
-					if(nameAndID[1] != "null") {
-						taxonClasses.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.doc_count}));
-					} else {
-						taxonClasses.push(new ResumeCount({name: nameAndID[0], count: data.doc_count}));
-					}
-				});
-				var order_ranks = ko.observableArray();
-				_.each(allData.aggregations.order_rank.buckets, function(data) {
-					var nameAndID = data.key.split("~~~");
-					if(nameAndID[1] != "null") {
-						order_ranks.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.doc_count}));
-					} else {
-						order_ranks.push(new ResumeCount({name: nameAndID[0], count: data.doc_count}));
-					}
-				});
-				var families = ko.observableArray();
-				_.each(allData.aggregations.family.buckets, function(data) {
-					var nameAndID = data.key.split("~~~");
-					if(nameAndID[1] != "null") {
-						families.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.doc_count}));
-					} else {
-						families.push(new ResumeCount({name: nameAndID[0], count: data.doc_count}));
-					}
-				});
-				var genuses = ko.observableArray();
-				_.each(allData.aggregations.genus.buckets, function(data) {
-					var nameAndID = data.key.split("~~~");
-					if(nameAndID[1] != "null") {
-						genuses.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.doc_count}));
-					} else {
-						genuses.push(new ResumeCount({name: nameAndID[0], count: data.doc_count}));
-					}
-				});
-				var species = ko.observableArray();
-				_.each(allData.aggregations.species.buckets, function(data) {
-					var nameAndID = data.key.split("~~~");
-					if(nameAndID[1] != "null") {
-						species.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.doc_count}));
-					} else {
-						species.push(new ResumeCount({name: nameAndID[0], count: data.doc_count}));
-					}
-				});
-				count = 0;
-				var countries = ko.observableArray();
-				_.each(allData.aggregations.country_name.buckets, function(data) {
-					countries.push(new ResumeCount({id: allData.aggregations.iso_country_code.buckets[count].key, url: "http://data.sibcolombia.net/countries/"+allData.aggregations.iso_country_code.buckets[count].key, name: data.key, count: data.doc_count}));
-					count++;
-				});
-				count = 0;
-				var departments = ko.observableArray();
-				_.each(allData.aggregations.department_name.buckets, function(data) {
-					departments.push(new ResumeCount({id: allData.aggregations.iso_department_code.buckets[count].key, url: "http://data.sibcolombia.net/departments/"+allData.aggregations.iso_department_code.buckets[count].key, name: data.key, count: data.doc_count}));
-					count++;
-				});
-				var paramos = ko.observableArray();
-				_.each(allData.aggregations.paramo_group.buckets, function(data) {
-					var paramoData = data.key.split("~~~");
-					paramos.push(new ResumeCount({id: paramoData[1], name: paramoData[0], count: data.doc_count}));
-				});
-				var marineZones = ko.observableArray();
-				_.each(allData.aggregations.marine_zone_group.buckets, function(data) {
-					var marineZoneData = data.key.split("~~~");
-					marineZones.push(new ResumeCount({id: marineZoneData[1], name: marineZoneData[0], count: data.doc_count}));
-				});
-				var commons = ko.observableArray();
-				_.each(allData.aggregations.common_names.common.buckets, function(data) {
-					commons.push(new ResumeCount({name: data.key, count: data.doc_count}));
-				});
-				self.resumesInfoFilter.removeAll();
-				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
-				self.showResumeContainer();
-			});
-		},
-		getParamosData: function() {
-			var self = this;
-			$.getJSON("/rest/occurrences/resume/paramos/name/"+((typeof self.objectNameValue() === "undefined")?"":self.objectNameValue()), function(allData) {
-				self.resumeParamos.removeAll();
-				_.each(allData.aggregations.paramo_group.buckets, function(data) {
-					var paramoData = data.key.split("~~~");
-					self.resumeParamos.push(new ResumeParamo({paramoCode: paramoData[1], paramoName: paramoData[0], occurrences: data.doc_count}));
-				});
-				var paramos = ko.observableArray();
-				var canonicals = ko.observableArray();
-				_.each(allData.aggregations.canonical.buckets, function(data) {
-					canonicals.push(new ResumeCount({name: data.key, count: data.doc_count}));
-				});
-				var count = 0;
-				var providers = ko.observableArray();
-				_.each(allData.aggregations.data_provider_name.buckets, function(data) {
-					providers.push(new ResumeCount({id: allData.aggregations.data_provider_id.buckets[count].key, url: "http://data.sibcolombia.net/publicadores/provider/"+allData.aggregations.data_provider_id.buckets[count].key, name: data.key, count: data.doc_count}));
-					count++;
-				});
-				count = 0;
-				var resources = ko.observableArray();
-				_.each(allData.aggregations.data_resource_name.buckets, function(data) {
-					resources.push(new ResumeCount({id: allData.aggregations.data_resource_id.buckets[count].key, url: "http://data.sibcolombia.net/conjuntos/resource/"+allData.aggregations.data_resource_id.buckets[count].key, name: data.key, count: data.doc_count}));
-					count++;
-				});
-				var kingdoms = ko.observableArray();
-				_.each(allData.aggregations.kingdom.buckets, function(data) {
-					var nameAndID = data.key.split("~~~");
-					if(nameAndID[1] != "null") {
-						kingdoms.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.doc_count}));
-					} else {
-						kingdoms.push(new ResumeCount({name: nameAndID[0], count: data.doc_count}));
-					}
-				});
-				var phylums = ko.observableArray();
-				_.each(allData.aggregations.phylum.buckets, function(data) {
-					var nameAndID = data.key.split("~~~");
-					if(nameAndID[1] != "null") {
-						phylums.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.doc_count}));
-					} else {
-						phylums.push(new ResumeCount({name: nameAndID[0], count: data.doc_count}));
-					}
-				});
-				var taxonClasses = ko.observableArray();
-				_.each(allData.aggregations.taxonClass.buckets, function(data) {
-					var nameAndID = data.key.split("~~~");
-					if(nameAndID[1] != "null") {
-						taxonClasses.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.doc_count}));
-					} else {
-						taxonClasses.push(new ResumeCount({name: nameAndID[0], count: data.doc_count}));
-					}
-				});
-				var order_ranks = ko.observableArray();
-				_.each(allData.aggregations.order_rank.buckets, function(data) {
-					var nameAndID = data.key.split("~~~");
-					if(nameAndID[1] != "null") {
-						order_ranks.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.doc_count}));
-					} else {
-						order_ranks.push(new ResumeCount({name: nameAndID[0], count: data.doc_count}));
-					}
-				});
-				var families = ko.observableArray();
-				_.each(allData.aggregations.family.buckets, function(data) {
-					var nameAndID = data.key.split("~~~");
-					if(nameAndID[1] != "null") {
-						families.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.doc_count}));
-					} else {
-						families.push(new ResumeCount({name: nameAndID[0], count: data.doc_count}));
-					}
-				});
-				var genuses = ko.observableArray();
-				_.each(allData.aggregations.genus.buckets, function(data) {
-					var nameAndID = data.key.split("~~~");
-					if(nameAndID[1] != "null") {
-						genuses.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.doc_count}));
-					} else {
-						genuses.push(new ResumeCount({name: nameAndID[0], count: data.doc_count}));
-					}
-				});
-				var species = ko.observableArray();
-				_.each(allData.aggregations.species.buckets, function(data) {
-					var nameAndID = data.key.split("~~~");
-					if(nameAndID[1] != "null") {
-						species.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.doc_count}));
-					} else {
-						species.push(new ResumeCount({name: nameAndID[0], count: data.doc_count}));
-					}
-				});
-				count = 0;
-				var countries = ko.observableArray();
-				_.each(allData.aggregations.country_name.buckets, function(data) {
-					countries.push(new ResumeCount({id: allData.aggregations.iso_country_code.buckets[count].key, url: "http://data.sibcolombia.net/countries/"+allData.aggregations.iso_country_code.buckets[count].key, name: data.key, count: data.doc_count}));
-					count++;
-				});
-				count = 0;
-				var departments = ko.observableArray();
-				_.each(allData.aggregations.department_name.buckets, function(data) {
-					departments.push(new ResumeCount({id: allData.aggregations.iso_department_code.buckets[count].key, url: "http://data.sibcolombia.net/departments/"+allData.aggregations.iso_department_code.buckets[count].key, name: data.key, count: data.doc_count}));
-					count++;
-				});
-				var counties = ko.observableArray();
-				_.each(allData.aggregations.county_group.buckets, function(data) {
-					var countyData = data.key.split("~~~");
-					counties.push(new ResumeCount({id: countyData[2], name: countyData[0] + " - " + countyData[1], count: data.doc_count}));
-				});
-				var marineZones = ko.observableArray();
-				_.each(allData.aggregations.marine_zone_group.buckets, function(data) {
-					var marineZoneData = data.key.split("~~~");
-					marineZones.push(new ResumeCount({id: marineZoneData[1], name: marineZoneData[0], count: data.doc_count}));
-				});
-				var commons = ko.observableArray();
-				_.each(allData.aggregations.common_names.common.buckets, function(data) {
-					commons.push(new ResumeCount({name: data.key, count: data.doc_count}));
-				});
-				self.resumesInfoFilter.removeAll();
-				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
-				self.showResumeContainer();
-			});
-		},
-		getMarineZonesData: function() {
-			var self = this;
-			$.getJSON("/rest/occurrences/resume/marinezones/name/"+((typeof self.objectNameValue() === "undefined")?"":self.objectNameValue()), function(allData) {
-				self.resumeMarineZones.removeAll();
-				_.each(allData.aggregations.marine_zone_group.buckets, function(data) {
-					var marineZoneData = data.key.split("~~~");
-					self.resumeMarineZones.push(new ResumeMarineZone({marineZoneCode: marineZoneData[1], marineZoneName: marineZoneData[0], occurrences: data.doc_count}));
-				});
-				var marineZones = ko.observableArray();
-				var canonicals = ko.observableArray();
-				_.each(allData.aggregations.canonical.buckets, function(data) {
-					canonicals.push(new ResumeCount({name: data.key, count: data.doc_count}));
-				});
-				var count = 0;
-				var providers = ko.observableArray();
-				_.each(allData.aggregations.data_provider_name.buckets, function(data) {
-					providers.push(new ResumeCount({id: allData.aggregations.data_provider_id.buckets[count].key, url: "http://data.sibcolombia.net/publicadores/provider/"+allData.aggregations.data_provider_id.buckets[count].key, name: data.key, count: data.doc_count}));
-					count++;
-				});
-				count = 0;
-				var resources = ko.observableArray();
-				_.each(allData.aggregations.data_resource_name.buckets, function(data) {
-					resources.push(new ResumeCount({id: allData.aggregations.data_resource_id.buckets[count].key, url: "http://data.sibcolombia.net/conjuntos/resource/"+allData.aggregations.data_resource_id.buckets[count].key, name: data.key, count: data.doc_count}));
-					count++;
-				});
-				var kingdoms = ko.observableArray();
-				_.each(allData.aggregations.kingdom.buckets, function(data) {
-					var nameAndID = data.key.split("~~~");
-					if(nameAndID[1] != "null") {
-						kingdoms.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.doc_count}));
-					} else {
-						kingdoms.push(new ResumeCount({name: nameAndID[0], count: data.doc_count}));
-					}
-				});
-				var phylums = ko.observableArray();
-				_.each(allData.aggregations.phylum.buckets, function(data) {
-					var nameAndID = data.key.split("~~~");
-					if(nameAndID[1] != "null") {
-						phylums.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.doc_count}));
-					} else {
-						phylums.push(new ResumeCount({name: nameAndID[0], count: data.doc_count}));
-					}
-				});
-				var taxonClasses = ko.observableArray();
-				_.each(allData.aggregations.taxonClass.buckets, function(data) {
-					var nameAndID = data.key.split("~~~");
-					if(nameAndID[1] != "null") {
-						taxonClasses.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.doc_count}));
-					} else {
-						taxonClasses.push(new ResumeCount({name: nameAndID[0], count: data.doc_count}));
-					}
-				});
-				var order_ranks = ko.observableArray();
-				_.each(allData.aggregations.order_rank.buckets, function(data) {
-					var nameAndID = data.key.split("~~~");
-					if(nameAndID[1] != "null") {
-						order_ranks.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.doc_count}));
-					} else {
-						order_ranks.push(new ResumeCount({name: nameAndID[0], count: data.doc_count}));
-					}
-				});
-				var families = ko.observableArray();
-				_.each(allData.aggregations.family.buckets, function(data) {
-					var nameAndID = data.key.split("~~~");
-					if(nameAndID[1] != "null") {
-						families.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.doc_count}));
-					} else {
-						families.push(new ResumeCount({name: nameAndID[0], count: data.doc_count}));
-					}
-				});
-				var genuses = ko.observableArray();
-				_.each(allData.aggregations.genus.buckets, function(data) {
-					var nameAndID = data.key.split("~~~");
-					if(nameAndID[1] != "null") {
-						genuses.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.doc_count}));
-					} else {
-						genuses.push(new ResumeCount({name: nameAndID[0], count: data.doc_count}));
-					}
-				});
-				var species = ko.observableArray();
-				_.each(allData.aggregations.species.buckets, function(data) {
-					var nameAndID = data.key.split("~~~");
-					if(nameAndID[1] != "null") {
-						species.push(new ResumeCount({id: nameAndID[1], url: "http://data.sibcolombia.net/species/"+nameAndID[1], name: nameAndID[0], count: data.doc_count}));
-					} else {
-						species.push(new ResumeCount({name: nameAndID[0], count: data.doc_count}));
-					}
-				});
-				count = 0;
-				var countries = ko.observableArray();
-				_.each(allData.aggregations.country_name.buckets, function(data) {
-					countries.push(new ResumeCount({id: allData.aggregations.iso_country_code.buckets[count].key, url: "http://data.sibcolombia.net/countries/"+allData.aggregations.iso_country_code.buckets[count].key, name: data.key, count: data.doc_count}));
-					count++;
-				});
-				count = 0;
-				var departments = ko.observableArray();
-				_.each(allData.aggregations.department_name.buckets, function(data) {
-					departments.push(new ResumeCount({id: allData.aggregations.iso_department_code.buckets[count].key, url: "http://data.sibcolombia.net/departments/"+allData.aggregations.iso_department_code.buckets[count].key, name: data.key, count: data.doc_count}));
-					count++;
-				});
-				var counties = ko.observableArray();
-				_.each(allData.aggregations.county_group.buckets, function(data) {
-					var countyData = data.key.split("~~~");
-					counties.push(new ResumeCount({id: countyData[2], name: countyData[0] + " - " + countyData[1], count: data.doc_count}));
-				});
-				var paramos = ko.observableArray();
-				_.each(allData.aggregations.paramo_group.buckets, function(data) {
-					var paramoData = data.key.split("~~~");
-					paramos.push(new ResumeCount({id: paramoData[1], name: paramoData[0], count: data.doc_count}));
-				});
-				var commons = ko.observableArray();
-				_.each(allData.aggregations.common_names.common.buckets, function(data) {
-					commons.push(new ResumeCount({name: data.key, count: data.doc_count}));
-				});
-				self.resumesInfoFilter.removeAll();
-				self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
-				self.showResumeContainer();
-			});
+					self.resumesInfoFilter.removeAll();
+					self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
+					self.showResumeContainer();
+				});
+			}
 		},
 		// Operations
 		// Add ScientificName filter

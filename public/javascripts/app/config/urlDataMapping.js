@@ -56,6 +56,26 @@ define(function() {
 			"13": {
 				"name": "collectionCodes",
 				"resumeApiURL": "/rest/occurrences/resume/collectioncodes/name/"
+			},
+			"5": {
+				"name": "countries",
+				"resumeApiURL": "/rest/occurrences/resume/countries/name/"
+			},
+			"38": {
+				"name": "departments",
+				"resumeApiURL": "/rest/occurrences/resume/departments/name/"
+			},
+			"39": {
+				"name": "counties",
+				"resumeApiURL": "/rest/occurrences/resume/counties/name/"
+			},
+			"40": {
+				"name": "paramos",
+				"resumeApiURL": "/rest/occurrences/resume/paramos/name/"
+			},
+			"41": {
+				"name": "marinezones",
+				"resumeApiURL": "/rest/occurrences/resume/marinezones/name/"
 			}
 		}
 	};
