@@ -336,15 +336,15 @@ exports.geoJsonMapPoints = function(req, res) {
 			"features": []
 		};
 
-		response["start"] = req.query.startindex || 0;
+		response["start"] = parseInt(req.query.startindex) || 0;
 		if(req.query.maxresults) {
 			if(req.query.maxresults > 1000) {
 				response["count"] = 1000;
 			} else {
-				response["count"] = req.query.maxresults;
+				response["count"] = parseInt(req.query.maxresults);
 			}
 		} else {
-			response["count"] = req.query.maxresults || 1000;
+			response["count"] = parseInt(req.query.maxresults) || 1000;
 		}
 		var currentCanonical = "";
 		var currentFeature = -1;
