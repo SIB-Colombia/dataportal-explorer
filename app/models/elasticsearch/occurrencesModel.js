@@ -701,8 +701,8 @@ exports.getDistributionsPointTwoDegree = function() {
 	return mySearchCall;
 };
 
-// Returns cell stats for one degree
-exports.getDistributionStatsOneDegree = function(cellid) {
+// Returns cell stats
+exports.getDistributionStats = function(cellSize, cellId, secondLevelCellId) {
 	qryObj = {
 		"_source": ["id"],
 		"size": 0,
@@ -751,94 +751,245 @@ exports.getDistributionStatsOneDegree = function(cellid) {
 			},
 			"kingdom": {
 				"terms": {
-					"field": "kingdom_group.untouched",
+					"field": "taxonomy.kingdom_name.untouched",
 					"size" : 10
+				},
+				"aggs": {
+					"id": {
+						"terms": {
+							"field": "taxonomy.kingdom_id"
+						}
+					}
 				}
 			},
 			"phylum": {
 				"terms": {
-					"field": "phylum_group.untouched",
+					"field": "taxonomy.phylum_name.untouched",
 					"size" : 10
+				},
+				"aggs": {
+					"id": {
+						"terms": {
+							"field": "taxonomy.phylum_id"
+						}
+					}
 				}
 			},
-			"taxonClass": {
+			"class": {
 				"terms": {
-					"field": "taxonClass_group.untouched",
+					"field": "taxonomy.class_name.untouched",
 					"size" : 10
+				},
+				"aggs": {
+					"id": {
+						"terms": {
+							"field": "taxonomy.class_id"
+						}
+					}
 				}
 			},
-			"order_rank": {
+			"order": {
 				"terms": {
-					"field": "order_rank_group.untouched",
+					"field": "taxonomy.order_name.untouched",
 					"size" : 10
+				},
+				"aggs": {
+					"id": {
+						"terms": {
+							"field": "taxonomy.order_id"
+						}
+					}
 				}
 			},
 			"family": {
 				"terms": {
-					"field": "family_group.untouched",
+					"field": "taxonomy.family_name.untouched",
 					"size" : 10
+				},
+				"aggs": {
+					"id": {
+						"terms": {
+							"field": "taxonomy.family_id"
+						}
+					}
 				}
 			},
 			"genus": {
 				"terms": {
-					"field": "genus_group.untouched",
+					"field": "taxonomy.genus_name.untouched",
 					"size" : 10
+				},
+				"aggs": {
+					"id": {
+						"terms": {
+							"field": "taxonomy.genus_id"
+						}
+					}
 				}
 			},
 			"species": {
 				"terms": {
-					"field": "species_group.untouched",
+					"field": "taxonomy.species_name.untouched",
 					"size" : 10
+				},
+				"aggs": {
+					"id": {
+						"terms": {
+							"field": "taxonomy.species_id"
+						}
+					}
 				}
 			},
-			"data_provider_name": {
+			"iso_department_code": {
 				"terms": {
-					"field": "provider.name.untouched",
+					"field": "iso_department_code.untouched",
 					"size" : 10
+				},
+				"aggs": {
+					"department_name": {
+						"terms": {
+							"field": "department_name.untouched"
+						}
+					}
+				}
+			},
+			"iso_country_code": {
+				"terms": {
+					"field": "iso_country_code.untouched",
+					"size" : 10
+				},
+				"aggs": {
+					"country_name": {
+						"terms": {
+							"field": "country_name.untouched"
+						}
+					}
+				}
+			},
+			"iso_county_code": {
+				"terms": {
+					"field": "iso_county_code.untouched",
+					"size" : 10
+				},
+				"aggs": {
+					"county_name": {
+						"terms": {
+							"field": "county_name.untouched"
+						},
+						"aggs": {
+							"department_name": {
+								"terms": {
+									"field": "department_name.untouched"
+								}
+							}
+						}
+					}
+				}
+			},
+			"paramo_code": {
+				"terms": {
+					"field": "paramo_code.untouched",
+					"size" : 10
+				},
+				"aggs": {
+					"paramo_name": {
+						"terms": {
+							"field": "paramo_name.untouched"
+						}
+					}
+				}
+			},
+			"marine_zone_code": {
+				"terms": {
+					"field": "marine_zone_code.untouched",
+					"size" : 10
+				},
+				"aggs": {
+					"marine_zone_name": {
+						"terms": {
+							"field": "marine_zone_name.untouched"
+						}
+					}
 				}
 			},
 			"data_provider_id": {
 				"terms": {
 					"field": "provider.id",
 					"size" : 10
-				}
-			},
-			"data_resource_name": {
-				"terms": {
-					"field": "resource.name.untouched",
-					"size" : 10
+				},
+				"aggs": {
+					"data_provider_name": {
+						"terms": {
+							"field": "provider.name.untouched"
+						}
+					}
 				}
 			},
 			"data_resource_id": {
 				"terms": {
 					"field": "resource.id",
 					"size" : 10
+				},
+				"aggs": {
+					"data_provider_id": {
+						"terms": {
+							"field": "provider.id"
+						},
+						"aggs": {
+							"data_resource_name": {
+								"terms": {
+									"field": "resource.name.untouched"
+								}
+							}
+						}
+					}
 				}
 			},
-			"county_name": {
+			"institution_code_id": {
 				"terms": {
-					"field": "county_name.untouched",
+					"field": "institution.id",
 					"size" : 10
+				},
+				"aggs": {
+					"institution_code": {
+						"terms": {
+							"field": "institution.code.untouched"
+						}
+					}
 				}
 			},
-			"paramo_name": {
+			"collection_code_id": {
 				"terms": {
-					"field": "paramo_name.untouched",
+					"field": "collection.id",
 					"size" : 10
-				}
-			},
-			"marine_zone_name": {
-				"terms": {
-					"field": "marine_zone_name.untouched",
-					"size" : 10
+				},
+				"aggs": {
+					"collection_code": {
+						"terms": {
+							"field": "collection.code.untouched"
+						}
+					}
 				}
 			}
 		}
 	};
 	qryObj["query"]["filtered"]["filter"]["bool"]["must"][2] = {};
 	qryObj["query"]["filtered"]["filter"]["bool"]["must"][2]["term"] = {};
-	qryObj["query"]["filtered"]["filter"]["bool"]["must"][2]["term"]["cell_id"] = cellid;
+	qryObj["query"]["filtered"]["filter"]["bool"]["must"][2]["term"]["cell_id"] = cellId;
 
+	if(cellSize === "pointfivedegree") {
+		qryObj["query"]["filtered"]["filter"]["bool"]["must"][3] = {};
+		qryObj["query"]["filtered"]["filter"]["bool"]["must"][3]["term"] = {};
+		qryObj["query"]["filtered"]["filter"]["bool"]["must"][3]["term"]["pointfive_cell_id"] = secondLevelCellId;
+	} else if(cellSize === "pointtwodegree") {
+		qryObj["query"]["filtered"]["filter"]["bool"]["must"][3] = {};
+		qryObj["query"]["filtered"]["filter"]["bool"]["must"][3]["term"] = {};
+		qryObj["query"]["filtered"]["filter"]["bool"]["must"][3]["term"]["pointtwo_cell_id"] = secondLevelCellId;
+	} else if(cellSize === "pointonedegree") {
+		qryObj["query"]["filtered"]["filter"]["bool"]["must"][3] = {};
+		qryObj["query"]["filtered"]["filter"]["bool"]["must"][3]["term"] = {};
+		qryObj["query"]["filtered"]["filter"]["bool"]["must"][3]["term"]["centi_cell_id"] = secondLevelCellId;
+	}
 
 	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
 	return mySearchCall;
@@ -1251,152 +1402,6 @@ exports.getDistributionStatsWithSearchOneDegree = function(conditions) {
 		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["match_all"] = {};
 		andCounter+=1;
 	}
-	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
-	return mySearchCall;
-};
-
-// Returns cell stats for point five degree
-exports.getDistributionStatsPointFiveDegree = function(cellid, pointfivecellid) {
-	qryObj = {
-		"_source": ["id"],
-		"size": 0,
-		"query": {
-			"filtered" : {
-				"query" : {
-					"match_all" : {}
-				},
-				"filter": {
-					"bool": {
-						"must": [
-							{
-								"missing": {
-									"field": "deleted"
-								}
-							},
-							{
-								"term": {
-									"geospatial_issue": 0
-								}
-							}
-						]
-					}
-				}
-			}
-		},
-		"aggs": {
-			"canonical": {
-				"terms": {
-					"field": "canonical.untouched",
-					"size" : 10
-				}
-			},
-			"common_names": {
-				"nested" : {
-					"path" : "common_names"
-				},
-				"aggs" : {
-					"common": {
-						"terms": {
-							"field": "common_names.name.untouched",
-							"size" : 10
-						}
-					}
-				}
-			},
-			"kingdom": {
-				"terms": {
-					"field": "kingdom_group.untouched",
-					"size" : 10
-				}
-			},
-			"phylum": {
-				"terms": {
-					"field": "phylum_group.untouched",
-					"size" : 10
-				}
-			},
-			"taxonClass": {
-				"terms": {
-					"field": "taxonClass_group.untouched",
-					"size" : 10
-				}
-			},
-			"order_rank": {
-				"terms": {
-					"field": "order_rank_group.untouched",
-					"size" : 10
-				}
-			},
-			"family": {
-				"terms": {
-					"field": "family_group.untouched",
-					"size" : 10
-				}
-			},
-			"genus": {
-				"terms": {
-					"field": "genus_group.untouched",
-					"size" : 10
-				}
-			},
-			"species": {
-				"terms": {
-					"field": "species_group.untouched",
-					"size" : 10
-				}
-			},
-			"data_provider_name": {
-				"terms": {
-					"field": "provider.name.untouched",
-					"size" : 10
-				}
-			},
-			"data_provider_id": {
-				"terms": {
-					"field": "provider.id",
-					"size" : 10
-				}
-			},
-			"data_resource_name": {
-				"terms": {
-					"field": "resource.name.untouched",
-					"size" : 10
-				}
-			},
-			"data_resource_id": {
-				"terms": {
-					"field": "resource.id",
-					"size" : 10
-				}
-			},
-			"county_name": {
-				"terms": {
-					"field": "county_name.untouched",
-					"size" : 10
-				}
-			},
-			"paramo_name": {
-				"terms": {
-					"field": "paramo_name.untouched",
-					"size" : 10
-				}
-			},
-			"marine_zone_name": {
-				"terms": {
-					"field": "marine_zone_name.untouched",
-					"size" : 10
-				}
-			}
-		}
-	};
-	qryObj["query"]["filtered"]["filter"]["bool"]["must"][2] = {};
-	qryObj["query"]["filtered"]["filter"]["bool"]["must"][2]["term"] = {};
-	qryObj["query"]["filtered"]["filter"]["bool"]["must"][2]["term"]["cell_id"] = cellid;
-
-	qryObj["query"]["filtered"]["filter"]["bool"]["must"][3] = {};
-	qryObj["query"]["filtered"]["filter"]["bool"]["must"][3]["term"] = {};
-	qryObj["query"]["filtered"]["filter"]["bool"]["must"][3]["term"]["pointfive_cell_id"] = pointfivecellid;
-
 	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
 	return mySearchCall;
 };
@@ -1827,152 +1832,6 @@ exports.getDistributionStatsWithSearchPointFiveDegree = function(conditions) {
 	return mySearchCall;
 };
 
-// Returns cell stats for point one degree
-exports.getDistributionStatsPointOneDegree = function(cellid, centicellid) {
-	qryObj = {
-		"_source": ["id"],
-		"size": 0,
-		"query": {
-			"filtered" : {
-				"query" : {
-					"match_all" : {}
-				},
-				"filter": {
-					"bool": {
-						"must": [
-							{
-								"missing": {
-									"field": "deleted"
-								}
-							},
-							{
-								"term": {
-									"geospatial_issue": 0
-								}
-							}
-						]
-					}
-				}
-			}
-		},
-		"aggs": {
-			"canonical": {
-				"terms": {
-					"field": "canonical.untouched",
-					"size" : 10
-				}
-			},
-			"common_names": {
-				"nested" : {
-					"path" : "common_names"
-				},
-				"aggs" : {
-					"common": {
-						"terms": {
-							"field": "common_names.name.untouched",
-							"size" : 10
-						}
-					}
-				}
-			},
-			"kingdom": {
-				"terms": {
-					"field": "kingdom_group.untouched",
-					"size" : 10
-				}
-			},
-			"phylum": {
-				"terms": {
-					"field": "phylum_group.untouched",
-					"size" : 10
-				}
-			},
-			"taxonClass": {
-				"terms": {
-					"field": "taxonClass_group.untouched",
-					"size" : 10
-				}
-			},
-			"order_rank": {
-				"terms": {
-					"field": "order_rank_group.untouched",
-					"size" : 10
-				}
-			},
-			"family": {
-				"terms": {
-					"field": "family_group.untouched",
-					"size" : 10
-				}
-			},
-			"genus": {
-				"terms": {
-					"field": "genus_group.untouched",
-					"size" : 10
-				}
-			},
-			"species": {
-				"terms": {
-					"field": "species_group.untouched",
-					"size" : 10
-				}
-			},
-			"data_provider_name": {
-				"terms": {
-					"field": "provider.name.untouched",
-					"size" : 10
-				}
-			},
-			"data_provider_id": {
-				"terms": {
-					"field": "provider.id",
-					"size" : 10
-				}
-			},
-			"data_resource_name": {
-				"terms": {
-					"field": "resource.name.untouched",
-					"size" : 10
-				}
-			},
-			"data_resource_id": {
-				"terms": {
-					"field": "resource.id",
-					"size" : 10
-				}
-			},
-			"county_name": {
-				"terms": {
-					"field": "county_name.untouched",
-					"size" : 10
-				}
-			},
-			"paramo_name": {
-				"terms": {
-					"field": "paramo_name.untouched",
-					"size" : 10
-				}
-			},
-			"marine_zone_name": {
-				"terms": {
-					"field": "marine_zone_name.untouched",
-					"size" : 10
-				}
-			}
-		}
-	};
-	qryObj["query"]["filtered"]["filter"]["bool"]["must"][2] = {};
-	qryObj["query"]["filtered"]["filter"]["bool"]["must"][2]["term"] = {};
-	qryObj["query"]["filtered"]["filter"]["bool"]["must"][2]["term"]["cell_id"] = cellid;
-
-	qryObj["query"]["filtered"]["filter"]["bool"]["must"][3] = {};
-	qryObj["query"]["filtered"]["filter"]["bool"]["must"][3]["term"] = {};
-	qryObj["query"]["filtered"]["filter"]["bool"]["must"][3]["term"]["centi_cell_id"] = centicellid;
-
-	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
-	return mySearchCall;
-};
-
 // Returns cell stats for point one degree with search conditions
 exports.getDistributionStatsWithSearchPointOneDegree = function(conditions) {
 	var qryObj = {
@@ -2395,154 +2254,6 @@ exports.getDistributionStatsWithSearchPointOneDegree = function(conditions) {
 		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["match_all"] = {};
 		andCounter+=1;
 	}
-	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
-	return mySearchCall;
-};
-
-// Returns cell stats for point two degree
-exports.getDistributionStatsPointTwoDegree = function(cellid, pointtwocellid) {
-	qryObj = {
-		"_source": ["id"],
-		"size": 0,
-		"query": {
-			"filtered" : {
-				"query" : {
-					"match_all" : {}
-				},
-				"filter": {
-					"bool": {
-						"must": [
-							{
-								"missing": {
-									"field": "deleted"
-								}
-							},
-							{
-								"term": {
-									"geospatial_issue": 0
-								}
-							}
-						]
-					}
-				}
-			}
-		},
-		"aggs": {
-			"canonical": {
-				"terms": {
-					"field": "canonical.untouched",
-					"size" : 10
-				}
-			},
-			"common_names": {
-				"nested" : {
-					"path" : "common_names"
-				},
-				"aggs" : {
-					"common": {
-						"terms": {
-							"field": "common_names.name.untouched",
-							"size" : 10
-						}
-					}
-				}
-			},
-			"kingdom": {
-				"terms": {
-					"field": "kingdom_group.untouched",
-					"size" : 10
-				}
-			},
-			"phylum": {
-				"terms": {
-					"field": "phylum_group.untouched",
-					"size" : 10
-				}
-			},
-			"taxonClass": {
-				"terms": {
-					"field": "taxonClass_group.untouched",
-					"size" : 10
-				}
-			},
-			"order_rank": {
-				"terms": {
-					"field": "order_rank_group.untouched",
-					"size" : 10
-				}
-			},
-			"family": {
-				"terms": {
-					"field": "family_group.untouched",
-					"size" : 10
-				}
-			},
-			"genus": {
-				"terms": {
-					"field": "genus_group.untouched",
-					"size" : 10
-				}
-			},
-			"species": {
-				"terms": {
-					"field": "species_group.untouched",
-					"size" : 10
-				}
-			},
-			"data_provider_name": {
-				"terms": {
-					"field": "provider.name.untouched",
-					"size" : 10
-				}
-			},
-			"data_provider_id": {
-				"terms": {
-					"field": "provider.id",
-					"size" : 10
-				}
-			},
-			"data_resource_name": {
-				"terms": {
-					"field": "resource.name.untouched",
-					"size" : 10
-				}
-			},
-			"data_resource_id": {
-				"terms": {
-					"field": "resource.id",
-					"size" : 10
-				}
-			},
-			"county_name": {
-				"terms": {
-					"field": "county_name.untouched",
-					"size" : 10
-				}
-			},
-			"paramo_name": {
-				"terms": {
-					"field": "paramo_name.untouched",
-					"size" : 10
-				}
-			},
-			"marine_zone_name": {
-				"terms": {
-					"field": "marine_zone_name.untouched",
-					"size" : 10
-				}
-			}
-		}
-	};
-	qryObj["query"]["filtered"]["filter"]["bool"]["must"][2] = {};
-	qryObj["query"]["filtered"]["filter"]["bool"]["must"][2]["term"] = {};
-	qryObj["query"]["filtered"]["filter"]["bool"]["must"][2]["term"]["cell_id"] = cellid;
-
-	qryObj["query"]["filtered"]["filter"]["bool"]["must"][3] = {};
-	qryObj["query"]["filtered"]["filter"]["bool"]["must"][3]["term"] = {};
-	qryObj["query"]["filtered"]["filter"]["bool"]["must"][3]["term"]["pointtwo_cell_id"] = pointtwocellid;
-
-	console.log(qryObj);
-	console.log(JSON.stringify(qryObj));
 	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
 	return mySearchCall;
 };

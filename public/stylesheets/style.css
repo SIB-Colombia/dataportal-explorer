@@ -126,12 +126,11 @@ a {
   margin: 0;
   padding: 0;
   -webkit-transition: all 0.3s ease-in-out;
-  transition: all 0.3s ease-in-out;
-  vertical-align: baseline;
-}
-a -moz-transition: val {
+  -moz-transition: all 0.3s ease-in-out;
   -ms-transition: all 0.3s ease-in-out;
   -o-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+  vertical-align: baseline;
 }
 /* change colours to suit your needs */
 ins {
@@ -297,8 +296,7 @@ p margin 10px 0 10px 0 a:link {
   display: inline-block;
   position: absolute;
   right: 12px;
-}
-.sib .share_icons a {
+a
   vertical-align: middle !important;
   margin: 0 !important;
 }
@@ -594,11 +592,10 @@ h4#currentSearch {
   float: left;
   line-height: 20px;
   -webkit-transition: all 0.5s ease-in-out;
-  transition: all 0.5s ease-in-out;
-}
-#filtersContainerHelp #contentFiltersContainerHelp .item -moz-transition: val {
+  -moz-transition: all 0.5s ease-in-out;
   -ms-transition: all 0.5s ease-in-out;
   -o-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
 }
 #filtersContainerHelp #contentFiltersContainerHelp .item:hover {
   background-color: #1775bf;

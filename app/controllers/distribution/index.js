@@ -32,7 +32,7 @@ exports.listInitialDistributionPointTwoDegree = function(req, res) {
 };
 
 exports.getDistributionStatsOneDegree = function(req, res) {
-	occurrences = occurrencesES.getDistributionStatsOneDegree(req.params._cellid);
+	occurrences = occurrencesES.getDistributionStats("onedegree", req.params._cellid);
 	occurrences.exec(function(err, data){
 		res.jsonp(JSON.parse(data));
 	});
@@ -46,7 +46,7 @@ exports.getDistributionStatsWithSearchOneDegree = function(req, res) {
 };
 
 exports.getDistributionStatsPointFiveDegree = function(req, res) {
-	occurrences = occurrencesES.getDistributionStatsPointFiveDegree(req.params._cellid, req.params._pointfivecellid);
+	occurrences = occurrencesES.getDistributionStats("pointfivedegree", req.params._cellid, req.params._pointfivecellid);
 	occurrences.exec(function(err, data){
 		res.jsonp(JSON.parse(data));
 	});
@@ -60,7 +60,7 @@ exports.getDistributionStatsWithSearchPointFiveDegree = function(req, res) {
 };
 
 exports.getDistributionStatsPointOneDegree = function(req, res) {
-	occurrences = occurrencesES.getDistributionStatsPointOneDegree(req.params._cellid, req.params._centicellid);
+	occurrences = occurrencesES.getDistributionStats("pointonedegree", req.params._cellid, req.params._centicellid);
 	occurrences.exec(function(err, data){
 		res.jsonp(JSON.parse(data));
 	});
@@ -74,7 +74,7 @@ exports.getDistributionStatsWithSearchPointOneDegree = function(req, res) {
 };
 
 exports.getDistributionStatsPointTwoDegree = function(req, res) {
-	occurrences = occurrencesES.getDistributionStatsPointTwoDegree(req.params._cellid, req.params._pointtwocellid);
+	occurrences = occurrencesES.getDistributionStats("pointtwodegree", req.params._cellid, req.params._pointtwocellid);
 	occurrences.exec(function(err, data){
 		res.jsonp(JSON.parse(data));
 	});

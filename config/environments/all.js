@@ -11,10 +11,13 @@ module.exports = function(parent) {
 	parent.set('port', process.env.PORT || 3000);
 	parent.set('view engine', 'jade');
 	parent.set('jsonp callback', true );
-  parent.use(compress());
-  parent.use(favicon(__dirname + '/../../public/images/sib.ico'));
-  parent.use(morgan('dev'));
-	parent.use(bodyParser());
+	parent.use(compress());
+	parent.use(favicon(__dirname + '/../../public/images/sib.ico'));
+	parent.use(morgan('dev'));
+	parent.use(bodyParser.urlencoded({
+		extended: true
+	}));
+	parent.use(bodyParser.json());
 	parent.use(methodOverride());
 	parent.use(require('stylus').middleware(__dirname + '/../../public'));
 
