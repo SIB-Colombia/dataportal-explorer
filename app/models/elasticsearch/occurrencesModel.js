@@ -995,20 +995,36 @@ exports.getDistributionStats = function(cellSize, cellId, secondLevelCellId) {
 	return mySearchCall;
 };
 
-// Returns cell stats for one degree with search conditions
-exports.getDistributionStatsWithSearchOneDegree = function(conditions) {
+// Returns cell stats with search conditions
+exports.getDistributionStatsWithSearchCondition = function(cellSize, conditions) {
 	var qryObj = {
 		"_source": false,
 		"query": {
-			"filtered": {
-				"filter": {
-					"term" : {
-						"cell_id": conditions.cellid
-					}
-				},
+			"filtered" : {
 				"query" : {
 					"bool": {
 						"must": []
+					}
+				},
+				"filter": {
+					"bool": {
+						"must": [
+							{
+								"missing": {
+									"field": "deleted"
+								}
+							},
+							{
+								"term": {
+									"geospatial_issue": 0
+								}
+							},
+							{
+								"term" : {
+									"cell_id": conditions.cellid
+								}
+							}
+						]
 					}
 				}
 			}
@@ -1035,936 +1051,242 @@ exports.getDistributionStatsWithSearchOneDegree = function(conditions) {
 			},
 			"kingdom": {
 				"terms": {
-					"field": "kingdom_group.untouched",
+					"field": "taxonomy.kingdom_name.untouched",
 					"size" : 10
+				},
+				"aggs": {
+					"id": {
+						"terms": {
+							"field": "taxonomy.kingdom_id"
+						}
+					}
 				}
 			},
 			"phylum": {
 				"terms": {
-					"field": "phylum_group.untouched",
+					"field": "taxonomy.phylum_name.untouched",
 					"size" : 10
+				},
+				"aggs": {
+					"id": {
+						"terms": {
+							"field": "taxonomy.phylum_id"
+						}
+					}
 				}
 			},
-			"taxonClass": {
+			"class": {
 				"terms": {
-					"field": "taxonClass_group.untouched",
+					"field": "taxonomy.class_name.untouched",
 					"size" : 10
+				},
+				"aggs": {
+					"id": {
+						"terms": {
+							"field": "taxonomy.class_id"
+						}
+					}
 				}
 			},
-			"order_rank": {
+			"order": {
 				"terms": {
-					"field": "order_rank_group.untouched",
+					"field": "taxonomy.order_name.untouched",
 					"size" : 10
+				},
+				"aggs": {
+					"id": {
+						"terms": {
+							"field": "taxonomy.order_id"
+						}
+					}
 				}
 			},
 			"family": {
 				"terms": {
-					"field": "family_group.untouched",
+					"field": "taxonomy.family_name.untouched",
 					"size" : 10
+				},
+				"aggs": {
+					"id": {
+						"terms": {
+							"field": "taxonomy.family_id"
+						}
+					}
 				}
 			},
 			"genus": {
 				"terms": {
-					"field": "genus_group.untouched",
+					"field": "taxonomy.genus_name.untouched",
 					"size" : 10
+				},
+				"aggs": {
+					"id": {
+						"terms": {
+							"field": "taxonomy.genus_id"
+						}
+					}
 				}
 			},
 			"species": {
 				"terms": {
-					"field": "species_group.untouched",
+					"field": "taxonomy.species_name.untouched",
 					"size" : 10
+				},
+				"aggs": {
+					"id": {
+						"terms": {
+							"field": "taxonomy.species_id"
+						}
+					}
 				}
 			},
-			"data_provider_name": {
+			"iso_department_code": {
 				"terms": {
-					"field": "provider.name.untouched",
+					"field": "iso_department_code.untouched",
 					"size" : 10
+				},
+				"aggs": {
+					"department_name": {
+						"terms": {
+							"field": "department_name.untouched"
+						}
+					}
+				}
+			},
+			"iso_country_code": {
+				"terms": {
+					"field": "iso_country_code.untouched",
+					"size" : 10
+				},
+				"aggs": {
+					"country_name": {
+						"terms": {
+							"field": "country_name.untouched"
+						}
+					}
+				}
+			},
+			"iso_county_code": {
+				"terms": {
+					"field": "iso_county_code.untouched",
+					"size" : 10
+				},
+				"aggs": {
+					"county_name": {
+						"terms": {
+							"field": "county_name.untouched"
+						},
+						"aggs": {
+							"department_name": {
+								"terms": {
+									"field": "department_name.untouched"
+								}
+							}
+						}
+					}
+				}
+			},
+			"paramo_code": {
+				"terms": {
+					"field": "paramo_code.untouched",
+					"size" : 10
+				},
+				"aggs": {
+					"paramo_name": {
+						"terms": {
+							"field": "paramo_name.untouched"
+						}
+					}
+				}
+			},
+			"marine_zone_code": {
+				"terms": {
+					"field": "marine_zone_code.untouched",
+					"size" : 10
+				},
+				"aggs": {
+					"marine_zone_name": {
+						"terms": {
+							"field": "marine_zone_name.untouched"
+						}
+					}
 				}
 			},
 			"data_provider_id": {
 				"terms": {
 					"field": "provider.id",
 					"size" : 10
-				}
-			},
-			"data_resource_name": {
-				"terms": {
-					"field": "resource.name.untouched",
-					"size" : 10
+				},
+				"aggs": {
+					"data_provider_name": {
+						"terms": {
+							"field": "provider.name.untouched"
+						}
+					}
 				}
 			},
 			"data_resource_id": {
 				"terms": {
 					"field": "resource.id",
 					"size" : 10
-				}
-			},
-			"county_name": {
-				"terms": {
-					"field": "county_name.untouched",
-					"size" : 10
-				}
-			},
-			"paramo_name": {
-				"terms": {
-					"field": "paramo_name.untouched",
-					"size" : 10
-				}
-			},
-			"marine_zone_name": {
-				"terms": {
-					"field": "marine_zone_name.untouched",
-					"size" : 10
-				}
-			}
-		}
-	};
-
-	var andCounter = 0;
-	var orCounter = 0;
-
-	if(conditions.scientificNames) {
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
-		_.each(conditions.scientificNames, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["canonical.exactWords"] = data.textObject.toLowerCase();
-			orCounter+=1;
-		});
-		andCounter+=1;
-	}
-	if(conditions.commonNames) {
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
-		_.each(conditions.commonNames, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["nombre_comun.exactWords"] = data.textObject.toLowerCase();
-			orCounter+=1;
-		});
-		andCounter+=1;
-	}
-	if(conditions.taxons) {
-		orCounter = 0;
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
-		_.each(conditions.taxons, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
-			if(data.textName == "kingdom")
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["kingdom.exactWords"] = data.textObject.toLowerCase();
-			if(data.textName == "phylum")
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["phylum.exactWords"] = data.textObject.toLowerCase();
-			if(data.textName == "class")
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["taxonClass.exactWords"] = data.textObject.toLowerCase();
-			if(data.textName == "order")
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["order_rank.exactWords"] = data.textObject.toLowerCase();
-			if(data.textName == "family")
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["family.exactWords"] = data.textObject.toLowerCase();
-			if(data.textName == "genus")
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["genus.exactWords"] = data.textObject.toLowerCase();
-			if(data.textName == "species")
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["species.exactWords"] = data.textObject.toLowerCase();
-			orCounter+=1;
-		});
-		andCounter+=1;
-	}
-	if(conditions.countries) {
-		orCounter = 0;
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
-		_.each(conditions.countries, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["iso_country_code.exactWords"] = data.textObject.toLowerCase();
-			orCounter+=1;
-		});
-		andCounter+=1;
-	}
-	if(conditions.departments) {
-		orCounter = 0;
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
-		_.each(conditions.departments, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["iso_department_code.exactWords"] = data.textObject.toLowerCase();
-			orCounter+=1;
-		});
-		andCounter+=1;
-	}
-	if(conditions.counties) {
-		orCounter = 0;
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
-		_.each(conditions.counties, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["iso_county_code.exactWords"] = data.textObject.toLowerCase();
-			orCounter+=1;
-		});
-		andCounter+=1;
-	}
-	if(conditions.paramos) {
-		orCounter = 0;
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
-		_.each(conditions.paramos, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["paramo_code.exactWords"] = data.textObject.toLowerCase();
-			orCounter+=1;
-		});
-		andCounter+=1;
-	}
-	if(conditions.marineZones) {
-		orCounter = 0;
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
-		_.each(conditions.marineZones, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["marine_zone_code.exactWords"] = data.textObject.toLowerCase();
-			orCounter+=1;
-		});
-		andCounter+=1;
-	}
-	if(conditions.latitudes) {
-		orCounter = 0;
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"] = [];
-		_.each(conditions.latitudes, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter] = {};
-			if(data.predicate == "eq") {
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["location.lat"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["location.lat"]["gte"] = data.textObject.toLowerCase();
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["location.lat"]["lte"] = data.textObject.toLowerCase();
-			} else if(data.predicate == "gt") {
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["location.lat"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["location.lat"]["gt"] = data.textObject.toLowerCase();
-			} else if(data.predicate == "lt") {
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["location.lat"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["location.lat"]["lt"] = data.textObject.toLowerCase();
-			}
-			orCounter+=1;
-		});
-		andCounter+=1;
-	}
-	if(conditions.longitudes) {
-		orCounter = 0;
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"] = [];
-		_.each(conditions.longitudes, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter] = {};
-			if(data.predicate == "eq") {
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["location.lon"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["location.lon"]["gte"] = data.textObject.toLowerCase();
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["location.lon"]["lte"] = data.textObject.toLowerCase();
-			} else if(data.predicate == "gt") {
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["location.lon"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["location.lon"]["gt"] = data.textObject.toLowerCase();
-			} else if(data.predicate == "lt") {
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["location.lon"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["location.lon"]["lt"] = data.textObject.toLowerCase();
-			}
-			orCounter+=1;
-		});
-		andCounter+=1;
-	}
-	if(conditions.altitudes) {
-		orCounter = 0;
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"] = [];
-		_.each(conditions.altitudes, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter] = {};
-			if(data.predicate == "eq") {
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_metres"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_metres"]["gte"] = data.textObject.toLowerCase();
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_metres"]["lte"] = data.textObject.toLowerCase();
-			} else if(data.predicate == "gt") {
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_metres"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_metres"]["gt"] = data.textObject.toLowerCase();
-			} else if(data.predicate == "lt") {
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_metres"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_metres"]["lt"] = data.textObject.toLowerCase();
-			}
-			orCounter+=1;
-		});
-		andCounter+=1;
-	}
-	if(conditions.deeps) {
-		orCounter = 0;
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"] = [];
-		_.each(conditions.deeps, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter] = {};
-			if(data.predicate == "eq") {
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimetres"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimetres"]["gte"] = data.textObject.toLowerCase();
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimetres"]["lte"] = data.textObject.toLowerCase();
-			} else if(data.predicate == "gt") {
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimetres"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimetres"]["gt"] = data.textObject.toLowerCase();
-			} else if(data.predicate == "lt") {
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimetres"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimetres"]["lt"] = data.textObject.toLowerCase();
-			}
-			orCounter+=1;
-		});
-		andCounter+=1;
-	}
-	if(conditions.providers) {
-		orCounter = 0;
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
-		_.each(conditions.providers, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["data_provider_name.exactWords"] = data.textObject.toLowerCase();
-			orCounter+=1;
-		});
-		andCounter+=1;
-	}
-	if(conditions.resources) {
-		orCounter = 0;
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
-		_.each(conditions.resources, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["data_resource_name.exactWords"] = data.textObject.toLowerCase();
-			orCounter+=1;
-		});
-		andCounter+=1;
-	}
-	if(conditions.poligonalCoordinates || conditions.radialCoordinates) {
-		if(conditions.poligonalCoordinates) {
-			orCounter = 0;
-			qryObj["query"]["filtered"]["filter"] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"] = [];
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][0] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_polygon"] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_polygon"]["location"] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_polygon"]["location"]["points"] = [];
-			_.each(conditions.poligonalCoordinates, function(data) {
-				qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_polygon"]["location"]["points"][orCounter] = {"lat": data.lat, "lon": data.lng};
-				orCounter+=1;
-			});
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1]["term"] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1]["term"]["cell_id"] = conditions.cellid;
-		}
-		if(conditions.radialCoordinates) {
-			qryObj["query"]["filtered"]["filter"] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"] = [];
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][0] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_distance"] = {};
-			_.each(conditions.radialCoordinates, function(data) {
-				qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_distance"]["distance"] = data.radius + "m";
-				qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_distance"]["location"] = {"lat": data.lat, "lon": data.lng};
-			});
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1]["term"] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1]["term"]["cell_id"] = conditions.cellid;
-		}
-	}
-	if(qryObj["query"]["filtered"]["query"]["bool"]["must"].length === 0) {
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["match_all"] = {};
-		andCounter+=1;
-	}
-	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
-	return mySearchCall;
-};
-
-// Returns cell stats for point five degree with search conditions
-exports.getDistributionStatsWithSearchPointFiveDegree = function(conditions) {
-	var qryObj = {
-		"_source": false,
-		"query": {
-			"filtered": {
-				"filter": {
-					"and": [
-						{
-							"term" : {
-								"cell_id": conditions.cellid
-							}
-						},
-						{
-							"term" : {
-								"pointfive_cell_id": conditions.pointfivecellid
-							}
-						}
-					]
 				},
-				"query" : {
-					"bool": {
-						"must": []
-					}
-				}
-			}
-		},
-		"aggs": {
-			"canonical": {
-				"terms": {
-					"field": "canonical.untouched",
-					"size" : 10
-				}
-			},
-			"common_names": {
-				"nested" : {
-					"path" : "common_names"
-				},
-				"aggs" : {
-					"common": {
+				"aggs": {
+					"data_provider_id": {
 						"terms": {
-							"field": "common_names.name.untouched",
-							"size" : 10
-						}
-					}
-				}
-			},
-			"kingdom": {
-				"terms": {
-					"field": "kingdom_group.untouched",
-					"size" : 10
-				}
-			},
-			"phylum": {
-				"terms": {
-					"field": "phylum_group.untouched",
-					"size" : 10
-				}
-			},
-			"taxonClass": {
-				"terms": {
-					"field": "taxonClass_group.untouched",
-					"size" : 10
-				}
-			},
-			"order_rank": {
-				"terms": {
-					"field": "order_rank_group.untouched",
-					"size" : 10
-				}
-			},
-			"family": {
-				"terms": {
-					"field": "family_group.untouched",
-					"size" : 10
-				}
-			},
-			"genus": {
-				"terms": {
-					"field": "genus_group.untouched",
-					"size" : 10
-				}
-			},
-			"species": {
-				"terms": {
-					"field": "species_group.untouched",
-					"size" : 10
-				}
-			},
-			"data_provider_name": {
-				"terms": {
-					"field": "data_provider_name.untouched",
-					"size" : 10
-				}
-			},
-			"data_provider_id": {
-				"terms": {
-					"field": "data_provider_id",
-					"size" : 10
-				}
-			},
-			"data_resource_name": {
-				"terms": {
-					"field": "data_resource_name.untouched",
-					"size" : 10
-				}
-			},
-			"data_resource_id": {
-				"terms": {
-					"field": "data_resource_id",
-					"size" : 10
-				}
-			},
-			"county_name": {
-				"terms": {
-					"field": "county_name.untouched",
-					"size" : 10
-				}
-			},
-			"paramo_name": {
-				"terms": {
-					"field": "paramo_name.untouched",
-					"size" : 10
-				}
-			},
-			"marine_zone_name": {
-				"terms": {
-					"field": "marine_zone_name.untouched",
-					"size" : 10
-				}
-			}
-		}
-	};
-
-	var andCounter = 0;
-	var orCounter = 0;
-
-	if(conditions.scientificNames) {
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
-		_.each(conditions.scientificNames, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["canonical.exactWords"] = data.textObject.toLowerCase();
-			orCounter+=1;
-		});
-		andCounter+=1;
-	}
-	if(conditions.commonNames) {
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
-		_.each(conditions.commonNames, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["nombre_comun.exactWords"] = data.textObject.toLowerCase();
-			orCounter+=1;
-		});
-		andCounter+=1;
-	}
-	if(conditions.taxons) {
-		orCounter = 0;
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
-		_.each(conditions.taxons, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
-			if(data.textName == "kingdom")
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["kingdom.exactWords"] = data.textObject.toLowerCase();
-			if(data.textName == "phylum")
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["phylum.exactWords"] = data.textObject.toLowerCase();
-			if(data.textName == "class")
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["taxonClass.exactWords"] = data.textObject.toLowerCase();
-			if(data.textName == "order")
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["order_rank.exactWords"] = data.textObject.toLowerCase();
-			if(data.textName == "family")
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["family.exactWords"] = data.textObject.toLowerCase();
-			if(data.textName == "genus")
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["genus.exactWords"] = data.textObject.toLowerCase();
-			if(data.textName == "species")
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["species.exactWords"] = data.textObject.toLowerCase();
-			orCounter+=1;
-		});
-		andCounter+=1;
-	}
-	if(conditions.countries) {
-		orCounter = 0;
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
-		_.each(conditions.countries, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["iso_country_code.exactWords"] = data.textObject.toLowerCase();
-			orCounter+=1;
-		});
-		andCounter+=1;
-	}
-	if(conditions.departments) {
-		orCounter = 0;
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
-		_.each(conditions.departments, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["iso_department_code.exactWords"] = data.textObject.toLowerCase();
-			orCounter+=1;
-		});
-		andCounter+=1;
-	}
-	if(conditions.counties) {
-		orCounter = 0;
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
-		_.each(conditions.counties, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["iso_county_code.exactWords"] = data.textObject.toLowerCase();
-			orCounter+=1;
-		});
-		andCounter+=1;
-	}
-	if(conditions.paramos) {
-		orCounter = 0;
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
-		_.each(conditions.paramos, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["paramo_code.exactWords"] = data.textObject.toLowerCase();
-			orCounter+=1;
-		});
-		andCounter+=1;
-	}
-	if(conditions.marineZones) {
-		orCounter = 0;
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
-		_.each(conditions.marineZones, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["marine_zone_code.exactWords"] = data.textObject.toLowerCase();
-			orCounter+=1;
-		});
-		andCounter+=1;
-	}
-	if(conditions.latitudes) {
-		orCounter = 0;
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"] = [];
-		_.each(conditions.latitudes, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter] = {};
-			if(data.predicate == "eq") {
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["location.lat"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["location.lat"]["gte"] = data.textObject.toLowerCase();
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["location.lat"]["lte"] = data.textObject.toLowerCase();
-			} else if(data.predicate == "gt") {
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["location.lat"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["location.lat"]["gt"] = data.textObject.toLowerCase();
-			} else if(data.predicate == "lt") {
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["location.lat"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["location.lat"]["lt"] = data.textObject.toLowerCase();
-			}
-			orCounter+=1;
-		});
-		andCounter+=1;
-	}
-	if(conditions.longitudes) {
-		orCounter = 0;
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"] = [];
-		_.each(conditions.longitudes, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter] = {};
-			if(data.predicate == "eq") {
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["location.lon"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["location.lon"]["gte"] = data.textObject.toLowerCase();
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["location.lon"]["lte"] = data.textObject.toLowerCase();
-			} else if(data.predicate == "gt") {
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["location.lon"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["location.lon"]["gt"] = data.textObject.toLowerCase();
-			} else if(data.predicate == "lt") {
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["location.lon"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["location.lon"]["lt"] = data.textObject.toLowerCase();
-			}
-			orCounter+=1;
-		});
-		andCounter+=1;
-	}
-	if(conditions.altitudes) {
-		orCounter = 0;
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"] = [];
-		_.each(conditions.altitudes, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter] = {};
-			if(data.predicate == "eq") {
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_metres"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_metres"]["gte"] = data.textObject.toLowerCase();
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_metres"]["lte"] = data.textObject.toLowerCase();
-			} else if(data.predicate == "gt") {
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_metres"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_metres"]["gt"] = data.textObject.toLowerCase();
-			} else if(data.predicate == "lt") {
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_metres"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_metres"]["lt"] = data.textObject.toLowerCase();
-			}
-			orCounter+=1;
-		});
-		andCounter+=1;
-	}
-	if(conditions.deeps) {
-		orCounter = 0;
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"] = [];
-		_.each(conditions.deeps, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter] = {};
-			if(data.predicate == "eq") {
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimetres"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimetres"]["gte"] = data.textObject.toLowerCase();
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimetres"]["lte"] = data.textObject.toLowerCase();
-			} else if(data.predicate == "gt") {
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimetres"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimetres"]["gt"] = data.textObject.toLowerCase();
-			} else if(data.predicate == "lt") {
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimetres"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimetres"]["lt"] = data.textObject.toLowerCase();
-			}
-			orCounter+=1;
-		});
-		andCounter+=1;
-	}
-	if(conditions.providers) {
-		orCounter = 0;
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
-		_.each(conditions.providers, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["data_provider_name.exactWords"] = data.textObject.toLowerCase();
-			orCounter+=1;
-		});
-		andCounter+=1;
-	}
-	if(conditions.resources) {
-		orCounter = 0;
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
-		_.each(conditions.resources, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["data_resource_name.exactWords"] = data.textObject.toLowerCase();
-			orCounter+=1;
-		});
-		andCounter+=1;
-	}
-	if(conditions.poligonalCoordinates || conditions.radialCoordinates) {
-		if(conditions.poligonalCoordinates) {
-			orCounter = 0;
-			qryObj["query"]["filtered"]["filter"] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"] = [];
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][0] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_polygon"] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_polygon"]["location"] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_polygon"]["location"]["points"] = [];
-			_.each(conditions.poligonalCoordinates, function(data) {
-				qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_polygon"]["location"]["points"][orCounter] = {"lat": data.lat, "lon": data.lng};
-				orCounter+=1;
-			});
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1]["term"] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1]["term"]["cell_id"] = conditions.cellid;
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][2] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][2]["term"] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][2]["term"]["pointfive_cell_id"] = conditions.pointfivecellid;
-		}
-		if(conditions.radialCoordinates) {
-			qryObj["query"]["filtered"]["filter"] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"] = [];
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][0] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_distance"] = {};
-			_.each(conditions.radialCoordinates, function(data) {
-				qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_distance"]["distance"] = data.radius + "m";
-				qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_distance"]["location"] = {"lat": data.lat, "lon": data.lng};
-			});
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1]["term"] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1]["term"]["cell_id"] = conditions.cellid;
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][2] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][2]["term"] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][2]["term"]["pointfive_cell_id"] = conditions.pointfivecellid;
-		}
-	}
-	if(qryObj["query"]["filtered"]["query"]["bool"]["must"].length === 0) {
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["match_all"] = {};
-		andCounter+=1;
-	}
-	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
-	return mySearchCall;
-};
-
-// Returns cell stats for point one degree with search conditions
-exports.getDistributionStatsWithSearchPointOneDegree = function(conditions) {
-	var qryObj = {
-		"_source": false,
-		"query": {
-			"filtered": {
-				"filter": {
-					"and": [
-						{
-							"term" : {
-								"cell_id": conditions.cellid
-							}
+							"field": "provider.id"
 						},
-						{
-							"term" : {
-								"centi_cell_id": conditions.pointonecellid
+						"aggs": {
+							"data_resource_name": {
+								"terms": {
+									"field": "resource.name.untouched"
+								}
 							}
 						}
-					]
-				},
-				"query" : {
-					"bool": {
-						"must": []
 					}
 				}
-			}
-		},
-		"aggs": {
-			"canonical": {
-				"terms": {
-					"field": "canonical.untouched",
-					"size" : 10
-				}
 			},
-			"common_names": {
-				"nested" : {
-					"path" : "common_names"
+			"institution_code_id": {
+				"terms": {
+					"field": "institution.id",
+					"size" : 10
 				},
-				"aggs" : {
-					"common": {
+				"aggs": {
+					"institution_code": {
 						"terms": {
-							"field": "common_names.name.untouched",
-							"size" : 10
+							"field": "institution.code.untouched"
 						}
 					}
 				}
 			},
-			"kingdom": {
+			"collection_code_id": {
 				"terms": {
-					"field": "kingdom_group.untouched",
+					"field": "collection.id",
 					"size" : 10
-				}
-			},
-			"phylum": {
-				"terms": {
-					"field": "phylum_group.untouched",
-					"size" : 10
-				}
-			},
-			"taxonClass": {
-				"terms": {
-					"field": "taxonClass_group.untouched",
-					"size" : 10
-				}
-			},
-			"order_rank": {
-				"terms": {
-					"field": "order_rank_group.untouched",
-					"size" : 10
-				}
-			},
-			"family": {
-				"terms": {
-					"field": "family_group.untouched",
-					"size" : 10
-				}
-			},
-			"genus": {
-				"terms": {
-					"field": "genus_group.untouched",
-					"size" : 10
-				}
-			},
-			"species": {
-				"terms": {
-					"field": "species_group.untouched",
-					"size" : 10
-				}
-			},
-			"data_provider_name": {
-				"terms": {
-					"field": "data_provider_name.untouched",
-					"size" : 10
-				}
-			},
-			"data_provider_id": {
-				"terms": {
-					"field": "data_provider_id",
-					"size" : 10
-				}
-			},
-			"data_resource_name": {
-				"terms": {
-					"field": "data_resource_name.untouched",
-					"size" : 10
-				}
-			},
-			"data_resource_id": {
-				"terms": {
-					"field": "data_resource_id",
-					"size" : 10
-				}
-			},
-			"county_name": {
-				"terms": {
-					"field": "county_name.untouched",
-					"size" : 10
-				}
-			},
-			"paramo_name": {
-				"terms": {
-					"field": "paramo_name.untouched",
-					"size" : 10
-				}
-			},
-			"marine_zone_name": {
-				"terms": {
-					"field": "marine_zone_name.untouched",
-					"size" : 10
+				},
+				"aggs": {
+					"collection_code": {
+						"terms": {
+							"field": "collection.code.untouched"
+						}
+					}
 				}
 			}
 		}
 	};
+
+	if(cellSize === "pointfivedegree") {
+		qryObj["query"]["filtered"]["filter"]["bool"]["must"][3] = {};
+		qryObj["query"]["filtered"]["filter"]["bool"]["must"][3]["term"] = {};
+		qryObj["query"]["filtered"]["filter"]["bool"]["must"][3]["term"]["pointfive_cell_id"] = conditions.pointfivecellid;
+	} else if(cellSize === "pointtwodegree") {
+		qryObj["query"]["filtered"]["filter"]["bool"]["must"][3] = {};
+		qryObj["query"]["filtered"]["filter"]["bool"]["must"][3]["term"] = {};
+		qryObj["query"]["filtered"]["filter"]["bool"]["must"][3]["term"]["pointtwo_cell_id"] = conditions.pointtwocellid;
+	} else if(cellSize === "pointonedegree") {
+		qryObj["query"]["filtered"]["filter"]["bool"]["must"][3] = {};
+		qryObj["query"]["filtered"]["filter"]["bool"]["must"][3]["term"] = {};
+		qryObj["query"]["filtered"]["filter"]["bool"]["must"][3]["term"]["centi_cell_id"] = conditions.pointonecellid;
+	}
 
 	var andCounter = 0;
 	var orCounter = 0;
@@ -1983,12 +1305,15 @@ exports.getDistributionStatsWithSearchPointOneDegree = function(conditions) {
 	}
 	if(conditions.commonNames) {
 		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["nested"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["nested"]["path"] = "common_names";
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["nested"]["query"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["nested"]["query"]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["nested"]["query"]["bool"]["should"] = [];
 		_.each(conditions.commonNames, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["nombre_comun.exactWords"] = data.textObject.toLowerCase();
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["nested"]["query"]["bool"]["should"][orCounter] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["nested"]["query"]["bool"]["should"][orCounter]["wildcard"] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["nested"]["query"]["bool"]["should"][orCounter]["wildcard"]["common_names.name.exactWords"] = data.textObject.toLowerCase();
 			orCounter+=1;
 		});
 		andCounter+=1;
@@ -2002,19 +1327,19 @@ exports.getDistributionStatsWithSearchPointOneDegree = function(conditions) {
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
 			if(data.textName == "kingdom")
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["kingdom.exactWords"] = data.textObject.toLowerCase();
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["taxonomy.kingdom_name.exactWords"] = data.textObject.toLowerCase();
 			if(data.textName == "phylum")
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["phylum.exactWords"] = data.textObject.toLowerCase();
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["taxonomy.phylum_name.exactWords"] = data.textObject.toLowerCase();
 			if(data.textName == "class")
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["taxonClass.exactWords"] = data.textObject.toLowerCase();
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["taxonomy.class_name.exactWords"] = data.textObject.toLowerCase();
 			if(data.textName == "order")
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["order_rank.exactWords"] = data.textObject.toLowerCase();
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["taxonomy.order_name.exactWords"] = data.textObject.toLowerCase();
 			if(data.textName == "family")
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["family.exactWords"] = data.textObject.toLowerCase();
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["taxonomy.family_name.exactWords"] = data.textObject.toLowerCase();
 			if(data.textName == "genus")
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["genus.exactWords"] = data.textObject.toLowerCase();
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["taxonomy.genus_name.exactWords"] = data.textObject.toLowerCase();
 			if(data.textName == "species")
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["species.exactWords"] = data.textObject.toLowerCase();
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["taxonomy.species_name.exactWords"] = data.textObject.toLowerCase();
 			orCounter+=1;
 		});
 		andCounter+=1;
@@ -2143,17 +1468,17 @@ exports.getDistributionStatsWithSearchPointOneDegree = function(conditions) {
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter] = {};
 			if(data.predicate == "eq") {
 				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_metres"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_metres"]["gte"] = data.textObject.toLowerCase();
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_meters"] = {};
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_meters"]["gte"] = data.textObject.toLowerCase();
 				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_metres"]["lte"] = data.textObject.toLowerCase();
 			} else if(data.predicate == "gt") {
 				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_metres"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_metres"]["gt"] = data.textObject.toLowerCase();
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_meters"] = {};
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_meters"]["gt"] = data.textObject.toLowerCase();
 			} else if(data.predicate == "lt") {
 				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_metres"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_metres"]["lt"] = data.textObject.toLowerCase();
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_meters"] = {};
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_meters"]["lt"] = data.textObject.toLowerCase();
 			}
 			orCounter+=1;
 		});
@@ -2168,17 +1493,17 @@ exports.getDistributionStatsWithSearchPointOneDegree = function(conditions) {
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter] = {};
 			if(data.predicate == "eq") {
 				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimetres"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimetres"]["gte"] = data.textObject.toLowerCase();
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimetres"]["lte"] = data.textObject.toLowerCase();
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimeters"] = {};
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimeters"]["gte"] = data.textObject.toLowerCase();
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimeters"]["lte"] = data.textObject.toLowerCase();
 			} else if(data.predicate == "gt") {
 				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimetres"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimetres"]["gt"] = data.textObject.toLowerCase();
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimeters"] = {};
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimeters"]["gt"] = data.textObject.toLowerCase();
 			} else if(data.predicate == "lt") {
 				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimetres"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimetres"]["lt"] = data.textObject.toLowerCase();
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimeters"] = {};
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimeters"]["lt"] = data.textObject.toLowerCase();
 			}
 			orCounter+=1;
 		});
@@ -2192,7 +1517,7 @@ exports.getDistributionStatsWithSearchPointOneDegree = function(conditions) {
 		_.each(conditions.providers, function(data) {
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["data_provider_name.exactWords"] = data.textObject.toLowerCase();
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["provider.name.exactWords"] = data.textObject.toLowerCase();
 			orCounter+=1;
 		});
 		andCounter+=1;
@@ -2205,7 +1530,7 @@ exports.getDistributionStatsWithSearchPointOneDegree = function(conditions) {
 		_.each(conditions.resources, function(data) {
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["data_resource_name.exactWords"] = data.textObject.toLowerCase();
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["resource.name.exactWords"] = data.textObject.toLowerCase();
 			orCounter+=1;
 		});
 		andCounter+=1;
@@ -2227,9 +1552,6 @@ exports.getDistributionStatsWithSearchPointOneDegree = function(conditions) {
 			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1] = {};
 			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1]["term"] = {};
 			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1]["term"]["cell_id"] = conditions.cellid;
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][2] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][2]["term"] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][2]["term"]["centi_cell_id"] = conditions.pointonecellid;
 		}
 		if(conditions.radialCoordinates) {
 			qryObj["query"]["filtered"]["filter"] = {};
@@ -2244,435 +1566,6 @@ exports.getDistributionStatsWithSearchPointOneDegree = function(conditions) {
 			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1] = {};
 			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1]["term"] = {};
 			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1]["term"]["cell_id"] = conditions.cellid;
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][2] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][2]["term"] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][2]["term"]["centi_cell_id"] = conditions.pointonecellid;
-		}
-	}
-	if(qryObj["query"]["filtered"]["query"]["bool"]["must"].length === 0) {
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["match_all"] = {};
-		andCounter+=1;
-	}
-	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
-	return mySearchCall;
-};
-
-// Returns cell stats for point two degree with query conditions
-exports.getDistributionStatsWithSearchPointTwoDegree = function(conditions) {
-	var qryObj = {
-		"_source": [],
-		"query": {
-			"filtered": {
-				"filter": {
-					"and": [
-						{
-							"term" : {
-								"cell_id": conditions.cellid
-							}
-						},
-						{
-							"term" : {
-								"pointtwo_cell_id": conditions.pointtwocellid
-							}
-						}
-					]
-				},
-				"query" : {
-					"bool": {
-						"must": []
-					}
-				}
-			}
-		},
-		"aggs": {
-			"canonical": {
-				"terms": {
-					"field": "canonical.untouched",
-					"size" : 10
-				}
-			},
-			"common_names": {
-				"nested" : {
-					"path" : "common_names"
-				},
-				"aggs" : {
-					"common": {
-						"terms": {
-							"field": "common_names.name.untouched",
-							"size" : 10
-						}
-					}
-				}
-			},
-			"kingdom": {
-				"terms": {
-					"field": "kingdom_group.untouched",
-					"size" : 10
-				}
-			},
-			"phylum": {
-				"terms": {
-					"field": "phylum_group.untouched",
-					"size" : 10
-				}
-			},
-			"taxonClass": {
-				"terms": {
-					"field": "taxonClass_group.untouched",
-					"size" : 10
-				}
-			},
-			"order_rank": {
-				"terms": {
-					"field": "order_rank_group.untouched",
-					"size" : 10
-				}
-			},
-			"family": {
-				"terms": {
-					"field": "family_group.untouched",
-					"size" : 10
-				}
-			},
-			"genus": {
-				"terms": {
-					"field": "genus_group.untouched",
-					"size" : 10
-				}
-			},
-			"species": {
-				"terms": {
-					"field": "species_group.untouched",
-					"size" : 10
-				}
-			},
-			"data_provider_name": {
-				"terms": {
-					"field": "data_provider_name.untouched",
-					"size" : 10
-				}
-			},
-			"data_provider_id": {
-				"terms": {
-					"field": "data_provider_id",
-					"size" : 10
-				}
-			},
-			"data_resource_name": {
-				"terms": {
-					"field": "data_resource_name.untouched",
-					"size" : 10
-				}
-			},
-			"data_resource_id": {
-				"terms": {
-					"field": "data_resource_id",
-					"size" : 10
-				}
-			},
-			"county_name": {
-				"terms": {
-					"field": "county_name.untouched",
-					"size" : 10
-				}
-			},
-			"paramo_name": {
-				"terms": {
-					"field": "paramo_name.untouched",
-					"size" : 10
-				}
-			},
-			"marine_zone_name": {
-				"terms": {
-					"field": "marine_zone_name.untouched",
-					"size" : 10
-				}
-			}
-		}
-	};
-
-	var andCounter = 0;
-	var orCounter = 0;
-
-	if(conditions.scientificNames) {
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
-		_.each(conditions.scientificNames, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["canonical.exactWords"] = data.textObject.toLowerCase();
-			orCounter+=1;
-		});
-		andCounter+=1;
-	}
-	if(conditions.commonNames) {
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
-		_.each(conditions.commonNames, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["nombre_comun.exactWords"] = data.textObject.toLowerCase();
-			orCounter+=1;
-		});
-		andCounter+=1;
-	}
-	if(conditions.taxons) {
-		orCounter = 0;
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
-		_.each(conditions.taxons, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
-			if(data.textName == "kingdom")
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["kingdom.exactWords"] = data.textObject.toLowerCase();
-			if(data.textName == "phylum")
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["phylum.exactWords"] = data.textObject.toLowerCase();
-			if(data.textName == "class")
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["taxonClass.exactWords"] = data.textObject.toLowerCase();
-			if(data.textName == "order")
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["order_rank.exactWords"] = data.textObject.toLowerCase();
-			if(data.textName == "family")
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["family.exactWords"] = data.textObject.toLowerCase();
-			if(data.textName == "genus")
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["genus.exactWords"] = data.textObject.toLowerCase();
-			if(data.textName == "species")
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["species.exactWords"] = data.textObject.toLowerCase();
-			orCounter+=1;
-		});
-		andCounter+=1;
-	}
-	if(conditions.countries) {
-		orCounter = 0;
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
-		_.each(conditions.countries, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["iso_country_code.exactWords"] = data.textObject.toLowerCase();
-			orCounter+=1;
-		});
-		andCounter+=1;
-	}
-	if(conditions.departments) {
-		orCounter = 0;
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
-		_.each(conditions.departments, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["iso_department_code.exactWords"] = data.textObject.toLowerCase();
-			orCounter+=1;
-		});
-		andCounter+=1;
-	}
-	if(conditions.counties) {
-		orCounter = 0;
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
-		_.each(conditions.counties, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["iso_county_code.exactWords"] = data.textObject.toLowerCase();
-			orCounter+=1;
-		});
-		andCounter+=1;
-	}
-	if(conditions.paramos) {
-		orCounter = 0;
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
-		_.each(conditions.paramos, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["paramo_code.exactWords"] = data.textObject.toLowerCase();
-			orCounter+=1;
-		});
-		andCounter+=1;
-	}
-	if(conditions.marineZones) {
-		orCounter = 0;
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
-		_.each(conditions.marineZones, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["marine_zone_code.exactWords"] = data.textObject.toLowerCase();
-			orCounter+=1;
-		});
-		andCounter+=1;
-	}
-	if(conditions.latitudes) {
-		orCounter = 0;
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"] = [];
-		_.each(conditions.latitudes, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter] = {};
-			if(data.predicate == "eq") {
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["location.lat"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["location.lat"]["gte"] = data.textObject.toLowerCase();
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["location.lat"]["lte"] = data.textObject.toLowerCase();
-			} else if(data.predicate == "gt") {
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["location.lat"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["location.lat"]["gt"] = data.textObject.toLowerCase();
-			} else if(data.predicate == "lt") {
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["location.lat"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["location.lat"]["lt"] = data.textObject.toLowerCase();
-			}
-			orCounter+=1;
-		});
-		andCounter+=1;
-	}
-	if(conditions.longitudes) {
-		orCounter = 0;
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"] = [];
-		_.each(conditions.longitudes, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter] = {};
-			if(data.predicate == "eq") {
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["location.lon"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["location.lon"]["gte"] = data.textObject.toLowerCase();
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["location.lon"]["lte"] = data.textObject.toLowerCase();
-			} else if(data.predicate == "gt") {
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["location.lon"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["location.lon"]["gt"] = data.textObject.toLowerCase();
-			} else if(data.predicate == "lt") {
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["location.lon"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["location.lon"]["lt"] = data.textObject.toLowerCase();
-			}
-			orCounter+=1;
-		});
-		andCounter+=1;
-	}
-	if(conditions.altitudes) {
-		orCounter = 0;
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"] = [];
-		_.each(conditions.altitudes, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter] = {};
-			if(data.predicate == "eq") {
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_metres"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_metres"]["gte"] = data.textObject.toLowerCase();
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_metres"]["lte"] = data.textObject.toLowerCase();
-			} else if(data.predicate == "gt") {
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_metres"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_metres"]["gt"] = data.textObject.toLowerCase();
-			} else if(data.predicate == "lt") {
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_metres"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_metres"]["lt"] = data.textObject.toLowerCase();
-			}
-			orCounter+=1;
-		});
-		andCounter+=1;
-	}
-	if(conditions.deeps) {
-		orCounter = 0;
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"] = [];
-		_.each(conditions.deeps, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter] = {};
-			if(data.predicate == "eq") {
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimetres"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimetres"]["gte"] = data.textObject.toLowerCase();
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimetres"]["lte"] = data.textObject.toLowerCase();
-			} else if(data.predicate == "gt") {
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimetres"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimetres"]["gt"] = data.textObject.toLowerCase();
-			} else if(data.predicate == "lt") {
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimetres"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimetres"]["lt"] = data.textObject.toLowerCase();
-			}
-			orCounter+=1;
-		});
-		andCounter+=1;
-	}
-	if(conditions.providers) {
-		orCounter = 0;
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
-		_.each(conditions.providers, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["data_provider_name.exactWords"] = data.textObject.toLowerCase();
-			orCounter+=1;
-		});
-		andCounter+=1;
-	}
-	if(conditions.resources) {
-		orCounter = 0;
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
-		_.each(conditions.resources, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["data_resource_name.exactWords"] = data.textObject.toLowerCase();
-			orCounter+=1;
-		});
-		andCounter+=1;
-	}
-	if(conditions.poligonalCoordinates || conditions.radialCoordinates) {
-		if(conditions.poligonalCoordinates) {
-			orCounter = 0;
-			qryObj["query"]["filtered"]["filter"] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"] = [];
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][0] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_polygon"] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_polygon"]["location"] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_polygon"]["location"]["points"] = [];
-			_.each(conditions.poligonalCoordinates, function(data) {
-				qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_polygon"]["location"]["points"][orCounter] = {"lat": data.lat, "lon": data.lng};
-				orCounter+=1;
-			});
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1]["term"] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1]["term"]["cell_id"] = conditions.cellid;
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][2] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][2]["term"] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][2]["term"]["pointtwo_cell_id"] = conditions.pointtwocellid;
-		}
-		if(conditions.radialCoordinates) {
-			qryObj["query"]["filtered"]["filter"] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"] = [];
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][0] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_distance"] = {};
-			_.each(conditions.radialCoordinates, function(data) {
-				qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_distance"]["distance"] = data.radius + "m";
-				qryObj["query"]["filtered"]["filter"]["bool"]["must"][0]["geo_distance"]["location"] = {"lat": data.lat, "lon": data.lng};
-			});
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1]["term"] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][1]["term"]["cell_id"] = conditions.cellid;
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][2] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][2]["term"] = {};
-			qryObj["query"]["filtered"]["filter"]["bool"]["must"][2]["term"]["pointtwo_cell_id"] = conditions.pointtwocellid;
 		}
 	}
 	if(qryObj["query"]["filtered"]["query"]["bool"]["must"].length === 0) {
@@ -2688,10 +1581,26 @@ exports.getDistributionWithFilter = function(conditions) {
 	var qryObj = {
 		"_source": false,
 		"query": {
-			"filtered": {
+			"filtered" : {
 				"query" : {
 					"bool": {
 						"must": []
+					}
+				},
+				"filter": {
+					"bool": {
+						"must": [
+							{
+								"missing": {
+									"field": "deleted"
+								}
+							},
+							{
+								"term": {
+									"geospatial_issue": 0
+								}
+							}
+						]
 					}
 				}
 			}
@@ -2741,18 +1650,22 @@ exports.getDistributionWithFilter = function(conditions) {
 	}
 	if(conditions.commonNames) {
 		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
-		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["nested"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["nested"]["path"] = "common_names";
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["nested"]["query"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["nested"]["query"]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["nested"]["query"]["bool"]["should"] = [];
 		_.each(conditions.commonNames, function(data) {
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["nombre_comun.exactWords"] = data.textObject.toLowerCase();
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["nested"]["query"]["bool"]["should"][orCounter] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["nested"]["query"]["bool"]["should"][orCounter]["wildcard"] = {};
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["nested"]["query"]["bool"]["should"][orCounter]["wildcard"]["common_names.name.exactWords"] = data.textObject.toLowerCase();
 			orCounter+=1;
 		});
 		andCounter+=1;
 	}
 	if(conditions.taxons) {
 		orCounter = 0;
+		console.log(qryObj["query"]["filtered"]["query"]["bool"]["must"]);
 		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
 		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
 		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
@@ -2760,19 +1673,19 @@ exports.getDistributionWithFilter = function(conditions) {
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
 			if(data.textName == "kingdom")
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["kingdom.exactWords"] = data.textObject.toLowerCase();
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["taxonomy.kingdom_name.exactWords"] = data.textObject.toLowerCase();
 			if(data.textName == "phylum")
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["phylum.exactWords"] = data.textObject.toLowerCase();
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["taxonomy.phylum_name.exactWords"] = data.textObject.toLowerCase();
 			if(data.textName == "class")
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["taxonClass.exactWords"] = data.textObject.toLowerCase();
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["taxonomy.class_name.exactWords"] = data.textObject.toLowerCase();
 			if(data.textName == "order")
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["order_rank.exactWords"] = data.textObject.toLowerCase();
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["taxonomy.order_name.exactWords"] = data.textObject.toLowerCase();
 			if(data.textName == "family")
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["family.exactWords"] = data.textObject.toLowerCase();
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["taxonomy.family_name.exactWords"] = data.textObject.toLowerCase();
 			if(data.textName == "genus")
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["genus.exactWords"] = data.textObject.toLowerCase();
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["taxonomy.genus_name.exactWords"] = data.textObject.toLowerCase();
 			if(data.textName == "species")
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["species.exactWords"] = data.textObject.toLowerCase();
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["taxonomy.species_name.exactWords"] = data.textObject.toLowerCase();
 			orCounter+=1;
 		});
 		andCounter+=1;
@@ -2850,7 +1763,7 @@ exports.getDistributionWithFilter = function(conditions) {
 		_.each(conditions.providers, function(data) {
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["data_provider_name.exactWords"] = data.textObject.toLowerCase();
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["provider.name.exactWords"] = data.textObject.toLowerCase();
 			orCounter+=1;
 		});
 		andCounter+=1;
@@ -2864,7 +1777,7 @@ exports.getDistributionWithFilter = function(conditions) {
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter] = {};
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"] = {};
 
-			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["data_resource_name.exactWords"] = data.textObject.toLowerCase();
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][orCounter]["wildcard"]["resource.name.exactWords"] = data.textObject.toLowerCase();
 			orCounter+=1;
 		});
 		andCounter+=1;
@@ -2928,17 +1841,17 @@ exports.getDistributionWithFilter = function(conditions) {
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter] = {};
 			if(data.predicate == "eq") {
 				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_metres"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_metres"]["gte"] = data.textObject.toLowerCase();
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_metres"]["lte"] = data.textObject.toLowerCase();
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_meters"] = {};
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_meters"]["gte"] = data.textObject.toLowerCase();
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_meters"]["lte"] = data.textObject.toLowerCase();
 			} else if(data.predicate == "gt") {
 				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_metres"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_metres"]["gt"] = data.textObject.toLowerCase();
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_meters"] = {};
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_meters"]["gt"] = data.textObject.toLowerCase();
 			} else if(data.predicate == "lt") {
 				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_metres"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_metres"]["lt"] = data.textObject.toLowerCase();
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_meters"] = {};
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["altitude_meters"]["lt"] = data.textObject.toLowerCase();
 			}
 			orCounter+=1;
 		});
@@ -2953,17 +1866,17 @@ exports.getDistributionWithFilter = function(conditions) {
 			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter] = {};
 			if(data.predicate == "eq") {
 				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimetres"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimetres"]["gte"] = data.textObject.toLowerCase();
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimetres"]["lte"] = data.textObject.toLowerCase();
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimeters"] = {};
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimeters"]["gte"] = data.textObject.toLowerCase();
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimeters"]["lte"] = data.textObject.toLowerCase();
 			} else if(data.predicate == "gt") {
 				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimetres"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimetres"]["gt"] = data.textObject.toLowerCase();
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimeters"] = {};
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimeters"]["gt"] = data.textObject.toLowerCase();
 			} else if(data.predicate == "lt") {
 				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimetres"] = {};
-				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimetres"]["lt"] = data.textObject.toLowerCase();
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimeters"] = {};
+				qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["must"][orCounter]["range"]["depth_centimeters"]["lt"] = data.textObject.toLowerCase();
 			}
 			orCounter+=1;
 		});

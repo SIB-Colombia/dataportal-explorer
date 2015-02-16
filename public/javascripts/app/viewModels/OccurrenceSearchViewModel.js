@@ -173,12 +173,49 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		  });
 
 		  map.on('moveend', function(e) {
+		  	var data = ko.toJSON(self.fillSearchConditions());
 		  	if(e.target._zoom >= 13 && !sidebar.isVisible()) {
 		  		if(map.hasLayer(markers)) {
 						map.removeLayer(markers);
 						markers.clearLayers();
 					}
-					$.getJSON("/rest/occurrences/boundingbox/"+map.getBounds()._northEast.lat+"/"+map.getBounds()._southWest.lat+"/"+map.getBounds()._southWest.lng+"/"+map.getBounds()._northEast.lng, function(allData) {
+					$.ajax({
+						contentType: 'application/json',
+						type: 'POST',
+						url: '/rest/occurrences/boundingbox/'+map.getBounds()._northEast.lat+'/'+map.getBounds()._southWest.lat+'/'+map.getBounds()._southWest.lng+'/'+map.getBounds()._northEast.lng,
+						data: data,
+						beforeSend: function() {
+							//self.hideMapAreaWithSpinner();
+						},
+						complete: function() {
+							//self.showMapAreaWithSpinner();
+						},
+						success: function(allData) {
+							$.each(allData.hits.hits, function(i, occurrence) {
+								var marker = new L.Marker([occurrence._source.location.lat, occurrence._source.location.lon], {clickable: true, zIndexOffset: 1000, title: occurrence._source.canonical});
+								marker.bindPopup("<strong>Nombre científico</strong></br><strong><a href=\"http://data.sibcolombia.net/occurrences/"+occurrence._source.id+"\" target=\"_blank\">"+occurrence._source.canonical.toUpperCase()+"</a></strong></br></br><strong>Ubicación:</strong></br>Latitud: "+occurrence._source.location.lat+"</br>Longitud: "+occurrence._source.location.lon);
+								marker.on('click', function (a) {
+									$.getJSON("/rest/occurrences/id/"+occurrence._source.id, function(allData) {
+										self.occurrence(new Occurrence(allData.hits.hits[0]._source));
+									});
+								});
+								marker.on('popupopen', function (a) {
+									$("#contentDetails").removeClass("occult-element");
+									sidebar.show();
+								});
+								marker.on('popupclose', function (a) {
+									$("#contentDetails").addClass("occult-element");
+									sidebar.hide();
+								});
+								markers.addLayer(marker);
+							});
+							if($("#occurrenceRecord").is(':checked')) {
+								map.addLayer(markers);
+							}
+						},
+						dataType: 'jsonp'
+					});
+					/*$.getJSON("/rest/occurrences/boundingbox/"+map.getBounds()._northEast.lat+"/"+map.getBounds()._southWest.lat+"/"+map.getBounds()._southWest.lng+"/"+map.getBounds()._northEast.lng, function(allData) {
 						$.each(allData.hits.hits, function(i, occurrence) {
 							var marker = new L.Marker([occurrence._source.location.lat, occurrence._source.location.lon], {clickable: true, zIndexOffset: 1000, title: occurrence._source.canonical});
 							marker.bindPopup("<strong>Nombre científico</strong></br><strong><a href=\"http://data.sibcolombia.net/occurrences/"+occurrence._source.id+"\" target=\"_blank\">"+occurrence._source.canonical.toUpperCase()+"</a></strong></br></br><strong>Ubicación:</strong></br>Latitud: "+occurrence._source.location.lat+"</br>Longitud: "+occurrence._source.location.lon);
@@ -200,7 +237,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 						if($("#occurrenceRecord").is(':checked')) {
 							map.addLayer(markers);
 						}
-					});
+					});*/
 		  	}
 		  });
 
