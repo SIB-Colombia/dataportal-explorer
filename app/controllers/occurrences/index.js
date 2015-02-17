@@ -325,7 +325,7 @@ exports.geoJsonMapPoints = function(req, res) {
 		var result = JSON.parse(data);
 
 		var response = {};
-		if(result.hits) {
+		if(result.hits.total !== 0) {
 			response = {
 				"hostUrl": req.protocol + "://" + req.get('host') + req.path,
 				"query": req.query,
@@ -385,7 +385,17 @@ exports.geoJsonMapPoints = function(req, res) {
 					currentGeometry += 1;
 				}
 			});
-		} else {
+		} else if (result.hits.total === 0) {
+			response = {
+				"hostUrl": req.protocol + "://" + req.get('host') + req.path,
+				"query": req.query,
+				"count": 0,
+				"start": 0,
+				"error": "No entries for current query.",
+				"cause": "No data in out database.",
+				"features": []
+			};
+		} else if(typeof result.hits.total === "undefined") {
 			response = {
 				"hostUrl": req.protocol + "://" + req.get('host') + req.path,
 				"query": req.query,
