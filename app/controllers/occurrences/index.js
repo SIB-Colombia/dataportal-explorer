@@ -392,7 +392,7 @@ exports.geoJsonMapPoints = function(req, res) {
 				"count": 0,
 				"start": 0,
 				"error": "No entries for current query.",
-				"cause": "No data in out database.",
+				"cause": "No data in the database.",
 				"features": []
 			};
 		} else if(typeof result.hits.total === "undefined") {
