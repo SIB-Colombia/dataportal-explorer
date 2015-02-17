@@ -313,7 +313,7 @@ exports.listMarineZones = function(req, res) {
 
 // Get all occurrences inside a bounding box
 exports.getOccurrencesInBoundingBox = function(req, res) {
-	occurrences = occurrencesES.getOccurrencesInBoundingBox(req.params._top, req.params._bottom, req.params._left, req.params._right);
+	occurrences = occurrencesES.getOccurrencesInBoundingBox(req.params._top, req.params._bottom, req.params._left, req.params._right, req.body);
 	occurrences.exec(function(err, data){
 		res.jsonp(JSON.parse(data));
 	});
@@ -400,93 +400,6 @@ exports.geoJsonMapPoints = function(req, res) {
 		res.jsonp(response);
 	});
 };
-
-// Search occurrences
-/*exports.searchGeoOccurrences = function(req, res) {
-	var data = req.body;
-	var scientificNames = [];
-	var taxonNames = [];
-	var countryIDs = [];
-	var departmentIDs = [];
-	var providerNames = [];
-	var resourceNames = [];
-	if(data.scientificNames) {
-		for(var i = 0; data.scientificNames.length > i; i++) {
-			scientificNames[i] = {canonical: new RegExp(data.scientificNames[i].textObject, "i")};
-		}
-	} else {
-		scientificNames[0] = {};
-	}
-	if(data.taxons) {
-		for(var i = 0; data.taxons.length > i; i++) {
-			if(data.taxons[i].textName == "Reino")
-				taxonNames[i] = {kingdom: data.taxons[i].textObject};
-			if(data.taxons[i].textName == "Filo")
-				taxonNames[i] = {phylum: data.taxons[i].textObject};
-			if(data.taxons[i].textName == "Clase")
-				taxonNames[i] = {taxonClass: data.taxons[i].textObject};
-			if(data.taxons[i].textName == "Orden")
-				taxonNames[i] = {order_rank: data.taxons[i].textObject};
-			if(data.taxons[i].textName == "Familia")
-				taxonNames[i] = {family: data.taxons[i].textObject};
-			if(data.taxons[i].textName == "Genero")
-				taxonNames[i] = {genus: data.taxons[i].textObject};
-			if(data.taxons[i].textName == "Especie")
-				taxonNames[i] = {species: data.taxons[i].textObject};
-		}
-	} else {
-		taxonNames[0] = {};
-	}
-	if(data.countries) {
-		for(var i = 0; data.countries.length > i; i++) {
-			countryIDs[i] = {iso_country_code: data.countries[i].textObject};
-		}
-	} else {
-		countryIDs[0] = {};
-	}
-	if(data.departments) {
-		for(var i = 0; data.departments.length > i; i++) {
-			departmentIDs[i] = {iso_department_code: data.departments[i].textObject};
-		}
-	} else {
-		departmentIDs[0] = {};
-	}
-	if(data.providers) {
-		for(var i = 0; data.providers.length > i; i++) {
-			providerNames[i] = {data_provider_name: data.providers[i].textObject};
-		}
-	} else {
-		providerNames[0] = {};
-	}
-	if(data.resources) {
-		for(var i = 0; data.resources.length > i; i++) {
-			resourceNames[i] = {data_resource_name: data.resources[i].textObject};
-		}
-	} else {
-		resourceNames[0] = {};
-	}
-	GeoOccurrence.find({$and: [{$or: scientificNames}, {$or: taxonNames}, {$or: countryIDs}, {$or: departmentIDs}, {$or: providerNames}, {$or: resourceNames}]}).select('id canonical num_occurrences latitude longitude').exec(function (err, geooccurrences) {
-		if(err)
-			res.send("Error getting search geo occurrence data.");
-		res.jsonp(geooccurrences);
-	});
-};*/
-
-/*exports.searchDetailsGeoOccurrences = function(req, res) {
-	Occurrence.find({canonical: req.query.canonical, latitude: req.query.latitude, longitude: req.query.longitude}).select('id canonical latitude longitude data_provider_id data_provider_name data_resource_id data_resource_name institution_code_id institution_code collection_code_id collection_code catalogue_number_id catalogue_number created occurrence_date iso_country_code iso_department_code altitude_metres depth_centimetres kingdom phylum taxonClass order_rank family genus species').exec(function (err, occurrences) {
-		if(err)
-			res.send("Error getting search occurrence details data.");
-		res.jsonp(occurrences);
-	});
-};
-
-exports.searchInitialOccurrences = function(req, res) {
-	GeoOccurrence.find().select('id canonical num_occurrences latitude longitude').limit(20000).exec(function (err, geooccurrences) {
-		if(err)
-			res.send("Error getting initial geo occurrence data.");
-		res.jsonp(geooccurrences);
-	});
-};*/
 
 exports.searchInitialPagedDataOccurrences = function(req, res) {
 	occurrences = occurrencesES.getOccurrencesWithFilter(req.query);

@@ -67,7 +67,7 @@ module.exports = function(parent, options) {
 					path = '/rest/' + name + '/pointfivedegree/stats/:' + '_cellid' + '/:' + '_pointfivecellid';
 					break;
 				case 'getOccurrencesInBoundingBox':
-					method = 'get';
+					method = 'post';
 					path = '/rest/' + name + '/boundingbox/:' + '_top' + '/:' + '_bottom' + '/:' + '_left' + '/:' + '_right';
 					break;
 				case 'getDistributionStatsWithSearchPointFiveDegree':
@@ -304,7 +304,7 @@ module.exports = function(parent, options) {
 					break;
 				case 'searchOccurrence':
 					method = 'get';
-					path = '/rest/' + name + '/id/:' + '_id';
+					path = '/rest/' + name + '/:' + '_id';
 					break;
 				case 'updatemongodb':
 					method = 'get';

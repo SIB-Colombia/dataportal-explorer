@@ -195,7 +195,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 								var marker = new L.Marker([occurrence._source.location.lat, occurrence._source.location.lon], {clickable: true, zIndexOffset: 1000, title: occurrence._source.canonical});
 								marker.bindPopup("<strong>Nombre científico</strong></br><strong><a href=\"http://data.sibcolombia.net/occurrences/"+occurrence._source.id+"\" target=\"_blank\">"+occurrence._source.canonical.toUpperCase()+"</a></strong></br></br><strong>Ubicación:</strong></br>Latitud: "+occurrence._source.location.lat+"</br>Longitud: "+occurrence._source.location.lon);
 								marker.on('click', function (a) {
-									$.getJSON("/rest/occurrences/id/"+occurrence._source.id, function(allData) {
+									$.getJSON("/rest/occurrences/"+occurrence._source.id, function(allData) {
 										self.occurrence(new Occurrence(allData.hits.hits[0]._source));
 									});
 								});
@@ -574,7 +574,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 						data: function(data) {
 							self.gridItems = ko.observableArray();
 							$.each(data.hits.hits, function(i, occurrence) {
-								self.gridItems.push(new Occurrence({id: occurrence._source.id, canonical: occurrence._source.canonical, data_resource_name: occurrence._source.resource.name, institution_code: occurrence._source.institution.code, collection_code: occurrence._source.collection.code, catalogue_number: occurrence._source.catalogue.number, occurrence_date: occurrence._source.occurrence_date, latitude: occurrence._source.location.lat, longitude: occurrence._source.location.lon, country_name: occurrence._source.country_name, department_name: occurrence._source.department_name, basis_of_record_name_spanish: occurrence._source.basis_of_record.name_spanish}));
+								self.gridItems.push(new Occurrence(occurrence._source));
 							});
 							self.totalOccurrences(data.hits.total);
 							return self.gridItems();
@@ -1315,6 +1315,9 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 
 					// Enable download links
 					self.generateURLSpreadsheet();
+
+					// Set current active distribution
+					self.currentActiveDistribution("oneDegree");
 				},
 				dataType: 'jsonp'
 			});
