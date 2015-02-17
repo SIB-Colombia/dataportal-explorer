@@ -195,7 +195,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 								var marker = new L.Marker([occurrence._source.location.lat, occurrence._source.location.lon], {clickable: true, zIndexOffset: 1000, title: occurrence._source.canonical});
 								marker.bindPopup("<strong>Nombre científico</strong></br><strong><a href=\"http://data.sibcolombia.net/occurrences/"+occurrence._source.id+"\" target=\"_blank\">"+occurrence._source.canonical.toUpperCase()+"</a></strong></br></br><strong>Ubicación:</strong></br>Latitud: "+occurrence._source.location.lat+"</br>Longitud: "+occurrence._source.location.lon);
 								marker.on('click', function (a) {
-									$.getJSON("/rest/occurrences/"+occurrence._source.id, function(allData) {
+									$.getJSON("/rest/occurrences/id/"+occurrence._source.id, function(allData) {
 										self.occurrence(new Occurrence(allData.hits.hits[0]._source));
 									});
 								});

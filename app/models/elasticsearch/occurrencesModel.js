@@ -2520,6 +2520,7 @@ exports.geoJsonMapPoints = function(parameters) {
 			}
 		}
 	};
+	console.log(JSON.stringify(qryObj));
 	qryObj["from"] = parameters.startindex || 0;
 	if(parameters.maxresults) {
 		if(parameters.maxresults > 1000) {

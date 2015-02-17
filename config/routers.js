@@ -304,7 +304,7 @@ module.exports = function(parent, options) {
 					break;
 				case 'searchOccurrence':
 					method = 'get';
-					path = '/rest/' + name + '/:' + '_id';
+					path = '/rest/' + name + '/id/:' + '_id';
 					break;
 				case 'updatemongodb':
 					method = 'get';
