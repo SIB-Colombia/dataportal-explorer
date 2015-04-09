@@ -465,68 +465,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 
 			kendo.culture("es-CO");
 
-			$('#densitySelector').slider({
-				formater: function(value) {
-					var actualDensity;
-					switch(value) {
-						case 0:
-							actualDensity = "0.1° x 0.1°";
-							break;
-						case 1:
-							actualDensity = "0.2° x 0.2°";
-							break;
-						case 2:
-							actualDensity = "0.5° x 0.5°";
-							break;
-						case 3:
-							actualDensity = "1.0° x 1.0°";
-							break;
-					}
-					return 'Densidad: ' + actualDensity;
-				}
-			});
 
-			$("#densitySelector").on('slideStop', function(slideEvt) {
-				if(self.currentActiveDistribution() != "none") {
-					// Disable current active button
-					switch(self.currentActiveDistribution()) {
-						case "oneDegree":
-							map.removeLayer(self.densityCellsOneDegree());
-							break;
-						case "pointOneDegree":
-							map.removeLayer(self.densityCellsPointOneDegree());
-							break;
-						case "pointFiveDegree":
-							map.removeLayer(self.densityCellsPointFiveDegree());
-							break;
-						case "pointTwoDegree":
-							map.removeLayer(self.densityCellsPointTwoDegree());
-							break;
-					}
-				}
-				switch(slideEvt.value) {
-					case 0:
-						map.addLayer(self.densityCellsPointOneDegree());
-						self.currentActiveDistribution("pointOneDegree");
-						$("#distributionCells").prop('checked', true);
-						break;
-					case 1:
-						map.addLayer(self.densityCellsPointTwoDegree());
-						self.currentActiveDistribution("pointTwoDegree");
-						$("#distributionCells").prop('checked', true);
-						break;
-					case 2:
-						map.addLayer(self.densityCellsPointFiveDegree());
-						self.currentActiveDistribution("pointFiveDegree");
-						$("#distributionCells").prop('checked', true);
-						break;
-					case 3:
-						map.addLayer(self.densityCellsOneDegree());
-						self.currentActiveDistribution("oneDegree");
-						$("#distributionCells").prop('checked', true);
-						break;
-				}
-			});
 		},
 		loadGridData: function() {
 			var self = this;
@@ -737,6 +676,68 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					$.getJSON("/rest/distribution/onedegree/stats/"+a.layer.options.cellID, function(allData) {
 						self.fillCellDensityData(allData, a);
 					});
+				});
+				$('#densitySelector').slider({
+					formater: function(value) {
+						var actualDensity;
+						switch(value) {
+							case 0:
+								actualDensity = "0.1° x 0.1°";
+								break;
+							case 1:
+								actualDensity = "0.2° x 0.2°";
+								break;
+							case 2:
+								actualDensity = "0.5° x 0.5°";
+								break;
+							case 3:
+								actualDensity = "1.0° x 1.0°";
+								break;
+						}
+						return 'Densidad: ' + actualDensity;
+					}
+				});
+
+				$("#densitySelector").on('slideStop', function(slideEvt) {
+					if(self.currentActiveDistribution() != "none") {
+						// Disable current active button
+						switch(self.currentActiveDistribution()) {
+							case "oneDegree":
+								map.removeLayer(self.densityCellsOneDegree());
+								break;
+							case "pointOneDegree":
+								map.removeLayer(self.densityCellsPointOneDegree());
+								break;
+							case "pointFiveDegree":
+								map.removeLayer(self.densityCellsPointFiveDegree());
+								break;
+							case "pointTwoDegree":
+								map.removeLayer(self.densityCellsPointTwoDegree());
+								break;
+						}
+					}
+					switch(slideEvt.value) {
+						case 0:
+							map.addLayer(self.densityCellsPointOneDegree());
+							self.currentActiveDistribution("pointOneDegree");
+							$("#distributionCells").prop('checked', true);
+							break;
+						case 1:
+							map.addLayer(self.densityCellsPointTwoDegree());
+							self.currentActiveDistribution("pointTwoDegree");
+							$("#distributionCells").prop('checked', true);
+							break;
+						case 2:
+							map.addLayer(self.densityCellsPointFiveDegree());
+							self.currentActiveDistribution("pointFiveDegree");
+							$("#distributionCells").prop('checked', true);
+							break;
+						case 3:
+							map.addLayer(self.densityCellsOneDegree());
+							self.currentActiveDistribution("oneDegree");
+							$("#distributionCells").prop('checked', true);
+							break;
+					}
 				});
 				self.showMapAreaWithSpinner();
 				self.currentActiveDistribution("oneDegree");
