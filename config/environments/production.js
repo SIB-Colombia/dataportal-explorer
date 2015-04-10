@@ -3,8 +3,9 @@ var express = require('express')
   , winston = require('winston');
 
 module.exports = function(parent) {
+	var oneMonth = 60*60*24*30;
 	parent.use(express.static(path.join(__dirname, '/../../public'), { maxAge: oneMonth }));
-	
+
 	logger = new (winston.Logger)({
 		transports: [
 			new (winston.transports.Console)({ level: 'error' }),
