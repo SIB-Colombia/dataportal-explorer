@@ -11,12 +11,13 @@
   "devDependencies": {
     "bootstrap": "~3.3.2",
     "knockoutjs": "~3.3.0",
-    "seiyria-bootstrap-slider": "~4.5.1",
-    "jquery": "~2.1.0",
-    "jquery-ui": "~1.11.3",
     "leaflet": "~0.7.3",
     "select2": "~3.4.8",
     "leaflet.markercluster": "~0.4.0",
     "leaflet-sidebar": "~0.1.5"
+  },
+  "dependencies": {
+    "rangeslider.js": "~1.1.0",
+    "jquery": "~2.1.3"
   }
 }

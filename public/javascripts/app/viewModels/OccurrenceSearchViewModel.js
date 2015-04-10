@@ -1,4 +1,4 @@
-define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map-initialize", "app/models/occurrence", "app/models/resumeInfo", "app/models/resumeCount", "app/models/resumeScientificName", "app/models/resumeCommonName", "app/models/resumeKingdomName", "app/models/resumePhylumName", "app/models/resumeClassName", "app/models/resumeOrderName", "app/models/resumeFamilyName", "app/models/resumeGenusName", "app/models/resumeSpecieName", "app/models/resumeDataProvider", "app/models/resumeDataResource", "app/models/resumeInstitutionCode", "app/models/resumeCollectionCode", "app/models/resumeCountry", "app/models/resumeDepartment", "app/models/resumeCounty", "app/models/resumeParamo", "app/models/resumeMarineZone", "app/models/county", "app/models/paramo", "app/models/marineZone", "app/models/coordinate", "app/models/radialCoordinate", "app/models/filterSelected", "app/config/urlDataMapping", "select2", "knockoutKendoUI", "Leaflet", "jqueryUI", "bootstrap", "kendoSpanishCulture", "bootstrap-slider", "LeafletMarkerCluster"], function($, ko, _, BaseViewModel, map, Occurrence, ResumeInfo, ResumeCount, ResumeScientificName, ResumeCommonName, ResumeKingdomName, ResumePhylumName, ResumeClassName, ResumeOrderName, ResumeFamilyName, ResumeGenusName, ResumeSpecieName, ResumeDataProvider, ResumeDataResource, ResumeInstitutionCode, ResumeCollectionCode, ResumeCountry, ResumeDepartment, ResumeCounty, ResumeParamo, ResumeMarineZone, County, Paramo, MarineZone, Coordinate, RadialCoordinate, FilterSelected, UrlDataMapping, select2) {
+define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map-initialize", "app/models/occurrence", "app/models/resumeInfo", "app/models/resumeCount", "app/models/resumeScientificName", "app/models/resumeCommonName", "app/models/resumeKingdomName", "app/models/resumePhylumName", "app/models/resumeClassName", "app/models/resumeOrderName", "app/models/resumeFamilyName", "app/models/resumeGenusName", "app/models/resumeSpecieName", "app/models/resumeDataProvider", "app/models/resumeDataResource", "app/models/resumeInstitutionCode", "app/models/resumeCollectionCode", "app/models/resumeCountry", "app/models/resumeDepartment", "app/models/resumeCounty", "app/models/resumeParamo", "app/models/resumeMarineZone", "app/models/county", "app/models/paramo", "app/models/marineZone", "app/models/coordinate", "app/models/radialCoordinate", "app/models/filterSelected", "app/config/urlDataMapping", "select2", "knockoutKendoUI", "Leaflet", "jqueryUI", "bootstrap", "kendoSpanishCulture", "range-slider", "LeafletMarkerCluster"], function($, ko, _, BaseViewModel, map, Occurrence, ResumeInfo, ResumeCount, ResumeScientificName, ResumeCommonName, ResumeKingdomName, ResumePhylumName, ResumeClassName, ResumeOrderName, ResumeFamilyName, ResumeGenusName, ResumeSpecieName, ResumeDataProvider, ResumeDataResource, ResumeInstitutionCode, ResumeCollectionCode, ResumeCountry, ResumeDepartment, ResumeCounty, ResumeParamo, ResumeMarineZone, County, Paramo, MarineZone, Coordinate, RadialCoordinate, FilterSelected, UrlDataMapping, select2) {
 	var OccurrenceSearchViewModel = function() {
 		var self = this;
 		self.densityCellsOneDegree = new L.FeatureGroup();
@@ -588,7 +588,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					min: new Date(1000, 0, 1),
 					max: new Date(10000, 0, 1)
 				});
-			}
+			};
 
 			function basisOfRecordFilter(element) {
 				var data = [
@@ -609,7 +609,56 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					dataSource: data,
 					optionLabel: "-- Seleccione --"
 				});
-			}
+			};
+
+			$('input[type=range]').rangeslider({
+				polyfill: false,
+				onInit: function() {
+					var actualDensity = "1.0° x 1.0°";
+				},
+				onSlideEnd: function(position, value) {
+					if(self.currentActiveDistribution() != "none") {
+						// Disable current active button
+						switch(self.currentActiveDistribution()) {
+							case "oneDegree":
+								map.removeLayer(self.densityCellsOneDegree());
+								break;
+							case "pointOneDegree":
+								map.removeLayer(self.densityCellsPointOneDegree());
+								break;
+							case "pointFiveDegree":
+								map.removeLayer(self.densityCellsPointFiveDegree());
+								break;
+							case "pointTwoDegree":
+								map.removeLayer(self.densityCellsPointTwoDegree());
+								break;
+						}
+					}
+					switch(value) {
+						case 0:
+							map.addLayer(self.densityCellsPointOneDegree());
+							self.currentActiveDistribution("pointOneDegree");
+							$("#distributionCells").prop('checked', true);
+							break;
+						case 1:
+							map.addLayer(self.densityCellsPointTwoDegree());
+							self.currentActiveDistribution("pointTwoDegree");
+							$("#distributionCells").prop('checked', true);
+							break;
+						case 2:
+							map.addLayer(self.densityCellsPointFiveDegree());
+							self.currentActiveDistribution("pointFiveDegree");
+							$("#distributionCells").prop('checked', true);
+							break;
+						case 3:
+							map.addLayer(self.densityCellsOneDegree());
+							self.currentActiveDistribution("oneDegree");
+							$("#distributionCells").prop('checked', true);
+							break;
+					}
+				}
+			});
+
 		},
 		loadCountyDropdownData: function() {
 			var self = this;
@@ -676,68 +725,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					$.getJSON("/rest/distribution/onedegree/stats/"+a.layer.options.cellID, function(allData) {
 						self.fillCellDensityData(allData, a);
 					});
-				});
-				$('#densitySelector').slider({
-					formater: function(value) {
-						var actualDensity;
-						switch(value) {
-							case 0:
-								actualDensity = "0.1° x 0.1°";
-								break;
-							case 1:
-								actualDensity = "0.2° x 0.2°";
-								break;
-							case 2:
-								actualDensity = "0.5° x 0.5°";
-								break;
-							case 3:
-								actualDensity = "1.0° x 1.0°";
-								break;
-						}
-						return 'Densidad: ' + actualDensity;
-					}
-				});
-
-				$("#densitySelector").on('slideStop', function(slideEvt) {
-					if(self.currentActiveDistribution() != "none") {
-						// Disable current active button
-						switch(self.currentActiveDistribution()) {
-							case "oneDegree":
-								map.removeLayer(self.densityCellsOneDegree());
-								break;
-							case "pointOneDegree":
-								map.removeLayer(self.densityCellsPointOneDegree());
-								break;
-							case "pointFiveDegree":
-								map.removeLayer(self.densityCellsPointFiveDegree());
-								break;
-							case "pointTwoDegree":
-								map.removeLayer(self.densityCellsPointTwoDegree());
-								break;
-						}
-					}
-					switch(slideEvt.value) {
-						case 0:
-							map.addLayer(self.densityCellsPointOneDegree());
-							self.currentActiveDistribution("pointOneDegree");
-							$("#distributionCells").prop('checked', true);
-							break;
-						case 1:
-							map.addLayer(self.densityCellsPointTwoDegree());
-							self.currentActiveDistribution("pointTwoDegree");
-							$("#distributionCells").prop('checked', true);
-							break;
-						case 2:
-							map.addLayer(self.densityCellsPointFiveDegree());
-							self.currentActiveDistribution("pointFiveDegree");
-							$("#distributionCells").prop('checked', true);
-							break;
-						case 3:
-							map.addLayer(self.densityCellsOneDegree());
-							self.currentActiveDistribution("oneDegree");
-							$("#distributionCells").prop('checked', true);
-							break;
-					}
 				});
 				self.showMapAreaWithSpinner();
 				self.currentActiveDistribution("oneDegree");
@@ -1288,7 +1275,8 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 
 					self.totalGeoOccurrences(returnedData.hits.total);
 
-					$("#densitySelector").slider('setValue', 3);
+					$('input[type=range]').rangeslider('setPosition', 3*100);
+
 					self.isFiltered(true);
 
 					// Enable download links
@@ -1923,7 +1911,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 
 			map.addLayer(self.densityCellsOneDegree());
 			self.totalGeoOccurrences(self.totalGeoOccurrencesCache());
-			$("#densitySelector").slider('setValue', 3);
+			$('input[type=range]').rangeslider('setPosition', 3*100);
 			self.currentActiveDistribution("oneDegree");
 
 			self.isFiltered(false);

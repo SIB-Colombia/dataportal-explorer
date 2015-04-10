@@ -26,7 +26,7 @@ requirejs.config({
     'kendoGrid': 'kendo/kendo.grid.min',
     'kendoSpanishCulture': 'kendo/cultures/kendo.culture.es-CO.min',
     'select2': '../../components/select2/select2.min',
-    'bootstrap-slider': '../../components/seiyria-bootstrap-slider/dist/bootstrap-slider.min',
+    'range-slider': '../../components/rangeslider.js/dist/rangeslider.min',
     'LeafletZoomSlider': 'leaflet/plugins/zoomslider/zoomslider'
   },
   shim: {
@@ -72,8 +72,8 @@ requirejs.config({
     'kendoSpanishCulture': {
       deps: ['kendo']
     },
-    'bootstrap-slider': {
-      deps: ['jquery', 'bootstrap']
+    'range-slider': {
+      deps: ['jquery']
     }
   }
 });
