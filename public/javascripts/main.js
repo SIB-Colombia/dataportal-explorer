@@ -19,7 +19,7 @@ requirejs.config({
     'LeafletDraw': 'leaflet/plugins/draw/leaflet.draw',
     'LeafletMarkerCluster': '../../components/leaflet.markercluster/dist/leaflet.markercluster',
     'LeafletSidebar': '../../components/leaflet-sidebar/src/L.Control.Sidebar',
-    'bootstrap': 'bootstrap/bootstrap.min',
+    'bootstrap': '../../components/bootstrap/dist/js/bootstrap.min',
     'knockout': '../../components/knockoutjs/dist/knockout',
     'knockoutKendoUI': 'knockout-kendoui/knockout-kendo.min',
     'kendo': 'kendo/kendo.web.min',

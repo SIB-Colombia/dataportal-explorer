@@ -1067,6 +1067,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		startSearch: function() {
 			var self = this;
 			var data = ko.toJSON(self.fillSearchConditions());
+			console.log(data);
 			$.ajax({
 				contentType: 'application/json',
 				type: 'POST',

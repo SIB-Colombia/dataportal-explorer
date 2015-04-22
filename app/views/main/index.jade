@@ -2,7 +2,7 @@ extends ../../layouts/layout
 
 block content
 	.container-fluid
-		.row-fluid
+		.row
 			section#processing-request
 				.processing-request-container
 					.content
@@ -14,9 +14,9 @@ block content
 				.tabbable
 					ul.nav.nav-pills
 						#actual-search-stats-data
-							span.title Resultados 
+							span.title Resultados&nbsp;
 								strong(data-bind="text: totalOccurrences")
-								|  registros 
+								|  registros&nbsp;
 								span.subtitle (
 									span(data-bind="text: totalGeoOccurrences")
 									|  georeferenciados)

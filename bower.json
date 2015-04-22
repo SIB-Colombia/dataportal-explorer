@@ -9,7 +9,7 @@
     "tests"
   ],
   "devDependencies": {
-    "bootstrap": "~3.3.2",
+    "bootstrap": "~3.3.4",
     "knockoutjs": "~3.3.0",
     "leaflet": "~0.7.3",
     "select2": "~3.4.8",
