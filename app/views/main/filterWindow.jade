@@ -548,9 +548,9 @@ block filterWindow
 			#explorerFiltersAndEditor
 				#filterEditorPane
 					#filters
-						.filter
+						.filter.form-inline
 							span(id='subject', class='type')
-								select(name='c[0].s', id='newFilterSubject', data-bind="value: selectedSubject, event: {change: changeFilterHelp}")
+								select.form-control(name='c[0].s', id='newFilterSubject', data-bind="value: selectedSubject, event: {change: changeFilterHelp}")
 									optgroup(label='Taxonomía')
 										option(value='0', selected='true') Nombre Científico
 										option(value='31') Nombre común
@@ -584,10 +584,10 @@ block filterWindow
 										option(value='13') Código de la colección
 										option(value='14') Número de catálogo
 							span(id='predicate', class='predicate')
-								select(name='c[0].p', id='newFilterPredicate', data-bind="value: selectedPredicate, options: predicateOptions, optionsText: 'name', optionsValue: 'value'")
+								select.form-control(name='c[0].p', id='newFilterPredicate', data-bind="value: selectedPredicate, options: predicateOptions, optionsText: 'name', optionsValue: 'value'")
 							span(id='newFilterValue', class='value')
 								// Input for simple text
-								input(name='c[0].o', type='text', id='statesInput', class='input-medium search-query', autocomplete='off', data-bind="click: enableFilterHelp, value: objectNameValue, valueUpdate: 'afterkeydown', visible: selectedSubject() == 0 || selectedSubject() == 31 || selectedSubject() == 100 || selectedSubject() == 101 || selectedSubject() == 102 || selectedSubject() == 103 || selectedSubject() == 104 || selectedSubject() == 105 || selectedSubject() == 106 || selectedSubject() == 1 || selectedSubject() == 2 || selectedSubject() == 34 || selectedSubject() == 35 || selectedSubject() == 24 || selectedSubject() == 25 || selectedSubject() == 21 || selectedSubject() == 12 || selectedSubject() == 13 || selectedSubject() == 14", style="display: none")
+								input.form-control(name='c[0].o', type='text', id='statesInput', class='input-medium search-query', autocomplete='off', data-bind="click: enableFilterHelp, value: objectNameValue, valueUpdate: 'afterkeydown', visible: selectedSubject() == 0 || selectedSubject() == 31 || selectedSubject() == 100 || selectedSubject() == 101 || selectedSubject() == 102 || selectedSubject() == 103 || selectedSubject() == 104 || selectedSubject() == 105 || selectedSubject() == 106 || selectedSubject() == 1 || selectedSubject() == 2 || selectedSubject() == 34 || selectedSubject() == 35 || selectedSubject() == 24 || selectedSubject() == 25 || selectedSubject() == 21 || selectedSubject() == 12 || selectedSubject() == 13 || selectedSubject() == 14", style="display: none")
 								// Input for country
 								select(name='c[0].o', id='dropDownCountry', data-bind='visible: selectedSubject() == 5, value: selectedCountry, selectCountry: {}',  style='display: none')
 									option(value="", default selected) Seleccione un país
@@ -895,7 +895,7 @@ block filterWindow
 									<!-- /ko -->
 									option(data-bind="attr: { value: marineZoneCode }, text: marineZoneName")
 								// Input for coordinates data
-								select(name="c[0].o", id="dropDownCoordinateState", data-bind="visible: selectedSubject() == 28, value: selectedCoordinateState",  style="display: none")
+								select.form-control(name="c[0].o", id="dropDownCoordinateState", data-bind="visible: selectedSubject() == 28, value: selectedCoordinateState",  style="display: none")
 									option(value="0") Incluye coordenadas
 									option(value="1") No incluye coordenadas
 								// Input for date range selector
@@ -903,7 +903,7 @@ block filterWindow
 									#startDate
 										strong Día de Inicio:
 										br
-										select(id="sd_day", name="sd_day", class="daySelect")
+										select.form-control(id="sd_day", name="sd_day", class="daySelect")
 											option(value="01") 1
 											option(value="02") 2
 											option(value="03") 3
@@ -935,7 +935,7 @@ block filterWindow
 											option(value="29") 29
 											option(value="30") 30
 											option(value="31") 31
-										select(id="sd_month", name="sd_month", class="monthSelect")
+										select.form-control(id="sd_month", name="sd_month", class="monthSelect")
 											option(value="01") Enero
 											option(value="02") Febrero
 											option(value="03") Marzo
@@ -948,11 +948,11 @@ block filterWindow
 											option(value="10") Octubre
 											option(value="11") Noviembre
 											option(value="12") Diciembre
-										input(id="sd_year", name="sd_year", class="yearInput", maxlength="4")
+										input.form-control(id="sd_year", name="sd_year", class="yearInput", maxlength="4")
 									#endDate
 										strong Día de Fin:
 										br
-										select(id="ed_day", name="ed_day", class="daySelect")
+										select.form-control(id="ed_day", name="ed_day", class="daySelect")
 											option(value="01") 1
 											option(value="02") 2
 											option(value="03") 3
@@ -984,7 +984,7 @@ block filterWindow
 											option(value="29") 29
 											option(value="30") 30
 											option(value="31") 31
-										select(id="ed_month", name="ed_month", class="monthSelect")
+										select.form-control(id="ed_month", name="ed_month", class="monthSelect")
 											option(value="01") Enero
 											option(value="02") Febrero
 											option(value="03") Marzo
@@ -997,18 +997,18 @@ block filterWindow
 											option(value="10") Octubre
 											option(value="11") Noviembre
 											option(value="12") Diciembre
-										input(id="ed_year", name="ed_year", class="yearInput", maxlength="4")
+										input.form-control(id="ed_year", name="ed_year", class="yearInput", maxlength="4")
 								// Input for year range selector
 								.dateSelectors(data-bind="visible: selectedSubject() == 33",  style="display: none")
 									span Empezando desde
 										span(style="font-size: 0.7em") (e incluyendo)
-									input(id="startYear", type="text", class="yearInput")
+									input.form-control(id="startYear", type="text", class="yearInput")
 									br
 									span hasta
 										span(style="font-size: 0.7em") (e incluyendo)
-									input(id="endYear", type="text", class="yearInput")
+									input.form-control(id="endYear", type="text", class="yearInput")
 								// Input for month
-								select(name="c[0].o", id="c[0].o", data-bind="visible: selectedSubject() == 22",  style="display: none")
+								select.form-control(name="c[0].o", id="c[0].o", data-bind="visible: selectedSubject() == 22",  style="display: none")
 									option(value="1") Enero
 									option(value="2") Febrero
 									option(value="3") Marzo
@@ -1022,7 +1022,7 @@ block filterWindow
 									option(value="11") Noviembre
 									option(value="12") Diciembre
 							span(class='submitFilter')
-								button(class='btn btn-small btn-add-filter', type='button', data-bind='click: addFilterItem') Agregar filtro
+								button(class='btn btn-sm btn-add-filter', type='button', data-bind='click: addFilterItem') Agregar filtro
 					#selectedFilterHelp
 						.taxonomyFilterHelp(data-bind="html: helpSearchText")
 					#filterWizard
@@ -1191,8 +1191,8 @@ block filterWindow
 									span(data-bind='text: coodinateText')
 								a(href='#', title='Quitar este filtro', data-bind='click: removeRadialCoordinateFilter')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
-						button(style="display: none", class='btn btn-small btn-add-filter', type='button', data-bind='visible: totalFilters() != 0, click: startSearch') Búsqueda
-						button(style="display: none", class='btn btn-small btn-add-filter', type='button', data-bind='visible: isFiltered(), click: removeFilter') Quitar filtro actual
+						button(style="display: none", class='btn btn-sm btn-add-filter', type='button', data-bind='visible: totalFilters() != 0, click: startSearch') Búsqueda
+						button(style="display: none", class='btn btn-sm btn-add-filter', type='button', data-bind='visible: isFiltered(), click: removeFilter') Quitar filtro actual
 				#densityButtonsPane
 					#densityButtons
 						span.detailDensity Deslice para cambiar el tamaño de la celda:
@@ -1219,13 +1219,13 @@ block filterWindow
 				#additionalInfoPane.occult-element
 					#downloadResults
 						.downloadItem
-							button.btn.btn-default.btn-small(type="button")
+							button.btn.btn-default.btn-sm(type="button")
 								i.icon-download-alt
 								| Descargar todo
-							button.btn.btn-default.btn-small(type="button")
+							button.btn.btn-default.btn-sm(type="button")
 								i.icon-download-alt
 								| Descargar solo georeferenciados
-							///button.btn.btn-default.btn-small(type="button")
+							///button.btn.btn-default.btn-sm(type="button")
 								span.glyphicon.glyphicon-star(aria-hidden="true") Descargar todos los resultados
 						///.downloadItem
 							a(target="_blank", data-bind="visible: totalGeoOccurrences() != 0 && totalFilters() != 0, attr: { href: urlDownloadSpreadsheetWithURL }")

@@ -454,7 +454,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				}
 			};
 
-			$(".leaflet-control-layers-overlays" ).prepend('<div id="unselect_all_layers"><button class="btn btn-info btn-mini" type="button" id="unselectLayersButton">Desmarcar todas las capas elegidas</button></div>');
+			$(".leaflet-control-layers-overlays" ).prepend('<div id="unselect_all_layers"><button class="btn btn-info btn-xs" type="button" id="unselectLayersButton">Desmarcar todas las capas elegidas</button></div>');
 			$("#unselectLayersButton").click(function() {
 				$(".leaflet-control-layers-overlays > label > input").each(function(i) {
 					if ($(this).is(":checked")) {
@@ -1067,7 +1067,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		startSearch: function() {
 			var self = this;
 			var data = ko.toJSON(self.fillSearchConditions());
-			console.log(data);
 			$.ajax({
 				contentType: 'application/json',
 				type: 'POST',

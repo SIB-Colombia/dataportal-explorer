@@ -91,7 +91,7 @@ require(["app/main"], function() {
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
   })();
 
-  $('a[data-toggle="tab"]').on('shown', function (e) {
+  $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     // Map Height
     $("#mapa").height($(window).height()-$("header").height());
     // Table view height

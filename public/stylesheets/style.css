@@ -245,11 +245,11 @@ p margin 10px 0 10px 0 a:link {
   margin: 0 auto;
 }
 .sib nav a {
-  max-width: 90px;
+  max-width: 119px;
   display: inline-block;
   padding: 13px;
   vertical-align: top;
-  min-height: 27px;
+  height: 50px;
 }
 .sib nav a:hover {
   background: rgba(255,255,255,0.3);
@@ -304,7 +304,7 @@ a
   width: 0px;
   border-left: #9bc2de 1px solid;
   display: inline-block;
-  height: 20px;
+  height: 50px;
   vertical-align: middle;
   margin: 0 4px;
 }
@@ -362,10 +362,6 @@ fieldset {
 }
 /* Fin diseño heredado Carlos Cubillos */
 /* Estilos area contenido mapa */
-.container-fluid {
-  padding-left: 0px;
-  padding-right: 0px;
-}
 #pane {
   position: relative;
   top: 0px;
@@ -399,6 +395,12 @@ fieldset {
   width: 26px !important;
   height: 26px !important;
 }
+.leaflet-control-zoomslider-body {
+  width: 20px !important;
+}
+.leaflet-control-zoomslider-knob {
+  width: 14px !important;
+}
 .leaflet-draw {
   margin-left: 13px !important;
 }
@@ -415,40 +417,47 @@ fieldset {
 }
 /* Fin estilos area contenido mapa */
 /* Estilos tab area y tab buttons para elegir vistas */
-#map-filter-area .tabbable .nav {
+#map-filter-area #tabzone .nav {
   margin-bottom: 3px;
-  margin-left: 20px;
   margin-right: 20px;
   position: fixed;
   z-index: 10;
   width: 700px;
-  margin-top: 53px;
   right: 0px;
   background: rgba(255,255,255,0.8);
   color: #1775bf;
   box-shadow: 0 2px 14px rgba(0,0,0,0.3);
+  border: 0px;
 }
-#map-filter-area .tabbable .nav li a {
+#map-filter-area #tabzone .nav li a {
   background-repeat: no-repeat;
   background-position: 10px center;
-  width: 50px;
+  width: 90px;
   font-weight: 700 !important;
   padding: 8px 10px 8px 40px;
   line-height: 0.9em;
+  margin: 0px;
+  border: 0px;
 }
-#map-filter-area .tabbable .nav li a:hover {
+#map-filter-area #tabzone .nav li a:hover {
   background-color: #a8dbf7;
+  border: 0px;
 }
-#map-filter-area .tabbable .tabla a {
+#map-filter-area #tabzone .nav .active a {
+  border: 0px;
+  background-color: #08c;
+  color: #fff;
+}
+#map-filter-area #tabzone .tabla a {
   background-image: url("/images/standard/ico_tabla_b.png");
 }
-#map-filter-area .tabbable .active.tabla a {
+#map-filter-area #tabzone .active.tabla a {
   background-image: url("/images/standard/ico_tabla_w.png") !important;
 }
-#map-filter-area .tabbable .active.mapa a {
+#map-filter-area #tabzone .active.mapa a {
   background-image: url("/images/standard/ico_mapcol_w.png") !important;
 }
-#map-filter-area .tabbable .mapa a {
+#map-filter-area #tabzone .mapa a {
   background-image: url("/images/standard/ico_mapcol_b.png");
 }
 #map-filter-area #actual-search-stats-data {
@@ -691,21 +700,21 @@ h4#currentSearch {
 #filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter input {
   font-size: 13px;
   font-family: 'Open sans', Helvetica, Verdana, Helvetica, Arial;
-}
-#filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter span.type {
-  margin-right: 10px;
+  margin-bottom: 5px;
 }
 #filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter span.type select {
-  width: 180px;
+  width: 230px;
+  margin-right: 5px;
 }
 #filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter span.predicate select {
-  width: 100px;
+  width: 60px;
 }
-#filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter span.value {
-  margin-bottom: 1em;
+#filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter span.submitFilter button {
+  display: block;
+  margin-top: 5px;
 }
 #filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter span.value input {
-  width: 260px;
+  width: 295px;
 }
 #filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter span.value select.daySelect {
   width: 55px;
