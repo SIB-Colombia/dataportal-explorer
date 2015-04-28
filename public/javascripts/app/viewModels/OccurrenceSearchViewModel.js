@@ -26,6 +26,16 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		self.totalFilters = 0;
 		self.isRectangle = false;
 
+		// Download data
+		self.downloadEmail = "";
+		self.downloadEmailFocused = true;
+		self.downloadEmailVerification = "";
+		self.downloadEmailVerificationFocused = true;
+		self.downloadReason = "";
+		self.downloadType = "all";
+		self.downloadFormValidationError = false;
+		self.downloadFormValidationErrorMessage = "";
+
 		// Total occurrences data
 		self.totalOccurrences = 0;
 		self.totalGeoOccurrences = 0;
@@ -115,6 +125,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 	_.extend(OccurrenceSearchViewModel.prototype, BaseViewModel.prototype, self.densityCellsOneDegree, {
 		initialize: function() {
 			var self = this;
+
 			this.loadCountyDropdownData();
 			this.loadParamoDropdownData();
 			this.loadMarineZoneDropdownData();
@@ -328,9 +339,17 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				};
 			};
 
-			// Event subscription
+			// Event change search text subscription
 			self.objectNameValue.subscribe(function (newValue) {
 				debounce(searchParamsResume, 500)();
+			});
+
+			self.downloadEmailFocused.subscribe(function(newValue) {
+				self.validateDownloadForm(newValue);
+			});
+
+			self.downloadEmailVerificationFocused.subscribe(function(newValue) {
+				self.validateDownloadForm(newValue);
 			});
 
 			searchParamsResume();
@@ -2023,6 +2042,76 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				return 1;
 			} else if(condition=="lt") {
 				return 2;
+			}
+		},
+		validateEmail: function(email) {
+			var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+			return re.test(email);
+		},
+		validateDownloadForm: function(newValue) {
+			var self = this;
+			if (!newValue) {
+				if(self.downloadEmail() !== "") {
+					if(!self.validateEmail(self.downloadEmail())) {
+						self.downloadFormValidationError(true);
+						self.downloadFormValidationErrorMessage("La dirección de correo electrónico es erronea.")
+						$("#inputEmail").parent().parent().addClass("has-error");
+					} else {
+						$("#inputEmail").parent().parent().removeClass("has-error");
+						$("#inputEmail").parent().parent().addClass("has-success");
+						self.downloadFormValidationError(false);
+						if(self.downloadEmail() !== "" && self.downloadEmailVerification() !== "") {
+							if(self.downloadEmail().toLowerCase() !== self.downloadEmailVerification().toLowerCase()) {
+								self.downloadFormValidationError(true);
+								self.downloadFormValidationErrorMessage("La dirección de correo electrónico y la dirección de confirmación deben ser iguales.")
+								$("#inputEmailConfirmation").parent().parent().addClass("has-error");
+							} else {
+								self.downloadFormValidationError(false);
+								$("#inputEmailConfirmation").parent().parent().removeClass("has-error");
+								$("#inputEmailConfirmation").parent().parent().addClass("has-success");
+							}
+						}
+					}
+				}
+			}
+		},
+		startDataDownload: function() {
+			var self = this;
+			self.validateDownloadForm(false);
+			if(!self.downloadFormValidationError() && self.downloadEmail() !== "" && self.downloadEmailVerification() !== "") {
+				if(grecaptcha.getResponse() !== "") {
+					// Form is valid a we get a captcha response
+					var data = ko.toJSON(self.fillSearchConditions());
+					var request = {
+						"email": self.downloadEmail(),
+						"reason": self.downloadReason(),
+						"type": self.downloadType(),
+						"captchaKey": grecaptcha.getResponse(),
+						"query": self.fillSearchConditions()
+					};
+					var data = ko.toJSON(request);
+					$.ajax({
+						contentType: 'application/json',
+						type: 'POST',
+						url: '/api/download/occurrences',
+						data: data,
+						beforeSend: function() {
+							$(".modal-body").addClass("hide-element");
+							$(".modal-content").addClass("loading3");
+						},
+						success: function(returnedData) {
+							console.log(returnedData);
+							$(".modal-body").removeClass("hide-element");
+							$(".modal-content").removeClass("loading3");
+							$('#modalDownloadAll').modal('hide');
+							$('#modalDownloadAllSuccess').modal('show');
+						},
+						dataType: 'jsonp'
+					});
+				}
+			} else {
+				self.downloadFormValidationError(true);
+				self.downloadFormValidationErrorMessage("Por favor complete los campos obligatorios para iniciar la descarga.");
 			}
 		}
 	});

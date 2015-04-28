@@ -98,4 +98,5 @@ require(["app/main"], function() {
     $("#reportGrid").height($(window).height()-$("header").height()-$("#actual-search-stats-data").height()-60);
     $("#reportGrid .k-grid-content").height($(window).height()-$("header").height()-$("#actual-search-stats-data").height()-60-91);
   });
+
 });

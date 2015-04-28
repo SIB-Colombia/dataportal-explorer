@@ -6,11 +6,13 @@ block content
 			section#processing-request
 				.processing-request-container
 					.content
-						h3 PROCESANDO SOLICITUD
-						span Por favor espere mientras la solicitud es procesada...
+						h3 CARGANDO DATOS
+						span Por favor espere mientras son descargados los datos geográficos...
 						.loading-area
 							img(src="/images/loading/loading5.gif")
 			section#map-filter-area.hiding
+				include modalForm
+				include modalFormSuccess
 				#tabzone(role="tabpanel")
 					ul.nav.nav-tabs(role="tablist")
 						#actual-search-stats-data

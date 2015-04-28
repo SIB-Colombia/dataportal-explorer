@@ -1218,20 +1218,15 @@ block filterWindow
 										| Ver registros biológicos
 				#additionalInfoPane.occult-element
 					#downloadResults
-						.downloadItem
-							button.btn.btn-default.btn-sm(type="button")
-								i.icon-download-alt
-								| Descargar todo
-							button.btn.btn-default.btn-sm(type="button")
-								i.icon-download-alt
-								| Descargar solo georeferenciados
-							///button.btn.btn-default.btn-sm(type="button")
-								span.glyphicon.glyphicon-star(aria-hidden="true") Descargar todos los resultados
-						///.downloadItem
+						//-.downloadItem
 							a(target="_blank", data-bind="visible: totalGeoOccurrences() != 0 && totalFilters() != 0, attr: { href: urlDownloadSpreadsheetWithURL }")
 								i(class="icon-download-alt icon-white")
 								span Descargar solo resultados con coordenadas.
-						///.downloadItem
+						//-.downloadItem
 							a(target="_blank", data-bind="visible: totalGeoOccurrences() != 0 && totalFilters() != 0, attr: { href: urlDownloadSpreadsheet }")
 								i(class="icon-download-alt icon-white")
 								span Descargar todos los resultados.
+						.downloadItem
+							button.btn.btn-default.btn-sm(type="button" data-toggle="modal" data-target="#modalDownloadAll")
+								i.icon-download-alt
+								| Descargar registros

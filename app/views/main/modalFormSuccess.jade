@@ -1,0 +1,16 @@
+// Modal form success
+#modalDownloadAllSuccess.modal.fade(tabindex="-1" role="dialog" aria-labelledby="modalDownloadAllSuccess" aria-hidden="true")
+	.modal-dialog
+		.modal-content
+			.modal-header
+				button.close(type="button" data-dismiss="modal" aria-label="Close")
+					span(aria-hidden="true") &times;
+			.modal-body
+				img(src="/images/success-small.jpg")
+				.modal-body-content
+					h3 Descarga en proceso
+					p Estamos preparando el archivo con los registros biológicos solicitados en su consulta. Este proceso puede tardar varios minutos, le notificaremos al correo electrónico que proporcionó la dirección de descarga cuando el proceso haya terminado.
+					p
+						strong Gracias por su espera.
+			.modal-footer
+				button.btn.btn-default(type="button" data-dismiss="modal") Cerrar
