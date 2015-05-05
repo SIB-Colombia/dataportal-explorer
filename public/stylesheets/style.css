@@ -1310,16 +1310,19 @@ h4#currentSearch {
 .modal-dialog .modal-content .modal-body .modal-body-content .col-sm-8 .radio p {
   line-height: 1.6em;
 }
-#modalDownloadAllSuccess .modal-body img {
+#modalDownloadAllSuccess .modal-body img,
+#modalDownloadAllFail .modal-body img {
   display: block;
   margin: auto;
 }
-#modalDownloadAllSuccess .modal-body .modal-body-content h3 {
+#modalDownloadAllSuccess .modal-body .modal-body-content h3,
+#modalDownloadAllFail .modal-body .modal-body-content h3 {
   font-family: 'Open sans', Helvetica, Verdana, Helvetica, Arial;
   font-size: 24px;
   text-align: center;
 }
-#modalDownloadAllSuccess .modal-body .modal-body-content p {
+#modalDownloadAllSuccess .modal-body .modal-body-content p,
+#modalDownloadAllFail .modal-body .modal-body-content p {
   text-align: center;
   padding-top: 10px;
 }

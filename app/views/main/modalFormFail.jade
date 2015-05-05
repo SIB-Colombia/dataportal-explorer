@@ -1,0 +1,16 @@
+// Modal form success
+#modalDownloadAllFail.modal.fade(tabindex="-1" role="dialog" aria-labelledby="modalDownloadAllSuccess" aria-hidden="true")
+	.modal-dialog
+		.modal-content
+			.modal-header
+				button.close(type="button" data-dismiss="modal" aria-label="Close")
+					span(aria-hidden="true") &times;
+			.modal-body
+				img(src="/images/fail2.png")
+				.modal-body-content
+					h3 Lo sentimos
+					p No es posible atender su solicitud en este momento ya el servicio de descarga no esta disponible, por favor reintente mas tarde.
+					p
+						strong Gracias por su comprensión.
+			.modal-footer
+				button.btn.btn-default(type="button" data-dismiss="modal") Cerrar

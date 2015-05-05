@@ -2081,7 +2081,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			if(!self.downloadFormValidationError() && self.downloadEmail() !== "" && self.downloadEmailVerification() !== "") {
 				if(grecaptcha.getResponse() !== "") {
 					// Form is valid a we get a captcha response
-					var data = ko.toJSON(self.fillSearchConditions());
 					var request = {
 						"email": self.downloadEmail(),
 						"reason": self.downloadReason(),
@@ -2100,11 +2099,16 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 							$(".modal-content").addClass("loading3");
 						},
 						success: function(returnedData) {
-							console.log(returnedData);
 							$(".modal-body").removeClass("hide-element");
 							$(".modal-content").removeClass("loading3");
 							$('#modalDownloadAll').modal('hide');
 							$('#modalDownloadAllSuccess').modal('show');
+						},
+						error: function(error) {
+							$(".modal-body").removeClass("hide-element");
+							$(".modal-content").removeClass("loading3");
+							$('#modalDownloadAll').modal('hide');
+							$('#modalDownloadAllFail').modal('show');
 						},
 						dataType: 'jsonp'
 					});
