@@ -352,6 +352,10 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				self.validateDownloadForm(newValue);
 			});
 
+			$('#modalDownloadAll').on('show.bs.modal', function (event) {
+				grecaptcha.reset();
+			});
+
 			searchParamsResume();
 			// Selected department filter name
 			self.dropDownCoordinateStateText = ko.computed(function() {
