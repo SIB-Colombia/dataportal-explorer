@@ -352,6 +352,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				self.validateDownloadForm(newValue);
 			});
 
+			// Reset captcha before modal form load
 			$('#modalDownloadAll').on('show.bs.modal', function (event) {
 				grecaptcha.reset();
 			});
@@ -2034,9 +2035,12 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				url += "&c["+counter+"].s=2&c["+counter+"].p=1&c["+counter+"].o="+self.selectedOnMapPoligonCoordinates()[0].lng;
 				counter++;
 			}
+			if(self.selectedOnMapRadialCoordinates().length != 0 || self.selectedOnMapPoligonCoordinates().length != 0 || self.isRectangle()) {
+				counter++;
+			}
 			self.urlDownloadSpreadsheet(url);
 			self.urlDownloadSpreadsheetWithURL(url+"&c["+counter+"].s=28&c["+counter+"].p=0&c["+counter+"].o=0");
-			if( (counter !== 0 && self.selectedOnMapRadialCoordinates().length === 0 && self.selectedOnMapPoligonCoordinates().length === 0) || (counter !== 0 && self.selectedOnMapPoligonCoordinates().length !== 0 && self.isRectangle()) )
+			if( counter !== 0 )
 				self.showAdditionalInfoPane();
 		},
 		dataPortalConditionCodes: function(condition) {
@@ -2116,6 +2120,9 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 						},
 						dataType: 'jsonp'
 					});
+				} else {
+					self.downloadFormValidationError(true);
+					self.downloadFormValidationErrorMessage("Por favor complete los campos obligatorios para iniciar la descarga.");
 				}
 			} else {
 				self.downloadFormValidationError(true);
