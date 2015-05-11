@@ -1113,7 +1113,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					self.densityCellsPointFiveDegree(new L.FeatureGroup());
 					self.densityCellsPointTwoDegree(new L.FeatureGroup());
 
-					map.addLayer(self.densityCellsOneDegree());
 					$.each(returnedData.aggregations.cellgroup.buckets, function(i, cell) {
 						var idAndLocation = cell.key.split("~~~");
 						var bounds = [[parseFloat(idAndLocation[1]), parseFloat(idAndLocation[2])], [parseFloat(idAndLocation[1])+1, parseFloat(idAndLocation[2])+1]];
@@ -1298,16 +1297,30 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					});
 
 					self.totalGeoOccurrences(returnedData.hits.total);
-
-					$('input[type=range]').rangeslider('setPosition', 3*100);
-
 					self.isFiltered(true);
 
 					// Enable download links
 					self.generateURLSpreadsheet();
 
 					// Set current active distribution
-					self.currentActiveDistribution("oneDegree");
+					if(self.currentActiveDistribution() != "none") {
+						// Disable current active button
+						switch(self.currentActiveDistribution()) {
+							case "oneDegree":
+								map.addLayer(self.densityCellsOneDegree());
+								break;
+							case "pointOneDegree":
+								map.addLayer(self.densityCellsPointOneDegree());
+								break;
+							case "pointFiveDegree":
+								map.addLayer(self.densityCellsPointFiveDegree());
+								break;
+							case "pointTwoDegree":
+								map.addLayer(self.densityCellsPointTwoDegree());
+								break;
+						}
+					}
+
 				},
 				dataType: 'jsonp'
 			});
