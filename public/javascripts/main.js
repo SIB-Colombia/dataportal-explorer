@@ -99,4 +99,8 @@ require(["app/main"], function() {
     $("#reportGrid .k-grid-content").height($(window).height()-$("header").height()-$("#actual-search-stats-data").height()-60-91);
   });
 
+  $(function () {
+    $('[data-toggle="popover"]').popover();
+  });
+
 });

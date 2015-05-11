@@ -667,6 +667,7 @@ h4#currentSearch {
 #filtersContainer #explorerFiltersAndEditor #filterEditorPane {
   width: auto;
   vertical-align: top;
+  margin-bottom: 10px;
 }
 #filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter {
   padding: 0px 20px;
@@ -684,9 +685,30 @@ h4#currentSearch {
 #filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter span.predicate select {
   width: 60px;
 }
-#filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter span.submitFilter button {
-  display: block;
-  margin-top: 5px;
+#filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter .submitFilter {
+  background: url("/images/standard/ico_bulb2.png") no-repeat center right;
+}
+#filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter .submitFilter .filterHelp {
+  float: right;
+  margin-right: 28px;
+  margin-top: 15px;
+  font-size: 0.9em;
+}
+#filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter .submitFilter .filterHelp .popover {
+  width: 500px;
+}
+#filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter .submitFilter .filterHelp .popover .popover-content {
+  font-family: 'Open sans', Helvetica, Verdana, Helvetica, Arial;
+}
+#filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter .submitFilter .filterHelp .popover .popover-content p {
+  padding: 5px 0;
+  font-size: 0.8em;
+}
+#filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter .submitFilter .filterHelp .popover .popover-content p:first-child {
+  color: #595045;
+  font-weight: bold;
+  margin: 5px 0;
+  font-size: 0.9em;
 }
 #filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter span.value input {
   display: block;

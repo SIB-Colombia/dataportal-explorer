@@ -1021,9 +1021,11 @@ block filterWindow
 									option(value="10") Octubre
 									option(value="11") Noviembre
 									option(value="12") Diciembre
-							span(class='submitFilter')
+							.submitFilter
 								button(class='btn btn-sm btn-add-filter', type='button', data-bind='click: addFilterItem') Agregar filtro
-					#selectedFilterHelp
+								.filterHelp
+									a#helpPopOver(role="button" tabindex="0" data-toggle="popover" data-trigger="focus" data-html="true" data-content="<p>Escriba un nombre científico y pulse en Agregar filtro.</p><p>Este filtro devolverá cualquier registro que posea un nombre que concuerde con el identificador dado del organismo, sin importar como está clasificado el organismo.</p>") Ayuda
+					//-#selectedFilterHelp
 						.taxonomyFilterHelp(data-bind="html: helpSearchText")
 					#filterWizard
 				#constructedFiltersPane

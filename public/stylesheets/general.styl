@@ -537,6 +537,7 @@ h4#currentSearch
 		#filterEditorPane
 			width auto
 			vertical-align top
+			margin-bottom 10px
 			.filter
 				padding 0px 20px
 				select, input
@@ -550,10 +551,25 @@ h4#currentSearch
 				span.predicate
 					select
 						width 60px
-				span.submitFilter
-					button
-						display block
-						margin-top 5px
+				.submitFilter
+					background url("/images/standard/ico_bulb2.png") no-repeat center right
+					.filterHelp
+						float right
+						margin-right 28px
+						margin-top 15px
+						font-size 0.9em
+						.popover
+							width 500px
+							.popover-content
+								font-family 'Open sans', Helvetica, Verdana, Helvetica, Arial
+								p
+									padding 5px 0
+									font-size 0.8em
+								p:first-child
+									color #595045
+									font-weight bold
+									margin 5px 0
+									font-size 0.9em
 				span.value
 					input
 						display block

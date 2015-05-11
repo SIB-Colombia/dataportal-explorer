@@ -977,6 +977,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			var self = this;
 			$.getJSON("/rest/occurrences/searchhelptext/name/"+self.selectedSubject(), function(allData) {
 				self.helpSearchText(allData.hits.hits[0]._source.text);
+				$("#helpPopOver").attr("data-content", self.helpSearchText());
 			});
 		},
 		enableFilterHelp: function() {
