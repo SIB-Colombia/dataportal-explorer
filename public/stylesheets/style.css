@@ -686,13 +686,18 @@ h4#currentSearch {
   width: 60px;
 }
 #filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter .submitFilter {
-  background: url("/images/standard/ico_bulb2.png") no-repeat center right;
+  margin-top: 10px;
 }
 #filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter .submitFilter .filterHelp {
-  float: right;
-  margin-right: 28px;
-  margin-top: 15px;
+  display: inline-block;
   font-size: 0.9em;
+  padding-left: 13px;
+}
+#filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter .submitFilter .filterHelp a {
+  outline: 0px;
+}
+#filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter .submitFilter .filterHelp a img {
+  vertical-align: middle;
 }
 #filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter .submitFilter .filterHelp .popover {
   width: 500px;
@@ -877,7 +882,6 @@ h4#currentSearch {
 .btn-add-filter {
   color: #fff;
   background: #2b7fbc !important;
-  margin-top: 8px;
   text-transform: uppercase;
   font-weight: bold;
 }
