@@ -10,6 +10,7 @@ explorador.sublime-project
 explorador.sublime-workspace
 temp/
 logs/
+public/components
 npm-debug.log
 
 pids

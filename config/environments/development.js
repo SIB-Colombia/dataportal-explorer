@@ -1,10 +1,12 @@
 var express = require('express')
   , path = require('path')
   , winston = require('winston');
+var serveStatic = require('serve-static');
+var errorhandler = require('errorhandler');
 
 module.exports = function(parent) {
-	parent.use(express.errorHandler());
-	parent.use(express.static(path.join(__dirname, '/../../public')));
+  parent.use(errorhandler());
+	parent.use(serveStatic(path.join(__dirname, '/../../public')));
 
 	logger = new (winston.Logger)({
 		transports: [

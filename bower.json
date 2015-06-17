@@ -1,0 +1,23 @@
+{
+  "name": "Dataportal-Explorer",
+  "version": "0.2.0",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "public/components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "bootstrap": "~3.3.4",
+    "knockoutjs": "~3.3.0",
+    "leaflet": "~0.7.3",
+    "select2": "~3.4.8",
+    "leaflet.markercluster": "~0.4.0",
+    "leaflet-sidebar": "~0.1.5"
+  },
+  "dependencies": {
+    "rangeslider.js": "~1.1.0",
+    "jquery": "~2.1.3"
+  }
+}

@@ -1,25 +1,13 @@
-/*var mongoose = require('mongoose')
-  , CanonicalGroup = mongoose.model('CanonicalGroup')
-  , KingdomGroup = mongoose.model('KingdomGroup')
-  , PhylumGroup = mongoose.model('PhylumGroup')
-  , ClassGroup = mongoose.model('ClassGroup')
-  , OrderRankGroup = mongoose.model('OrderRankGroup')
-  , FamilyGroup = mongoose.model('FamilyGroup')
-  , GenusGroup = mongoose.model('GenusGroup')
-  , SpeciesGroup = mongoose.model('SpeciesGroup')
-  , DataProvidersGroup = mongoose.model('DataProvidersGroup')
-  , DataResourcesGroup = mongoose.model('DataResourcesGroup')
-  , DataResourcesGroup = mongoose.model('DataResourcesGroup')
-  , InstitutionCodeGroup = mongoose.model('InstitutionCodeGroup')
-  , CollectionCodeGroup = mongoose.model('CollectionCodeGroup')
-  , CountriesGroup = mongoose.model('CountriesGroup')
-  , DepartmentsGroup = mongoose.model('DepartmentsGroup')
-  , GeoOccurrence = mongoose.model('GeoOccurrence')
-  , Occurrence = mongoose.model('Occurrence')
-  , HelpSearchText = mongoose.model('HelpSearchText')*/
-
 var occurrencesES = require("../../models/elasticsearch/occurrencesModel");
 var _ = require('underscore');
+
+// Get single occurrence data
+exports.searchOccurrence = function(req, res) {
+	occurrences = occurrencesES.getOccurrence(req.params._id);
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
+	});
+};
 
 // Resume Canonical Name data JSON response
 exports.searchResumeScientificName = function(req, res) {
@@ -323,69 +311,91 @@ exports.listMarineZones = function(req, res) {
 	});
 };
 
+// Get all occurrences inside a bounding box
+exports.getOccurrencesInBoundingBox = function(req, res) {
+	occurrences = occurrencesES.getOccurrencesInBoundingBox(req.params._top, req.params._bottom, req.params._left, req.params._right, req.body);
+	occurrences.exec(function(err, data){
+		res.jsonp(JSON.parse(data));
+	});
+};
+
 exports.geoJsonMapPoints = function(req, res) {
 	occurrences = occurrencesES.geoJsonMapPoints(req.query);
 	occurrences.exec(function(err, data){
 		var result = JSON.parse(data);
 
 		var response = {};
-		if(result.hits) {
+		if(result.hits.total !== 0) {
 			response = {
-			"hostUrl": req.protocol + "://" + req.get('host') + req.path,
-			"query": req.query,
-			"count": 1000,
-			"start": 0,
-			"totalMatched": result.hits.total,
-			"features": []
-		};
+				"hostUrl": req.protocol + "://" + req.get('host') + req.path,
+				"query": req.query,
+				"count": 1000,
+				"start": 0,
+				"totalMatched": result.hits.total,
+				"type": "FeatureCollection",
+				"features": []
+			};
 
-		response["start"] = req.query.startindex || 0;
-		if(req.query.maxresults) {
-			if(req.query.maxresults > 1000) {
-				response["count"] = 1000;
+			response["start"] = parseInt(req.query.startindex) || 0;
+			if(req.query.maxresults) {
+				if(req.query.maxresults > 1000) {
+					response["count"] = 1000;
+				} else {
+					response["count"] = parseInt(req.query.maxresults);
+				}
 			} else {
-				response["count"] = req.query.maxresults;
+				response["count"] = parseInt(req.query.maxresults) || 1000;
 			}
-		} else {
-			response["count"] = req.query.maxresults || 1000;
-		}
-		var currentCanonical = "";
-		var currentFeature = -1;
-		var currentGeometry = 0;
-		_.each(result.hits.hits, function(occurrence) {
-			if(occurrence.fields.canonical != currentCanonical) {
-				// New feature
-				// New currentCanonical
-				currentCanonical = occurrence.fields.canonical;
-				currentFeature += 1;
-				// A new geometry for a new geature
-				currentGeometry = 0;
-				response["features"][currentFeature] = {};
-				response["features"][currentFeature]["taxonName"] = occurrence.fields.canonical;
-				response["features"][currentFeature]["type"] = "Feature";
-				response["features"][currentFeature]["key"] = occurrence.fields.id;
-				response["features"][currentFeature]["geometry"] = {};
-				response["features"][currentFeature]["geometry"]["type"] = "GeometryCollection";
-				response["features"][currentFeature]["geometry"]["geometries"] = [];
-				response["features"][currentFeature]["geometry"]["geometries"][currentGeometry] = {};
-				response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["occurrenceID"] = occurrence.fields.id;
-				response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["type"] = "Point";
-				response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["coordinates"] = [];
-				response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["coordinates"][0] = occurrence.fields.location.lon;
-				response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["coordinates"][1] = occurrence.fields.location.lat;
-				currentGeometry += 1;
-			} else {
-				// Existing feature
-				response["features"][currentFeature]["geometry"]["geometries"][currentGeometry] = {};
-				response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["occurrenceID"] = occurrence.fields.id;
-				response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["type"] = "Point";
-				response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["coordinates"] = [];
-				response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["coordinates"][0] = occurrence.fields.location.lon;
-				response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["coordinates"][1] = occurrence.fields.location.lat;
-				currentGeometry += 1;
-			}
-		});
-		} else {
+			var currentCanonical = "";
+			var currentFeature = -1;
+			var currentGeometry = 0;
+			_.each(result.hits.hits, function(occurrence) {
+				if(occurrence._source.canonical != currentCanonical) {
+					// New feature
+					// New currentCanonical
+					currentCanonical = occurrence._source.canonical;
+					currentFeature += 1;
+					// A new geometry for a new geature
+					currentGeometry = 0;
+					response["features"][currentFeature] = {};
+					response["features"][currentFeature]["type"] = "Feature";
+					response["features"][currentFeature]["properties"] = {};
+					response["features"][currentFeature]["properties"]["taxonName"] = occurrence._source.canonical;
+					response["features"][currentFeature]["properties"]["key"] = occurrence._source.id;
+					response["features"][currentFeature]["geometry"] = {};
+					response["features"][currentFeature]["geometry"]["type"] = "GeometryCollection";
+					response["features"][currentFeature]["geometry"]["geometries"] = [];
+					response["features"][currentFeature]["geometry"]["geometries"][currentGeometry] = {};
+					response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["type"] = "Point";
+					response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["properties"] = {};
+					response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["properties"]["occurrenceID"] = occurrence._source.id;
+					response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["coordinates"] = [];
+					response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["coordinates"][0] = occurrence._source.location.lon;
+					response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["coordinates"][1] = occurrence._source.location.lat;
+					currentGeometry += 1;
+				} else {
+					// Existing feature
+					response["features"][currentFeature]["geometry"]["geometries"][currentGeometry] = {};
+					response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["type"] = "Point";
+					response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["properties"] = {};
+					response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["properties"]["occurrenceID"] = occurrence._source.id;
+					response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["coordinates"] = [];
+					response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["coordinates"][0] = occurrence._source.location.lon;
+					response["features"][currentFeature]["geometry"]["geometries"][currentGeometry]["coordinates"][1] = occurrence._source.location.lat;
+					currentGeometry += 1;
+				}
+			});
+		} else if (result.hits.total === 0) {
+			response = {
+				"hostUrl": req.protocol + "://" + req.get('host') + req.path,
+				"query": req.query,
+				"count": 0,
+				"start": 0,
+				"error": "No entries for current query.",
+				"cause": "No data in the database.",
+				"features": []
+			};
+		} else if(typeof result.hits.total === "undefined") {
 			response = {
 				"hostUrl": req.protocol + "://" + req.get('host') + req.path,
 				"query": req.query,
@@ -401,97 +411,7 @@ exports.geoJsonMapPoints = function(req, res) {
 	});
 };
 
-// Search occurrences
-/*exports.searchGeoOccurrences = function(req, res) {
-	var data = req.body;
-	var scientificNames = [];
-	var taxonNames = [];
-	var countryIDs = [];
-	var departmentIDs = [];
-	var providerNames = [];
-	var resourceNames = [];
-	if(data.scientificNames) {
-		for(var i = 0; data.scientificNames.length > i; i++) {
-			scientificNames[i] = {canonical: new RegExp(data.scientificNames[i].textObject, "i")};
-		}
-	} else {
-		scientificNames[0] = {};
-	}
-	if(data.taxons) {
-		for(var i = 0; data.taxons.length > i; i++) {
-			if(data.taxons[i].textName == "Reino")
-				taxonNames[i] = {kingdom: data.taxons[i].textObject};
-			if(data.taxons[i].textName == "Filo")
-				taxonNames[i] = {phylum: data.taxons[i].textObject};
-			if(data.taxons[i].textName == "Clase")
-				taxonNames[i] = {taxonClass: data.taxons[i].textObject};
-			if(data.taxons[i].textName == "Orden")
-				taxonNames[i] = {order_rank: data.taxons[i].textObject};
-			if(data.taxons[i].textName == "Familia")
-				taxonNames[i] = {family: data.taxons[i].textObject};
-			if(data.taxons[i].textName == "Genero")
-				taxonNames[i] = {genus: data.taxons[i].textObject};
-			if(data.taxons[i].textName == "Especie")
-				taxonNames[i] = {species: data.taxons[i].textObject};
-		}
-	} else {
-		taxonNames[0] = {};
-	}
-	if(data.countries) {
-		for(var i = 0; data.countries.length > i; i++) {
-			countryIDs[i] = {iso_country_code: data.countries[i].textObject};
-		}
-	} else {
-		countryIDs[0] = {};
-	}
-	if(data.departments) {
-		for(var i = 0; data.departments.length > i; i++) {
-			departmentIDs[i] = {iso_department_code: data.departments[i].textObject};
-		}
-	} else {
-		departmentIDs[0] = {};
-	}
-	if(data.providers) {
-		for(var i = 0; data.providers.length > i; i++) {
-			providerNames[i] = {data_provider_name: data.providers[i].textObject};
-		}
-	} else {
-		providerNames[0] = {};
-	}
-	if(data.resources) {
-		for(var i = 0; data.resources.length > i; i++) {
-			resourceNames[i] = {data_resource_name: data.resources[i].textObject};
-		}
-	} else {
-		resourceNames[0] = {};
-	}
-	GeoOccurrence.find({$and: [{$or: scientificNames}, {$or: taxonNames}, {$or: countryIDs}, {$or: departmentIDs}, {$or: providerNames}, {$or: resourceNames}]}).select('id canonical num_occurrences latitude longitude').exec(function (err, geooccurrences) {
-		if(err)
-			res.send("Error getting search geo occurrence data.");
-		res.jsonp(geooccurrences);
-	});
-};*/
-
-/*exports.searchDetailsGeoOccurrences = function(req, res) {
-	Occurrence.find({canonical: req.query.canonical, latitude: req.query.latitude, longitude: req.query.longitude}).select('id canonical latitude longitude data_provider_id data_provider_name data_resource_id data_resource_name institution_code_id institution_code collection_code_id collection_code catalogue_number_id catalogue_number created occurrence_date iso_country_code iso_department_code altitude_metres depth_centimetres kingdom phylum taxonClass order_rank family genus species').exec(function (err, occurrences) {
-		if(err)
-			res.send("Error getting search occurrence details data.");
-		res.jsonp(occurrences);
-	});
-};
-
-exports.searchInitialOccurrences = function(req, res) {
-	GeoOccurrence.find().select('id canonical num_occurrences latitude longitude').limit(20000).exec(function (err, geooccurrences) {
-		if(err)
-			res.send("Error getting initial geo occurrence data.");
-		res.jsonp(geooccurrences);
-	});
-};*/
-
 exports.searchInitialPagedDataOccurrences = function(req, res) {
-	//console.log(req.query);
-	//console.log(req.query.filter);
-	//console.log(req.query.filter.logic);
 	occurrences = occurrencesES.getOccurrencesWithFilter(req.query);
 	occurrences.exec(function(err, data){
 		res.jsonp(JSON.parse(data));

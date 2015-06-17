@@ -1,6 +1,53 @@
-define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles", "LeafletProviders", "LeafletControlFullScreen", "LeafletDraw"], function($) {
-	//console.log(kendo);
-	//kendo.culture("es-CO");
+define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles", "LeafletProviders", "LeafletControlFullScreen", "LeafletDraw", "LeafletZoomSlider", "LeafletSidebar"], function($) {
+	
+	L.Control.MousePosition = L.Control.extend({
+	  options: {
+	    position: 'bottomright',
+	    separator: ' : ',
+	    emptyString: 'Unavailable',
+	    lngFirst: false,
+	    numDigits: 5,
+	    lngFormatter: undefined,
+	    latFormatter: undefined,
+	    prefix: ""
+	  },
+
+	  onAdd: function (map) {
+	    this._container = L.DomUtil.create('div', 'leaflet-control-mouseposition');
+	    L.DomEvent.disableClickPropagation(this._container);
+	    map.on('mousemove', this._onMouseMove, this);
+	    this._container.innerHTML=this.options.emptyString;
+	    return this._container;
+	  },
+
+	  onRemove: function (map) {
+	    map.off('mousemove', this._onMouseMove)
+	  },
+
+	  _onMouseMove: function (e) {
+	    var lng = this.options.lngFormatter ? this.options.lngFormatter(e.latlng.lng) : L.Util.formatNum(e.latlng.lng, this.options.numDigits);
+	    var lat = this.options.latFormatter ? this.options.latFormatter(e.latlng.lat) : L.Util.formatNum(e.latlng.lat, this.options.numDigits);
+	    var value = this.options.lngFirst ? lng + this.options.separator + lat : lat + this.options.separator + lng;
+	    var prefixAndValue = this.options.prefix + ' ' + value;
+	    this._container.innerHTML = prefixAndValue;
+	  }
+
+	});
+
+	L.Map.mergeOptions({
+	    positionControl: false
+	});
+
+	L.Map.addInitHook(function () {
+	    if (this.options.positionControl) {
+	        this.positionControl = new L.Control.MousePosition();
+	        this.addControl(this.positionControl);
+	    }
+	});
+
+	L.control.mousePosition = function (options) {
+	    return new L.Control.MousePosition(options);
+	};
 
 	// Set map initial height
 	$("#mapa").height($(window).height()-$("header").height());
@@ -219,6 +266,7 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 	var map = L.map('mapa', {
 		center: [4.781505, -79.804687],
 		zoom: 6,
+		zoomControl: false,
 		//crs: L.CRS.EPSG4326,
 		layers: [googleTerrain]
 	});
@@ -229,19 +277,6 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 		'Invemar: Ecosistemas costeros': invemarEcosistemasCosteros,
 		'Invemar: Área de régimen común': invemarAreaRegimenComun,
 		'Invemar: Límite departamental': invemarLimiteDepartamental,
-		'IAVH: Complejos páramos': humboldtComplejosParamos,
-		'IAVH: Grilla': humboldtGrilla,
-		'IAVH: Embalses': humboldtEmbalses,
-		'IAVH: Áreas protegidas - RUNAP': humboldtAreasProtegidasRunap,
-		'IAVH: Lagunas': humboldtLagunas,
-		'IAVH: Centros poblados': humboldtCentrosPoblados,
-		'IAVH: Cuencas hidrográficas': humboldtCuencasHidrograficas,
-		'IAVH: Jurisdicciones CAR': humboldtCars,
-		'IAVH: Parques nacionales naturales': humboldtParquesNacionalesNaturales,
-		'IAVH: AICAS': humboldtAicas,
-		'IAVH: Ecosistemas generales': humboldtEcosistemasGenerales,
-		'IAVH: Resguardos indígenas': humboldtResguardosIndigenas,
-		'IAVH: Comunidades afrodescendientes': humboldtComunidadesAfro,
 		"OpenWeatherMap: Clouds": L.tileLayer.provider('OpenWeatherMap.Clouds'),
 		"OpenWeatherMap: CloudsClassic": L.tileLayer.provider('OpenWeatherMap.CloudsClassic'),
 		"OpenWeatherMap: Precipitation": L.tileLayer.provider('OpenWeatherMap.Precipitation'),
@@ -253,6 +288,7 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 	};
 	
 	baseAndFirstOverlays = L.control.layers(baseLayers, wmsLayers, {collapsed: true}).addTo(map);
+	
 	//L.control.layers(wmsLayers).addTo(map);
 	L.control.fullscreen({
 		position: 'topleft',
@@ -262,6 +298,15 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 	featureGroup = new L.FeatureGroup().addTo(map);
 
 	L.control.scale().addTo(map);
+
+	// Leaflet mouse position
+	L.control.mousePosition().addTo(map);
+
+	// Sidebar control
+	sidebar = L.control.sidebar('sidebar', {
+		position: 'left'
+	});
+	map.addControl(sidebar);
 
 	// Set toolbar draw to spanish
 	L.drawLocal = {
@@ -382,6 +427,12 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 		edit: {
 			featureGroup: featureGroup
 		}
+	}).addTo(map);
+
+	// Zoom slider control
+	L.control.zoomslider({
+		position: 'topleft',
+		title: 'Cambiar nivel de acercamiento.'
 	}).addTo(map);
 
 	// Enable floating windows for search floating window

@@ -542,13 +542,15 @@ block filterWindow
 								li
 									span(data-bind="text: name")
 						dd.cuenta(data-bind="text: count")
+		///#detailsPaneContainer
+			| Texto de prueba
 		#filtersContainer
 			#explorerFiltersAndEditor
 				#filterEditorPane
 					#filters
-						.filter
+						.filter.form-inline
 							span(id='subject', class='type')
-								select(name='c[0].s', id='newFilterSubject', data-bind="value: selectedSubject, event: {change: changeFilterHelp}")
+								select.form-control(name='c[0].s', id='newFilterSubject', data-bind="value: selectedSubject, event: {change: changeFilterHelp}")
 									optgroup(label='Taxonomía')
 										option(value='0', selected='true') Nombre Científico
 										option(value='31') Nombre común
@@ -582,12 +584,13 @@ block filterWindow
 										option(value='13') Código de la colección
 										option(value='14') Número de catálogo
 							span(id='predicate', class='predicate')
-								select(name='c[0].p', id='newFilterPredicate', data-bind="options: predicateOptions, optionsText: 'name', optionsValue: 'value', value: selectedPredicate")
+								select.form-control(name='c[0].p', id='newFilterPredicate', data-bind="value: selectedPredicate, options: predicateOptions, optionsText: 'name', optionsValue: 'value'")
 							span(id='newFilterValue', class='value')
 								// Input for simple text
-								input(name='c[0].o', type='text', id='statesInput', class='input-medium search-query', autocomplete='off', data-bind="click: enableFilterHelp, value: objectNameValue, valueUpdate: 'afterkeydown', visible: selectedSubject() == 0 || selectedSubject() == 31 || selectedSubject() == 100 || selectedSubject() == 101 || selectedSubject() == 102 || selectedSubject() == 103 || selectedSubject() == 104 || selectedSubject() == 105 || selectedSubject() == 106 || selectedSubject() == 1 || selectedSubject() == 2 || selectedSubject() == 34 || selectedSubject() == 35 || selectedSubject() == 24 || selectedSubject() == 25 || selectedSubject() == 21 || selectedSubject() == 12 || selectedSubject() == 13 || selectedSubject() == 14", style="display: none")
+								input.form-control(name='c[0].o', type='text', id='statesInput', class='input-medium search-query', autocomplete='off', data-bind="click: enableFilterHelp, value: objectNameValue, valueUpdate: 'afterkeydown', visible: selectedSubject() == 0 || selectedSubject() == 31 || selectedSubject() == 100 || selectedSubject() == 101 || selectedSubject() == 102 || selectedSubject() == 103 || selectedSubject() == 104 || selectedSubject() == 105 || selectedSubject() == 106 || selectedSubject() == 1 || selectedSubject() == 2 || selectedSubject() == 34 || selectedSubject() == 35 || selectedSubject() == 24 || selectedSubject() == 25 || selectedSubject() == 21 || selectedSubject() == 12 || selectedSubject() == 13 || selectedSubject() == 14", style="display: none")
 								// Input for country
 								select(name='c[0].o', id='dropDownCountry', data-bind='visible: selectedSubject() == 5, value: selectedCountry, selectCountry: {}',  style='display: none')
+									option(value="", default selected) Seleccione un país
 									option(value="AF") Afganistán
 									option(value="AX") Islas de Åland
 									option(value="AL") Albania
@@ -839,6 +842,7 @@ block filterWindow
 									option(value="ZW") Zimbabue
 								// Input for department
 								select(name="c[0].o", id="dropDownDepartment", data-bind="visible: selectedSubject() == 38, value: selectedDepartment, selectDepartment: {}",  style="display: none")
+									option(value="", default selected) Seleccione un departamento
 									option(value="CO-AMA") Amazonas
 									option(value="CO-ANT") Antioquia
 									option(value="CO-ARA") Arauca
@@ -874,15 +878,24 @@ block filterWindow
 									option(value="CO-VID") Vichada
 								// Input for county
 								select(name="c[0].o", id="dropDownCounty", data-bind="foreach: countyDropdown, visible: selectedSubject() == 39, value: selectedCounty, selectCounty: {}",  style="display: none")
+									<!-- ko if: $index() == 0 -->
+									option(value="", default selected) Seleccione un municipio
+									<!-- /ko -->
 									option(data-bind="attr: { value: isoCountyCode }, text: departmentAndCountyName")
 								// Input for paramo
 								select(name="c[0].o", id="dropDownParamo", data-bind="foreach: paramoDropdown, visible: selectedSubject() == 40, value: selectedParamo, selectParamo: {}",  style="display: none")
+									<!-- ko if: $index() == 0 -->
+									option(value="", default selected) Seleccione un páramo
+									<!-- /ko -->
 									option(data-bind="attr: { value: paramoCode }, text: paramoName")
 								// Input for marine zone
 								select(name="c[0].o", id="dropDownMarineZone", data-bind="foreach: marineZoneDropdown, visible: selectedSubject() == 41, value: selectedMarineZone, selectMarineZone: {}",  style="display: none")
+									<!-- ko if: $index() == 0 -->
+									option(value="", default selected) Seleccione una zona marina
+									<!-- /ko -->
 									option(data-bind="attr: { value: marineZoneCode }, text: marineZoneName")
 								// Input for coordinates data
-								select(name="c[0].o", id="dropDownCoordinateState", data-bind="visible: selectedSubject() == 28, value: selectedCoordinateState",  style="display: none")
+								select.form-control(name="c[0].o", id="dropDownCoordinateState", data-bind="visible: selectedSubject() == 28, value: selectedCoordinateState",  style="display: none")
 									option(value="0") Incluye coordenadas
 									option(value="1") No incluye coordenadas
 								// Input for date range selector
@@ -890,7 +903,7 @@ block filterWindow
 									#startDate
 										strong Día de Inicio:
 										br
-										select(id="sd_day", name="sd_day", class="daySelect")
+										select.form-control(id="sd_day", name="sd_day", class="daySelect")
 											option(value="01") 1
 											option(value="02") 2
 											option(value="03") 3
@@ -922,7 +935,7 @@ block filterWindow
 											option(value="29") 29
 											option(value="30") 30
 											option(value="31") 31
-										select(id="sd_month", name="sd_month", class="monthSelect")
+										select.form-control(id="sd_month", name="sd_month", class="monthSelect")
 											option(value="01") Enero
 											option(value="02") Febrero
 											option(value="03") Marzo
@@ -935,11 +948,11 @@ block filterWindow
 											option(value="10") Octubre
 											option(value="11") Noviembre
 											option(value="12") Diciembre
-										input(id="sd_year", name="sd_year", class="yearInput", maxlength="4")
+										input.form-control(id="sd_year", name="sd_year", class="yearInput", maxlength="4")
 									#endDate
 										strong Día de Fin:
 										br
-										select(id="ed_day", name="ed_day", class="daySelect")
+										select.form-control(id="ed_day", name="ed_day", class="daySelect")
 											option(value="01") 1
 											option(value="02") 2
 											option(value="03") 3
@@ -971,7 +984,7 @@ block filterWindow
 											option(value="29") 29
 											option(value="30") 30
 											option(value="31") 31
-										select(id="ed_month", name="ed_month", class="monthSelect")
+										select.form-control(id="ed_month", name="ed_month", class="monthSelect")
 											option(value="01") Enero
 											option(value="02") Febrero
 											option(value="03") Marzo
@@ -984,18 +997,18 @@ block filterWindow
 											option(value="10") Octubre
 											option(value="11") Noviembre
 											option(value="12") Diciembre
-										input(id="ed_year", name="ed_year", class="yearInput", maxlength="4")
+										input.form-control(id="ed_year", name="ed_year", class="yearInput", maxlength="4")
 								// Input for year range selector
 								.dateSelectors(data-bind="visible: selectedSubject() == 33",  style="display: none")
-									span Empezando desde 
+									span Empezando desde
 										span(style="font-size: 0.7em") (e incluyendo)
-									input(id="startYear", type="text", class="yearInput")
+									input.form-control(id="startYear", type="text", class="yearInput")
 									br
-									span hasta 
+									span hasta
 										span(style="font-size: 0.7em") (e incluyendo)
-									input(id="endYear", type="text", class="yearInput")
+									input.form-control(id="endYear", type="text", class="yearInput")
 								// Input for month
-								select(name="c[0].o", id="c[0].o", data-bind="visible: selectedSubject() == 22",  style="display: none")
+								select.form-control(name="c[0].o", id="c[0].o", data-bind="visible: selectedSubject() == 22",  style="display: none")
 									option(value="1") Enero
 									option(value="2") Febrero
 									option(value="3") Marzo
@@ -1008,9 +1021,12 @@ block filterWindow
 									option(value="10") Octubre
 									option(value="11") Noviembre
 									option(value="12") Diciembre
-							span(class='submitFilter')
-								button(class='btn btn-small btn-add-filter', type='button', data-bind='click: addFilterItem') Agregar filtro
-					#selectedFilterHelp
+							.submitFilter
+								button(class='btn btn-sm btn-add-filter', type='button', data-bind='click: addFilterItem') Agregar filtro
+								.filterHelp
+									a#helpPopOver(role="button" tabindex="0" data-toggle="popover" data-trigger="focus" data-html="true" data-content="<p>Escriba un nombre científico y pulse en Agregar filtro.</p><p>Este filtro devolverá cualquier registro que posea un nombre que concuerde con el identificador dado del organismo, sin importar como está clasificado el organismo.</p>") Ayuda
+										img(src="/images/standard/ico_bulb2.png")
+					//-#selectedFilterHelp
 						.taxonomyFilterHelp(data-bind="html: helpSearchText")
 					#filterWizard
 				#constructedFiltersPane
@@ -1021,24 +1037,24 @@ block filterWindow
 						// Include ScientificName filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedScientificNames, visible: selectedScientificNames().length > 0')
 							li(class='alteredFilter')
-								span(data-bind='visible: $index() == 0') Nombre Científico es 
-								span(data-bind='visible: $index() != 0') o es 
+								span(data-bind='visible: $index() == 0') Nombre Científico es&nbsp;
+								span(data-bind='visible: $index() != 0') o es&nbsp;
 								span(data-bind='text: textObject')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeScientificName($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include CommonName filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedCommonNames, visible: selectedCommonNames().length > 0')
 							li(class='alteredFilter')
-								span(data-bind='visible: $index() == 0') Nombre común es 
-								span(data-bind='visible: $index() != 0') o es 
+								span(data-bind='visible: $index() == 0') Nombre común es&nbsp;
+								span(data-bind='visible: $index() != 0') o es&nbsp;
 								span(data-bind='text: textObject')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeCommonName($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include Taxon filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedTaxonNames, visible: selectedTaxonNames().length > 0')
 							li(class='alteredFilter')
-								span(data-bind='visible: $index() == 0') Clasificación incluye 
-								span(data-bind='visible: $index() != 0') o incluye 
+								span(data-bind='visible: $index() == 0') Clasificación incluye&nbsp;
+								span(data-bind='visible: $index() != 0') o incluye&nbsp;
 								span(data-bind='text: textName + ": "')
 								span(data-bind='text: textObject')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeTaxonName($parent, this); }')
@@ -1046,126 +1062,126 @@ block filterWindow
 						// Include Country filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedCountriesIDs, visible: selectedCountriesIDs().length > 0')
 							li(class='alteredFilter')
-								span(data-bind='visible: $index() == 0') País es 
-								span(data-bind='visible: $index() != 0') o es 
+								span(data-bind='visible: $index() == 0') País es&nbsp;
+								span(data-bind='visible: $index() != 0') o es&nbsp;
 								span(data-bind='text: textName')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeCountryID($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include Department filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedDepartmentsIDs, visible: selectedDepartmentsIDs().length > 0')
 							li(class='alteredFilter')
-								span(data-bind='visible: $index() == 0') Departamento es 
-								span(data-bind='visible: $index() != 0') o es 
+								span(data-bind='visible: $index() == 0') Departamento es&nbsp;
+								span(data-bind='visible: $index() != 0') o es&nbsp;
 								span(data-bind='text: textName')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeDepartmentID($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include counties filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedCountiesIDs, visible: selectedCountiesIDs().length > 0')
 							li(class='alteredFilter')
-								span(data-bind='visible: $index() == 0') Municipio es 
-								span(data-bind='visible: $index() != 0') o es 
+								span(data-bind='visible: $index() == 0') Municipio es&nbsp;
+								span(data-bind='visible: $index() != 0') o es&nbsp;
 								span(data-bind='text: textName')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeCountyID($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include paramos filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedParamosIDs, visible: selectedParamosIDs().length > 0')
 							li(class='alteredFilter')
-								span(data-bind='visible: $index() == 0') Páramo es 
-								span(data-bind='visible: $index() != 0') o es 
+								span(data-bind='visible: $index() == 0') Páramo es&nbsp;
+								span(data-bind='visible: $index() != 0') o es&nbsp;
 								span(data-bind='text: textName')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeParamoID($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include marine zones filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedMarineZonesIDs, visible: selectedMarineZonesIDs().length > 0')
 							li(class='alteredFilter')
-								span(data-bind='visible: $index() == 0') Zona marítima es 
-								span(data-bind='visible: $index() != 0') o es 
+								span(data-bind='visible: $index() == 0') Zona marítima es&nbsp;
+								span(data-bind='visible: $index() != 0') o es&nbsp;
 								span(data-bind='text: textName')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeMarineZoneID($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include Latitude filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedLatitudes, visible: selectedLatitudes().length > 0')
 							li(class='alteredFilter')
-								span(data-bind='visible: $index() == 0') Latitud 
-									span(data-bind='visible: predicate == "eq"') es 
-									span(data-bind='visible: predicate == "gt"') mayor que 
-									span(data-bind='visible: predicate == "lt"') menor que 
-								span(data-bind='visible: $index() != 0') y 
-									span(data-bind='visible: predicate == "eq"') es 
-									span(data-bind='visible: predicate == "gt"') mayor que 
-									span(data-bind='visible: predicate == "lt"') menor que 
+								span(data-bind='visible: $index() == 0') Latitud
+									span(data-bind='visible: predicate == "eq"') es&nbsp;
+									span(data-bind='visible: predicate == "gt"') mayor que&nbsp;
+									span(data-bind='visible: predicate == "lt"') menor que&nbsp;
+								span(data-bind='visible: $index() != 0') y
+									span(data-bind='visible: predicate == "eq"') es&nbsp;
+									span(data-bind='visible: predicate == "gt"') mayor que&nbsp;
+									span(data-bind='visible: predicate == "lt"') menor que&nbsp;
 								span(data-bind='text: $parent.parsedLatitudeText($data)')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeLatitudeNumber($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include longitude filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedLongitudes, visible: selectedLongitudes().length > 0')
 							li(class='alteredFilter')
-								span(data-bind='visible: $index() == 0') Longitud 
-									span(data-bind='visible: predicate == "eq"') es 
-									span(data-bind='visible: predicate == "gt"') mayor que 
-									span(data-bind='visible: predicate == "lt"') menor que 
-								span(data-bind='visible: $index() != 0') y 
-									span(data-bind='visible: predicate == "eq"') es 
-									span(data-bind='visible: predicate == "gt"') mayor que 
-									span(data-bind='visible: predicate == "lt"') menor que 
+								span(data-bind='visible: $index() == 0') Longitud
+									span(data-bind='visible: predicate == "eq"') es&nbsp;
+									span(data-bind='visible: predicate == "gt"') mayor que&nbsp;
+									span(data-bind='visible: predicate == "lt"') menor que&nbsp;
+								span(data-bind='visible: $index() != 0') y
+									span(data-bind='visible: predicate == "eq"') es&nbsp;
+									span(data-bind='visible: predicate == "gt"') mayor que&nbsp;
+									span(data-bind='visible: predicate == "lt"') menor que&nbsp;
 								span(data-bind='text: $parent.parsedLongitudeText($data)')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeLongitudeNumber($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include altitude filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedAltitudes, visible: selectedAltitudes().length > 0')
 							li(class='alteredFilter')
-								span(data-bind='visible: $index() == 0') Altitud 
-									span(data-bind='visible: predicate == "eq"') es 
-									span(data-bind='visible: predicate == "gt"') mayor que 
-									span(data-bind='visible: predicate == "lt"') menor que 
-								span(data-bind='visible: $index() != 0') y 
-									span(data-bind='visible: predicate == "eq"') es 
-									span(data-bind='visible: predicate == "gt"') mayor que 
-									span(data-bind='visible: predicate == "lt"') menor que 
+								span(data-bind='visible: $index() == 0') Altitud
+									span(data-bind='visible: predicate == "eq"') es&nbsp;
+									span(data-bind='visible: predicate == "gt"') mayor que&nbsp;
+									span(data-bind='visible: predicate == "lt"') menor que&nbsp;
+								span(data-bind='visible: $index() != 0') y
+									span(data-bind='visible: predicate == "eq"') es&nbsp;
+									span(data-bind='visible: predicate == "gt"') mayor que&nbsp;
+									span(data-bind='visible: predicate == "lt"') menor que&nbsp;
 								span(data-bind='text: $parent.parsedHeightText($data)')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeAltitudeNumber($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include deep filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedDeeps, visible: selectedDeeps().length > 0')
 							li(class='alteredFilter')
-								span(data-bind='visible: $index() == 0') Profundidad 
-									span(data-bind='visible: predicate == "eq"') es 
-									span(data-bind='visible: predicate == "gt"') mayor que 
-									span(data-bind='visible: predicate == "lt"') menor que 
-								span(data-bind='visible: $index() != 0') y 
-									span(data-bind='visible: predicate == "eq"') es 
-									span(data-bind='visible: predicate == "gt"') mayor que 
-									span(data-bind='visible: predicate == "lt"') menor que 
+								span(data-bind='visible: $index() == 0') Profundidad
+									span(data-bind='visible: predicate == "eq"') es&nbsp;
+									span(data-bind='visible: predicate == "gt"') mayor que&nbsp;
+									span(data-bind='visible: predicate == "lt"') menor que&nbsp;
+								span(data-bind='visible: $index() != 0') y
+									span(data-bind='visible: predicate == "eq"') es
+									span(data-bind='visible: predicate == "gt"') mayor que&nbsp;
+									span(data-bind='visible: predicate == "lt"') menor que&nbsp;
 								span(data-bind='text: $parent.parsedHeightText($data)')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeDeepNumber($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include coordinate state filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedCoordinate, visible: selectedCoordinate().length > 0')
 							li(class='alteredFilter')
-								span Estado de las coordenadas es  
+								span Estado de las coordenadas es&nbsp;
 								span(data-bind='text: textName')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeCoordinateState($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include data providers filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedProviders, visible: selectedProviders().length > 0')
 							li(class='alteredFilter')
-								span(data-bind='visible: $index() == 0') Publicador de datos es 
-								span(data-bind='visible: $index() != 0') o es 
+								span(data-bind='visible: $index() == 0') Publicador de datos es&nbsp;
+								span(data-bind='visible: $index() != 0') o es&nbsp;
 								span(data-bind='text: textObject')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeDataProviderName($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include data resources filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedResources, visible: selectedResources().length > 0')
 							li(class='alteredFilter')
-								span(data-bind='visible: $index() == 0') Recurso de datos es 
-								span(data-bind='visible: $index() != 0') o es 
+								span(data-bind='visible: $index() == 0') Recurso de datos es&nbsp;
+								span(data-bind='visible: $index() != 0') o es&nbsp;
 								span(data-bind='text: textObject')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeDataResourceName($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include poligonal coordinates data
 						ul(style="display: none", class='filterItem', data-bind='visible: selectedOnMapPoligonCoordinates().length > 0')
 							li(class='alteredFilter')
-								span Conjunto de coordenadas poligonales son: 
+								span Conjunto de coordenadas poligonales son:&nbsp;
 								span(data-bind='foreach: selectedOnMapPoligonCoordinates')
 									span(data-bind='text: coodinateText')
 								a(href='#', title='Quitar este filtro', data-bind='click: removePoligonalCoordinateFilter')
@@ -1173,27 +1189,39 @@ block filterWindow
 						// Include radial coordinates data
 						ul(style="display: none", class='filterItem', data-bind='visible: selectedOnMapRadialCoordinates().length > 0')
 							li(class='alteredFilter')
-								span Coordenada radial es: 
+								span Coordenada radial es:&nbsp;
 								span(data-bind='foreach: selectedOnMapRadialCoordinates')
 									span(data-bind='text: coodinateText')
 								a(href='#', title='Quitar este filtro', data-bind='click: removeRadialCoordinateFilter')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
-						button(style="display: none", class='btn btn-small btn-add-filter', type='button', data-bind='visible: totalFilters() != 0, click: startSearch') Búsqueda
-						button(style="display: none", class='btn btn-small btn-add-filter', type='button', data-bind='visible: isFiltered(), click: removeFilter') Quitar filtro actual
+						button(style="display: none", class='btn btn-sm btn-add-filter', type='button', data-bind='visible: totalFilters() != 0, click: startSearch') Búsqueda
+						button(style="display: none", class='btn btn-sm btn-add-filter', type='button', data-bind='visible: isFiltered(), click: removeFilter') Quitar filtro actual
 				#densityButtonsPane
 					#densityButtons
-						span.detailDensity Tamaño de la celda:
-						button(id='oneDegree', class='btn btn-primary btn-small', type='button', data-toggle="button", data-bind='click: toggleDistribution') 1&deg;x1&deg;
-						button(id='pointFiveDegree',class='btn btn-primary btn-small', type='button', data-toggle="button", data-bind='click: toggleDistribution') 0.5&deg;x0.5&deg;
-						button(id='pointTwoDegree', class='btn btn-primary btn-small', type='button', data-toggle="button", data-bind='click: toggleDistribution') 0.2&deg;x0.2&deg;
-						button(id='pointOneDegree', class='btn btn-primary btn-small', type='button', data-toggle="button", data-bind='click: toggleDistribution') 0.1&deg;x0.1&deg;
+						span.detailDensity Deslice para cambiar el tamaño de la celda:
+						#densitySlider
+							input(type="range" min="0" max="3" step="1" value="4")
+						#densityInstructions(style="width: 330px;margin: 0px;padding: 0px;")
+							#densityInstructionsIndicators(style="height: 6px;margin-left: 20px;margin-bottom: 2px;")
+								.verticalLine(style="height: 6px;width: 2px;background: white;float: left;")
+								.verticalLine(style="height: 6px;width: 2px;background: white;margin-left: 91px;float: left;")
+								.verticalLine(style="height: 6px;width: 2px;background: white;margin-left: 90px;float: left;")
+								.verticalLine(style="height: 6px;width: 2px;background: white;margin-left: 278px;")
+							span(style="font-size: 11px;padding-left:0px;") 0.1&deg; x 0.1&deg;
+							span(style="font-size: 11px;padding-left:37px;") 0.2&deg; x 0.2&deg;
+							span(style="font-size: 11px;padding-left:40px;") 0.5&deg; x 0.5&deg;
+							span(style="font-size: 11px;padding-left:35px;") 1.0&deg; x 1.0&deg;
+							#densityInstructionsCellSelection.occult-element
+								form
+									label.checkbox
+										input#distributionCells(type="checkbox", name="distributionCells", value="distributionCells")
+										| Ver celdas de distribución
+									label.checkbox
+										input#occurrenceRecord(type="checkbox", name="occurrenceRecord", value="occurrenceRecord", checked)
+										| Ver registros biológicos
 				#additionalInfoPane.occult-element
 					#downloadResults
 						.downloadItem
-							a(target="_blank", data-bind="visible: totalGeoOccurrences() != 0 && totalFilters() != 0, attr: { href: urlDownloadSpreadsheetWithURL }")
-								i(class="icon-download-alt icon-white")
-								span Descargar solo resultados con coordenadas.
-						.downloadItem
-							a(target="_blank", data-bind="visible: totalGeoOccurrences() != 0 && totalFilters() != 0, attr: { href: urlDownloadSpreadsheet }")
-								i(class="icon-download-alt icon-white")
-								span Descargar todos los resultados.
+							button.btn.btn-default.btn-sm(type="button" data-toggle="modal" data-target="#modalDownloadAll")
+								i.icon-download-alt
+								| Descargar registros

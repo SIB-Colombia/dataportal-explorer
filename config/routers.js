@@ -66,6 +66,10 @@ module.exports = function(parent, options) {
 					method = 'get';
 					path = '/rest/' + name + '/pointfivedegree/stats/:' + '_cellid' + '/:' + '_pointfivecellid';
 					break;
+				case 'getOccurrencesInBoundingBox':
+					method = 'post';
+					path = '/rest/' + name + '/boundingbox/:' + '_top' + '/:' + '_bottom' + '/:' + '_left' + '/:' + '_right';
+					break;
 				case 'getDistributionStatsWithSearchPointFiveDegree':
 					method = 'post';
 					path = '/' + name + '/pointfivedegree/stats';
@@ -106,50 +110,14 @@ module.exports = function(parent, options) {
 					method = 'get';
 					path = '/' + name + '/PagedData';
 					break;
+				case 'startDownload':
+					method = 'post';
+					path = '/api/' + name + '/occurrences';
+					break;
 				case 'geoJsonMapPoints':
 					method = 'get';
 					path = '/rest/' + name + '/mappoints';
 					break;
-				/*case 'show':
-					method = 'get';
-					path = '/' + name + '/:' + name + '_id';
-					break;
-				case 'list':
-					method = 'get';
-					path = '/' + name + 's';
-					break;
-				case 'edit':
-					method = 'get';
-					path = '/' + name + '/:' + name + '_id/edit';
-					break;
-				case 'update':
-					method = 'put';
-					path = '/' + name + '/:' + name + '_id';
-					break;
-				case 'create':
-					method = 'post';
-					path = '/' + name;
-					break;*/
-				/*case 'searchInitialOccurrences':
-					method = 'get';
-					path = '/' + name + '/list';
-					break;*/
-				/*case 'searchAllOccurrences':
-					method = 'get';
-					path = '/' + name + '/list';
-					break;*/
-				/*case 'searchGeoOccurrences':
-					method = 'post';
-					path = '/' + name + '/search';
-					break;*/
-				/*case 'searchGeoDistributionOccurrences':
-					method = 'post';
-					path = '/' + name + '/search';
-					break;*/
-				/*case 'searchDetailsGeoOccurrences':
-					method = 'get';
-					path = '/' + name + '/details/search';
-					break;*/
 				case 'searchResumeScientificNameByName':
 					method = 'get';
 					path = '/rest/' + name + '/resume/scientificname/name/:' + '_name';
@@ -297,6 +265,10 @@ module.exports = function(parent, options) {
 				case 'searchSearchHelpTextByName':
 					method = 'get';
 					path = '/rest/' + name + '/searchhelptext/name/:' + '_name';
+					break;
+				case 'searchOccurrence':
+					method = 'get';
+					path = '/rest/' + name + '/id/:' + '_id';
 					break;
 				case 'updatemongodb':
 					method = 'get';

@@ -1,0 +1,1 @@
+db.occurrences.ensureIndex({ "taxonomy.species_id" : 1 },{ "name" : "species_id" });

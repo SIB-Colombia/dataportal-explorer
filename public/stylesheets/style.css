@@ -1,18 +1,5 @@
 @import url("http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,400,300");
 @import url("http://fonts.googleapis.com/css?family=Economica:400,700,400italic,700italic");
-/* 
-html5doctor.com Reset Stylesheet
-v1.6.1
-Last Updated: 2010-09-17
-Author: Richard Clark - http://richclarkdesign.com 
-Twitter: @rich_clark
-
-Stylus-ized by 
-dale tan
-http://www.whatthedale.com
-@HellaTan
-
-*/
 html,
 body,
 div,
@@ -126,20 +113,17 @@ a {
   margin: 0;
   padding: 0;
   -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -ms-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
   vertical-align: baseline;
 }
-a -moz-transition: val {
-  -ms-transition: all 0.3s ease-in-out;
-  -o-transition: all 0.3s ease-in-out;
-}
-/* change colours to suit your needs */
 ins {
   background-color: #ff9;
   color: #000;
   text-decoration: none;
 }
-/* change colours to suit your needs */
 mark {
   background-color: #ff9;
   color: #000;
@@ -158,7 +142,6 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
-/* change border colour to suit your needs */
 hr {
   border: 0;
   border-top: 1px solid #ccc;
@@ -171,8 +154,6 @@ input,
 select {
   vertical-align: middle;
 }
-/* END RESET */
-/* Heredados diseño Carlos Cubillos */
 body {
   font-size: 80%;
   color: #333;
@@ -197,23 +178,22 @@ h6 {
 p {
   line-height: 1.3em;
 }
-p margin 10px010px0 a {
+p margin 10px 0 10px 0 a {
   border: 0;
   color: #2288c9;
   padding: 0 5px;
 }
-p margin 10px010px0 a:hover,
-p margin 10px010px0 a input[type=submit]:hover {
+p margin 10px 0 10px 0 a:hover,
+p margin 10px 0 10px 0 a input[type=submit]:hover {
   border: 0;
   opacity: 0.6;
   background: #2288c9;
   color: #fff;
 }
-p margin 10px010px0 a:link {
+p margin 10px 0 10px 0 a:link {
   border-bottom: 0px dashed transparent;
   text-decoration: none;
 }
-/* HEADER */
 .sib {
   background: #2b7fbc;
   height: 53px;
@@ -246,11 +226,11 @@ p margin 10px010px0 a:link {
   margin: 0 auto;
 }
 .sib nav a {
-  max-width: 90px;
+  max-width: 119px;
   display: inline-block;
   padding: 13px;
   vertical-align: top;
-  min-height: 27px;
+  height: 50px;
 }
 .sib nav a:hover {
   background: rgba(255,255,255,0.3);
@@ -283,7 +263,7 @@ p margin 10px010px0 a:link {
   -moz-opacity: 1;
   opacity: 1;
 }
-.sib .logo:hover -webkit-box-shadow 0px0px5px0pxrgba(0,
+.sib .logo:hover -webkit-box-shadow 0px 0px 5px 0px rgba(0,
 .sib .logo:hover 0,
 .sib .logo:hover 0.2) {
   box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.2);
@@ -297,8 +277,7 @@ p margin 10px010px0 a:link {
   display: inline-block;
   position: absolute;
   right: 12px;
-}
-.sib .share_icons a {
+a
   vertical-align: middle !important;
   margin: 0 !important;
 }
@@ -306,7 +285,7 @@ p margin 10px010px0 a:link {
   width: 0px;
   border-left: #9bc2de 1px solid;
   display: inline-block;
-  height: 20px;
+  height: 50px;
   vertical-align: middle;
   margin: 0 4px;
 }
@@ -362,12 +341,6 @@ fieldset {
   border-radius: 20px;
   padding: 20px;
 }
-/* Fin diseño heredado Carlos Cubillos */
-/* Estilos area contenido mapa */
-.container-fluid {
-  padding-left: 0px;
-  padding-right: 0px;
-}
 #pane {
   position: relative;
   top: 0px;
@@ -401,6 +374,12 @@ fieldset {
   width: 26px !important;
   height: 26px !important;
 }
+.leaflet-control-zoomslider-body {
+  width: 20px !important;
+}
+.leaflet-control-zoomslider-knob {
+  width: 14px !important;
+}
 .leaflet-draw {
   margin-left: 13px !important;
 }
@@ -415,42 +394,47 @@ fieldset {
   text-decoration: none;
   color: #000;
 }
-/* Fin estilos area contenido mapa */
-/* Estilos tab area y tab buttons para elegir vistas */
-#map-filter-area .tabbable .nav {
+#map-filter-area #tabzone .nav {
   margin-bottom: 3px;
-  margin-left: 20px;
   margin-right: 20px;
   position: fixed;
   z-index: 10;
   width: 700px;
-  margin-top: 53px;
   right: 0px;
   background: rgba(255,255,255,0.8);
   color: #1775bf;
   box-shadow: 0 2px 14px rgba(0,0,0,0.3);
+  border: 0px;
 }
-#map-filter-area .tabbable .nav li a {
+#map-filter-area #tabzone .nav li a {
   background-repeat: no-repeat;
   background-position: 10px center;
-  width: 50px;
+  width: 90px;
   font-weight: 700 !important;
   padding: 8px 10px 8px 40px;
   line-height: 0.9em;
+  margin: 0px;
+  border: 0px;
 }
-#map-filter-area .tabbable .nav li a:hover {
+#map-filter-area #tabzone .nav li a:hover {
   background-color: #a8dbf7;
+  border: 0px;
 }
-#map-filter-area .tabbable .tabla a {
+#map-filter-area #tabzone .nav .active a {
+  border: 0px;
+  background-color: #08c;
+  color: #fff;
+}
+#map-filter-area #tabzone .tabla a {
   background-image: url("/images/standard/ico_tabla_b.png");
 }
-#map-filter-area .tabbable .active.tabla a {
+#map-filter-area #tabzone .active.tabla a {
   background-image: url("/images/standard/ico_tabla_w.png") !important;
 }
-#map-filter-area .tabbable .active.mapa a {
+#map-filter-area #tabzone .active.mapa a {
   background-image: url("/images/standard/ico_mapcol_w.png") !important;
 }
-#map-filter-area .tabbable .mapa a {
+#map-filter-area #tabzone .mapa a {
   background-image: url("/images/standard/ico_mapcol_b.png");
 }
 #map-filter-area #actual-search-stats-data {
@@ -462,7 +446,6 @@ fieldset {
 #map-filter-area #actual-search-stats-data .subtitle {
   font-weight: normal;
 }
-/* Estilos ventana filtro de búsqueda */
 #filterZone {
   position: absolute;
   left: 50px;
@@ -532,7 +515,6 @@ h4#currentSearch {
   margin: 0px;
   padding: 6px;
 }
-/* Internet Explorer 9 gradient compatibility */
 .gradient {
   filter: none;
 }
@@ -559,7 +541,8 @@ h4#currentSearch {
 #filtersContainerHelp #contentFiltersContainerHelp {
   background-color: rgba(255,255,255,0.8);
   height: 500px;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: scroll;
 }
 #filtersContainerHelp #contentFiltersContainerHelp .mCSB_container {
   background-color: #fff;
@@ -593,11 +576,10 @@ h4#currentSearch {
   float: left;
   line-height: 20px;
   -webkit-transition: all 0.5s ease-in-out;
-  transition: all 0.5s ease-in-out;
-}
-#filtersContainerHelp #contentFiltersContainerHelp .item -moz-transition: val {
+  -moz-transition: all 0.5s ease-in-out;
   -ms-transition: all 0.5s ease-in-out;
   -o-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
 }
 #filtersContainerHelp #contentFiltersContainerHelp .item:hover {
   background-color: #1775bf;
@@ -685,6 +667,7 @@ h4#currentSearch {
 #filtersContainer #explorerFiltersAndEditor #filterEditorPane {
   width: auto;
   vertical-align: top;
+  margin-bottom: 10px;
 }
 #filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter {
   padding: 0px 20px;
@@ -693,21 +676,48 @@ h4#currentSearch {
 #filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter input {
   font-size: 13px;
   font-family: 'Open sans', Helvetica, Verdana, Helvetica, Arial;
-}
-#filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter span.type {
-  margin-right: 10px;
+  margin-bottom: 5px;
 }
 #filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter span.type select {
-  width: 180px;
+  width: 230px;
+  margin-right: 5px;
 }
 #filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter span.predicate select {
-  width: 100px;
+  width: 60px;
 }
-#filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter span.value {
-  margin-bottom: 1em;
+#filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter .submitFilter {
+  margin-top: 10px;
+}
+#filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter .submitFilter .filterHelp {
+  display: inline-block;
+  font-size: 0.9em;
+  padding-left: 13px;
+}
+#filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter .submitFilter .filterHelp a {
+  outline: 0px;
+}
+#filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter .submitFilter .filterHelp a img {
+  vertical-align: middle;
+}
+#filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter .submitFilter .filterHelp .popover {
+  width: 500px;
+}
+#filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter .submitFilter .filterHelp .popover .popover-content {
+  font-family: 'Open sans', Helvetica, Verdana, Helvetica, Arial;
+}
+#filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter .submitFilter .filterHelp .popover .popover-content p {
+  padding: 5px 0;
+  font-size: 0.8em;
+}
+#filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter .submitFilter .filterHelp .popover .popover-content p:first-child {
+  color: #595045;
+  font-weight: bold;
+  margin: 5px 0;
+  font-size: 0.9em;
 }
 #filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter span.value input {
-  width: 260px;
+  display: block;
+  width: 295px;
 }
 #filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter span.value select.daySelect {
   width: 55px;
@@ -718,6 +728,7 @@ h4#currentSearch {
   padding: 5px;
 }
 #filtersContainer #explorerFiltersAndEditor #filterEditorPane .filter span.value input.yearInput {
+  display: inline;
   width: 100px;
   padding: 5px;
   margin-left: 5px;
@@ -819,6 +830,7 @@ h4#currentSearch {
   height: 100%;
   vertical-align: top;
   padding-left: 10px;
+  padding-right: 10px;
   padding-top: 10px;
   padding-bottom: 10px;
   background-color: #115b96;
@@ -837,6 +849,9 @@ h4#currentSearch {
   padding-left: 6px;
   padding-right: 6px;
 }
+#filtersContainer #explorerFiltersAndEditor #densityButtonsPane #densityButtons #densityInstructionsCellSelection {
+  padding: 10px;
+}
 #filtersContainer #explorerFiltersAndEditor #additionalInfoPane {
   width: 100%;
 }
@@ -844,6 +859,7 @@ h4#currentSearch {
   height: 100%;
   vertical-align: top;
   padding-left: 10px;
+  padding-right: 10px;
   padding-top: 10px;
   padding-bottom: 10px;
   background-color: #1775bf;
@@ -866,7 +882,6 @@ h4#currentSearch {
 .btn-add-filter {
   color: #fff;
   background: #2b7fbc !important;
-  margin-top: 8px;
   text-transform: uppercase;
   font-weight: bold;
 }
@@ -874,8 +889,6 @@ h4#currentSearch {
   color: #fff !important;
   background: #649ecc;
 }
-/* Fin estilos ventana filtro de búsqueda */
-/* Estilos de apoyo */
 .loading {
   background-image: url("/images/loading/loading64w.gif");
   background-position: center center;
@@ -886,6 +899,11 @@ h4#currentSearch {
 .loading2 {
   background-image: url("/images/loading/loading2.gif");
   background-position: left top;
+  background-repeat: no-repeat;
+}
+.loading3 {
+  background-image: url("/images/loading/loading64w.gif");
+  background-position: center center;
   background-repeat: no-repeat;
 }
 .hiding {
@@ -902,8 +920,6 @@ h4#currentSearch {
   opacity: 0.2;
   -moz-opacity: 0.2;
 }
-/* Fin de estilos de apoyo */
-/* Estilos ventana detalles registro biológico */
 .tab-pane {
   margin-top: 52px;
 }
@@ -1014,7 +1030,9 @@ h4#currentSearch {
 #resumeDetail #resumeInfoDetailContainer {
   background-color: rgba(255,255,255,0.8);
   height: 500px;
-  overflow: hidden;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  overflow: -moz-scrollbars-vertical;
 }
 #resumeDetail #resumeInfoDetailContainer .contentResumeInfoDetailContainer {
   padding-left: 5px;
@@ -1070,10 +1088,6 @@ h4#currentSearch {
   margin: 0;
   width: 20%;
 }
-/*.leaflet-popup-tip
-	margin-top -12px !important*/
-/* Fin estilos ventana detalles registro biológico */
-/* Estilos vista tabla registros biológicos */
 .k-secondary.k-filter-menu {
   background-color: #2b7fbc !important;
 }
@@ -1146,10 +1160,6 @@ h4#currentSearch {
   margin-top: 10px;
   margin-bottom: 10px;
 }
-/* Estilos vista tabla registros biológicos */
-/* Estilos area filtro de búsqueda en zona tabla */
-/* Fin estilos area filtro de búsqueda en zona tabla */
-/* Beta ribbon styles */
 .wrapper {
   position: relative;
   z-index: 90;
@@ -1202,8 +1212,6 @@ h4#currentSearch {
 .ribbon-green:after {
   right: 0;
 }
-/* End of beta ribbon styles */
-/* Request processing window */
 #processing-request {
   position: absolute;
   left: 50%;
@@ -1215,21 +1223,132 @@ h4#currentSearch {
   z-index: 500000;
 }
 #processing-request .processing-request-container {
-  background-color: #e4e4e4;
+  background-color: rgba(255,255,255,0.7);
   padding: 10px;
 }
 #processing-request .processing-request-container h3 {
-  font-family: 'Open sans', Helvetica, Verdana, Helvetica, Arial;
+  font-family: Helvetica, Verdana, Helvetica, Arial;
+  font-weight: bold;
+  margin-bottom: 10px;
+  font-size: 1.1em;
 }
 #processing-request .processing-request-container .loading-area {
   margin-top: 10px;
   margin-left: 170px;
   margin-bottom: 10px;
 }
-/* End request processing window */
-/* Unselect layers button */
 #unselect_all_layers {
   margin-bottom: 5px;
   margin-left: 60px;
 }
-/* End unselect layers button */
+#densitySelectorSlider .slider-selection {
+  background: #9bd4ff;
+}
+#densitySelectorSlider {
+  width: 280px;
+  margin-left: 20px;
+}
+#densitySelectorSlider .slider.slider-horizontal .slider-handle {
+  background: #fff;
+}
+::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 7px;
+}
+::-webkit-scrollbar-thumb {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  background-color: rgba(0,0,0,0.5);
+  -webkit-box-shadow: 0 0 1px rgba(255,255,255,0.5);
+}
+.leaflet-container .leaflet-control-mouseposition {
+  background-color: rgba(255,255,255,0.7);
+  box-shadow: 0 0 5px #bbb;
+  padding: 0 5px;
+  margin: 0;
+  color: #333;
+  font: 11px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
+#sidebar #contentDetails #occurrenceBlock fieldset.occurrenceFieldset {
+  margin: 0px 0 10px 0;
+  padding: 10px;
+  min-height: 80px;
+  background: #faf9f3;
+  -webkit-border-radius: 20px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
+  position: relative;
+}
+#sidebar #contentDetails #occurrenceBlock fieldset.occurrenceFieldset p {
+  border-bottom: 1px solid #ded3cc;
+  padding-top: 6px;
+  min-height: 20px;
+  display: block;
+  clear: left;
+  float: left;
+  width: 100%;
+}
+#sidebar #contentDetails #occurrenceBlock fieldset.occurrenceFieldset label {
+  font-weight: bold;
+  display: block;
+  float: left;
+  margin-bottom: 5px;
+  margin-right: 5px;
+  text-align: left;
+  width: 80px;
+  padding-right: 20px;
+  padding-bottom: 5px;
+  line-height: 1.3em;
+}
+#sidebar #contentDetails #occurrenceBlock h2 {
+  font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  line-height: 20px;
+}
+#sidebar h1 {
+  font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  font-size: 14px;
+}
+#densitySlider {
+  padding-top: 2px;
+  padding-bottom: 5px;
+  margin-left: 12px;
+  margin-right: 12px;
+}
+#densitySlider input {
+  width: 100%;
+}
+.modal-dialog .modal-content .modal-header h4 {
+  font-family: Helvetica, 'Helvetica Neue', Arial, sans-serif;
+  font-weight: normal;
+  font-size: 1.5em;
+}
+.modal-dialog .modal-content .modal-body .modal-body-content {
+  width: 400px;
+  margin: auto;
+  padding-top: 15px;
+}
+.modal-dialog .modal-content .modal-body .modal-body-content .col-sm-8 {
+  padding-left: 0px;
+}
+.modal-dialog .modal-content .modal-body .modal-body-content .col-sm-8 .radio p {
+  line-height: 1.6em;
+}
+#modalDownloadAllSuccess .modal-body img,
+#modalDownloadAllFail .modal-body img {
+  display: block;
+  margin: auto;
+}
+#modalDownloadAllSuccess .modal-body .modal-body-content h3,
+#modalDownloadAllFail .modal-body .modal-body-content h3 {
+  font-family: 'Open sans', Helvetica, Verdana, Helvetica, Arial;
+  font-size: 24px;
+  text-align: center;
+}
+#modalDownloadAllSuccess .modal-body .modal-body-content p,
+#modalDownloadAllFail .modal-body .modal-body-content p {
+  text-align: center;
+  padding-top: 10px;
+}

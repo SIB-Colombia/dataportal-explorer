@@ -1,0 +1,95 @@
+block map
+	#sidebar
+		#contentDetails.occult-element
+			h1 DETALLES DEL REGISTRO BIOLÓGICO
+			#occurrenceBlock
+				h2 Taxonomía
+				fieldset.occurrenceFieldset
+					p(data-bind="visible: occurrence().id")
+						label Id del registro:
+						a(target="_blank", data-bind="attr: { href: occurrence().url }")
+							span.occurrenceField(data-bind="text: occurrence().id")
+					p(data-bind="visible: occurrence().id")
+						label Nombre científico:
+						span.occurrenceField(data-bind="text: occurrence().canonical")
+					p(data-bind="visible: occurrence().kingdom")
+						label Reino
+						a(target="_blank", data-bind="attr: { href: occurrence().urlKingdom }")
+							span.occurrenceField(data-bind="text: occurrence().kingdom")
+					p(data-bind="visible: occurrence().phylum")
+						label Filo
+						a(target="_blank", data-bind="attr: { href: occurrence().urlPhylum }")
+							span.occurrenceField(data-bind="text: occurrence().phylum")
+					p(data-bind="visible: occurrence().taxonClass")
+						label Clase
+						a(target="_blank", data-bind="attr: { href: occurrence().urlClass }")
+							span.occurrenceField(data-bind="text: occurrence().taxonClass")
+					p(data-bind="visible: occurrence().order_rank")
+						label Orden
+						a(target="_blank", data-bind="attr: { href: occurrence().urlOrder }")
+							span.occurrenceField(data-bind="text: occurrence().order_rank")
+					p(data-bind="visible: occurrence().family")
+						label Familia
+						a(target="_blank", data-bind="attr: { href: occurrence().urlFamily }")
+							span.occurrenceField(data-bind="text: occurrence().family")
+					p(data-bind="visible: occurrence().genus")
+						label Género
+						a(target="_blank", data-bind="attr: { href: occurrence().urlGenus }")
+							span.occurrenceField(data-bind="text: occurrence().genus")
+					p(data-bind="visible: occurrence().species")
+						label Especie
+						a(target="_blank", data-bind="attr: { href: occurrence().urlSpecie }")
+							span.occurrenceField(data-bind="text: occurrence().species")
+				h2 Conjunto de datos
+				fieldset.occurrenceFieldset
+					p(data-bind="visible: occurrence().data_provider_name")
+						label Publicador de datos:
+						a(target="_blank", data-bind="attr: { href: occurrence().urlDataProvider }")
+							span.occurrenceField(data-bind="text: occurrence().data_provider_name")
+					p(data-bind="visible: occurrence().data_resource_name")
+						label Conjunto de datos:
+						a(target="_blank", data-bind="attr: { href: occurrence().urlResourceName }")
+							span.occurrenceField(data-bind="text: occurrence().data_resource_name")
+					p(data-bind="visible: occurrence().institution_code")
+						label Código de la institución:
+						span.occurrenceField(data-bind="text: occurrence().institution_code")
+					p(data-bind="visible: occurrence().collection_code")
+						label Código de la colección:
+						span.occurrenceField(data-bind="text: occurrence().collection_code")
+					p(data-bind="visible: occurrence().catalogue_number")
+						label Número del Catálogo
+						span.occurrenceField(data-bind="text: occurrence().catalogue_number")
+					p(data-bind="visible: occurrence().basis_of_record_name_spanish")
+						label Base del registro:
+						span.occurrenceField(data-bind="text: occurrence().basis_of_record_name_spanish")
+					p(data-bind="visible: occurrence().rights")
+						label Licencia:
+						span.occurrenceField(data-bind="text: occurrence().rights")
+					p(data-bind="visible: occurrence().citation")
+						label Cómo citar este registro:
+						span.occurrenceField(data-bind="text: occurrence().citation")
+				h2 Geoespacial			
+				fieldset.occurrenceFieldset
+					p(data-bind="visible: occurrence().country_name")
+						label País:
+						a(target="_blank", data-bind="attr: { href: occurrence().urlCountry }")
+							span.occurrenceField(data-bind="text: occurrence().country_name")
+					p(data-bind="visible: occurrence().department_name")
+						label Departamento:
+						a(target="_blank", data-bind="attr: { href: occurrence().urlDepartment }")
+							span.occurrenceField(data-bind="text: occurrence().department_name")
+					p(data-bind="visible: occurrence().county_name")
+						label Municipio:
+						span.occurrenceField(data-bind="text: occurrence().county_name")
+					p(data-bind="visible: occurrence().latitude")
+						label Latitud:
+						span.occurrenceField(data-bind="text: occurrence().latitude")
+					p(data-bind="visible: occurrence().longitude")
+						label Longitud:
+						span.occurrenceField(data-bind="text: occurrence().longitude")
+					p(data-bind="visible: occurrence().altitude_meters")
+						label Altitud:
+						span.occurrenceField(data-bind="text: occurrence().altitude_meters+' metros'")
+					p(data-bind="visible: occurrence().depth_centimeters")
+						label Profundidad:
+						span.occurrenceField(data-bind="text: occurrence().depth_centimeters")

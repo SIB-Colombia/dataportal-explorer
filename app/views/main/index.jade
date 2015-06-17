@@ -2,38 +2,41 @@ extends ../../layouts/layout
 
 block content
 	.container-fluid
-		.row-fluid
+		.row
 			section#processing-request
 				.processing-request-container
 					.content
-						h3 PROCESANDO SOLICITUD
-						span Por favor espere mientras la solicitud es procesada...
+						h3 CARGANDO DATOS
+						span Por favor espere mientras son descargados los datos geográficos...
 						.loading-area
 							img(src="/images/loading/loading5.gif")
 			section#map-filter-area.hiding
-				.tabbable
-					ul.nav.nav-pills
+				include modalForm
+				include modalFormSuccess
+				include modalFormFail
+				#tabzone(role="tabpanel")
+					ul.nav.nav-tabs(role="tablist")
 						#actual-search-stats-data
-							span.title Resultados 
+							span.title Resultados&nbsp;
 								strong(data-bind="text: totalOccurrences")
-								|  registros 
+								|  registros&nbsp;
 								span.subtitle (
 									span(data-bind="text: totalGeoOccurrences")
 									|  georeferenciados)
-						li.pull-right.tabla
-							a(href='#tab2', data-toggle='tab') VER TABLA
-						li.active.pull-right.mapa
-							a(href='#tab1', data-toggle='tab') VER MAPA
+						li.pull-right.tabla(role="presentation")
+							a(href='#tab2', aria-controls="tab2" role="tab", data-toggle='tab') VER TABLA
+						li.active.pull-right.mapa(role="presentation")
+							a(href='#tab1', aria-controls="tab1" role="tab", data-toggle='tab') VER MAPA
 					.tab-content
-						.tab-pane.active(id='tab1')
+						.tab-pane.active(role="tabpanel", id='tab1')
 							#pane
 								#mapa
 							#filterZone.open
 								include filterWindow
-						.tab-pane(id='tab2')
+						.tab-pane(role="tabpanel", id='tab2')
 							#filterZoneTable
 								include filterTableWindow
 							#reportGrid(data-bind="kendoGrid: gridOptions")
 							//script.
 							//	var initialGridOccurrences = !{tableData};
-	include mapascripts
+				include map

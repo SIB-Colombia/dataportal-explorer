@@ -1,0 +1,80 @@
+// Modal form
+#modalDownloadAll.modal.fade(tabindex="-1" role="dialog" aria-labelledby="modalDownloadAll" aria-hidden="true")
+	.modal-dialog
+		.modal-content
+			.modal-header
+				button.close(type="button" data-dismiss="modal" aria-label="Close")
+					span(aria-hidden="true") &times;
+				h4#myModalLabel.modal-title Descargas
+			.modal-body
+				p#instruccionesDescarga
+					| Complete los datos del formulario para iniciar la descarga (* requeridos)
+				.alert.alert-danger(role="alert" data-bind="visible: downloadFormValidationError")
+					.span(data-bind="text: downloadFormValidationErrorMessage")
+				.modal-body-content
+					form#downloadAll
+						.form-horizontal
+							.form-group
+								label.col-sm-4.control-label(for="inputEmail") Email*
+								.col-sm-8
+									input#inputEmail.form-control(type="email" required placeholder="Correo electrónico" data-bind="value: downloadEmail, hasfocus: downloadEmailFocused" data-required="true" data-email="true")
+							.form-group
+								label.col-sm-4.control-label(for="inputEmailConfirmation") Confirmación de email*
+								.col-sm-8
+									input#inputEmailConfirmation.form-control(type="email" required placeholder="Confirme su dirección de correo" data-bind="value: downloadEmailVerification, hasfocus: downloadEmailVerificationFocused" data-required="true" data-email="true")
+							.form-group
+								label.col-sm-4.control-label(for="downloadReason") Motivo de la descarga
+								.col-sm-8
+									select#downloadReason.form-control(name="downloadReason" data-bind="value: downloadReason")
+										option(disabled selected)
+											| -- elija un motivo de descarga --
+										option(value="educación")
+											| Educación
+										option(value="gestión de bioseguridad, planeación")
+											| Gestión de bioseguridad, planeación
+										option(value="gestión de colecciones")
+											| Gestión de colecciones
+										option(value="gestión de conservación/planeación")
+											| Gestión de conservación/Planeación
+										option(value="investigación científica")
+											| Investigación científica
+										option(value="investigación ecológica")
+											| Investigación ecológica
+										option(value="investigación sistemática")
+											| Investigación sistemática
+										option(value="impacto medioambiental, evaluación de sitio")
+											| Impacto medioambiental, evaluación de sitio
+										option(value="otra investigación científica")
+											| Otra investigación científica
+										option(value="otro")
+											| Otro
+										option(value="Pruebas")
+											| Pruebas
+							.form-group
+								label.col-sm-4.control-label(for="downloadType") Tipo de descarga
+								.col-sm-8
+									.radio
+										label
+											input(type="radio" name="downloadType" id="downloadTypeAll" value="all" data-bind="checked: downloadType" checked)
+											p Todos los registros
+									.radio
+										label
+											input(type="radio" name="downloadType" id="downloadTypeGeoreferenced" value="georeferenced" data-bind="checked: downloadType")
+											p Solo registros georeferenciados
+							.form-group
+								.col-sm-offset-4.col-sm-8
+									script.
+										var RecaptchaOptions = {
+											theme: 'white',
+											lang: 'es'
+										};
+									!= recaptcha_form
+							.form-group
+								.col-sm-offset-4.col-sm-8
+									button.btn.btn-primary(type="button" data-bind="click: startDataDownload") Iniciar descarga
+				p
+					strong
+						| Nota:&nbsp;
+					| Tenga presente que la notificación por correo para descargar el archivo puede tardar varios minutos dependiendo de la cantidad de registros que componen el resultado de su consulta.
+			.modal-footer
+				button.btn.btn-default(type="button" data-dismiss="modal") Cerrar
