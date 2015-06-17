@@ -354,7 +354,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 
 			// Reset captcha before modal form load
 			$('#modalDownloadAll').on('show.bs.modal', function (event) {
-				grecaptcha.reset();
+				Recaptcha.reload();
 			});
 
 			searchParamsResume();
@@ -2101,14 +2101,16 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			var self = this;
 			self.validateDownloadForm(false);
 			if(!self.downloadFormValidationError() && self.downloadEmail() !== "" && self.downloadEmailVerification() !== "") {
-				if(grecaptcha.getResponse() !== "") {
-					// Form is valid a we get a captcha response
+				if($('#recaptcha_response_field').val() !== "") {
+					// Form is valid a we have a filled captcha
 					var request = {
 						"email": self.downloadEmail(),
 						"reason": self.downloadReason(),
 						"type": self.downloadType(),
-						"captchaKey": grecaptcha.getResponse(),
-						"query": self.fillSearchConditions()
+						"query": self.fillSearchConditions(),
+						"challenge": $('#recaptcha_challenge_field').val(),
+						"response": $('#recaptcha_response_field').val(),
+						"date": Date.now()
 					};
 					var data = ko.toJSON(request);
 					$.ajax({
@@ -2127,10 +2129,17 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 							$('#modalDownloadAllSuccess').modal('show');
 						},
 						error: function(error) {
+							console.log(error);
 							$(".modal-body").removeClass("hide-element");
 							$(".modal-content").removeClass("loading3");
-							$('#modalDownloadAll').modal('hide');
-							$('#modalDownloadAllFail').modal('show');
+							if(error.status == 401) {
+								Recaptcha.reload();
+								self.downloadFormValidationError(true);
+								self.downloadFormValidationErrorMessage("Error al completar el número en el captcha.");
+							} else {
+								$('#modalDownloadAll').modal('hide');
+								$('#modalDownloadAllFail').modal('show');
+							}
 						},
 						dataType: 'jsonp'
 					});

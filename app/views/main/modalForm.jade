@@ -63,7 +63,12 @@
 											p Solo registros georeferenciados
 							.form-group
 								.col-sm-offset-4.col-sm-8
-									.g-recaptcha(data-sitekey="6LdwrAUTAAAAAL7SMgkNMSjvdiMxS0YwaZ8AcSYE" data-callback="recaptcha_callback")
+									script.
+										var RecaptchaOptions = {
+											theme: 'white',
+											lang: 'es'
+										};
+									!= recaptcha_form
 							.form-group
 								.col-sm-offset-4.col-sm-8
 									button.btn.btn-primary(type="button" data-bind="click: startDataDownload") Iniciar descarga
