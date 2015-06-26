@@ -5,7 +5,6 @@ var PUBLIC_KEY  = '6LdwrAUTAAAAAL7SMgkNMSjvdiMxS0YwaZ8AcSYE',
     PRIVATE_KEY = process.env.CAPTCHASECRET;
 
 exports.startDownload = function(req, res) {
-	console.log(req);
 	var data = {
 		remoteip:  req.connection.remoteAddress,
 		challenge: req.body.challenge,
@@ -26,14 +25,14 @@ exports.startDownload = function(req, res) {
 				"reason": req.body.reason,
 				"type": req.body.type,
 				"query": req.body.query,
-				"date": req.body.date
+				"date": req.body.date,
+				"remoteip": req.connection.remoteAddress
 			}
 			var payloads = [
 				{ topic: 'occurrencesDownload', messages: JSON.stringify(message), partition: 0 }
 			];
 			producer.on('ready', function () {
 				producer.send(payloads, function (err, data) {
-					console.log(data);
 					res.jsonp({"success": "true"});
 				});
 			});
@@ -41,7 +40,6 @@ exports.startDownload = function(req, res) {
 			producer.on('error', function (err) {
 				res.sendStatus(400);
 			});
-			res.jsonp({"success": "true"});
 		} else {
 			res.sendStatus(401);
 		}

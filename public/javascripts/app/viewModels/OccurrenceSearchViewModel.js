@@ -2110,7 +2110,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 						"query": self.fillSearchConditions(),
 						"challenge": $('#recaptcha_challenge_field').val(),
 						"response": $('#recaptcha_response_field').val(),
-						"date": Date.now()
+						"date": Date.now()/1000
 					};
 					var data = ko.toJSON(request);
 					$.ajax({
