@@ -6,7 +6,7 @@ var PUBLIC_KEY  = '6LdwrAUTAAAAAL7SMgkNMSjvdiMxS0YwaZ8AcSYE',
 
 exports.startDownload = function(req, res) {
 	var data = {
-		remoteip:  req.connection.remoteAddress,
+		remoteip:  req.ip || req.ips,
 		challenge: req.body.challenge,
 		response:  req.body.response
 	};
@@ -26,7 +26,7 @@ exports.startDownload = function(req, res) {
 				"type": req.body.type,
 				"query": req.body.query,
 				"date": req.body.date,
-				"remoteip": req.connection.remoteAddress
+				"remoteip": req.ip || req.ips
 			}
 			var payloads = [
 				{ topic: 'occurrencesDownload', messages: JSON.stringify(message), partition: 0 }

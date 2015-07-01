@@ -8,6 +8,7 @@ var path = require('path');
 
 module.exports = function(parent) {
 	var oneMonth = 2592000;
+	parent.enable('trust proxy');
 	parent.set('port', process.env.PORT || 3000);
 	parent.set('view engine', 'jade');
 	parent.set('jsonp callback', true );
