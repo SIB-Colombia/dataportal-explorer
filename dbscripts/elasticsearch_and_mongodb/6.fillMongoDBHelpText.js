@@ -9,8 +9,8 @@ var Client = require('mariasql');
 var c = new Client();
 c.connect({
 	host: '127.0.0.1',
-	user: 'root',
-	password: 'h4s1p8k21078!',
+	user: 'valentina',
+	password: 'password',
 	db: 'dataportal'
 });
 
