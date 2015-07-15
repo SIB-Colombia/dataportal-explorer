@@ -26,7 +26,7 @@ exports.startDownload = function(req, res) {
 				"type": req.body.type,
 				"query": req.body.query,
 				"date": req.body.date,
-				if(typeof(req.body.sourceip) != null) {
+				if(typeof req.body.sourceip !== 'undefined') {
 					"remoteip": req.body.sourceip;
 				} else {
 					"remoteip": req.ip || req.ips;
