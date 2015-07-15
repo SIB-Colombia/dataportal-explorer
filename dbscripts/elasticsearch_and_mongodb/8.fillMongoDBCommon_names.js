@@ -11,7 +11,7 @@ var c = new Client();
 c.connect({
 	host: '127.0.0.1',
 	user: 'valentina',
-	password: 'password',
+	password: 'h4s1p8k21078!',
 	db: 'dataportal'
 });
 

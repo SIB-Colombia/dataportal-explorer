@@ -26,7 +26,11 @@ exports.startDownload = function(req, res) {
 				"type": req.body.type,
 				"query": req.body.query,
 				"date": req.body.date,
-				"remoteip": req.ip || req.ips
+				if(typeof(req.body.sourceip) != null) {
+					"remoteip": req.body.sourceip;
+				} else {
+					"remoteip": req.ip || req.ips;
+				}
 			}
 			var payloads = [
 				{ topic: 'occurrencesDownload', messages: JSON.stringify(message), partition: 0 }
