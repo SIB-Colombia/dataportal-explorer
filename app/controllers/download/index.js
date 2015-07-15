@@ -20,8 +20,8 @@ exports.startDownload = function(req, res) {
 					producer = new Producer(client);
 
 			// Print out the response body
-			if(typeof req.body.sourceip !== "undefined") {
-				remoteip = req.body.sourceip;
+			if(typeof req.body.ipsource !== "undefined") {
+				remoteip = req.body.ipsource;
 			} else {
 				remoteip = req.ip || req.ips;
 			}
