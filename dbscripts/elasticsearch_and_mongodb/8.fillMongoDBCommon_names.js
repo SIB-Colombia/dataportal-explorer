@@ -7,11 +7,12 @@ var mongodb = require('mongodb')
 
 var Client = require('mariasql');
 
+var mysqlPass = process.env.MYSQL_PASSWORD
 var c = new Client();
 c.connect({
 	host: '127.0.0.1',
 	user: 'valentina',
-	password: 'h4s1p8k21078!',
+	password: mysqlPass,
 	db: 'dataportal'
 });
 
