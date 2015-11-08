@@ -137,10 +137,62 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 				"geohash_prefix": true,
 				"geohash_precision": 6
 			},
-			"cell_id": {"type" : "integer"},
-			"centi_cell_id": {"type" : "integer"},
-			"pointfive_cell_id": {"type" : "integer"},
-			"pointtwo_cell_id": {"type" : "integer"},
+			"cell_id": {
+				"type": "string",
+				"index": "analyzed",
+				"fields" : {
+					"untouched" : {
+						"type": "string",
+						"index": "not_analyzed"
+					},
+					"exactWords": {
+						"type": "string",
+						"analyzer": "string_lowercase"
+					}
+				}
+			},
+			"centi_cell_id": {
+				"type": "string",
+				"index": "analyzed",
+				"fields" : {
+					"untouched" : {
+						"type": "string",
+						"index": "not_analyzed"
+					},
+					"exactWords": {
+						"type": "string",
+						"analyzer": "string_lowercase"
+					}
+				}
+			},
+			"pointfive_cell_id": {
+				"type": "string",
+				"index": "analyzed",
+				"fields" : {
+					"untouched" : {
+						"type": "string",
+						"index": "not_analyzed"
+					},
+					"exactWords": {
+						"type": "string",
+						"analyzer": "string_lowercase"
+					}
+				}
+			},
+			"pointtwo_cell_id": {
+				"type": "string",
+				"index": "analyzed",
+				"fields" : {
+					"untouched" : {
+						"type": "string",
+						"index": "not_analyzed"
+					},
+					"exactWords": {
+						"type": "string",
+						"analyzer": "string_lowercase"
+					}
+				}
+			},
 			"mod360_cell_id": {"type" : "integer"},
 			"geospatial_issue": {"type" : "integer"},
 			"taxon_rank_id": {"type" : "integer"},

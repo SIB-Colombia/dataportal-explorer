@@ -23,7 +23,7 @@ c.on('connect', function() {
 	console.log('Client error: ' + err);
 })
 .on('close', function(hadError) {
-	console.log('Client closed');
+	console.log('Mysql client closed');
 });
 
 fs.openSync("output.txt", 'w+');
@@ -49,7 +49,6 @@ c.query('SELECT common_name_taxon_concept.taxon_concept_id, common_name.name, co
 		console.log('Done with all results');
 		c.end();
 
-		var counter = 0;
 		var numUpdated = 1;
 		readline = require('readline');
 		MongoClient.connect('mongodb://localhost/sibexplorer_dev', function(error, db) {
@@ -74,12 +73,10 @@ c.query('SELECT common_name_taxon_concept.taxon_concept_id, common_name.name, co
 						}
 					}
 				});
-				counter++;
 			});
 
 			rd.on('close', function() {
 				fs.unlinkSync('output.txt');
 			});
-
 		});
 	});
