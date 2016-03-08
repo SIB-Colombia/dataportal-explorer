@@ -2520,7 +2520,6 @@ exports.geoJsonMapPoints = function(parameters) {
 			}
 		}
 	};
-	console.log(JSON.stringify(qryObj));
 	qryObj["from"] = parameters.startindex || 0;
 	if(parameters.maxresults) {
 		if(parameters.maxresults > 1000) {
@@ -2539,6 +2538,55 @@ exports.geoJsonMapPoints = function(parameters) {
 		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
 		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["wildcard"] = {};
 		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["wildcard"]["canonical.exactWords"] = parameters.scientificname.toLowerCase();
+		andCounter+=1;
+	}
+
+	if(parameters.basisofrecord) {
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["wildcard"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["wildcard"]["basis_of_record.name_spanish.exactWords"] = parameters.basisofrecord.toLowerCase();
+		andCounter+=1;
+	}
+
+	if(parameters.departmentname) {
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["wildcard"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["wildcard"]["department_name.exactWords"] = parameters.departmentname.toLowerCase();
+		andCounter+=1;
+	}
+
+	if(parameters.locality) {
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["wildcard"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["wildcard"]["locality.exactWords"] = parameters.locality.toLowerCase();
+		andCounter+=1;
+	}
+
+	if(parameters.taxonname) {
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"] = [];
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][0] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][0]["wildcard"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][0]["wildcard"]["taxonomy.kingdom_name.exactWords"] = parameters.taxonname.toLowerCase();
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][1] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][1]["wildcard"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][1]["wildcard"]["taxonomy.phylum_name.exactWords"] = parameters.taxonname.toLowerCase();
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][2] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][2]["wildcard"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][2]["wildcard"]["taxonomy.class_name.exactWords"] = parameters.taxonname.toLowerCase();
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][3] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][3]["wildcard"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][3]["wildcard"]["taxonomy.order_name.exactWords"] = parameters.taxonname.toLowerCase();
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][4] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][4]["wildcard"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][4]["wildcard"]["taxonomy.family_name.exactWords"] = parameters.taxonname.toLowerCase();
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][5] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][5]["wildcard"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][5]["wildcard"]["taxonomy.genus_name.exactWords"] = parameters.taxonname.toLowerCase();
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][6] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][6]["wildcard"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["bool"]["should"][6]["wildcard"]["taxonomy.species_name.exactWords"] = parameters.taxonname.toLowerCase();
 		andCounter+=1;
 	}
 
