@@ -12,6 +12,8 @@ temp/
 logs/
 public/components
 npm-debug.log
+sonar-project.properties
+.sonar/
 
 pids
 logs
