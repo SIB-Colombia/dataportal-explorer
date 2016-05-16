@@ -2809,7 +2809,6 @@ exports.geoJsonMapPoints = function(parameters) {
 		currentFilter+=1;
 		andCounter+=1;
 	}
-	console.log(JSON.stringify(qryObj));
 
 	mySearchCall = elasticSearchClient.search('sibexplorer', 'occurrences', qryObj);
 	return mySearchCall;
