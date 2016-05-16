@@ -2727,32 +2727,31 @@ exports.geoJsonMapPoints = function(parameters) {
 	}
 
 	if(parameters.minlatitude || parameters.maxlatitude || parameters.minlongitude || parameters.maxlongitude) {
-		qryObj["query"]["filtered"]["filter"][currentFilter] = {};
-		qryObj["query"]["filtered"]["filter"][currentFilter]["geo_bounding_box"] = {};
-		qryObj["query"]["filtered"]["filter"][currentFilter]["geo_bounding_box"]["location"] = {};
-		qryObj["query"]["filtered"]["filter"][currentFilter]["geo_bounding_box"]["location"]["top_left"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["geo_bounding_box"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["geo_bounding_box"]["location"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["geo_bounding_box"]["location"]["top_left"] = {};
 		if(parameters.maxlatitude) {
-			qryObj["query"]["filtered"]["filter"][currentFilter]["geo_bounding_box"]["location"]["top_left"]["lat"] = parameters.maxlatitude;
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["geo_bounding_box"]["location"]["top_left"]["lat"] = parseInt(parameters.maxlatitude);
 		} else {
-			qryObj["query"]["filtered"]["filter"][currentFilter]["geo_bounding_box"]["location"]["top_left"]["lat"] = 90;
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["geo_bounding_box"]["location"]["top_left"]["lat"] = 90;
 		}
 		if(parameters.minlongitude) {
-			qryObj["query"]["filtered"]["filter"][currentFilter]["geo_bounding_box"]["location"]["top_left"]["lon"] = parameters.minlongitude;
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["geo_bounding_box"]["location"]["top_left"]["lon"] = parseInt(parameters.minlongitude);
 		} else {
-			qryObj["query"]["filtered"]["filter"][currentFilter]["geo_bounding_box"]["location"]["top_left"]["lon"] = -180;
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["geo_bounding_box"]["location"]["top_left"]["lon"] = -180;
 		}
-		qryObj["query"]["filtered"]["filter"][currentFilter]["geo_bounding_box"]["location"]["bottom_right"] = {};
+		qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["geo_bounding_box"]["location"]["bottom_right"] = {};
 		if(parameters.minlatitude) {
-			qryObj["query"]["filtered"]["filter"][currentFilter]["geo_bounding_box"]["location"]["bottom_right"]["lat"] = parameters.minlatitude;
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["geo_bounding_box"]["location"]["bottom_right"]["lat"] = parseInt(parameters.minlatitude);
 		} else {
-			qryObj["query"]["filtered"]["filter"][currentFilter]["geo_bounding_box"]["location"]["bottom_right"]["lat"] = -90;
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["geo_bounding_box"]["location"]["bottom_right"]["lat"] = -90;
 		}
 		if(parameters.maxlongitude) {
-			qryObj["query"]["filtered"]["filter"][currentFilter]["geo_bounding_box"]["location"]["bottom_right"]["lon"] = parameters.maxlongitude;
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["geo_bounding_box"]["location"]["bottom_right"]["lon"] = parseInt(parameters.maxlongitude);
 		} else {
-			qryObj["query"]["filtered"]["filter"][currentFilter]["geo_bounding_box"]["location"]["bottom_right"]["lon"] = 179.999;
+			qryObj["query"]["filtered"]["query"]["bool"]["must"][andCounter]["geo_bounding_box"]["location"]["bottom_right"]["lon"] = 179.999;
 		}
-		currentFilter+=1;
 		andCounter+=1;
 	}
 
