@@ -262,14 +262,6 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 	});
 
 	var wmsLayers = {
-		'Invemar: Ecorregiones': invemarEcoregiones,
-		'Invemar: Ecozonas': invemarEcozonas,
-		'Invemar: Ecosistemas costeros': invemarEcosistemasCosteros,
-		'Invemar: Área de régimen común': invemarAreaRegimenComun,
-		'Invemar: Límite departamental': invemarLimiteDepartamental,
-		"OpenWeatherMap: Clouds": L.tileLayer.provider('OpenWeatherMap.Clouds'),
-		"OpenWeatherMap: CloudsClassic": L.tileLayer.provider('OpenWeatherMap.CloudsClassic'),
-		"OpenWeatherMap: Precipitation": L.tileLayer.provider('OpenWeatherMap.Precipitation'),
 	};
 
 	var overlays = {
