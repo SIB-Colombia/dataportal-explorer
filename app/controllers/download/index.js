@@ -20,13 +20,18 @@ exports.startDownload = function(req, res) {
 					producer = new Producer(client);
 
 			// Print out the response body
+			if(typeof req.body.ipsource !== "undefined") {
+				remoteip = req.body.ipsource;
+			} else {
+				remoteip = req.ip || req.ips;
+			}
 			var message = {
 				"email": req.body.email,
 				"reason": req.body.reason,
 				"type": req.body.type,
 				"query": req.body.query,
 				"date": req.body.date,
-				"remoteip": req.ip || req.ips
+				"remoteip": remoteip
 			}
 			var payloads = [
 				{ topic: 'occurrencesDownload', messages: JSON.stringify(message), partition: 0 }

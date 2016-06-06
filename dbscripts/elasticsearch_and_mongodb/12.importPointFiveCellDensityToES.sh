@@ -59,10 +59,14 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/pointfive_cell_density' -
 				}
 			},
 			"location_cell" : {
-				"type" : "geo_point"
+				"type" : "geo_point",
+				"lat_lon": true,
+				"validate": true
 			},
 			"location_pointfive_cell" : {
-				"type" : "geo_point"
+				"type" : "geo_point",
+				"lat_lon": true,
+				"validate": true
 			},
 			"count": {
 				"type" : "integer"

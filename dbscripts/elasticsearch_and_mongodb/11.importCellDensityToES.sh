@@ -46,7 +46,9 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/cell_density' -d '
 				}
 			},
 			"location_cell" : {
-					"type" : "geo_point"
+				"type" : "geo_point",
+				"lat_lon": true,
+				"validate": true
 			},
 			"count": {
 				"type" : "integer"

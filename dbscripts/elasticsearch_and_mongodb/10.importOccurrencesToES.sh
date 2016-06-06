@@ -93,6 +93,24 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					}
 				}
 			},
+			"taxon_rank":  {
+				"type": "string",
+				"index": "analyzed",
+				"fields": {
+					"untouched" : {
+						"type": "string",
+						"index": "not_analyzed"
+					},
+					"exactWords": {
+						"type": "string",
+						"analyzer": "string_lowercase"
+					},
+					"spanish": {
+						"type": "string",
+						"analyzer": "spanish_search_analyzer"
+					}
+				}
+			},
 			"taxon_name_author":  {
 				"type": "string",
 				"index": "analyzed",
@@ -119,13 +137,66 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 				"geohash_prefix": true,
 				"geohash_precision": 6
 			},
-			"cell_id": {"type" : "integer"},
-			"centi_cell_id": {"type" : "integer"},
-			"pointfive_cell_id": {"type" : "integer"},
-			"pointtwo_cell_id": {"type" : "integer"},
+			"cell_id": {
+				"type": "string",
+				"index": "analyzed",
+				"fields" : {
+					"untouched" : {
+						"type": "string",
+						"index": "not_analyzed"
+					},
+					"exactWords": {
+						"type": "string",
+						"analyzer": "string_lowercase"
+					}
+				}
+			},
+			"centi_cell_id": {
+				"type": "string",
+				"index": "analyzed",
+				"fields" : {
+					"untouched" : {
+						"type": "string",
+						"index": "not_analyzed"
+					},
+					"exactWords": {
+						"type": "string",
+						"analyzer": "string_lowercase"
+					}
+				}
+			},
+			"pointfive_cell_id": {
+				"type": "string",
+				"index": "analyzed",
+				"fields" : {
+					"untouched" : {
+						"type": "string",
+						"index": "not_analyzed"
+					},
+					"exactWords": {
+						"type": "string",
+						"analyzer": "string_lowercase"
+					}
+				}
+			},
+			"pointtwo_cell_id": {
+				"type": "string",
+				"index": "analyzed",
+				"fields" : {
+					"untouched" : {
+						"type": "string",
+						"index": "not_analyzed"
+					},
+					"exactWords": {
+						"type": "string",
+						"analyzer": "string_lowercase"
+					}
+				}
+			},
 			"mod360_cell_id": {"type" : "integer"},
 			"geospatial_issue": {"type" : "integer"},
-			"country_name" :  {
+			"taxon_rank_id": {"type" : "integer"},
+			"country_name": {
 				"type": "string",
 				"index": "analyzed",
 				"fields" : {
@@ -147,7 +218,7 @@ curl -XPUT 'http://localhost:9200/sibexplorer/_mapping/occurrences' -d '
 					}
 				}
 			},
-			"county_name" :  {
+			"county_name": {
 				"type": "string",
 				"index": "analyzed",
 				"fields" : {

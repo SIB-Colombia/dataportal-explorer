@@ -38,11 +38,12 @@ toBoundingBoxPointFiveCell = function(cellId, pointFiveCellId) {
 	return locationPointFiveCellId;
 };
 
+var mysqlPass = process.env.MYSQL_PASSWORD
 var c = new Client();
 c.connect({
 	host: '127.0.0.1',
 	user: 'valentina',
-	password: 'password',
+	password: mysqlPass,
 	db: 'dataportal'
 });
 

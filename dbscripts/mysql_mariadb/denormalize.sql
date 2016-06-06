@@ -17,7 +17,7 @@ CREATE FUNCTION toPointFiveCellId(latitude float, longitude float) RETURNS INT D
 		DECLARE pointFiveCellId INT;
 		DECLARE la FLOAT;
 		DECLARE lo FLOAT;
-		
+
 		IF latitude < -90 OR latitude > 90 OR longitude < -180 OR longitude > 180 THEN
 			SET _output = "Geolocation cannot be converted to a 0.5 cell id";
 		ELSE
@@ -47,7 +47,7 @@ CREATE FUNCTION toPointFiveCellId(latitude float, longitude float) RETURNS INT D
 
 			SET pointFiveCellId = (la * 10) + lo;
 		END IF;
-		
+
 		RETURN ABS(pointFiveCellId);
 	END //
 DELIMITER ;
@@ -59,7 +59,7 @@ CREATE FUNCTION toPointTwoCellId(latitude float, longitude float) RETURNS INT DE
 		DECLARE pointTwoCellId INT;
 		DECLARE la FLOAT;
 		DECLARE lo FLOAT;
-		
+
 		IF latitude < -90 OR latitude > 90 OR longitude < -180 OR longitude > 180 THEN
 			SET _output = "Geolocation cannot be converted to a 0.5 cell id";
 		ELSE
@@ -84,7 +84,7 @@ CREATE FUNCTION toPointTwoCellId(latitude float, longitude float) RETURNS INT DE
 
 			SET lo = ABS(FLOOR((longitude * 10000) % 10000));
 			IF longitude < 0 THEN
-				SET lo = 10000 - lo; 
+				SET lo = 10000 - lo;
 			END IF;
 			SET lo = FLOOR((lo / 1000) % 10);
 			IF lo >= 0 AND lo < 2 THEN
@@ -101,7 +101,7 @@ CREATE FUNCTION toPointTwoCellId(latitude float, longitude float) RETURNS INT DE
 
 			SET pointTwoCellId = (la * 10) + lo;
 		END IF;
-		
+
 		RETURN ABS(pointTwoCellId);
 	END //
 DELIMITER ;
@@ -122,7 +122,7 @@ CREATE PROCEDURE generate_new_density_data ()
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET no_more_rows1 := TRUE;
 
 		SET no_more_rows1 := FALSE;
-	
+
 		OPEN cursor1;
 		LOOP1: loop
 			fetch cursor1 INTO occurrenceID, recordLatitude, recordLongitude;
@@ -171,6 +171,8 @@ occurrence_record.taxon_concept_id AS taxon_concept_id,
 occurrence_record.data_provider_id AS data_provider_id,
 data_provider.`name` AS data_provider_name,
 taxon_name.canonical AS taxon_name_canonical,
+taxon_name.rank AS taxon_rank_id,
+rank.name AS taxon_rank,
 occurrence_record.data_resource_id AS data_resource_id,
 data_resource.`name` AS data_resource_name,
 data_resource.rights AS data_resource_rights,
@@ -267,6 +269,7 @@ LEFT JOIN department ON occurrence_record.iso_department_code = department.iso_d
 LEFT JOIN county ON occurrence_record.iso_county_code = county.iso_county_code
 LEFT JOIN paramo ON occurrence_record.paramo = paramo.complex_id
 LEFT JOIN marine_zone ON occurrence_record.marine_zone = marine_zone.mask
+LEFT JOIN rank on taxon_name.rank = rank.id
 LEFT JOIN taxon_concept ON occurrence_record.taxon_concept_id = taxon_concept.id
 LEFT JOIN taxon_concept AS taxon_concept_phylum ON taxon_concept.phylum_concept_id = taxon_concept_phylum.id
 LEFT JOIN taxon_name AS taxon_name_phylum ON taxon_concept_phylum.taxon_name_id = taxon_name_phylum.id
@@ -290,9 +293,9 @@ select concat('Adding country name column in table occurrence_record_denormalize
 ALTER TABLE occurrence_record_denormalized ADD country_name VARCHAR(255);
 
 select concat('Filling country names in table occurrence_record_denormalized: ', now()) as debug;
-UPDATE occurrence_record_denormalized 
-INNER JOIN country_name 
-ON occurrence_record_denormalized.iso_country_code = country_name.iso_country_code 
+UPDATE occurrence_record_denormalized
+INNER JOIN country_name
+ON occurrence_record_denormalized.iso_country_code = country_name.iso_country_code
 AND country_name.locale = 'en'
 SET occurrence_record_denormalized.country_name = country_name.name;
 
@@ -300,9 +303,9 @@ select concat('Adding country name calculated column in table occurrence_record_
 ALTER TABLE occurrence_record_denormalized ADD country_name_calculated VARCHAR(255);
 
 select concat('Filling country names in table occurrence_record_denormalized: ', now()) as debug;
-UPDATE occurrence_record_denormalized 
-INNER JOIN country_name 
-ON occurrence_record_denormalized.iso_country_code_calculated = country_name.iso_country_code 
+UPDATE occurrence_record_denormalized
+INNER JOIN country_name
+ON occurrence_record_denormalized.iso_country_code_calculated = country_name.iso_country_code
 AND country_name.locale = 'en'
 SET occurrence_record_denormalized.country_name_calculated = country_name.name;
 
@@ -310,9 +313,9 @@ select concat('Adding dataprovider country name column in table occurrence_recor
 ALTER TABLE occurrence_record_denormalized ADD data_provider_country_name VARCHAR(255);
 
 select concat('Filling country names in table occurrence_record_denormalized: ', now()) as debug;
-UPDATE occurrence_record_denormalized 
-INNER JOIN country_name 
-ON occurrence_record_denormalized.data_provider_iso_country_code = country_name.iso_country_code 
+UPDATE occurrence_record_denormalized
+INNER JOIN country_name
+ON occurrence_record_denormalized.data_provider_iso_country_code = country_name.iso_country_code
 AND country_name.locale = 'en'
 SET occurrence_record_denormalized.data_provider_country_name = country_name.name;
 
@@ -413,18 +416,18 @@ CREATE TABLE `pointtwo_cell_density` (
 
 -- populate the pointfive_cell_density for country
 select concat('Building pointfive cells for country: ', now()) as debug;
-insert into pointfive_cell_density 
-select 2, c.id, cell_id, pointfive_cell_id, count(oc.id) 
-from occurrence_record oc 
-inner join country c on oc.iso_country_code=c.iso_country_code 
+insert into pointfive_cell_density
+select 2, c.id, cell_id, pointfive_cell_id, count(oc.id)
+from occurrence_record oc
+inner join country c on oc.iso_country_code=c.iso_country_code
 where oc.centi_cell_id is not null and oc.geospatial_issue=0 and oc.deleted is null
 group by 1,2,3,4;
 
 -- populate the pointfive_cell_density for home country
 select concat('Building pointfive cells for home country: ', now()) as debug;
-insert into pointfive_cell_density 
-select 6, c.id, cell_id, pointfive_cell_id, count(oc.id) 
-from occurrence_record oc 
+insert into pointfive_cell_density
+select 6, c.id, cell_id, pointfive_cell_id, count(oc.id)
+from occurrence_record oc
 inner join data_provider dp on oc.data_provider_id=dp.id
 inner join country c on dp.iso_country_code=c.iso_country_code
 where oc.pointfive_cell_id is not null and oc.geospatial_issue=0 and oc.deleted is null
@@ -433,8 +436,8 @@ group by 1,2,3,4;
 -- populate the pointfive_cell_density home country for international networks
 select concat('Building pointfive cells for international networks: ', now()) as debug;
 insert into pointfive_cell_density
-select 6, 0, cell_id, pointfive_cell_id, count(oc.id) 
-from occurrence_record oc 
+select 6, 0, cell_id, pointfive_cell_id, count(oc.id)
+from occurrence_record oc
 inner join data_provider dp on oc.data_provider_id=dp.id
 where dp.iso_country_code is null and oc.pointfive_cell_id is not null and oc.geospatial_issue=0 and oc. deleted is null
 group by 3,4;
@@ -466,72 +469,72 @@ group by nm.resource_network_id, oc.cell_id, oc.pointfive_cell_id;
 
 -- populate the pointfive_cell_density for department
 select concat('Building pointfive cells for department: ', now()) as debug;
-insert into pointfive_cell_density 
-select 8, d.id, cell_id, pointfive_cell_id, count(oc.id) 
-from occurrence_record oc 
-inner join department d on oc.iso_department_code=d.iso_department_code 
+insert into pointfive_cell_density
+select 8, d.id, cell_id, pointfive_cell_id, count(oc.id)
+from occurrence_record oc
+inner join department d on oc.iso_department_code=d.iso_department_code
 where oc.pointfive_cell_id is not null and oc.geospatial_issue=0 and oc.deleted is null
 group by 1,2,3,4;
 
 -- populate pointfive_cell_density for all ORs on the denormalised nub id
 select concat('Building pointfive cells for kingdom: ', now()) as debug;
-insert ignore into pointfive_cell_density 
+insert ignore into pointfive_cell_density
 select 1, ore.kingdom_concept_id, ore.cell_id, ore.pointfive_cell_id, count(ore.id)
 from occurrence_record ore
 where ore.kingdom_concept_id is not null
 and ore.pointfive_cell_id is not null and ore.geospatial_issue=0 and ore.deleted is null
 group by 1,2,3,4;
 
--- populate pointfive_cell_density for all ORs on the denormalised nub id    
+-- populate pointfive_cell_density for all ORs on the denormalised nub id
 select concat('Building pointfive cells for phylum: ', now()) as debug;
-insert ignore into pointfive_cell_density 
+insert ignore into pointfive_cell_density
 select 1, ore.phylum_concept_id, ore.cell_id, ore.pointfive_cell_id, count(ore.id)
-from occurrence_record ore 
+from occurrence_record ore
 where ore.phylum_concept_id is not null
 and ore.pointfive_cell_id is not null and ore.geospatial_issue=0 and ore.deleted is null
 group by 1,2,3,4;
-    
+
 -- populate pointfive_cell_density for all ORs on the denormalised nub id
 select concat('Building pointfive cells for class: ', now()) as debug;
 insert ignore into pointfive_cell_density
 select 1, ore.class_concept_id, ore.cell_id, ore.pointfive_cell_id, count(ore.id)
-from occurrence_record ore 
+from occurrence_record ore
 where ore.class_concept_id is not null
 and ore.pointfive_cell_id is not null and ore.geospatial_issue=0 and ore.deleted is null
 group by 1,2,3,4;
 
 -- populate pointfive_cell_density for all ORs on the denormalised nub id
 select concat('Building pointfive cells for order: ', now()) as debug;
-insert ignore into pointfive_cell_density 
+insert ignore into pointfive_cell_density
 select 1, ore.order_concept_id, ore.cell_id, ore.pointfive_cell_id, count(ore.id)
-from occurrence_record ore 
+from occurrence_record ore
 where ore.order_concept_id is not null
 and ore.pointfive_cell_id is not null and ore.geospatial_issue=0 and ore.deleted is null
 group by 1,2,3,4;
-    
+
 -- populate pointfive_cell_density for all ORs on the denormalised nub id
 select concat('Building pointfive cells for family: ', now()) as debug;
-insert ignore into pointfive_cell_density 
+insert ignore into pointfive_cell_density
 select 1, ore.family_concept_id, ore.cell_id, ore.pointfive_cell_id, count(ore.id)
-from occurrence_record ore 
+from occurrence_record ore
 where ore.family_concept_id is not null
 and ore.pointfive_cell_id is not null and ore.geospatial_issue=0 and ore.deleted is null
 group by 1,2,3,4;
-    
+
 -- populate pointfive_cell_density for all ORs on the denormalised nub id
 select concat('Building pointfive cells for genus: ', now()) as debug;
-insert ignore into pointfive_cell_density 
+insert ignore into pointfive_cell_density
 select 1, ore.genus_concept_id, ore.cell_id, ore.pointfive_cell_id, count(ore.id)
-from occurrence_record ore 
+from occurrence_record ore
 where ore.genus_concept_id is not null
 and ore.pointfive_cell_id is not null and ore.geospatial_issue=0 and ore.deleted is null
 group by 1,2,3,4;
 
 -- populate pointfive_cell_density for all ORs on the denormalised nub id
 select concat('Building pointfive cells for species: ', now()) as debug;
-insert ignore into pointfive_cell_density 
+insert ignore into pointfive_cell_density
 select 1, ore.species_concept_id, ore.cell_id, ore.pointfive_cell_id, count(ore.id)
-from occurrence_record ore 
+from occurrence_record ore
 where ore.species_concept_id is not null
 and ore.pointfive_cell_id is not null and ore.geospatial_issue=0 and ore.deleted is null
 group by 1,2,3,4;
@@ -555,18 +558,18 @@ group by 1,2,3,4;
 
 -- populate the pointtwo_cell_density for country
 select concat('Building pointtwo cells for country: ', now()) as debug;
-insert into pointtwo_cell_density 
-select 2, c.id, cell_id, pointtwo_cell_id, count(oc.id) 
-from occurrence_record oc 
-inner join country c on oc.iso_country_code=c.iso_country_code 
+insert into pointtwo_cell_density
+select 2, c.id, cell_id, pointtwo_cell_id, count(oc.id)
+from occurrence_record oc
+inner join country c on oc.iso_country_code=c.iso_country_code
 where oc.centi_cell_id is not null and oc.geospatial_issue=0 and oc.deleted is null
 group by 1,2,3,4;
 
 -- populate the pointtwo_cell_density for home country
 select concat('Building pointtwo cells for home country: ', now()) as debug;
-insert into pointtwo_cell_density 
-select 6, c.id, cell_id, pointtwo_cell_id, count(oc.id) 
-from occurrence_record oc 
+insert into pointtwo_cell_density
+select 6, c.id, cell_id, pointtwo_cell_id, count(oc.id)
+from occurrence_record oc
 inner join data_provider dp on oc.data_provider_id=dp.id
 inner join country c on dp.iso_country_code=c.iso_country_code
 where oc.pointtwo_cell_id is not null and oc.geospatial_issue=0 and oc.deleted is null
@@ -575,8 +578,8 @@ group by 1,2,3,4;
 -- populate the pointtwo_cell_density home country for international networks
 select concat('Building pointtwo cells for international networks: ', now()) as debug;
 insert into pointtwo_cell_density
-select 6, 0, cell_id, pointtwo_cell_id, count(oc.id) 
-from occurrence_record oc 
+select 6, 0, cell_id, pointtwo_cell_id, count(oc.id)
+from occurrence_record oc
 inner join data_provider dp on oc.data_provider_id=dp.id
 where dp.iso_country_code is null and oc.pointtwo_cell_id is not null and oc.geospatial_issue=0 and oc. deleted is null
 group by 3,4;
@@ -608,72 +611,72 @@ group by nm.resource_network_id, oc.cell_id, oc.pointtwo_cell_id;
 
 -- populate the pointtwo_cell_density for department
 select concat('Building pointtwo cells for department: ', now()) as debug;
-insert into pointtwo_cell_density 
-select 8, d.id, cell_id, pointtwo_cell_id, count(oc.id) 
-from occurrence_record oc 
-inner join department d on oc.iso_department_code=d.iso_department_code 
+insert into pointtwo_cell_density
+select 8, d.id, cell_id, pointtwo_cell_id, count(oc.id)
+from occurrence_record oc
+inner join department d on oc.iso_department_code=d.iso_department_code
 where oc.pointtwo_cell_id is not null and oc.geospatial_issue=0 and oc.deleted is null
 group by 1,2,3,4;
 
 -- populate pointtwo_cell_density for all ORs on the denormalised nub id
 select concat('Building pointtwo cells for kingdom: ', now()) as debug;
-insert ignore into pointtwo_cell_density 
+insert ignore into pointtwo_cell_density
 select 1, ore.kingdom_concept_id, ore.cell_id, ore.pointtwo_cell_id, count(ore.id)
 from occurrence_record ore
 where ore.kingdom_concept_id is not null
 and ore.pointtwo_cell_id is not null and ore.geospatial_issue=0 and ore.deleted is null
 group by 1,2,3,4;
 
--- populate pointtwo_cell_density for all ORs on the denormalised nub id    
+-- populate pointtwo_cell_density for all ORs on the denormalised nub id
 select concat('Building pointtwo cells for phylum: ', now()) as debug;
-insert ignore into pointtwo_cell_density 
+insert ignore into pointtwo_cell_density
 select 1, ore.phylum_concept_id, ore.cell_id, ore.pointtwo_cell_id, count(ore.id)
-from occurrence_record ore 
+from occurrence_record ore
 where ore.phylum_concept_id is not null
 and ore.pointtwo_cell_id is not null and ore.geospatial_issue=0 and ore.deleted is null
 group by 1,2,3,4;
-    
+
 -- populate pointtwo_cell_density for all ORs on the denormalised nub id
 select concat('Building pointtwo cells for class: ', now()) as debug;
 insert ignore into pointtwo_cell_density
 select 1, ore.class_concept_id, ore.cell_id, ore.pointtwo_cell_id, count(ore.id)
-from occurrence_record ore 
+from occurrence_record ore
 where ore.class_concept_id is not null
 and ore.pointtwo_cell_id is not null and ore.geospatial_issue=0 and ore.deleted is null
 group by 1,2,3,4;
 
 -- populate pointtwo_cell_density for all ORs on the denormalised nub id
 select concat('Building pointtwo cells for order: ', now()) as debug;
-insert ignore into pointtwo_cell_density 
+insert ignore into pointtwo_cell_density
 select 1, ore.order_concept_id, ore.cell_id, ore.pointtwo_cell_id, count(ore.id)
-from occurrence_record ore 
+from occurrence_record ore
 where ore.order_concept_id is not null
 and ore.pointtwo_cell_id is not null and ore.geospatial_issue=0 and ore.deleted is null
 group by 1,2,3,4;
-    
+
 -- populate pointtwo_cell_density for all ORs on the denormalised nub id
 select concat('Building pointtwo cells for family: ', now()) as debug;
-insert ignore into pointtwo_cell_density 
+insert ignore into pointtwo_cell_density
 select 1, ore.family_concept_id, ore.cell_id, ore.pointtwo_cell_id, count(ore.id)
-from occurrence_record ore 
+from occurrence_record ore
 where ore.family_concept_id is not null
 and ore.pointtwo_cell_id is not null and ore.geospatial_issue=0 and ore.deleted is null
 group by 1,2,3,4;
-    
+
 -- populate pointtwo_cell_density for all ORs on the denormalised nub id
 select concat('Building pointtwo cells for genus: ', now()) as debug;
-insert ignore into pointtwo_cell_density 
+insert ignore into pointtwo_cell_density
 select 1, ore.genus_concept_id, ore.cell_id, ore.pointtwo_cell_id, count(ore.id)
-from occurrence_record ore 
+from occurrence_record ore
 where ore.genus_concept_id is not null
 and ore.pointtwo_cell_id is not null and ore.geospatial_issue=0 and ore.deleted is null
 group by 1,2,3,4;
 
 -- populate pointtwo_cell_density for all ORs on the denormalised nub id
 select concat('Building pointtwo cells for species: ', now()) as debug;
-insert ignore into pointtwo_cell_density 
+insert ignore into pointtwo_cell_density
 select 1, ore.species_concept_id, ore.cell_id, ore.pointtwo_cell_id, count(ore.id)
-from occurrence_record ore 
+from occurrence_record ore
 where ore.species_concept_id is not null
 and ore.pointtwo_cell_id is not null and ore.geospatial_issue=0 and ore.deleted is null
 group by 1,2,3,4;
