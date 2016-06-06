@@ -53,51 +53,51 @@ define(["knockout"], function(ko) {
 		this.basis_of_record_name_spanish = data.basis_of_record.name_spanish || null;
 
 		this.url = ko.computed(function() {
-			return "http://data.sibcolombia.net/occurrences/"+this.id;
+			return "http://maps.sibcolombia.net/occurrences/"+this.id;
 		}, this);
 
 		this.urlDataProvider = ko.computed(function() {
-			return "http://data.sibcolombia.net/datasets/provider/"+this.data_provider_id;
+			return "http://maps.sibcolombia.net/datasets/provider/"+this.data_provider_id;
 		}, this);
 
 		this.urlResourceName = ko.computed(function() {
-			return "http://data.sibcolombia.net/datasets/resource/"+this.data_resource_id;
+			return "http://maps.sibcolombia.net/datasets/resource/"+this.data_resource_id;
 		}, this);
 
 		this.urlCountry = ko.computed(function() {
-			return "http://data.sibcolombia.net/countries/"+this.iso_country_code;
+			return "http://maps.sibcolombia.net/countries/"+this.iso_country_code;
 		}, this);
 
 		this.urlDepartment = ko.computed(function() {
-			return "http://data.sibcolombia.net/departments/"+this.iso_department_code;
+			return "http://maps.sibcolombia.net/departments/"+this.iso_department_code;
 		}, this);
 
 		this.urlKingdom = ko.computed(function() {
-			return "http://data.sibcolombia.net/species/"+this.kingdom_concept_id;
+			return "http://maps.sibcolombia.net/species/"+this.kingdom_concept_id;
 		}, this);
 
 		this.urlPhylum = ko.computed(function() {
-			return "http://data.sibcolombia.net/species/"+this.phylum_concept_id;
+			return "http://maps.sibcolombia.net/species/"+this.phylum_concept_id;
 		}, this);
 
 		this.urlClass = ko.computed(function() {
-			return "http://data.sibcolombia.net/species/"+this.class_concept_id;
+			return "http://maps.sibcolombia.net/species/"+this.class_concept_id;
 		}, this);
 
 		this.urlOrder = ko.computed(function() {
-			return "http://data.sibcolombia.net/species/"+this.order_concept_id;
+			return "http://maps.sibcolombia.net/species/"+this.order_concept_id;
 		}, this);
 
 		this.urlFamily = ko.computed(function() {
-			return "http://data.sibcolombia.net/species/"+this.family_concept_id;
+			return "http://maps.sibcolombia.net/species/"+this.family_concept_id;
 		}, this);
 
 		this.urlGenus = ko.computed(function() {
-			return "http://data.sibcolombia.net/species/"+this.genus_concept_id;
+			return "http://maps.sibcolombia.net/species/"+this.genus_concept_id;
 		}, this);
 
 		this.urlSpecie = ko.computed(function() {
-			return "http://data.sibcolombia.net/species/"+this.species_concept_id;
+			return "http://maps.sibcolombia.net/species/"+this.species_concept_id;
 		}, this);
 
 		this.fullSpecieName = ko.computed(function() {
@@ -114,7 +114,7 @@ define(["knockout"], function(ko) {
 
 		this.canonicalWithURL = ko.computed(function() {
 			if(this.canonical)
-				return "<a href=\"http://data.sibcolombia.net/occurrences/"+this.id+"\">"+this.canonical+"</a>";
+				return "<a href=\"http://maps.sibcolombia.net/occurrences/"+this.id+"\">"+this.canonical+"</a>";
 			return "";
 		}, this);
 	};

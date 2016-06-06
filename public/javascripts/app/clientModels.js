@@ -39,7 +39,7 @@ function Occurrence(data) {
 	this.basis_of_record_name_spanish = data.basis_of_record_name_spanish;
 
 	this.url = ko.computed(function() {
-		return "http://data.sibcolombia.net/occurrences/"+this.id;
+		return "http://maps.sibcolombia.net/occurrences/"+this.id;
 	}, this);
 
 	this.fullSpecieName = ko.computed(function() {
@@ -56,7 +56,7 @@ function Occurrence(data) {
 
 	this.canonicalWithURL = ko.computed(function() {
 		if(this.canonical)
-			return "<a href=\"http://data.sibcolombia.net/occurrences/"+this.id+"\">"+this.canonical+"</a>";
+			return "<a href=\"http://maps.sibcolombia.net/occurrences/"+this.id+"\">"+this.canonical+"</a>";
 		return "";
 	}, this);
 }

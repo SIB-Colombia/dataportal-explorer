@@ -107,7 +107,7 @@ function OccurrenceSearchViewModel() {
 		scrollable: true,
 		columns: [
 			{ field: "id", title: "ID", width: "5%", filterable: {operators: {string: {eq: "Igual a", neq: "No igual a"}}} },
-			{ field: "canonical", title: "Nombre científico", width: "13%",  template: '<a target="_blank" href="http://data.sibcolombia.net/occurrences/#=id#">#=canonical#</a>' },
+			{ field: "canonical", title: "Nombre científico", width: "13%",  template: '<a target="_blank" href="http://maps.sibcolombia.net/occurrences/#=id#">#=canonical#</a>' },
 			{ field: "data_resource_name", title: "Recurso de datos", width: "13%" },
 			{ field: "institution_code", title: "Cód. institución", width: "11%" },
 			{ field: "collection_code", title: "Cód. colección", width: "10%" },

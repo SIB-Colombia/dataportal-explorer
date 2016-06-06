@@ -240,16 +240,6 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 			attribution: "Fuente: Instituto Alexander Von Humboldt - Colombia"
 		}
 	);
-	var gbifGrid = L.tileLayer.wms("http://data.sibcolombia.net/geoserver/wms",
-		{
-			layers: 'gbif:country_borders,gbif:tabDensityLayer',
-			format: 'image/png',
-			transparent: true,
-			opacity: 0.5,
-			attribution: "GBIF, Density layer",
-			filter: '()(<Filter><PropertyIsEqualTo><PropertyName>url</PropertyName><Literal><![CDATA[http://data.sibcolombia.net/maplayer/country/48]]></Literal></PropertyIsEqualTo></Filter>)()()'
-		}
-	);
 	
 	var baseLayers = {
 		'Google terreno': googleTerrain,
@@ -280,7 +270,6 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 		"OpenWeatherMap: Clouds": L.tileLayer.provider('OpenWeatherMap.Clouds'),
 		"OpenWeatherMap: CloudsClassic": L.tileLayer.provider('OpenWeatherMap.CloudsClassic'),
 		"OpenWeatherMap: Precipitation": L.tileLayer.provider('OpenWeatherMap.Precipitation'),
-		'GBIF: Density layer': gbifGrid
 	};
 
 	var overlays = {
