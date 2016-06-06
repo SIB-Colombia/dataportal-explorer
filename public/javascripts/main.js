@@ -94,9 +94,6 @@ require(["app/main"], function() {
   $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     // Map Height
     $("#mapa").height($(window).height()-$("header").height());
-    // Table view height
-    $("#reportGrid").height($(window).height()-$("header").height()-$("#actual-search-stats-data").height()-60);
-    $("#reportGrid .k-grid-content").height($(window).height()-$("header").height()-$("#actual-search-stats-data").height()-60-91);
   });
 
   $(function () {

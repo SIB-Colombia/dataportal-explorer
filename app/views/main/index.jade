@@ -23,10 +23,6 @@ block content
 								span.subtitle (
 									span(data-bind="text: totalGeoOccurrences")
 									|  georeferenciados)
-						li.pull-right.tabla(role="presentation")
-							a(href='#tab2', aria-controls="tab2" role="tab", data-toggle='tab') VER TABLA
-						li.active.pull-right.mapa(role="presentation")
-							a(href='#tab1', aria-controls="tab1" role="tab", data-toggle='tab') VER MAPA
 					.tab-content
 						.tab-pane.active(role="tabpanel", id='tab1')
 							#pane
@@ -36,7 +32,4 @@ block content
 						.tab-pane(role="tabpanel", id='tab2')
 							#filterZoneTable
 								include filterTableWindow
-							#reportGrid(data-bind="kendoGrid: gridOptions")
-							//script.
-							//	var initialGridOccurrences = !{tableData};
 				include map
