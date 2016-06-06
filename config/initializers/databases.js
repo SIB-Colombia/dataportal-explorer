@@ -6,7 +6,7 @@ module.exports = function(environment) {
 		development: {
 			elasticSearchServer: {
 				hosts: [{
-					host: 'localhost',
+					host: '192.168.99.100',
 					port: 9200,
 					secure: false
 				}]
@@ -15,7 +15,7 @@ module.exports = function(environment) {
 		production: {
 			elasticSearchServer: {
 				hosts: [{
-					host: 'localhost',
+					host: '192.168.99.100',
 					port: 9200,
 					secure: false
 				}]
