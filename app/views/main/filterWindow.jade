@@ -1198,19 +1198,6 @@ block filterWindow
 						button(style="display: none", class='btn btn-sm btn-add-filter', type='button', data-bind='visible: isFiltered(), click: removeFilter') Quitar filtro actual
 				#densityButtonsPane
 					#densityButtons
-						span.detailDensity Deslice para cambiar el tamaño de la celda:
-						#densitySlider
-							input(type="range" min="0" max="3" step="1" value="4")
-						#densityInstructions(style="width: 330px;margin: 0px;padding: 0px;")
-							#densityInstructionsIndicators(style="height: 6px;margin-left: 20px;margin-bottom: 2px;")
-								.verticalLine(style="height: 6px;width: 2px;background: white;float: left;")
-								.verticalLine(style="height: 6px;width: 2px;background: white;margin-left: 91px;float: left;")
-								.verticalLine(style="height: 6px;width: 2px;background: white;margin-left: 90px;float: left;")
-								.verticalLine(style="height: 6px;width: 2px;background: white;margin-left: 278px;")
-							span(style="font-size: 11px;padding-left:0px;") 0.1&deg; x 0.1&deg;
-							span(style="font-size: 11px;padding-left:37px;") 0.2&deg; x 0.2&deg;
-							span(style="font-size: 11px;padding-left:40px;") 0.5&deg; x 0.5&deg;
-							span(style="font-size: 11px;padding-left:35px;") 1.0&deg; x 1.0&deg;
 							#densityInstructionsCellSelection.occult-element
 								form
 									label.checkbox
