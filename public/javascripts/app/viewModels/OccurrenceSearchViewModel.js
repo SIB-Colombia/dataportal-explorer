@@ -447,10 +447,11 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		},
 		loadCellDensityPointOneDegree: function() {
 			var self = this;
+			self.showMapAreaWithSpinner();
 			// Hide map area
-			self.hideMapAreaWithSpinner();
+			//self.hideMapAreaWithSpinner();
 			// Initialize default cell density distribution (one degree)
-			map.addLayer(self.densityCellsPointOneDegree());
+			//map.addLayer(self.densityCellsPointOneDegree());
 			$.getJSON("/rest/distribution/centidegree/list", function(allData) {
 				$.each(allData.hits.hits, function(i, cell) {
 					var bounds = [[cell._source.location_centi_cell.lat, cell._source.location_centi_cell.lon], [cell._source.location_centi_cell.lat+0.1, cell._source.location_centi_cell.lon+0.1]];
@@ -484,7 +485,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 						self.fillCellDensityData(allData, a);
 					});
 				});
-				self.showMapAreaWithSpinner();
+				//self.showMapAreaWithSpinner();
 				// Show map area
 				jQuery.extend(self.densityCellsPointOneDegreeCache(),self.densityCellsPointOneDegree());
 			});
@@ -723,152 +724,9 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					self.showMapAreaWithSpinner();
 				},
 				success: function(returnedData) {
-					map.removeLayer(self.densityCellsOneDegree());
 					map.removeLayer(self.densityCellsPointOneDegree());
-					map.removeLayer(self.densityCellsPointFiveDegree());
-					map.removeLayer(self.densityCellsPointTwoDegree());
 
-					self.densityCellsOneDegree(new L.FeatureGroup());
 					self.densityCellsPointOneDegree(new L.FeatureGroup());
-					self.densityCellsPointFiveDegree(new L.FeatureGroup());
-					self.densityCellsPointTwoDegree(new L.FeatureGroup());
-
-					$.each(returnedData.aggregations.cellgroup.buckets, function(i, cell) {
-						var idAndLocation = cell.key.split("~~~");
-						var bounds = [[parseFloat(idAndLocation[1]), parseFloat(idAndLocation[2])], [parseFloat(idAndLocation[1])+1, parseFloat(idAndLocation[2])+1]];
-						var color = "#ff7800";
-						if (cell.doc_count > 0 && cell.doc_count < 10) {
-							color = "#FFFF00";
-						} else if(cell.doc_count > 9 && cell.doc_count < 100) {
-							color = "#FFCC00";
-						} else if(cell.doc_count > 99 && cell.doc_count < 1000) {
-							color = "#FF9900";
-						} else if(cell.doc_count > 999 && cell.doc_count < 10000) {
-							color = "#FF6600";
-						} else if(cell.doc_count > 9999 && cell.doc_count < 100000) {
-							color = "#FF3300";
-						} else if(cell.doc_count > 99999) {
-							color = "#CC0000";
-						}
-						var densityCell = new L.rectangle(bounds, {color: color, weight: 1, fill: true, fillOpacity: 0.5, cellID: idAndLocation[0]});
-						densityCell.on('click', function (a) {
-							a.target.bindPopup("<strong>No. registros: </strong>" + cell.doc_count + "</br></br><strong>Ubicación:</strong></br>[" + idAndLocation[1] + ", " + idAndLocation[2] + "] [" + (parseFloat(idAndLocation[1])+1) + ", " + (parseFloat(idAndLocation[2])+1) + "]").openPopup();
-						});
-						self.densityCellsOneDegree().addLayer(densityCell);
-					});
-					self.densityCellsOneDegree().on('click', function (a) {
-						data = self.fillSearchConditions();
-						data["cellid"] = a.layer.options.cellID;
-						data = ko.toJSON(data);
-						$.ajax({
-							contentType: 'application/json',
-							type: 'POST',
-							url: '/distribution/onedegree/stats',
-							data: data,
-							beforeSend: function() {
-								self.hideMapAreaWithSpinner();
-							},
-							complete: function() {
-								self.showMapAreaWithSpinner();
-							},
-							success: function(allData) {
-								self.fillCellDensityData(allData, a);
-							},
-							dataType: 'jsonp'
-						});
-					});
-
-					$.each(returnedData.aggregations.pointfivegroup.buckets, function(i, cell) {
-						var idAndLocation = cell.key.split("~~~");
-						var bounds = [[parseFloat(idAndLocation[2]), parseFloat(idAndLocation[3])], [parseFloat(idAndLocation[2])+0.5, parseFloat(idAndLocation[3])+0.5]];
-						var color = "#ff7800";
-						if (cell.doc_count > 0 && cell.doc_count < 10) {
-							color = "#FFFF00";
-						} else if(cell.doc_count > 9 && cell.doc_count < 100) {
-							color = "#FFCC00";
-						} else if(cell.doc_count > 99 && cell.doc_count < 1000) {
-							color = "#FF9900";
-						} else if(cell.doc_count > 999 && cell.doc_count < 10000) {
-							color = "#FF6600";
-						} else if(cell.doc_count > 9999 && cell.doc_count < 100000) {
-							color = "#FF3300";
-						} else if(cell.doc_count > 99999) {
-							color = "#CC0000";
-						}
-						var densityCell = new L.rectangle(bounds, {color: color, weight: 1, fill: true, fillOpacity: 0.5, cellID: idAndLocation[0], pointfivecellID: idAndLocation[1]});
-						densityCell.on('click', function (a) {
-							a.target.bindPopup("<strong>No. registros: </strong>" + cell.doc_count + "</br></br><strong>Ubicación:</strong></br>[" + idAndLocation[2] + ", " + idAndLocation[3] + "] [" + (((parseFloat(idAndLocation[2])*10)+5)/10) + ", " + (((parseFloat(idAndLocation[3])*10)+5)/10) + "]").openPopup();
-						});
-						self.densityCellsPointFiveDegree().addLayer(densityCell);
-					});
-					self.densityCellsPointFiveDegree().on('click', function (a) {
-						data = self.fillSearchConditions();
-						data["cellid"] = a.layer.options.cellID;
-						data["pointfivecellid"] = a.layer.options.pointfivecellID;
-						data = ko.toJSON(data);
-						$.ajax({
-							contentType: 'application/json',
-							type: 'POST',
-							url: '/distribution/pointfivedegree/stats',
-							data: data,
-							beforeSend: function() {
-								self.hideMapAreaWithSpinner();
-							},
-							complete: function() {
-								self.showMapAreaWithSpinner();
-							},
-							success: function(allData) {
-								self.fillCellDensityData(allData, a);
-							},
-							dataType: 'jsonp'
-						});
-					});
-
-					$.each(returnedData.aggregations.pointtwogroup.buckets, function(i, cell) {
-						var idAndLocation = cell.key.split("~~~");
-						var bounds = [[parseFloat(idAndLocation[2]), parseFloat(idAndLocation[3])], [parseFloat(idAndLocation[2])+0.2, parseFloat(idAndLocation[3])+0.2]];
-						var color = "#ff7800";
-						if (cell.doc_count > 0 && cell.doc_count < 10) {
-							color = "#FFFF00";
-						} else if(cell.doc_count > 9 && cell.doc_count < 100) {
-							color = "#FFCC00";
-						} else if(cell.doc_count > 99 && cell.doc_count < 1000) {
-							color = "#FF9900";
-						} else if(cell.doc_count > 999 && cell.doc_count < 10000) {
-							color = "#FF6600";
-						} else if(cell.doc_count > 9999 && cell.doc_count < 100000) {
-							color = "#FF3300";
-						} else if(cell.doc_count > 99999) {
-							color = "#CC0000";
-						}
-						var densityCell = new L.rectangle(bounds, {color: color, weight: 1, fill: true, fillOpacity: 0.5, cellID: idAndLocation[0], pointtwocellID: idAndLocation[1]});
-						densityCell.on('click', function (a) {
-							a.target.bindPopup("<strong>No. registros: </strong>" + cell.doc_count + "</br></br><strong>Ubicación:</strong></br>[" + idAndLocation[2] + ", " + idAndLocation[3] + "] [" + (((parseFloat(idAndLocation[2])*10)+2)/10) + ", " + (((parseFloat(idAndLocation[3])*10)+2)/10) + "]").openPopup();
-						});
-						self.densityCellsPointTwoDegree().addLayer(densityCell);
-					});
-					self.densityCellsPointTwoDegree().on('click', function (a) {
-						data = self.fillSearchConditions();
-						data["cellid"] = a.layer.options.cellID;
-						data["pointtwocellid"] = a.layer.options.pointtwocellID;
-						data = ko.toJSON(data);
-						$.ajax({
-							contentType: 'application/json',
-							type: 'POST',
-							url: '/distribution/pointtwodegree/stats',
-							data: data,
-							beforeSend: function() {
-								self.hideMapAreaWithSpinner();
-							},
-							complete: function() {
-								self.showMapAreaWithSpinner();
-							},
-							success: function(allData) {
-								self.fillCellDensityData(allData, a);
-							},
-							dataType: 'jsonp'
-						});
-					});
 
 					$.each(returnedData.aggregations.centigroup.buckets, function(i, cell) {
 						var idAndLocation = cell.key.split("~~~");
@@ -922,24 +780,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					// Enable download links
 					self.generateURLSpreadsheet();
 
-					// Set current active distribution
-					if(self.currentActiveDistribution() != "none") {
-						// Disable current active button
-						switch(self.currentActiveDistribution()) {
-							case "oneDegree":
-								map.addLayer(self.densityCellsOneDegree());
-								break;
-							case "pointOneDegree":
-								map.addLayer(self.densityCellsPointOneDegree());
-								break;
-							case "pointFiveDegree":
-								map.addLayer(self.densityCellsPointFiveDegree());
-								break;
-							case "pointTwoDegree":
-								map.addLayer(self.densityCellsPointTwoDegree());
-								break;
-						}
-					}
+					map.addLayer(self.densityCellsPointOneDegree());
 
 				},
 				dataType: 'jsonp'
@@ -1556,20 +1397,13 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		},
 		removeFilter: function() {
 			var self = this;
-			map.removeLayer(self.densityCellsOneDegree());
 			map.removeLayer(self.densityCellsPointOneDegree());
-			map.removeLayer(self.densityCellsPointFiveDegree());
-			map.removeLayer(self.densityCellsPointTwoDegree());
 
-			jQuery.extend(self.densityCellsOneDegree(),self.densityCellsOneDegreeCache());
 			jQuery.extend(self.densityCellsPointOneDegree(),self.densityCellsPointOneDegreeCache());
-			jQuery.extend(self.densityCellsPointFiveDegree(),self.densityCellsPointFiveDegreeCache());
-			jQuery.extend(self.densityCellsPointTwoDegree(),self.densityCellsPointTwoDegreeCache());
 
-			map.addLayer(self.densityCellsOneDegree());
+			map.addLayer(self.densityCellsPointOneDegree());
 			self.totalGeoOccurrences(self.totalGeoOccurrencesCache());
-			$('input[type=range]').rangeslider('setPosition', 3*100);
-			self.currentActiveDistribution("oneDegree");
+			self.currentActiveDistribution("pointOneDegree");
 
 			self.isFiltered(false);
 			self.isRectangle(false);
