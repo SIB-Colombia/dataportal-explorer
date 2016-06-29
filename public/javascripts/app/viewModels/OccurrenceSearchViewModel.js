@@ -120,9 +120,9 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		initialize: function() {
 			var self = this;
 
-			this.loadCountyDropdownData();
-			this.loadParamoDropdownData();
-			this.loadMarineZoneDropdownData();
+			//this.loadCountyDropdownData();
+			//this.loadParamoDropdownData();
+			//this.loadMarineZoneDropdownData();
 			this.loadCellDensityPointOneDegree();
 
 			markers = new L.MarkerClusterGroup({
@@ -296,7 +296,8 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				Recaptcha.reload();
 			});
 
-			searchParamsResume();
+			//searchParamsResume();
+			//
 			// Selected department filter name
 			self.dropDownCoordinateStateText = ko.computed(function() {
 				return $("#dropDownCoordinateState option[value='" + self.selectedCoordinateState() + "']").text();
@@ -447,47 +448,13 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		},
 		loadCellDensityPointOneDegree: function() {
 			var self = this;
-			self.showMapAreaWithSpinner();
-			// Hide map area
-			//self.hideMapAreaWithSpinner();
-			// Initialize default cell density distribution (one degree)
-			//map.addLayer(self.densityCellsPointOneDegree());
-			$.getJSON("/rest/distribution/centidegree/list", function(allData) {
-				$.each(allData.hits.hits, function(i, cell) {
-					var bounds = [[cell._source.location_centi_cell.lat, cell._source.location_centi_cell.lon], [cell._source.location_centi_cell.lat+0.1, cell._source.location_centi_cell.lon+0.1]];
-					var color = "#ff7800";
-					if (cell._source.count > 0 && cell._source.count < 10) {
-						color = "#FFFF00";
-					} else if(cell._source.count > 9 && cell._source.count < 100) {
-						color = "#FFCC00";
-					} else if(cell._source.count > 99 && cell._source.count < 1000) {
-						color = "#FF9900";
-					} else if(cell._source.count > 999 && cell._source.count < 10000) {
-						color = "#FF6600";
-					} else if(cell._source.count > 9999 && cell._source.count < 100000) {
-						color = "#FF3300";
-					} else if(cell._source.count > 99999) {
-						color = "#CC0000";
-					}
-					var densityCell = new L.rectangle(bounds, {color: color, weight: 1, fill: true, fillOpacity: 0.5, cellID: cell._source.cell_id, centicellID: cell._source.centi_cell_id});
-					densityCell.on('click', function (a) {
-						a.target.bindPopup("<strong>No. registros: </strong>" + cell._source.count + "</br></br><strong>Ubicación:</strong></br>[" + cell._source.location_centi_cell.lat + ", " + cell._source.location_centi_cell.lon + "] [" + (((cell._source.location_centi_cell.lat*10)+1)/10) + ", " + (((cell._source.location_centi_cell.lon*10)+1)/10) + "]").openPopup();
-					});
-					self.densityCellsPointOneDegree().addLayer(densityCell);
-				});
-				self.totalGeoOccurrences(allData.aggregations.stats.sum);
-				self.totalGeoOccurrencesCache(allData.aggregations.stats.sum);
+			$.getJSON("http://localhost:8000/api/v1.5/occurrence/count?isGeoreferenced=true", function(data) {
+				self.totalGeoOccurrences(data.count);
+			});
 
-				self.densityCellsPointOneDegree().on('click', function (a) {
-					// Hide map area
-					self.hideMapAreaWithSpinner();
-					$.getJSON("/rest/distribution/centidegree/stats/"+a.layer.options.cellID+"/"+a.layer.options.centicellID, function(allData) {
-						self.fillCellDensityData(allData, a);
-					});
-				});
-				//self.showMapAreaWithSpinner();
-				// Show map area
-				jQuery.extend(self.densityCellsPointOneDegreeCache(),self.densityCellsPointOneDegree());
+			$.getJSON("http://localhost:8000/api/v1.5/occurrence/count", function(data) {
+				self.totalOccurrences(data.count);
+				self.showMapAreaWithSpinner();
 			});
 		},
 		disableOccurrencesDetail: function() {

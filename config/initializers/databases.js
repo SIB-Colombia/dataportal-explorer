@@ -7,7 +7,7 @@ module.exports = function(environment) {
 			elasticSearchServer: {
 				hosts: [{
 					host: 'localhost',
-					port: 9200,
+					port: 9400,
 					secure: false
 				}]
 			}

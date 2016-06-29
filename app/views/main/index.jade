@@ -22,7 +22,8 @@ block content
 								///|  registros&nbsp;
 								span.subtitle
 									span(data-bind="text: totalGeoOccurrences")
-									|  registros georeferenciados
+									|  registros georeferenciados, de 
+									span(data-bind="text: totalOccurrences")
 					.tab-content
 						.tab-pane.active(role="tabpanel", id='tab1')
 							#pane

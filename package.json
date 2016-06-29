@@ -46,7 +46,6 @@
     "winston": "0.9.0"
   },
   "devDependencies": {
-    "mariasql": "latest",
     "mocha": "latest",
     "mongodb": "latest",
     "nodemon": "latest",
