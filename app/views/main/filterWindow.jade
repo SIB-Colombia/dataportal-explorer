@@ -100,22 +100,6 @@ block filterWindow
 									li
 										span(data-bind="text: name")
 							dd.cuenta(data-bind="text: count")
-						span.headerDistribution(data-bind="visible: paramos().length > 0") Páramos:
-						span.headerCount(data-bind="visible: paramos().length > 0") # Registros
-						dl.preview-data(data-bind="foreach: paramos")
-							dt
-								ul
-									li
-										span(data-bind="text: name")
-							dd.cuenta(data-bind="text: count")
-						span.headerDistribution(data-bind="visible: marineZones().length > 0") Zonas marítimas:
-						span.headerCount(data-bind="visible: marineZones().length > 0") # Registros
-						dl.preview-data(data-bind="foreach: marineZones")
-							dt
-								ul
-									li
-										span(data-bind="text: name")
-							dd.cuenta(data-bind="text: count")
 						span.headerDistribution(data-bind="visible: canonicals().length > 0") Reino:
 						span.headerCount(data-bind="visible: canonicals().length > 0") # Registros
 						dl.preview-data(data-bind="foreach: kingdoms")
@@ -351,20 +335,6 @@ block filterWindow
 						a(href='#', title='Adicionar este filtro', data-bind='click: function () { $parent.addCountyIDFromHelp($parent, this); }')
 							img(alt='Adicionar este filtro', src='/images/icons/redplus.png')
 						em(data-bind="text: occurrences")
-				// Paramos resume data
-				.contentFiltersContainerHelpContainer(data-bind="foreach: resumeParamos, visible: resumeParamos().length > 0 && selectedSubject() == 40")
-					.item
-						span(data-bind="html: paramoNameWithBold")
-						a(href='#', title='Adicionar este filtro', data-bind='click: function () { $parent.addParamoIDFromHelp($parent, this); }')
-							img(alt='Adicionar este filtro', src='/images/icons/redplus.png')
-						em(data-bind="text: occurrences")
-				// MarineZones resume data
-				.contentFiltersContainerHelpContainer(data-bind="foreach: resumeMarineZones, visible: resumeMarineZones().length > 0 && selectedSubject() == 41")
-					.item
-						span(data-bind="html: marineZoneNameWithBold")
-						a(href='#', title='Adicionar este filtro', data-bind='click: function () { $parent.addMarineZoneIDFromHelp($parent, this); }')
-							img(alt='Adicionar este filtro', src='/images/icons/redplus.png')
-						em(data-bind="text: occurrences")
 				.resumeHeader
 					h2 Distribución de registros encontrados
 				.resume(data-bind="foreach: resumesInfoFilter")
@@ -407,22 +377,6 @@ block filterWindow
 					span.headerDistribution(data-bind="visible: counties().length > 0") Municipio:
 					span.headerCount(data-bind="visible: counties().length > 0") # Registros
 					dl.preview-data(data-bind="foreach: counties")
-						dt
-							ul
-								li
-									span(data-bind="text: name")
-						dd.cuenta(data-bind="text: count")
-					span.headerDistribution(data-bind="visible: paramos().length > 0") Páramo:
-					span.headerCount(data-bind="visible: paramos().length > 0") # Registros
-					dl.preview-data(data-bind="foreach: paramos")
-						dt
-							ul
-								li
-									span(data-bind="text: name")
-						dd.cuenta(data-bind="text: count")
-					span.headerDistribution(data-bind="visible: marineZones().length > 0") Zona marítima:
-					span.headerCount(data-bind="visible: marineZones().length > 0") # Registros
-					dl.preview-data(data-bind="foreach: marineZones")
 						dt
 							ul
 								li
@@ -565,8 +519,6 @@ block filterWindow
 										option(value='5') País
 										option(value='38') Departamento
 										option(value='39') Municipio
-										option(value='40') Páramo
-										option(value='41') Área marítima
 										option(value='1') Latitud
 										option(value='2') Longitud
 										option(value='34') Altitud
@@ -882,18 +834,6 @@ block filterWindow
 									option(value="", default selected) Seleccione un municipio
 									<!-- /ko -->
 									option(data-bind="attr: { value: isoCountyCode }, text: departmentAndCountyName")
-								// Input for paramo
-								select(name="c[0].o", id="dropDownParamo", data-bind="foreach: paramoDropdown, visible: selectedSubject() == 40, value: selectedParamo, selectParamo: {}",  style="display: none")
-									<!-- ko if: $index() == 0 -->
-									option(value="", default selected) Seleccione un páramo
-									<!-- /ko -->
-									option(data-bind="attr: { value: paramoCode }, text: paramoName")
-								// Input for marine zone
-								select(name="c[0].o", id="dropDownMarineZone", data-bind="foreach: marineZoneDropdown, visible: selectedSubject() == 41, value: selectedMarineZone, selectMarineZone: {}",  style="display: none")
-									<!-- ko if: $index() == 0 -->
-									option(value="", default selected) Seleccione una zona marina
-									<!-- /ko -->
-									option(data-bind="attr: { value: marineZoneCode }, text: marineZoneName")
 								// Input for coordinates data
 								select.form-control(name="c[0].o", id="dropDownCoordinateState", data-bind="visible: selectedSubject() == 28, value: selectedCoordinateState",  style="display: none")
 									option(value="0") Incluye coordenadas
@@ -1082,22 +1022,6 @@ block filterWindow
 								span(data-bind='visible: $index() != 0') o es&nbsp;
 								span(data-bind='text: textName')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeCountyID($parent, this); }')
-									img(alt='Quitar este filtro', src='/images/grey_minus.png')
-						// Include paramos filters
-						ul(style="display: none", class='filterItem', data-bind='foreach: selectedParamosIDs, visible: selectedParamosIDs().length > 0')
-							li(class='alteredFilter')
-								span(data-bind='visible: $index() == 0') Páramo es&nbsp;
-								span(data-bind='visible: $index() != 0') o es&nbsp;
-								span(data-bind='text: textName')
-								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeParamoID($parent, this); }')
-									img(alt='Quitar este filtro', src='/images/grey_minus.png')
-						// Include marine zones filters
-						ul(style="display: none", class='filterItem', data-bind='foreach: selectedMarineZonesIDs, visible: selectedMarineZonesIDs().length > 0')
-							li(class='alteredFilter')
-								span(data-bind='visible: $index() == 0') Zona marítima es&nbsp;
-								span(data-bind='visible: $index() != 0') o es&nbsp;
-								span(data-bind='text: textName')
-								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeMarineZoneID($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include Latitude filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedLatitudes, visible: selectedLatitudes().length > 0')

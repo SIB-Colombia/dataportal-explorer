@@ -38,8 +38,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 
 		// Arrays for dropdowns
 		self.countyDropdown = [];
-		self.paramoDropdown = [];
-		self.marineZoneDropdown = [];
 
 		// Arrays for resume help windows
 		self.resumeScientificNames = [];
@@ -58,8 +56,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		self.resumeCountries = [];
 		self.resumeDepartments = [];
 		self.resumeCounties = [];
-		self.resumeParamos = [];
-		self.resumeMarineZones = [];
 		self.isObjectNameHelpSelected = false;
 		self.predicateOptions = "[{value: 'eq', name: 'es'}]";
 
@@ -70,8 +66,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		self.selectedCountriesIDs = [];
 		self.selectedDepartmentsIDs = [];
 		self.selectedCountiesIDs = [];
-		self.selectedParamosIDs = [];
-		self.selectedMarineZonesIDs = [];
 		self.selectedLatitudes = [];
 		self.selectedLongitudes = [];
 		self.selectedAltitudes = [];
@@ -99,8 +93,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		self.selectedCountry = "";
 		self.selectedDepartment = "";
 		self.selectedCounty = "";
-		self.selectedParamo = "";
-		self.selectedMarineZone = "";
 		self.selectedCoordinateState = "";
 
 		// Download URLs
@@ -120,9 +112,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		initialize: function() {
 			var self = this;
 
-			//this.loadCountyDropdownData();
-			//this.loadParamoDropdownData();
-			//this.loadMarineZoneDropdownData();
+			this.loadCountyDropdownData();
 			this.loadCellDensityPointOneDegree();
 
 			markers = new L.MarkerClusterGroup({
@@ -372,78 +362,14 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				}
 			};
 
-			ko.bindingHandlers.selectParamo = {
-				init: function(element, valueAccessor, allBindingsAccessor) {
-					var obj = valueAccessor();
-					$(element).select2(obj);
-
-					ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
-						$(element).select2('destroy');
-					});
-
-					$(element).on("change", function(e) {
-						if(typeof e.val !== 'undefined') {
-							self.objectNameValue(e.val);
-							self.hideResumeContainer();
-							self.getSearchResumeData();
-							self.enableFilterHelp();
-						}
-					});
-				},
-				update: function(element) {
-					$(element).trigger('change');
-				}
-			};
-
-			ko.bindingHandlers.selectMarineZone = {
-				init: function(element, valueAccessor, allBindingsAccessor) {
-					var obj = valueAccessor();
-					$(element).select2(obj);
-
-					ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
-						$(element).select2('destroy');
-					});
-
-					$(element).on("change", function(e) {
-						if(typeof e.val !== 'undefined') {
-							self.objectNameValue(e.val);
-							self.hideResumeContainer();
-							self.getSearchResumeData();
-							self.enableFilterHelp();
-						}
-					});
-				},
-				update: function(element) {
-					$(element).trigger('change');
-				}
-			};
-
 		},
 		loadCountyDropdownData: function() {
 			var self = this;
-			$.getJSON("/rest/occurrences/counties/list", function(allData) {
-				var newCounties = ko.utils.arrayMap(allData.aggregations.county_name.buckets, function(county) {
-					return new County({departmentName: county.iso_county_code.buckets[0].department_name.buckets[0].key, countyName: county.key, isoCountyCode: county.iso_county_code.buckets[0].key});
+			$.getJSON("http://localhost:8000/api/v1.5/registry/county", function(allData) {
+				var newCounties = ko.utils.arrayMap(allData, function(county) {
+					return new County({departmentName: county.department_name, countyName: county.county_name, isoCountyCode: county.iso_county_code});
 				});
 				self.countyDropdown.push.apply(self.countyDropdown, newCounties);
-			});
-		},
-		loadParamoDropdownData: function() {
-			var self = this;
-			$.getJSON("/rest/occurrences/paramos/list", function(allData) {
-				var newParamos = ko.utils.arrayMap(allData.aggregations.paramo_name.buckets, function(paramo) {
-					return new Paramo({paramoName: paramo.key, paramoCode: paramo.paramo_code.buckets[0].key});
-				});
-				self.paramoDropdown.push.apply(self.paramoDropdown, newParamos);
-			});
-		},
-		loadMarineZoneDropdownData: function() {
-			var self = this;
-			$.getJSON("/rest/occurrences/marinezones/list", function(allData) {
-				var newMarineZones = ko.utils.arrayMap(allData.aggregations.marine_zone_name.buckets, function(marinezone) {
-					return new MarineZone({marineZoneName: marinezone.key, marineZoneCode: marinezone.marine_zone_code.buckets[0].key});
-				});
-				self.marineZoneDropdown.push.apply(self.marineZoneDropdown, newMarineZones);
 			});
 		},
 		loadCellDensityPointOneDegree: function() {
@@ -481,14 +407,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			if($("#s2id_dropDownCounty").length && self.selectedSubject() != 39) {
 				$("#dropDownCounty").select2('destroy');
 				$("#dropDownCounty").css({display: 'none'});
-			}
-			if($("#s2id_dropDownParamo").length && self.selectedSubject() != 40) {
-				$("#dropDownParamo").select2('destroy');
-				$("#dropDownParamo").css({display: 'none'});
-			}
-			if($("#s2id_dropDownMarineZone").length && self.selectedSubject() != 41) {
-				$("#dropDownMarineZone").select2('destroy');
-				$("#dropDownMarineZone").css({display: 'none'});
 			}
 			$("#filtersContainerHelp").css({display: 'none'});
 			// Clear actual resume filter
@@ -529,28 +447,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				$("#filtersContainerHelp").animate({width: 'toggle'}, 500, "swing");
 				$("#dropDownCounty").select2({
 					placeholder: "Seleccione un municipio"
-				});
-				$(".select2-input").on("click", function(event) {
-					self.enableFilterHelp();
-				});
-			} else if(self.selectedSubject() == 40) {
-				// Get countries resume data
-				self.getSearchResumeData();
-				self.isObjectNameHelpSelected = ko.observable(true);
-				$("#filtersContainerHelp").animate({width: 'toggle'}, 500, "swing");
-				$("#dropDownParamo").select2({
-					placeholder: "Seleccione un páramo"
-				});
-				$(".select2-input").on("click", function(event) {
-					self.enableFilterHelp();
-				});
-			} else if(self.selectedSubject() == 41) {
-				// Get countries resume data
-				self.getSearchResumeData();
-				self.isObjectNameHelpSelected = ko.observable(true);
-				$("#filtersContainerHelp").animate({width: 'toggle'}, 500, "swing");
-				$("#dropDownMarineZone").select2({
-					placeholder: "Seleccione una zona marina"
 				});
 				$(".select2-input").on("click", function(event) {
 					self.enableFilterHelp();
@@ -607,12 +503,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				} else if(self.selectedSubject() == 39) {
 					// Adding county filter
 					self.addCountyID();
-				} else if(self.selectedSubject() == 40) {
-					// Adding paramo filter
-					self.addParamoID();
-				} else if(self.selectedSubject() == 41) {
-					// Adding paramo filter
-					self.addMarineZoneID();
 				} else if(self.selectedSubject() == 1) {
 					// Adding latitude filter
 					self.addLatitudeNumber();
@@ -652,10 +542,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				response['departments'] = self.selectedDepartmentsIDs();
 			if(self.selectedCountiesIDs().length !== 0)
 				response['counties'] = self.selectedCountiesIDs();
-			if(self.selectedParamosIDs().length !== 0)
-				response['paramos'] = self.selectedParamosIDs();
-			if(self.selectedMarineZonesIDs().length !== 0)
-				response['marineZones'] = self.selectedMarineZonesIDs();
 			if(self.selectedLatitudes().length !== 0)
 				response['latitudes'] = self.selectedLatitudes();
 			if(self.selectedLongitudes().length !== 0)
@@ -776,8 +662,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					var countries = ko.observableArray();
 					var departments = ko.observableArray();
 					var counties = ko.observableArray();
-					var paramos = ko.observableArray();
-					var marineZones = ko.observableArray();
 					var commons = ko.observableArray();
 
 					_.each(allData.aggregations.canonical.buckets, function(data) {
@@ -830,14 +714,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 
 					_.each(allData.aggregations.iso_county_code.buckets, function(data) {
 						counties.push(new ResumeCount({id: data.key, name: data.county_name.buckets[0].department_name.buckets[0].key + " - " + data.county_name.buckets[0].key, count: data.doc_count}));
-					});
-
-					_.each(allData.aggregations.paramo_code.buckets, function(data) {
-						paramos.push(new ResumeCount({id: data.key, name: data.paramo_name.buckets[0].key, count: data.doc_count}));
-					});
-
-					_.each(allData.aggregations.marine_zone_code.buckets, function(data) {
-						marineZones.push(new ResumeCount({id: data.key, name: data.marine_zone_name.buckets[0].key, count: data.doc_count}));
 					});
 
 					_.each(allData.aggregations.common_names.common.buckets, function(data) {
@@ -951,26 +827,14 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 						case "39":
 							self.resumeCounties.removeAll();
 							_.each(allData.aggregations.iso_county_code.buckets, function(data) {
-								self.resumeCounties.push(new ResumeCounty({isoCountyCode: data.key, countyName: data.county_name.buckets[0].key, occurrences: data.doc_count, departmentAndCountyName: data.county_name.buckets[0].department_name.buckets[0].key + " - " + data.county_name.buckets[0].key}));
+								self.resumeCounties.push(new ResumeCounty({isoCountyCode: data.key, countyName: data.county_name.buckets[0].key, occurrences: data.doc_count, departmentAndCountyName: data.county_name.buckets[0].key + " - " + data.county_name.buckets[0].department_name.buckets[0].key}));
 							});
 							counties.removeAll();
 							break;
-						case "40":
-							self.resumeParamos.removeAll();
-							_.each(allData.aggregations.paramo_code.buckets, function(data) {
-								self.resumeParamos.push(new ResumeParamo({paramoCode: data.key, paramoName: data.paramo_name.buckets[0].key, occurrences: data.doc_count}));
-							});
-							paramos.removeAll();
-							break;
-						case "41":
-							self.resumeMarineZones.removeAll();
-							_.each(allData.aggregations.marine_zone_code.buckets, function(data) {
-								self.resumeMarineZones.push(new ResumeMarineZone({marineZoneCode: data.key, marineZoneName: data.marine_zone_name.buckets[0].key, occurrences: data.doc_count}));
-							});
 					}
 
 					self.resumesInfoFilter.removeAll();
-					self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties, paramos: paramos, marineZones: marineZones}));
+					self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties}));
 					self.showResumeContainer();
 				});
 			}
@@ -1082,47 +946,13 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		},
 		addCountyIDFromHelp: function(parent, selectedFilter) {
 			var self = parent;
-			self.selectedCountiesIDs.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.isoCountyCode, textName: selectedFilter.departmentAndCountyName}));
+			self.selectedCountiesIDs.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.isoCountyCode, textName: selectedFilter.countyDropdown}));
 			self.totalFilters(self.totalFilters()+1);
 		},
 		// Removes County filter
 		removeCountyID: function(parent, selectedFilter) {
 			var self = this;
 			self.selectedCountiesIDs.remove(selectedFilter);
-			self.totalFilters(self.totalFilters()-1);
-		},
-		// Add paramo filter
-		addParamoID: function() {
-			var self = this;
-			self.selectedParamosIDs.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: $("#dropDownParamo").select2('data').id, textName: $("#dropDownParamo").select2('data').text}));
-			self.totalFilters(self.totalFilters()+1);
-		},
-		addParamoIDFromHelp: function(parent, selectedFilter) {
-			var self = parent;
-			self.selectedParamosIDs.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.paramoCode, textName: selectedFilter.paramoName}));
-			self.totalFilters(self.totalFilters()+1);
-		},
-		// Removes paramo filter
-		removeParamoID: function(parent, selectedFilter) {
-			var self = this;
-			self.selectedParamosIDs.remove(selectedFilter);
-			self.totalFilters(self.totalFilters()-1);
-		},
-		// Add marineZone filter
-		addMarineZoneID: function() {
-			var self = this;
-			self.selectedMarineZonesIDs.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: $("#dropDownMarineZone").select2('data').id, textName: $("#dropDownMarineZone").select2('data').text}));
-			self.totalFilters(self.totalFilters()+1);
-		},
-		addMarineZoneIDFromHelp: function(parent, selectedFilter) {
-			var self = parent;
-			self.selectedMarineZonesIDs.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.marineZoneCode, textName: selectedFilter.marineZoneName}));
-			self.totalFilters(self.totalFilters()+1);
-		},
-		// Removes paramo filter
-		removeMarineZoneID: function(parent, selectedFilter) {
-			var self = this;
-			self.selectedMarineZonesIDs.remove(selectedFilter);
 			self.totalFilters(self.totalFilters()-1);
 		},
 		// Add Latitude filter
@@ -1278,8 +1108,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			var countries = ko.observableArray();
 			var departments = ko.observableArray();
 			var counties = ko.observableArray();
-			var paramos = ko.observableArray();
-			var marineZones = ko.observableArray();
 			var commons = ko.observableArray();
 
 			_.each(allData.aggregations.canonical.buckets, function(data) {
@@ -1334,20 +1162,12 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				counties.push(new ResumeCount({id: data.key, name: data.county_name.buckets[0].department_name.buckets[0].key + " - " + data.county_name.buckets[0].key, count: data.doc_count}));
 			});
 
-			_.each(allData.aggregations.paramo_code.buckets, function(data) {
-				paramos.push(new ResumeCount({id: data.key, name: data.paramo_name.buckets[0].key, count: data.doc_count}));
-			});
-
-			_.each(allData.aggregations.marine_zone_code.buckets, function(data) {
-				marineZones.push(new ResumeCount({id: data.key, name: data.marine_zone_name.buckets[0].key, count: data.doc_count}));
-			});
-
 			_.each(allData.aggregations.common_names.common.buckets, function(data) {
 				commons.push(new ResumeCount({name: data.key, count: data.doc_count}));
 			});
 
 			self.resumesInfo.removeAll();
-			self.resumesInfo.push(new ResumeInfo({cellID: a.layer.options.cellID, canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, counties: counties, paramos: paramos, marineZones: marineZones}));
+			self.resumesInfo.push(new ResumeInfo({cellID: a.layer.options.cellID, canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, counties: counties}));
 			if($("#resumeDetail").is(':hidden')) {
 				$("#resumeDetail").animate({width: 'toggle'}, 500, "swing");
 			}
@@ -1425,14 +1245,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			});
 			_.each(self.selectedCountiesIDs(), function(county) {
 				url += ((counter > 0) ? "&" : "")+"c["+counter+"].s="+county.subject+"&"+"c["+counter+"].p="+self.dataPortalConditionCodes(county.predicate)+"&"+"c["+counter+"].o="+county.textObject;
-				counter++;
-			});
-			_.each(self.selectedParamosIDs(), function(paramo) {
-				url += ((counter > 0) ? "&" : "")+"c["+counter+"].s="+paramo.subject+"&"+"c["+counter+"].p="+self.dataPortalConditionCodes(paramo.predicate)+"&"+"c["+counter+"].o="+paramo.textObject;
-				counter++;
-			});
-			_.each(self.selectedMarineZonesIDs(), function(marineZone) {
-				url += ((counter > 0) ? "&" : "")+"c["+counter+"].s="+marineZone.subject+"&"+"c["+counter+"].p="+self.dataPortalConditionCodes(marineZone.predicate)+"&"+"c["+counter+"].o="+marineZone.textObject;
 				counter++;
 			});
 			_.each(self.selectedProviders(), function(provider) {

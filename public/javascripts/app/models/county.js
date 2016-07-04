@@ -5,7 +5,7 @@ define(["knockout"], function(ko) {
 		this.isoCountyCode = data.isoCountyCode;
 
 		this.departmentAndCountyName = ko.computed(function() {
-			return this.departmentName + " - " + this.countyName;
+			return this.countyName + " - " + this.departmentName;
 		}, this);
 	};
 
