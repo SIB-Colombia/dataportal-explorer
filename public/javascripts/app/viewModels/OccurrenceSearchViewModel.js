@@ -114,6 +114,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 
 			this.loadCountyDropdownData();
 			this.loadCellDensityPointOneDegree();
+			this.getSearchResumeData();
 
 			markers = new L.MarkerClusterGroup({
 				spiderfyOnMaxZoom: true,
@@ -304,9 +305,9 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 
 					$(element).on("change", function(e) {
 						if(typeof e.val !== 'undefined') {
-							self.objectNameValue(e.val);
-							self.hideResumeContainer();
-							self.getSearchResumeData();
+							self.objectNameValue(e.added.text.toLowerCase());
+							//self.hideResumeContainer();
+							//self.getSearchResumeData();
 							self.enableFilterHelp();
 						}
 					});
@@ -327,10 +328,10 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 
 					$(element).on("change", function(e) {
 						if(typeof e.val !== 'undefined') {
-							self.objectNameValue(e.val);
-							self.hideResumeContainer();
-							self.getSearchResumeData();
-							self.enableFilterHelp();
+							self.objectNameValue(e.added.text.toLowerCase());
+							//self.hideResumeContainer();
+							//self.getSearchResumeData();
+							//self.enableFilterHelp();
 						}
 					});
 				},
@@ -351,9 +352,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					$(element).on("change", function(e) {
 						if(typeof e.val !== 'undefined') {
 							self.objectNameValue(e.val);
-							self.hideResumeContainer();
-							self.getSearchResumeData();
-							self.enableFilterHelp();
 						}
 					});
 				},
@@ -365,7 +363,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		},
 		loadCountyDropdownData: function() {
 			var self = this;
-			$.getJSON("http://localhost:8000/api/v1.5/registry/county", function(allData) {
+			$.getJSON("http://localhost:5000/api/v1.5/registry/county", function(allData) {
 				var newCounties = ko.utils.arrayMap(allData, function(county) {
 					return new County({departmentName: county.department_name, countyName: county.county_name, isoCountyCode: county.iso_county_code});
 				});
@@ -374,11 +372,11 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		},
 		loadCellDensityPointOneDegree: function() {
 			var self = this;
-			$.getJSON("http://localhost:8000/api/v1.5/occurrence/count?isGeoreferenced=true", function(data) {
+			$.getJSON("http://localhost:5000/api/v1.5/occurrence/count?isGeoreferenced=true", function(data) {
 				self.totalGeoOccurrences(data.count);
 			});
 
-			$.getJSON("http://localhost:8000/api/v1.5/occurrence/count", function(data) {
+			$.getJSON("http://localhost:5000/api/v1.5/occurrence/count", function(data) {
 				self.totalOccurrences(data.count);
 				self.showMapAreaWithSpinner();
 			});
@@ -442,9 +440,9 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				});
 			} else if(self.selectedSubject() == 39) {
 				// Get countries resume data
-				self.getSearchResumeData();
+				//self.getSearchResumeData();
 				self.isObjectNameHelpSelected = ko.observable(true);
-				$("#filtersContainerHelp").animate({width: 'toggle'}, 500, "swing");
+				//$("#filtersContainerHelp").animate({width: 'toggle'}, 500, "swing");
 				$("#dropDownCounty").select2({
 					placeholder: "Seleccione un municipio"
 				});
@@ -458,10 +456,93 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		},
 		getHelpSearchText: function() {
 			var self = this;
-			$.getJSON("/rest/occurrences/searchhelptext/name/"+self.selectedSubject(), function(allData) {
-				self.helpSearchText(allData.hits.hits[0]._source.text);
-				$("#helpPopOver").attr("data-content", self.helpSearchText());
-			});
+			switch(self.selectedSubject()) {
+				case "0":
+					self.helpSearchText("<p>Escriba un nombre científico y pulse en Agregar filtro.</p><p>Este filtro devolverá cualquier registro que posea un nombre que concuerde con el identificador dado del organismo, sin importar como está clasificado el organismo.</p>");
+					break;
+				case "31":
+					self.helpSearchText("<p>Escriba un nombre común y pulse en Agregar filtro.</p><p>Este filtro devolverá cualquier registro que posea un nombre común que concuerde con el identificador dado del organismo, sin importar como está clasificado el organismo.</p>");
+					break;
+				case "100":
+					self.helpSearchText("<p>Escriba un nombre de reino y pulse en Agregar filtro.</p><p>Este filtro devolverá cualquier registro que posea un reino que concuerde con el organismo.</p>");
+					break;
+				case "101":
+					self.helpSearchText("<p>Escriba un nombre de filo y pulse en Agregar filtro.</p><p>Este filtro devolverá cualquier registro que posea un filo que concuerde con el organismo.</p>");
+					break;
+				case "102":
+					self.helpSearchText("<p>Escriba un nombre de clase y pulse en Agregar filtro.</p><p>Este filtro devolverá cualquier registro que posea una clase que concuerde con el organismo.</p>");
+					break;
+				case "103":
+					self.helpSearchText("<p>Escriba un nombre de orden y pulse en Agregar filtro.</p><p>Este filtro devolverá cualquier registro que posea un orden que concuerde con el organismo.</p>");
+					break;
+				case "104":
+					self.helpSearchText("<p>Escriba un nombre de familia y pulse en Agregar filtro.</p><p>Este filtro devolverá cualquier registro que posea una familia que concuerde con el organismo.</p>");
+					break;
+				case "105":
+					self.helpSearchText("<p>Escriba un nombre de género y pulse en Agregar filtro.</p><p>Este filtro devolverá cualquier registro que posea un género que concuerde con el organismo.</p>");
+					break;
+				case "106":
+					self.helpSearchText("<p>Escriba un nombre de especie y pulse en Agregar filtro.</p><p>Este filtro devolverá cualquier registro que posea una especie que concuerde con el organismo.</p>");
+					break;
+				case "5":
+					self.helpSearchText("<p>Seleccione un país de la lista y dar clic en Agregar filtro para filtrar su búsqueda a uno o más paises.</p><p>Este filtro retornará registros del país identificado, sin importar si poseen coordenadas; pero note que al agregar un filtro de coordenadas (Bounding box, Latitud o Longitud) limitará los resultados a registros georreferenciados.</p>");
+					break;
+				case "38":
+					self.helpSearchText("<p>Seleccione un departamento de la lista y oprima en Agregar filtro para acotar su búsqueda a uno o más departamentos.</p><p>Este filtro retorna los registros que pertenecen al departamento, independientemente de si estos tienen o no coordenadas; tenga en cuenta que al adicionar un filtro de coordenadas (Condición de selección, Latitud o Longitud) limitará los resultados a los registros georeferenciados.</p>");
+					break;
+				case "39":
+					self.helpSearchText("<p>Seleccione un municipio de la lista y oprima en Agregar filtro para acotar su búsqueda a uno o más municipios.</p><p>Este filtro retorna los registros que pertenecen al municipio, independientemente de si estos tienen o no coordenadas; tenga en cuenta que al adicionar un filtro de coordenadas (Condición de selección, Latitud o Longitud) limitará los resultados a los registros georeferenciados.</p>");
+					break;
+				case "40":
+					self.helpSearchText("<p>Seleccione un páramo de la lista y dar clic en Agregar filtro para filtrar su búsqueda a uno o más páramos.</p><p>Este filtro retornará registros del páramo identificado, sin importar si poseen coordenadas; pero note que al agregar un filtro de coordenadas (Bounding box, Latitud o Longitud) limitará los resultados a registros georreferenciados.</p>");
+					break;
+				case "41":
+					self.helpSearchText("<p>Seleccione una área marítima de la lista y dar clic en Agregar filtro para filtrar su búsqueda a una o más áreas marítimas.</p><p>Este filtro retornará registros de la área marítima identificada, sin importar si poseen coordenadas; pero note que al agregar un filtro de coordenadas (Bounding box, Latitud o Longitud) limitará los resultados a registros georreferenciados.</p>");
+					break;
+				case "1":
+					self.helpSearchText("<p></p><p>Ingrese una latitud en formato decimal (ej. -1.1) y escoja entre \"es\", \"mayor que\" y \"menor que\". Este filtro retornará solo registros georreferenciados que concuerdan con la selección.</p>");
+					break;
+				case "2":
+					self.helpSearchText("<p></p><p>Ingrese una longitud en formato decimal (ej. -73.2) y escoja entre \"es\", \"mayor que\" y \"menor que\". Este filtro retornará solo registros georreferenciados que concuerdan con la selección.</p>");
+					break;
+				case "34":
+					self.helpSearchText("<p>Ingrese una altitud en metros y escoja entre \"es\", \"mayor que\" y \"menor que\". Este filtro retornará solo registros con un valor de altitud que coincida con la selección. Este filtro sólo es compatible con los valores de números enteros.</p><p>Por favor tenga en cuenta que los valores de altitud subyacentes se supone que se indican en metros por las fuentes originales de datos, pero que no todas las fuentes de datos se ajustan a esta norma todavía. La conversión automática sólo puede ser suministrada en los casos donde se conoce la unidad de medida. Si planea cualquier análisis basado en los valores de altitud, se recomienda ponerse en contacto directamente con los propietarios de los datos relacionados y verificar las unidades de medida utilizadas en sus conjuntos de datos.</p>");
+					break;
+				case "35":
+					self.helpSearchText("<p>Ingrese una profundidad en metros y escoja entre \"es\", \"mayor que\" y \"menor que\". Este filtro retornará solo registros con un valor de profundidad que coincida con la selección. Este filtro admite valores decimales a 2 decimales.</p><p>Por favor tenga en cuenta que los valores de profundidad subyacentes se supone que se indican en metros por las fuentes originales de datos, pero que no todas las fuentes de datos se ajustan a esta norma todavía. La conversión automática sólo puede ser suministrada en los casos donde se conoce la unidad de medida. Si planea cualquier análisis basado en los valores de profundidad, se recomienda ponerse en contacto directamente con los propietarios de los datos relacionados y verificar las unidades de medida utilizadas en sus conjuntos de datos.</p>");
+					break;
+				case "28":
+					self.helpSearchText("<p></p><p>Seleccione \"incluye coordenadas\" para filtrar aquellos registros que no están georreferenciados; alternativamente, seleccione \"no incluye coordenadas\" para excluir registros georreferenciados. Para ver todos los registros, no utilize este filtro.</p>");
+					break;
+				case "25":
+					self.helpSearchText("<p>Seleccione un publicador de datos de la lista y haga clic en Agregar filtro.</p><p>Este filtro retornará registros de los publicadores especificados.</p>");
+					break;
+				case "24":
+					self.helpSearchText("<p>Seleccione un recurso de datos de la lista y haga clic en Agregar filtro.</p><p>Este filtro retornará registros de los recursos especificados.</p>");
+					break;
+				case "4":
+					self.helpSearchText("<p></p><p>Seleccione un rango de fecha y haga clic en Agregar filtro.</p>");
+					break;
+				case "33":
+					self.helpSearchText("<p></p><p>Seleccione un rango de años y haga clic en Agregar filtro..</p>");
+					break;
+				case "21":
+					self.helpSearchText("<p></p><p>Ingrese un año y haga clic en Agregar filtro. Este filtro retornará registros del año (o años) que concuerdan con la selección.</p>");
+					break;
+				case "22":
+					self.helpSearchText("<p></p><p>Seleccione un mes de la lista y haga clic en Agregar filtro. Este filtro retornará registros del mes especificado, sin importar el año.</p>");
+					break;
+				case "12":
+					self.helpSearchText("<p></p><p>Ingrese un código de institución y \"es\". Este filtro retornará registros con el código de institución dado.</p>");
+					break;
+				case "13":
+					self.helpSearchText("<p></p><p>Ingrese un código de colección y \"es\". El filtro retornará registros con el código de colección.</p>");
+					break;
+				case "14":
+					self.helpSearchText("<p></p><p>Ingrese un número de catálogo y pulse en Agregar filtro. Este filtro retornará registros con el número de catálogo especificado.</p>");
+					break;
+			}
+			$("#helpPopOver").attr("data-content", self.helpSearchText());
 		},
 		enableFilterHelp: function() {
 			var self = this;
@@ -648,7 +729,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		getSearchResumeData: function() {
 			var self = this;
 			if(typeof UrlDataMapping.filterSubject[self.selectedSubject()] !== "undefined") {
-				$.getJSON(UrlDataMapping.filterSubject[self.selectedSubject()].resumeApiURL+((typeof self.objectNameValue() === "undefined")?"":self.objectNameValue()), function(allData) {
+				$.getJSON('http://localhost:5000/api/v1.5/occurrence/search?size=2&facet%5B%5D=scientificName&facet%5B%5D=kingdom&facet%5B%5D=phylum&facet%5B%5D=class&facet%5B%5D=order&facet%5B%5D=family&facet%5B%5D=genus&facet%5B%5D=specie&facet%5B%5D=country&facet%5B%5D=department&facet%5B%5D=county&facet%5B%5D=provider_name&facet%5B%5D=resource_name&facet%5B%5D=institution_code&facet%5B%5D=collection_name&facetLimit=10'+((self.objectNameValue())?"&"+UrlDataMapping.filterSubject[self.selectedSubject()].resumeApi15Condition+"="+self.objectNameValue():""), function(allData) {
 					var canonicals = ko.observableArray();
 					var kingdoms = ko.observableArray();
 					var providers = ko.observableArray();
@@ -664,165 +745,157 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					var counties = ko.observableArray();
 					var commons = ko.observableArray();
 
-					_.each(allData.aggregations.canonical.buckets, function(data) {
-						canonicals.push(new ResumeCount({name: data.key, count: data.doc_count}));
+					_.each(allData.facets, function(data) {
+						switch(data.field) {
+							case "scientificName":
+								self.resumeScientificNames.removeAll();
+								_.each(data.counts, function(facet) {
+									canonicals.push(new ResumeCount({name: facet.key, count: facet.doc_count}));
+									self.resumeScientificNames.push(new ResumeScientificName({canonical: facet.key, occurrences: facet.doc_count}));
+								});
+								break;
+							case "kingdom":
+								self.resumeKingdomNames.removeAll();
+								_.each(data.counts, function(facet) {
+									kingdoms.push(new ResumeCount({name: facet.key, count: facet.doc_count}));
+									self.resumeKingdomNames.push(new ResumeKingdomName({kingdom: facet.key, occurrences: facet.doc_count}));
+								});
+								break;
+							case "provider_name":
+								self.resumeDataProviders.removeAll();
+								_.each(data.counts, function(facet) {
+									providers.push(new ResumeCount({name: facet.key, count: facet.doc_count}));
+									self.resumeDataProviders.push(new ResumeDataProvider({providerName: facet.key, occurrences: facet.doc_count}));
+								});
+								break;
+							case "resource_name":
+								self.resumeDataResources.removeAll();
+								_.each(data.counts, function(facet) {
+									resources.push(new ResumeCount({name: facet.key, count: facet.doc_count}));
+									self.resumeDataResources.push(new ResumeDataResource({resourceName: facet.key, occurrences: facet.doc_count}));
+								});
+								break;
+							case "phylum":
+								self.resumePhylumNames.removeAll();
+								_.each(data.counts, function(facet) {
+									phylums.push(new ResumeCount({name: facet.key, count: facet.doc_count}));
+									self.resumePhylumNames.push(new ResumePhylumName({phylum: facet.key, occurrences: facet.doc_count}));
+								});
+								break;
+							case "class":
+								self.resumeClassNames.removeAll();
+								_.each(data.counts, function(facet) {
+									taxonClasses.push(new ResumeCount({name: facet.key, count: facet.doc_count}));
+									self.resumeClassNames.push(new ResumeClassName({nameClass: facet.key, occurrences: facet.doc_count}));
+								});
+								break;
+							case "order":
+								self.resumeOrderNames.removeAll();
+								_.each(data.counts, function(facet) {
+									order_ranks.push(new ResumeCount({name: facet.key, count: facet.doc_count}));
+									self.resumeOrderNames.push(new ResumeOrderName({order_rank: facet.key, occurrences: facet.doc_count}));
+								});
+								break;
+							case "family":
+								self.resumeFamilyNames.removeAll();
+								_.each(data.counts, function(facet) {
+									families.push(new ResumeCount({name: facet.key, count: facet.doc_count}));
+									self.resumeFamilyNames.push(new ResumeFamilyName({family: facet.key, occurrences: facet.doc_count}));
+								});
+								break;
+							case "genus":
+								self.resumeGenusNames.removeAll();
+								_.each(data.counts, function(facet) {
+									genuses.push(new ResumeCount({name: facet.key, count: facet.doc_count}));
+									self.resumeGenusNames.push(new ResumeGenusName({genus: facet.key, occurrences: facet.doc_count}));
+								});
+								break;
+							case "specie":
+								self.resumeSpeciesNames.removeAll();
+								_.each(data.counts, function(facet) {
+									species.push(new ResumeCount({name: facet.key, count: facet.doc_count}));
+									self.resumeSpeciesNames.push(new ResumeSpecieName({species: facet.key, occurrences: facet.doc_count}));
+								});
+								break;
+							case "country":
+								self.resumeCountries.removeAll();
+								_.each(data.counts, function(facet) {
+									countries.push(new ResumeCount({name: facet.key, count: facet.doc_count}));
+									self.resumeCountries.push(new ResumeCountry({countryName: facet.key, occurrences: facet.doc_count}));
+								});
+								break;
+							case "department":
+								self.resumeDepartments.removeAll();
+								_.each(data.counts, function(facet) {
+									departments.push(new ResumeCount({name: facet.key, count: facet.doc_count}));
+									self.resumeDepartments.push(new ResumeDepartment({departmentName: facet.key, occurrences: facet.doc_count}));
+								});
+								break;
+							case "institution_code":
+								self.resumeInstitutionCodes.removeAll();
+								_.each(data.counts, function(facet) {
+									self.resumeInstitutionCodes.push(new ResumeInstitutionCode({institutionCode: facet.key, occurrences: facet.doc_count}));
+								});
+								break;
+							case "collection_name":
+								self.resumeCollectionCodes.removeAll();
+								_.each(data.counts, function(facet) {
+									self.resumeCollectionCodes.push(new ResumeCollectionCode({collectionCode: facet.key, occurrences: facet.doc_count}));
+								});
+								break;
+						}
 					});
 
-					_.each(allData.aggregations.kingdom.buckets, function(data) {
-						kingdoms.push(new ResumeCount({id: ((typeof data.id.buckets[0] !== 'undefined') ? data.id.buckets[0].key : ''), url: ((typeof data.id.buckets[0] !== 'undefined') ? "http://maps.sibcolombia.net/species/"+data.id.buckets[0].key : ''), name: data.key, count: data.doc_count}));
-					});
-
-					_.each(allData.aggregations.data_provider_id.buckets, function(data) {
-						providers.push(new ResumeCount({id: data.key, url: "http://maps.sibcolombia.net/publicadores/provider/"+data.key, name: data.data_provider_name.buckets[0].key, count: data.doc_count}));
-					});
-
-					_.each(allData.aggregations.data_resource_id.buckets, function(data) {
-						resources.push(new ResumeCount({id: data.key, url: "http://maps.sibcolombia.net/conjuntos/resource/"+data.key, name: data.data_provider_id.buckets[0].data_resource_name.buckets[0].key, count: data.doc_count}));
-					});
-
-					_.each(allData.aggregations.phylum.buckets, function(data) {
-						phylums.push(new ResumeCount({id: ((typeof data.id.buckets[0] !== 'undefined') ? data.id.buckets[0].key : ''), url: ((typeof data.id.buckets[0] !== 'undefined') ? "http://maps.sibcolombia.net/species/"+data.id.buckets[0].key : ''), name: data.key, count: data.doc_count}));
-					});
-
-					_.each(allData.aggregations.class.buckets, function(data) {
-						taxonClasses.push(new ResumeCount({id: ((typeof data.id.buckets[0] !== 'undefined') ? data.id.buckets[0].key : ''), url: ((typeof data.id.buckets[0] !== 'undefined') ? "http://maps.sibcolombia.net/species/"+data.id.buckets[0].key : ''), name: data.key, count: data.doc_count}));
-					});
-
-					_.each(allData.aggregations.order.buckets, function(data) {
-						order_ranks.push(new ResumeCount({id: ((typeof data.id.buckets[0] !== 'undefined') ? data.id.buckets[0].key : ''), url: ((typeof data.id.buckets[0] !== 'undefined') ? "http://maps.sibcolombia.net/species/"+data.id.buckets[0].key : ''), name: data.key, count: data.doc_count}));
-					});
-
-					_.each(allData.aggregations.family.buckets, function(data) {
-						families.push(new ResumeCount({id: ((typeof data.id.buckets[0] !== 'undefined') ? data.id.buckets[0].key : ''), url: ((typeof data.id.buckets[0] !== 'undefined') ? "http://maps.sibcolombia.net/species/"+data.id.buckets[0].key : ''), name: data.key, count: data.doc_count}));
-					});
-
-					_.each(allData.aggregations.genus.buckets, function(data) {
-						genuses.push(new ResumeCount({id: ((typeof data.id.buckets[0] !== 'undefined') ? data.id.buckets[0].key : ''), url: ((typeof data.id.buckets[0] !== 'undefined') ? "http://maps.sibcolombia.net/species/"+data.id.buckets[0].key : ''), name: data.key, count: data.doc_count}));
-					});
-
-					_.each(allData.aggregations.species.buckets, function(data) {
-						species.push(new ResumeCount({id: ((typeof data.id.buckets[0] !== 'undefined') ? data.id.buckets[0].key : ''), url: ((typeof data.id.buckets[0] !== 'undefined') ? "http://maps.sibcolombia.net/species/"+data.id.buckets[0].key : ''), name: data.key, count: data.doc_count}));
-					});
-
-					_.each(allData.aggregations.iso_country_code.buckets, function(data) {
-						countries.push(new ResumeCount({id: data.key, url: "http://maps.sibcolombia.net/countries/"+data.key, name: data.country_name.buckets[0].key, count: data.doc_count}));
-					});
-
-					_.each(allData.aggregations.iso_department_code.buckets, function(data) {
-						departments.push(new ResumeCount({id: data.key, url: "http://maps.sibcolombia.net/departments/"+data.key, name: data.department_name.buckets[0].key, count: data.doc_count}));
-					});
-
-					_.each(allData.aggregations.iso_county_code.buckets, function(data) {
-						counties.push(new ResumeCount({id: data.key, name: data.county_name.buckets[0].department_name.buckets[0].key + " - " + data.county_name.buckets[0].key, count: data.doc_count}));
-					});
-
-					_.each(allData.aggregations.common_names.common.buckets, function(data) {
+					/*_.each(allData.aggregations.common_names.common.buckets, function(data) {
 						commons.push(new ResumeCount({name: data.key, count: data.doc_count}));
-					});
+					});*/
 
 					switch(self.selectedSubject()) {
 						case "0":
-							self.resumeScientificNames.removeAll();
-							_.each(allData.aggregations.canonical.buckets, function(data) {
-								self.resumeScientificNames.push(new ResumeScientificName({canonical: data.key, occurrences: data.doc_count}));
-							});
 							canonicals.removeAll();
 							break;
 						case "100":
-							self.resumeKingdomNames.removeAll();
-							_.each(allData.aggregations.kingdom.buckets, function(data) {
-								self.resumeKingdomNames.push(new ResumeKingdomName({kingdom: data.key, occurrences: data.doc_count, id: ((typeof data.id.buckets[0] !== 'undefined') ? data.id.buckets[0].key : '')}));
-							});
 							kingdoms.removeAll();
 							break;
 						case "101":
-							self.resumePhylumNames.removeAll();
-							_.each(allData.aggregations.phylum.buckets, function(data) {
-								self.resumePhylumNames.push(new ResumePhylumName({phylum: data.key, occurrences: data.doc_count, id: ((typeof data.id.buckets[0] !== 'undefined') ? data.id.buckets[0].key : '')}));
-							});
 							phylums.removeAll();
 							break;
 						case "102":
-							self.resumeClassNames.removeAll();
-							_.each(allData.aggregations.class.buckets, function(data) {
-								self.resumeClassNames.push(new ResumeClassName({nameClass: data.key, occurrences: data.doc_count, id: ((typeof data.id.buckets[0] !== 'undefined') ? data.id.buckets[0].key : '')}));
-							});
 							taxonClasses.removeAll();
 							break;
 						case "103":
-							self.resumeOrderNames.removeAll();
-							_.each(allData.aggregations.order.buckets, function(data) {
-								self.resumeOrderNames.push(new ResumeOrderName({order_rank: data.key, occurrences: data.doc_count, id: ((typeof data.id.buckets[0] !== 'undefined') ? data.id.buckets[0].key : '')}));
-							});
 							order_ranks.removeAll();
 							break;
 						case "104":
-							self.resumeFamilyNames.removeAll();
-							_.each(allData.aggregations.family.buckets, function(data) {
-								self.resumeFamilyNames.push(new ResumeFamilyName({family: data.key, occurrences: data.doc_count, id: ((typeof data.id.buckets[0] !== 'undefined') ? data.id.buckets[0].key : '')}));
-							});
 							families.removeAll();
 							break;
 						case "105":
-							self.resumeGenusNames.removeAll();
-							_.each(allData.aggregations.genus.buckets, function(data) {
-								self.resumeGenusNames.push(new ResumeGenusName({genus: data.key, occurrences: data.doc_count, id: ((typeof data.id.buckets[0] !== 'undefined') ? data.id.buckets[0].key : '')}));
-							});
 							genuses.removeAll();
 							break;
 						case "106":
-							self.resumeSpeciesNames.removeAll();
-							_.each(allData.aggregations.species.buckets, function(data) {
-								self.resumeSpeciesNames.push(new ResumeSpecieName({species: data.key, occurrences: data.doc_count, id: ((typeof data.id.buckets[0] !== 'undefined') ? data.id.buckets[0].key : '')}));
-							});
 							species.removeAll();
 							break;
+						case "25":
+							providers.removeAll();
+							break;
+						case "24":
+							resources.removeAll();
+							break;
+						case "5":
+							countries.removeAll();
+							break;
+						case "38":
+							departments.removeAll();
+							break;
+					}
+
+					/*switch(self.selectedSubject()) {
 						case "31":
 							self.resumeCommonNames.removeAll();
 							_.each(allData.aggregations.common_names.common.buckets, function(data) {
 								self.resumeCommonNames.push(new ResumeCommonName({canonical: data.key, occurrences: data.doc_count}));
 							});
 							commons.removeAll();
-							break;
-						case "25":
-							self.resumeDataProviders.removeAll();
-							_.each(allData.aggregations.data_provider_id.buckets, function(data) {
-								self.resumeDataProviders.push(new ResumeDataProvider({providerID: data.key, providerName: data.data_provider_name.buckets[0].key, occurrences: data.doc_count}));
-							});
-							providers.removeAll();
-							break;
-						case "24":
-							self.resumeDataResources.removeAll();
-							_.each(allData.aggregations.data_resource_id.buckets, function(data) {
-								self.resumeDataResources.push(new ResumeDataResource({providerID: data.data_provider_id.buckets[0].key, resourceID: data.key, resourceName: data.data_provider_id.buckets[0].data_resource_name.buckets[0].key, occurrences: data.doc_count}));
-							});
-							resources.removeAll();
-							break;
-						case "12":
-							self.resumeInstitutionCodes.removeAll();
-							_.each(allData.aggregations.institution_code_id.buckets, function(data) {
-								self.resumeInstitutionCodes.push(new ResumeInstitutionCode({institutionCodeID: data.key, institutionCode: data.institution_code.buckets[0].key, occurrences: data.doc_count}));
-							});
-							break;
-						case "13":
-							self.resumeCollectionCodes.removeAll();
-							_.each(allData.aggregations.collection_code_id.buckets, function(data) {
-								self.resumeCollectionCodes.push(new ResumeCollectionCode({collectionCodeID: data.key, collectionCode: data.collection_code.buckets[0].key, occurrences: data.doc_count}));
-							});
-							break;
-						case "5":
-							self.resumeCountries.removeAll();
-							_.each(allData.aggregations.iso_country_code.buckets, function(data) {
-								self.resumeCountries.push(new ResumeCountry({isoCountryCode: data.key, countryName: data.country_name.buckets[0].key, occurrences: data.doc_count}));
-							});
-							countries.removeAll();
-							break;
-						case "38":
-							self.resumeDepartments.removeAll();
-							_.each(allData.aggregations.iso_department_code.buckets, function(data) {
-								self.resumeDepartments.push(new ResumeDepartment({isoDepartmentCode: data.key, departmentName: data.department_name.buckets[0].key, occurrences: data.doc_count}));
-							});
-							departments.removeAll();
 							break;
 						case "39":
 							self.resumeCounties.removeAll();
@@ -831,7 +904,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 							});
 							counties.removeAll();
 							break;
-					}
+					}*/
 
 					self.resumesInfoFilter.removeAll();
 					self.resumesInfoFilter.push(new ResumeInfo({canonicals: canonicals, commons: commons, kingdoms: kingdoms, providers: providers, resources: resources, phylums: phylums, taxonClasses: taxonClasses, order_ranks: order_ranks, families: families, genuses: genuses, species: species, countries: countries, departments: departments, counties: counties}));

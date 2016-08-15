@@ -344,8 +344,7 @@ block filterWindow
 						dt
 							ul
 								li
-									a(target="_blank", data-bind="attr: { href: url }")
-										span(data-bind="text: name")
+									span(data-bind="text: name")
 						dd.cuenta(data-bind="text: count")
 					span.headerDistribution(data-bind="visible: resources().length > 0") Conjuntos de datos:
 					span.headerCount(data-bind="visible: resources().length > 0") # Registros
@@ -353,8 +352,7 @@ block filterWindow
 						dt
 							ul
 								li
-									a(target="_blank", data-bind="attr: { href: url }")
-										span(data-bind="text: name")
+									span(data-bind="text: name")
 						dd.cuenta(data-bind="text: count")
 					span.headerDistribution(data-bind="visible: countries().length > 0") País:
 					span.headerCount(data-bind="visible: countries().length > 0") # Registros
@@ -362,8 +360,7 @@ block filterWindow
 						dt
 							ul
 								li
-									a(target="_blank", data-bind="attr: { href: url }")
-										span(data-bind="text: name")
+									span(data-bind="text: name")
 						dd.cuenta(data-bind="text: count")
 					span.headerDistribution(data-bind="visible: departments().length > 0") Departamento:
 					span.headerCount(data-bind="visible: departments().length > 0") # Registros
@@ -371,8 +368,7 @@ block filterWindow
 						dt
 							ul
 								li
-									a(target="_blank", data-bind="attr: { href: url }")
-										span(data-bind="text: name")
+									span(data-bind="text: name")
 						dd.cuenta(data-bind="text: count")
 					span.headerDistribution(data-bind="visible: counties().length > 0") Municipio:
 					span.headerCount(data-bind="visible: counties().length > 0") # Registros
@@ -507,7 +503,6 @@ block filterWindow
 								select.form-control(name='c[0].s', id='newFilterSubject', data-bind="value: selectedSubject, event: {change: changeFilterHelp}")
 									optgroup(label='Taxonomía')
 										option(value='0', selected='true') Nombre Científico
-										option(value='31') Nombre común
 										option(value='100') Reino
 										option(value='101') Filo
 										option(value='102') Clase
@@ -799,6 +794,7 @@ block filterWindow
 									option(value="CO-ANT") Antioquia
 									option(value="CO-ARA") Arauca
 									option(value="CO-ATL") Atlántico
+									option(value="CO-DC") Bogotá
 									option(value="CO-BOL") Bolívar
 									option(value="CO-BOY") Boyacá
 									option(value="CO-CAL") Caldas
@@ -809,7 +805,6 @@ block filterWindow
 									option(value="CO-CHO") Chocó
 									option(value="CO-COR") Córdoba
 									option(value="CO-CUN") Cundinamarca
-									option(value="CO-DC") Bogotá Distrito Capital
 									option(value="CO-GUA") Guainía
 									option(value="CO-GUV") Guaviare
 									option(value="CO-HUI") Huila
