@@ -27,7 +27,8 @@ requirejs.config({
     'kendoSpanishCulture': 'kendo/cultures/kendo.culture.es-CO.min',
     'select2': '../../components/select2/select2.min',
     'range-slider': '../../components/rangeslider.js/dist/rangeslider.min',
-    'LeafletZoomSlider': 'leaflet/plugins/zoomslider/zoomslider'
+    'LeafletZoomSlider': 'leaflet/plugins/zoomslider/zoomslider',
+    'LeafletMapboxVectorTile': 'leafletMapboxVectorTile/Leaflet.MapboxVectorTile'
   },
   shim: {
     'Leaflet': {
@@ -74,22 +75,24 @@ requirejs.config({
     },
     'range-slider': {
       deps: ['jquery']
+    },
+    'LeafletMapboxVectorTile': {
+      deps: ['Leaflet']
     }
   }
 });
 
 // Load the main app module to start the app
 require(["app/main"], function() {
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-1418857-10']);
-  _gaq.push(['_setDomainName', 'sibcolombia.net']);
-  _gaq.push(['_trackPageview']);
+  // GOOGLE ANALYTICS CODE
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
+  ga('create', 'UA-1418857-10', 'auto');
+  ga('send', 'pageview');
+  // ------ END GOOGLE ANALYTICS CODE
 
   $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     // Map Height

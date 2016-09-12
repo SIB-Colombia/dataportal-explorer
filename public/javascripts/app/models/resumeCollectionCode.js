@@ -3,13 +3,14 @@ define(["knockout"], function(ko) {
 		this.collectionCode = data.collectionCode;
 		this.collectionCodeID = data.collectionCodeID;
 		this.occurrences = data.occurrences;
+		this.name = data.name;
 
 		this.collectionCodeWithBold = ko.computed(function() {
 			if($("#statesInput").val()) {
 				var regex = new RegExp( '(' + $("#statesInput").val() + ')', 'gi' );
-				return this.collectionCode.replace(regex, "<strong>$1</strong>");
+				return this.name.replace(regex, "<strong>$1</strong>");
 			} else {
-				return this.collectionCode;
+				return this.name;
 			}
 		}, this);
 	};

@@ -80,6 +80,11 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 	var minimal = L.tileLayer(cmUrl, {styleId: 997, attribution: cmAttr});
 	var midnight = L.tileLayer(cmUrl, {styleId: 999,   attribution: cmAttr});
 
+	var mapboxLightUrl = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}';
+	var accessToken = 'pk.eyJ1IjoidmFsZWdyYWphbGVzIiwiYSI6ImNpc2dmaHdzdjAxdjgydHZvdnF2YmxscmcifQ.5Z-QrnTKW-xwNS4ZmzR4BQ';
+	var mapBoxLight = L.tileLayer(mapboxLightUrl, {id: 'mapbox.light', attribution: '', maxZoom: 20, accessToken: accessToken});
+	var mapBoxDark = L.tileLayer(mapboxLightUrl, {id: 'mapbox.dark', attribution: '', maxZoom: 20, accessToken: accessToken});
+
 	// Servicio WMS del INVEMAR del Mapa Ecosistemas Continentales Costeros y Marinos 1:500.000 MECCM500k 
 	var invemarEcoregiones = L.tileLayer.wms("http://gis.invemar.org.co/arcgis/services/MECCM/1_TM_MECCM500k_EcosistemasMarinoCosteros/MapServer/WMSServer",
 		{
@@ -242,6 +247,8 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 	);
 	
 	var baseLayers = {
+		'Mapbox claro': mapBoxLight,
+		'Mapbox oscuro': mapBoxDark,
 		'Google terreno': googleTerrain,
 		'Google mapa carreteras': googleRoadmap,
 		'Google satélite': googleSatellite,
@@ -258,7 +265,7 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 		zoom: 6,
 		zoomControl: false,
 		//crs: L.CRS.EPSG4326,
-		layers: [googleTerrain]
+		layers: [mapBoxDark]
 	});
 
 	var wmsLayers = {

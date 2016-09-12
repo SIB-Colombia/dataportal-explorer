@@ -4,13 +4,14 @@ define(["knockout"], function(ko) {
 		this.resourceID = data.resourceID;
 		this.providerID = data.providerID;
 		this.occurrences = data.occurrences;
+		this.name = data.name;
 
 		this.resourceNameWithBold = ko.computed(function() {
 			if($("#statesInput").val()) {
 				var regex = new RegExp( '(' + $("#statesInput").val() + ')', 'gi' );
-				return this.resourceName.replace(regex, "<strong>$1</strong>");
+				return this.name.replace(regex, "<strong>$1</strong>");
 			} else {
-				return this.resourceName;
+				return this.name;
 			}
 		}, this);
 	};

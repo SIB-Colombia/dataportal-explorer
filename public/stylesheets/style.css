@@ -1320,6 +1320,16 @@ h4#currentSearch {
 #densitySlider input {
   width: 100%;
 }
+.leaflet-popup-content-wrapper {
+  max-height: 500px;
+  overflow-y: scroll;
+}
+.leaflet-popup-content-wrapper .leaflet-popup-content {
+  font-size: 1.1em;
+}
+.leaflet-popup-content-wrapper .leaflet-popup-content ul {
+  padding-left: 15px;
+}
 .modal-dialog .modal-content .modal-header h4 {
   font-family: Helvetica, 'Helvetica Neue', Arial, sans-serif;
   font-weight: normal;

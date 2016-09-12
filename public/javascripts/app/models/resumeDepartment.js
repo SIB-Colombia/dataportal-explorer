@@ -3,13 +3,14 @@ define(["knockout"], function(ko) {
 		this.departmentName = data.departmentName;
 		this.isoDepartmentCode = data.isoDepartmentCode;
 		this.occurrences = data.occurrences;
+		this.name = data.name;
 
 		this.departmentNameWithBold = ko.computed(function() {
 			if($("#statesInput").val()) {
 				var regex = new RegExp( '(' + $("#statesInput").val() + ')', 'gi' );
-				return this.departmentName.replace(regex, "<strong>$1</strong>");
+				return this.name.replace(regex, "<strong>$1</strong>");
 			} else {
-				return this.departmentName;
+				return this.name;
 			}
 		}, this);
 	};

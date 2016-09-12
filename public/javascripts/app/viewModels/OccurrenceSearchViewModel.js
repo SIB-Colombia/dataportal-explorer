@@ -1,4 +1,4 @@
-define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map-initialize", "app/models/occurrence", "app/models/resumeInfo", "app/models/resumeCount", "app/models/resumeScientificName", "app/models/resumeCommonName", "app/models/resumeKingdomName", "app/models/resumePhylumName", "app/models/resumeClassName", "app/models/resumeOrderName", "app/models/resumeFamilyName", "app/models/resumeGenusName", "app/models/resumeSpecieName", "app/models/resumeDataProvider", "app/models/resumeDataResource", "app/models/resumeInstitutionCode", "app/models/resumeCollectionCode", "app/models/resumeCountry", "app/models/resumeDepartment", "app/models/resumeCounty", "app/models/resumeParamo", "app/models/resumeMarineZone", "app/models/county", "app/models/paramo", "app/models/marineZone", "app/models/coordinate", "app/models/radialCoordinate", "app/models/filterSelected", "app/config/urlDataMapping", "select2", "knockoutKendoUI", "Leaflet", "jqueryUI", "bootstrap", "kendoSpanishCulture", "range-slider", "LeafletMarkerCluster"], function($, ko, _, BaseViewModel, map, Occurrence, ResumeInfo, ResumeCount, ResumeScientificName, ResumeCommonName, ResumeKingdomName, ResumePhylumName, ResumeClassName, ResumeOrderName, ResumeFamilyName, ResumeGenusName, ResumeSpecieName, ResumeDataProvider, ResumeDataResource, ResumeInstitutionCode, ResumeCollectionCode, ResumeCountry, ResumeDepartment, ResumeCounty, ResumeParamo, ResumeMarineZone, County, Paramo, MarineZone, Coordinate, RadialCoordinate, FilterSelected, UrlDataMapping, select2) {
+define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map-initialize", "app/models/occurrence", "app/models/resumeInfo", "app/models/resumeCount", "app/models/resumeScientificName", "app/models/resumeCommonName", "app/models/resumeKingdomName", "app/models/resumePhylumName", "app/models/resumeClassName", "app/models/resumeOrderName", "app/models/resumeFamilyName", "app/models/resumeGenusName", "app/models/resumeSpecieName", "app/models/resumeDataProvider", "app/models/resumeDataResource", "app/models/resumeInstitutionCode", "app/models/resumeCollectionCode", "app/models/resumeCountry", "app/models/resumeDepartment", "app/models/resumeCounty", "app/models/resumeParamo", "app/models/resumeMarineZone", "app/models/county", "app/models/paramo", "app/models/marineZone", "app/models/coordinate", "app/models/radialCoordinate", "app/models/filterSelected", "app/config/urlDataMapping", "select2", "knockoutKendoUI", "Leaflet", "jqueryUI", "bootstrap", "kendoSpanishCulture", "range-slider", "LeafletMarkerCluster", "LeafletMapboxVectorTile"], function($, ko, _, BaseViewModel, map, Occurrence, ResumeInfo, ResumeCount, ResumeScientificName, ResumeCommonName, ResumeKingdomName, ResumePhylumName, ResumeClassName, ResumeOrderName, ResumeFamilyName, ResumeGenusName, ResumeSpecieName, ResumeDataProvider, ResumeDataResource, ResumeInstitutionCode, ResumeCollectionCode, ResumeCountry, ResumeDepartment, ResumeCounty, ResumeParamo, ResumeMarineZone, County, Paramo, MarineZone, Coordinate, RadialCoordinate, FilterSelected, UrlDataMapping, select2) {
 	var OccurrenceSearchViewModel = function() {
 		var self = this;
 		self.densityCellsPointOneDegree = new L.FeatureGroup();
@@ -113,8 +113,9 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			var self = this;
 
 			this.loadCountyDropdownData();
-			this.loadCellDensityPointOneDegree();
+			this.changeFilterHelp();
 			this.getSearchResumeData();
+			this.loadCellDensity();
 
 			markers = new L.MarkerClusterGroup({
 				spiderfyOnMaxZoom: true,
@@ -370,15 +371,96 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				self.countyDropdown.push.apply(self.countyDropdown, newCounties);
 			});
 		},
-		loadCellDensityPointOneDegree: function() {
+		loadCellDensity: function() {
+			var debug = {};
 			var self = this;
+
 			$.getJSON("http://localhost:5000/api/v1.5/occurrence/count?isGeoreferenced=true", function(data) {
 				self.totalGeoOccurrences(data.count);
 			});
 
 			$.getJSON("http://localhost:5000/api/v1.5/occurrence/count", function(data) {
 				self.totalOccurrences(data.count);
-				self.showMapAreaWithSpinner();
+			});
+
+			$.ajax({
+				contentType: 'application/json',
+				type: 'GET',
+				url: 'http://localhost:5000/api/v1.5/occurrence/grid?precision=5&responseType=geojson&scale=logarithmic&color=%23ff2600&colorMethod=gradient',
+				beforeSend: function() {
+					self.hideMapAreaWithSpinner();
+				},
+				complete: function() {
+					//self.showMapAreaWithSpinner();
+				},
+				success: function(returnedData) {
+					map.removeLayer(self.densityCellsPointOneDegree());
+					self.densityCellsPointOneDegree(new L.geoJson(returnedData, {
+						style: function(feature) {
+							return {
+								color: feature.properties.fill,
+								fillOpacity: feature.properties['fill-opacity'],
+								weight: 1,
+								opacity: feature.properties['fill-opacity']
+							};
+						},
+						onEachFeature: function(feature, layer) {
+							// does this feature have a properties
+							if (feature.properties) {
+								layer.bindPopup("<strong>No. registros: </strong>" + feature.properties.count + "</br></br>");
+							}
+						}
+					}));
+					self.densityCellsPointOneDegree().on('click', function (a) {
+						if (a.layer.feature.properties) {
+							$.ajax({
+								contentType: 'application/json',
+								type: 'GET',
+								url: 'http://localhost:5000/api/v1.5/occurrence/search?latitudeTopLeft='+a.layer._latlngs[1].lat+'&longitudeTopLeft='+a.layer._latlngs[1].lng+'&latitudeBottomRight='+a.layer._latlngs[3].lat+'&longitudeBottomRight='+a.layer._latlngs[3].lng+'&size=10&facet%5B%5D=provider_name&facet%5B%5D=resource_name&facet%5B%5D=basis_of_record&facet%5B%5D=collection_name&facetLimit=1000',
+								success: function(results) {
+									var resources = "";
+									var providers = "";
+									var basisOfRecords = "";
+									var collections = "";
+									_.each(results.facets, function(data) {
+										if (data.field === "resource_name") {
+											_.each(data.counts, function(resource) {
+												resources = (resources === "") ? "<ul><li>" + resource.key + ": " + resource.doc_count + "</li>" : resources + "<li>" + resource.key + ": " + resource.doc_count + "</li>";
+											});
+											if (resources !== "") {
+												resources = resources + "</ul>";
+											}
+										} else if (data.field === "provider_name") {
+											_.each(data.counts, function(provider) {
+												providers = (providers === "") ? "<ul><li>" + provider.key + ": " + provider.doc_count + "</li>" : providers + "<li>" + provider.key + ": " + provider.doc_count + "</li>";
+											});
+											if (providers !== "") {
+												providers = providers + "</ul>";
+											}
+										} else if (data.field === "basis_of_record") {
+											_.each(data.counts, function(basisOfRecord) {
+												basisOfRecords = (basisOfRecords === "") ? "<ul><li>" + basisOfRecord.key + ": " + basisOfRecord.doc_count + "</li>" : basisOfRecords + "<li>" + basisOfRecord.key + ": " + basisOfRecord.doc_count + "</li>";
+											});
+											if (basisOfRecords !== "") {
+												basisOfRecords = basisOfRecords + "</ul>";
+											}
+										} else if (data.field === "collection_name") {
+											_.each(data.counts, function(collection) {
+												collections = (collections === "") ? "<ul><li>" + collection.key + ": " + collection.doc_count + "</li>" : collections + "<li>" + collection.key + ": " + collection.doc_count + "</li>";
+											});
+											if (collections !== "") {
+												collections = collections + "</ul>";
+											}
+										}
+									});
+									a.layer.bindPopup("<strong>No. registros: </strong>" + a.layer.feature.properties.count + "</br></br>" + ((resources !== "")?"<strong>Conjuntos de datos:</strong></br>"+resources:"") + ((providers !== "")?"</br><strong>Publicadores:</strong></br>"+providers:"") + ((basisOfRecords !== "")?"</br><strong>Base del registro:</strong></br>"+basisOfRecords:"") + ((collections !== "")?"</br><strong>Colecciones:</strong></br>"+collections:"") );
+								}
+							});
+						}
+					});
+					map.addLayer(self.densityCellsPointOneDegree());
+					self.showMapAreaWithSpinner();
+				}
 			});
 		},
 		disableOccurrencesDetail: function() {
@@ -610,43 +692,199 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		},
 		fillSearchConditions: function() {
 			var response = {};
+			var urlParams = "";
 			var self = this;
-			if(self.selectedScientificNames().length !== 0)
+			if(self.selectedScientificNames().length !== 0) {
 				response['scientificNames'] = self.selectedScientificNames();
+				self.selectedScientificNames().forEach(function(element, index, array) {
+					urlParams = urlParams + ((urlParams.length == 0)?"":"&") + "scientificName=" + element.textObject;
+				});
+			}
 			if(self.selectedCommonNames().length !== 0)
 				response['commonNames'] = self.selectedCommonNames();
-			if(self.selectedTaxonNames().length !== 0)
+			if(self.selectedTaxonNames().length !== 0) {
 				response['taxons'] = self.selectedTaxonNames();
-			if(self.selectedCountriesIDs().length !== 0)
+				self.selectedTaxonNames().forEach(function(element, index, array) {
+					switch (element.textName) {
+						case "reino":
+							urlParams = urlParams + ((urlParams.length == 0)?"":"&") + "kingdomName=" + element.textObject;
+							break;
+						case "clase":
+							urlParams = urlParams + ((urlParams.length == 0)?"":"&") + "className=" + element.textObject;
+							break;
+						case "filo":
+							urlParams = urlParams + ((urlParams.length == 0)?"":"&") + "phylumName=" + element.textObject;
+							break;
+						case "orden":
+							urlParams = urlParams + ((urlParams.length == 0)?"":"&") + "orderName=" + element.textObject;
+							break;
+						case "familia":
+							urlParams = urlParams + ((urlParams.length == 0)?"":"&") + "familyName=" + element.textObject;
+							break;
+						case "género":
+							urlParams = urlParams + ((urlParams.length == 0)?"":"&") + "genusName=" + element.textObject;
+							break;
+						case "especie":
+							urlParams = urlParams + ((urlParams.length == 0)?"":"&") + "speciesName=" + element.textObject;
+							break;
+					}
+				});
+			}
+			if(self.selectedCountriesIDs().length !== 0) {
 				response['countries'] = self.selectedCountriesIDs();
-			if(self.selectedDepartmentsIDs().length !== 0)
+				self.selectedCountriesIDs().forEach(function(element, index, array) {
+					urlParams = urlParams + ((urlParams.length == 0)?"":"&") + "countryName=" + element.textName;
+				});
+			}
+			if(self.selectedDepartmentsIDs().length !== 0) {
 				response['departments'] = self.selectedDepartmentsIDs();
-			if(self.selectedCountiesIDs().length !== 0)
+				self.selectedDepartmentsIDs().forEach(function(element, index, array) {
+					urlParams = urlParams + ((urlParams.length == 0)?"":"&") + "departmentName=" + element.textName;
+				});
+			}
+			if(self.selectedCountiesIDs().length !== 0) {
 				response['counties'] = self.selectedCountiesIDs();
-			if(self.selectedLatitudes().length !== 0)
+				self.selectedCountiesIDs().forEach(function(element, index, array) {
+					var countyAndDepartment = element.textName.split(" - ");
+					urlParams = urlParams + ((urlParams.length == 0)?"":"&") + "departmentName=" + countyAndDepartment[1];
+					urlParams = urlParams + ((urlParams.length == 0)?"":"&") + "countyName=" + countyAndDepartment[0];
+				});
+			}
+			if(self.selectedLatitudes().length !== 0) {
 				response['latitudes'] = self.selectedLatitudes();
-			if(self.selectedLongitudes().length !== 0)
+			}
+			if(self.selectedLongitudes().length !== 0) {
 				response['longitudes'] = self.selectedLongitudes();
-			if(self.selectedAltitudes().length !== 0)
+			}
+			if(self.selectedAltitudes().length !== 0) {
 				response['altitudes'] = self.selectedAltitudes();
-			if(self.selectedDeeps().length !== 0)
+			}
+			if(self.selectedDeeps().length !== 0) {
 				response['deeps'] = self.selectedDeeps();
-			if(self.selectedCoordinate().length !== 0)
+			}
+			if(self.selectedCoordinate().length !== 0) {
 				response['coordinates'] = self.selectedCoordinate();
-			if(self.selectedProviders().length !== 0)
+			}
+			if(self.selectedProviders().length !== 0) {
 				response['providers'] = self.selectedProviders();
-			if(self.selectedResources().length !== 0)
+				self.selectedProviders().forEach(function(element, index, array) {
+					urlParams = urlParams + ((urlParams.length == 0)?"":"&") + "providerName=" + element.textObject;
+				});
+			}
+			if(self.selectedResources().length !== 0) {
 				response['resources'] = self.selectedResources();
-			if(self.selectedOnMapPoligonCoordinates().length !== 0)
+				self.selectedResources().forEach(function(element, index, array) {
+					console.log(element);
+					urlParams = urlParams + ((urlParams.length == 0)?"":"&") + "resourceName=" + element.textObject;
+				});
+			}
+			if(self.selectedOnMapPoligonCoordinates().length !== 0) {
 				response['poligonalCoordinates'] = self.selectedOnMapPoligonCoordinates();
-			if(self.selectedOnMapRadialCoordinates().length !== 0)
+			}
+			if(self.selectedOnMapRadialCoordinates().length !== 0) {
 				response['radialCoordinates'] = self.selectedOnMapRadialCoordinates();
-			return response;
+			}
+			return {
+				response: response,
+				url: urlParams
+			};
 		},
 		startSearch: function() {
 			var self = this;
-			var data = ko.toJSON(self.fillSearchConditions());
+			var result = self.fillSearchConditions();
+			var data = ko.toJSON(result.response);
+			var urlParams = result.url;
+			var totalOccurrences = 0;
+
 			$.ajax({
+				contentType: 'application/json',
+				type: 'GET',
+				url: 'http://localhost:5000/api/v1.5/occurrence/grid?'+urlParams+'&precision=5&responseType=geojson&scale=logarithmic&color=%23ff2600&colorMethod=gradient',
+				beforeSend: function() {
+					self.hideMapAreaWithSpinner();
+				},
+				complete: function() {
+					self.showMapAreaWithSpinner();
+				},
+				success: function(returnedData) {
+					map.removeLayer(self.densityCellsPointOneDegree());
+					self.densityCellsPointOneDegree(new L.geoJson(returnedData, {
+						style: function(feature) {
+							return {
+								color: feature.properties.fill,
+								fillOpacity: feature.properties['fill-opacity'],
+								weight: 1,
+								opacity: feature.properties['fill-opacity']
+							};
+						},
+						onEachFeature: function(feature, layer) {
+							// does this feature have a properties
+							if (feature.properties) {
+								layer.bindPopup("<strong>No. registros: </strong>" + feature.properties.count + "</br></br>");
+								totalOccurrences = totalOccurrences + feature.properties.count;
+							}
+						}
+					}));
+					self.densityCellsPointOneDegree().on('click', function (a) {
+						if (a.layer.feature.properties) {
+							$.ajax({
+								contentType: 'application/json',
+								type: 'GET',
+								url: 'http://localhost:5000/api/v1.5/occurrence/search?'+urlParams+'&latitudeTopLeft='+a.layer._latlngs[1].lat+'&longitudeTopLeft='+a.layer._latlngs[1].lng+'&latitudeBottomRight='+a.layer._latlngs[3].lat+'&longitudeBottomRight='+a.layer._latlngs[3].lng+'&size=10&facet%5B%5D=provider_name&facet%5B%5D=resource_name&facet%5B%5D=basis_of_record&facet%5B%5D=collection_name&facetLimit=1000',
+								success: function(results) {
+									var resources = "";
+									var providers = "";
+									var basisOfRecords = "";
+									var collections = "";
+									_.each(results.facets, function(data) {
+										if (data.field === "resource_name") {
+											_.each(data.counts, function(resource) {
+												resources = (resources === "") ? "<ul><li>" + resource.key + ": " + resource.doc_count + "</li>" : resources + "<li>" + resource.key + ": " + resource.doc_count + "</li>";
+											});
+											if (resources !== "") {
+												resources = resources + "</ul>";
+											}
+										} else if (data.field === "provider_name") {
+											_.each(data.counts, function(provider) {
+												providers = (providers === "") ? "<ul><li>" + provider.key + ": " + provider.doc_count + "</li>" : providers + "<li>" + provider.key + ": " + provider.doc_count + "</li>";
+											});
+											if (providers !== "") {
+												providers = providers + "</ul>";
+											}
+										} else if (data.field === "basis_of_record") {
+											_.each(data.counts, function(basisOfRecord) {
+												basisOfRecords = (basisOfRecords === "") ? "<ul><li>" + basisOfRecord.key + ": " + basisOfRecord.doc_count + "</li>" : basisOfRecords + "<li>" + basisOfRecord.key + ": " + basisOfRecord.doc_count + "</li>";
+											});
+											if (basisOfRecords !== "") {
+												basisOfRecords = basisOfRecords + "</ul>";
+											}
+										} else if (data.field === "collection_name") {
+											_.each(data.counts, function(collection) {
+												collections = (collections === "") ? "<ul><li>" + collection.key + ": " + collection.doc_count + "</li>" : collections + "<li>" + collection.key + ": " + collection.doc_count + "</li>";
+											});
+											if (collections !== "") {
+												collections = collections + "</ul>";
+											}
+										}
+									});
+									a.layer.bindPopup("<strong>No. registros: </strong>" + a.layer.feature.properties.count + "</br></br>" + ((resources !== "")?"<strong>Conjuntos de datos:</strong></br>"+resources:"") + ((providers !== "")?"</br><strong>Publicadores:</strong></br>"+providers:"") + ((basisOfRecords !== "")?"</br><strong>Base del registro:</strong></br>"+basisOfRecords:"") + ((collections !== "")?"</br><strong>Colecciones:</strong></br>"+collections:"") );
+								}
+							});
+						}
+					});
+					map.addLayer(self.densityCellsPointOneDegree());
+					self.totalGeoOccurrences(totalOccurrences);
+
+					$.getJSON('http://localhost:5000/api/v1.5/occurrence/search?' +urlParams+ '&size=1&facetLimit=10', function(allData) {
+						self.totalOccurrences(allData.count);
+					});
+
+					// Enable download links
+					self.generateURLSpreadsheet();
+				}
+			});
+
+			/*$.ajax({
 				contentType: 'application/json',
 				type: 'POST',
 				url: '/distribution/search',
@@ -718,7 +956,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 
 				},
 				dataType: 'jsonp'
-			});
+			});*/
 		},
 		disableResumeDetail: function() {
 			if(!$("#resumeDetail").is(':hidden')) {
@@ -751,96 +989,152 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 								self.resumeScientificNames.removeAll();
 								_.each(data.counts, function(facet) {
 									canonicals.push(new ResumeCount({name: facet.key, count: facet.doc_count}));
-									self.resumeScientificNames.push(new ResumeScientificName({canonical: facet.key, occurrences: facet.doc_count}));
+									if(facet.key == "") {
+										self.resumeScientificNames.push(new ResumeScientificName({canonical: facet.key, occurrences: facet.doc_count, name: 'No documentado'}));
+									} else {
+										self.resumeScientificNames.push(new ResumeScientificName({canonical: facet.key, occurrences: facet.doc_count, name: facet.key}));	
+									}
 								});
 								break;
 							case "kingdom":
 								self.resumeKingdomNames.removeAll();
 								_.each(data.counts, function(facet) {
 									kingdoms.push(new ResumeCount({name: facet.key, count: facet.doc_count}));
-									self.resumeKingdomNames.push(new ResumeKingdomName({kingdom: facet.key, occurrences: facet.doc_count}));
+									if(facet.key == "") {
+										self.resumeKingdomNames.push(new ResumeKingdomName({kingdom: facet.key, occurrences: facet.doc_count, name: 'No documentado'}));
+									} else {
+										self.resumeKingdomNames.push(new ResumeKingdomName({kingdom: facet.key, occurrences: facet.doc_count, name: facet.key}));
+									}
 								});
 								break;
 							case "provider_name":
 								self.resumeDataProviders.removeAll();
 								_.each(data.counts, function(facet) {
 									providers.push(new ResumeCount({name: facet.key, count: facet.doc_count}));
-									self.resumeDataProviders.push(new ResumeDataProvider({providerName: facet.key, occurrences: facet.doc_count}));
+									if(facet.key == "") {
+										self.resumeDataProviders.push(new ResumeDataProvider({providerName: facet.key, occurrences: facet.doc_count, name: 'No documentado'}));
+									} else {
+										self.resumeDataProviders.push(new ResumeDataProvider({providerName: facet.key, occurrences: facet.doc_count, name: facet.key}));
+									}
 								});
 								break;
 							case "resource_name":
 								self.resumeDataResources.removeAll();
 								_.each(data.counts, function(facet) {
 									resources.push(new ResumeCount({name: facet.key, count: facet.doc_count}));
-									self.resumeDataResources.push(new ResumeDataResource({resourceName: facet.key, occurrences: facet.doc_count}));
+									if(facet.key == "") {
+										self.resumeDataResources.push(new ResumeDataResource({resourceName: facet.key, occurrences: facet.doc_count, name: 'No documentado'}));
+									} else {
+										self.resumeDataResources.push(new ResumeDataResource({resourceName: facet.key, occurrences: facet.doc_count, name: facet.key}));
+									}
 								});
 								break;
 							case "phylum":
 								self.resumePhylumNames.removeAll();
 								_.each(data.counts, function(facet) {
 									phylums.push(new ResumeCount({name: facet.key, count: facet.doc_count}));
-									self.resumePhylumNames.push(new ResumePhylumName({phylum: facet.key, occurrences: facet.doc_count}));
+									if(facet.key == "") {
+										self.resumePhylumNames.push(new ResumePhylumName({phylum: facet.key, occurrences: facet.doc_count, name: 'No documentado'}));
+									} else {
+										self.resumePhylumNames.push(new ResumePhylumName({phylum: facet.key, occurrences: facet.doc_count, name: facet.key}));
+									}
 								});
 								break;
 							case "class":
 								self.resumeClassNames.removeAll();
 								_.each(data.counts, function(facet) {
 									taxonClasses.push(new ResumeCount({name: facet.key, count: facet.doc_count}));
-									self.resumeClassNames.push(new ResumeClassName({nameClass: facet.key, occurrences: facet.doc_count}));
+									if(facet.key == "") {
+										self.resumeClassNames.push(new ResumeClassName({nameClass: facet.key, occurrences: facet.doc_count, name: 'No documentado'}));
+									} else {
+										self.resumeClassNames.push(new ResumeClassName({nameClass: facet.key, occurrences: facet.doc_count, name: facet.key}));
+									}
 								});
 								break;
 							case "order":
 								self.resumeOrderNames.removeAll();
 								_.each(data.counts, function(facet) {
 									order_ranks.push(new ResumeCount({name: facet.key, count: facet.doc_count}));
-									self.resumeOrderNames.push(new ResumeOrderName({order_rank: facet.key, occurrences: facet.doc_count}));
+									if(facet.key == "") {
+										self.resumeOrderNames.push(new ResumeOrderName({order_rank: facet.key, occurrences: facet.doc_count, name: 'No documentado'}));
+									} else {
+										self.resumeOrderNames.push(new ResumeOrderName({order_rank: facet.key, occurrences: facet.doc_count, name: facet.key}));
+									}
 								});
 								break;
 							case "family":
 								self.resumeFamilyNames.removeAll();
 								_.each(data.counts, function(facet) {
 									families.push(new ResumeCount({name: facet.key, count: facet.doc_count}));
-									self.resumeFamilyNames.push(new ResumeFamilyName({family: facet.key, occurrences: facet.doc_count}));
+									if(facet.key == "") {
+										self.resumeFamilyNames.push(new ResumeFamilyName({family: facet.key, occurrences: facet.doc_count, name: 'No documentado'}));
+									} else {
+										self.resumeFamilyNames.push(new ResumeFamilyName({family: facet.key, occurrences: facet.doc_count, name: facet.key}));
+									}
 								});
 								break;
 							case "genus":
 								self.resumeGenusNames.removeAll();
 								_.each(data.counts, function(facet) {
 									genuses.push(new ResumeCount({name: facet.key, count: facet.doc_count}));
-									self.resumeGenusNames.push(new ResumeGenusName({genus: facet.key, occurrences: facet.doc_count}));
+									if(facet.key == "") {
+										self.resumeGenusNames.push(new ResumeGenusName({genus: facet.key, occurrences: facet.doc_count, name: 'No documentado'}));
+									} else {
+										self.resumeGenusNames.push(new ResumeGenusName({genus: facet.key, occurrences: facet.doc_count, name: facet.key}));
+									}
 								});
 								break;
 							case "specie":
 								self.resumeSpeciesNames.removeAll();
 								_.each(data.counts, function(facet) {
 									species.push(new ResumeCount({name: facet.key, count: facet.doc_count}));
-									self.resumeSpeciesNames.push(new ResumeSpecieName({species: facet.key, occurrences: facet.doc_count}));
+									if(facet.key == "") {
+										self.resumeSpeciesNames.push(new ResumeSpecieName({species: facet.key, occurrences: facet.doc_count, name: 'No documentado'}));
+									} else {
+										self.resumeSpeciesNames.push(new ResumeSpecieName({species: facet.key, occurrences: facet.doc_count, name: facet.key}));
+									}
 								});
 								break;
 							case "country":
 								self.resumeCountries.removeAll();
 								_.each(data.counts, function(facet) {
 									countries.push(new ResumeCount({name: facet.key, count: facet.doc_count}));
-									self.resumeCountries.push(new ResumeCountry({countryName: facet.key, occurrences: facet.doc_count}));
+									if(facet.key == "") {
+										self.resumeCountries.push(new ResumeCountry({countryName: facet.key, occurrences: facet.doc_count, name: 'No documentado'}));
+									} else {
+										self.resumeCountries.push(new ResumeCountry({countryName: facet.key, occurrences: facet.doc_count, name: facet.key}));
+									}
 								});
 								break;
 							case "department":
 								self.resumeDepartments.removeAll();
 								_.each(data.counts, function(facet) {
 									departments.push(new ResumeCount({name: facet.key, count: facet.doc_count}));
-									self.resumeDepartments.push(new ResumeDepartment({departmentName: facet.key, occurrences: facet.doc_count}));
+									if(facet.key == "") {
+										self.resumeDepartments.push(new ResumeDepartment({departmentName: facet.key, occurrences: facet.doc_count, name: 'No documentado'}));
+									} else {
+										self.resumeDepartments.push(new ResumeDepartment({departmentName: facet.key, occurrences: facet.doc_count, name: facet.key}));
+									}
 								});
 								break;
 							case "institution_code":
 								self.resumeInstitutionCodes.removeAll();
 								_.each(data.counts, function(facet) {
-									self.resumeInstitutionCodes.push(new ResumeInstitutionCode({institutionCode: facet.key, occurrences: facet.doc_count}));
+									if(facet.key == "") {
+										self.resumeInstitutionCodes.push(new ResumeInstitutionCode({institutionCode: facet.key, occurrences: facet.doc_count, name: 'No documentado'}));
+									} else {
+										self.resumeInstitutionCodes.push(new ResumeInstitutionCode({institutionCode: facet.key, occurrences: facet.doc_count, name: facet.key}));
+									}
 								});
 								break;
 							case "collection_name":
 								self.resumeCollectionCodes.removeAll();
 								_.each(data.counts, function(facet) {
-									self.resumeCollectionCodes.push(new ResumeCollectionCode({collectionCode: facet.key, occurrences: facet.doc_count}));
+									if(facet.key == "") {
+										self.resumeCollectionCodes.push(new ResumeCollectionCode({collectionCode: facet.key, occurrences: facet.doc_count, name: 'No documentado'}));
+									} else {
+										self.resumeCollectionCodes.push(new ResumeCollectionCode({collectionCode: facet.key, occurrences: facet.doc_count, name: facet.key}));
+									}
 								});
 								break;
 						}
@@ -956,19 +1250,19 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		addTaxonNameFromHelp: function(parent, selectedFilter) {
 			var self = parent;
 			if(self.selectedSubject() == 100)
-				self.selectedTaxonNames.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.kingdom, textName: "kingdom", id: selectedFilter.id}));
+				self.selectedTaxonNames.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.kingdom, textName: "reino", id: selectedFilter.id}));
 			if(self.selectedSubject() == 101)
-				self.selectedTaxonNames.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.phylum, textName: "phylum", id: selectedFilter.id}));
+				self.selectedTaxonNames.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.phylum, textName: "filo", id: selectedFilter.id}));
 			if(self.selectedSubject() == 102)
-				self.selectedTaxonNames.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.nameClass, textName: "class", id: selectedFilter.id}));
+				self.selectedTaxonNames.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.nameClass, textName: "clase", id: selectedFilter.id}));
 			if(self.selectedSubject() == 103)
-				self.selectedTaxonNames.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.order_rank, textName: "order", id: selectedFilter.id}));
+				self.selectedTaxonNames.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.order_rank, textName: "orden", id: selectedFilter.id}));
 			if(self.selectedSubject() == 104)
-				self.selectedTaxonNames.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.family, textName: "family", id: selectedFilter.id}));
+				self.selectedTaxonNames.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.family, textName: "familia", id: selectedFilter.id}));
 			if(self.selectedSubject() == 105)
-				self.selectedTaxonNames.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.genus, textName: "genus", id: selectedFilter.id}));
+				self.selectedTaxonNames.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.genus, textName: "género", id: selectedFilter.id}));
 			if(self.selectedSubject() == 106)
-				self.selectedTaxonNames.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.species, textName: "species", id: selectedFilter.id}));
+				self.selectedTaxonNames.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.species, textName: "especie", id: selectedFilter.id}));
 			self.totalFilters(self.totalFilters()+1);
 		},
 		// Removes Taxon filter
