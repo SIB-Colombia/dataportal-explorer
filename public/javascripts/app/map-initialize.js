@@ -383,7 +383,7 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 		}
 	};
 	
-	var drawControl = new L.Control.Draw({
+	/*var drawControl = new L.Control.Draw({
 		draw: {
 			polygon: {
 				allowIntersection: false, // Restricts shapes to simple polygons
@@ -415,7 +415,7 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 		edit: {
 			featureGroup: featureGroup
 		}
-	}).addTo(map);
+	}).addTo(map);*/
 
 	// Zoom slider control
 	L.control.zoomslider({

@@ -142,7 +142,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 
 		  map.on('moveend', function(e) {
 		  	var data = ko.toJSON(self.fillSearchConditions());
-		  	if(e.target._zoom >= 13 && !sidebar.isVisible()) {
+		  	/*if(e.target._zoom >= 13 && !sidebar.isVisible()) {
 		  		if(map.hasLayer(markers)) {
 						map.removeLayer(markers);
 						markers.clearLayers();
@@ -183,7 +183,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 						},
 						dataType: 'jsonp'
 					});
-		  	}
+		  	}*/
 		  });
 
 			$('#distributionCells').click(function () {
@@ -364,7 +364,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		},
 		loadCountyDropdownData: function() {
 			var self = this;
-			$.getJSON("http://localhost:5000/api/v1.5/registry/county", function(allData) {
+			$.getJSON("http://api.biodiversidad.co/api/v1.5/registry/county", function(allData) {
 				var newCounties = ko.utils.arrayMap(allData, function(county) {
 					return new County({departmentName: county.department_name, countyName: county.county_name, isoCountyCode: county.iso_county_code});
 				});
@@ -375,18 +375,18 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			var debug = {};
 			var self = this;
 
-			$.getJSON("http://localhost:5000/api/v1.5/occurrence/count?isGeoreferenced=true", function(data) {
+			$.getJSON("http://api.biodiversidad.co/api/v1.5/occurrence/count?isGeoreferenced=true", function(data) {
 				self.totalGeoOccurrences(data.count);
 			});
 
-			$.getJSON("http://localhost:5000/api/v1.5/occurrence/count", function(data) {
+			$.getJSON("http://api.biodiversidad.co/api/v1.5/occurrence/count", function(data) {
 				self.totalOccurrences(data.count);
 			});
 
 			$.ajax({
 				contentType: 'application/json',
 				type: 'GET',
-				url: 'http://localhost:5000/api/v1.5/occurrence/grid?precision=5&responseType=geojson&scale=logarithmic&color=%23ff2600&colorMethod=gradient',
+				url: 'http://api.biodiversidad.co/api/v1.5/occurrence/grid?precision=5&responseType=geojson&scale=logarithmic&color=%23ff2600&colorMethod=gradient',
 				beforeSend: function() {
 					self.hideMapAreaWithSpinner();
 				},
@@ -416,7 +416,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 							$.ajax({
 								contentType: 'application/json',
 								type: 'GET',
-								url: 'http://localhost:5000/api/v1.5/occurrence/search?latitudeTopLeft='+a.layer._latlngs[1].lat+'&longitudeTopLeft='+a.layer._latlngs[1].lng+'&latitudeBottomRight='+a.layer._latlngs[3].lat+'&longitudeBottomRight='+a.layer._latlngs[3].lng+'&size=10&facet%5B%5D=provider_name&facet%5B%5D=resource_name&facet%5B%5D=basis_of_record&facet%5B%5D=collection_name&facetLimit=1000',
+								url: 'http://api.biodiversidad.co/api/v1.5/occurrence/search?latitudeTopLeft='+a.layer._latlngs[1].lat+'&longitudeTopLeft='+a.layer._latlngs[1].lng+'&latitudeBottomRight='+a.layer._latlngs[3].lat+'&longitudeBottomRight='+a.layer._latlngs[3].lng+'&size=10&facet%5B%5D=provider_name&facet%5B%5D=resource_name&facet%5B%5D=basis_of_record&facet%5B%5D=collection_name&facetLimit=1000',
 								success: function(results) {
 									var resources = "";
 									var providers = "";
@@ -799,7 +799,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			$.ajax({
 				contentType: 'application/json',
 				type: 'GET',
-				url: 'http://localhost:5000/api/v1.5/occurrence/grid?'+urlParams+'&precision=5&responseType=geojson&scale=logarithmic&color=%23ff2600&colorMethod=gradient',
+				url: 'http://api.biodiversidad.co/api/v1.5/occurrence/grid?'+urlParams+'&precision=5&responseType=geojson&scale=logarithmic&color=%23ff2600&colorMethod=gradient',
 				beforeSend: function() {
 					self.hideMapAreaWithSpinner();
 				},
@@ -830,7 +830,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 							$.ajax({
 								contentType: 'application/json',
 								type: 'GET',
-								url: 'http://localhost:5000/api/v1.5/occurrence/search?'+urlParams+'&latitudeTopLeft='+a.layer._latlngs[1].lat+'&longitudeTopLeft='+a.layer._latlngs[1].lng+'&latitudeBottomRight='+a.layer._latlngs[3].lat+'&longitudeBottomRight='+a.layer._latlngs[3].lng+'&size=10&facet%5B%5D=provider_name&facet%5B%5D=resource_name&facet%5B%5D=basis_of_record&facet%5B%5D=collection_name&facetLimit=1000',
+								url: 'http://api.biodiversidad.co/api/v1.5/occurrence/search?'+urlParams+'&latitudeTopLeft='+a.layer._latlngs[1].lat+'&longitudeTopLeft='+a.layer._latlngs[1].lng+'&latitudeBottomRight='+a.layer._latlngs[3].lat+'&longitudeBottomRight='+a.layer._latlngs[3].lng+'&size=10&facet%5B%5D=provider_name&facet%5B%5D=resource_name&facet%5B%5D=basis_of_record&facet%5B%5D=collection_name&facetLimit=1000',
 								success: function(results) {
 									var resources = "";
 									var providers = "";
@@ -875,7 +875,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					map.addLayer(self.densityCellsPointOneDegree());
 					self.totalGeoOccurrences(totalOccurrences);
 
-					$.getJSON('http://localhost:5000/api/v1.5/occurrence/search?' +urlParams+ '&size=1&facetLimit=10', function(allData) {
+					$.getJSON('http://api.biodiversidad.co/api/v1.5/occurrence/search?' +urlParams+ '&size=1&facetLimit=10', function(allData) {
 						self.totalOccurrences(allData.count);
 					});
 
@@ -967,7 +967,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		getSearchResumeData: function() {
 			var self = this;
 			if(typeof UrlDataMapping.filterSubject[self.selectedSubject()] !== "undefined") {
-				$.getJSON('http://localhost:5000/api/v1.5/occurrence/search?size=2&facet%5B%5D=scientificName&facet%5B%5D=kingdom&facet%5B%5D=phylum&facet%5B%5D=class&facet%5B%5D=order&facet%5B%5D=family&facet%5B%5D=genus&facet%5B%5D=specie&facet%5B%5D=country&facet%5B%5D=department&facet%5B%5D=county&facet%5B%5D=provider_name&facet%5B%5D=resource_name&facet%5B%5D=institution_code&facet%5B%5D=collection_name&facetLimit=10'+((self.objectNameValue())?"&"+UrlDataMapping.filterSubject[self.selectedSubject()].resumeApi15Condition+"="+self.objectNameValue():""), function(allData) {
+				$.getJSON('http://api.biodiversidad.co/api/v1.5/occurrence/search?size=2&facet%5B%5D=scientificName&facet%5B%5D=kingdom&facet%5B%5D=phylum&facet%5B%5D=class&facet%5B%5D=order&facet%5B%5D=family&facet%5B%5D=genus&facet%5B%5D=specie&facet%5B%5D=country&facet%5B%5D=department&facet%5B%5D=county&facet%5B%5D=provider_name&facet%5B%5D=resource_name&facet%5B%5D=institution_code&facet%5B%5D=collection_name&facetLimit=10'+((self.objectNameValue())?"&"+UrlDataMapping.filterSubject[self.selectedSubject()].resumeApi15Condition+"="+self.objectNameValue():""), function(allData) {
 					var canonicals = ko.observableArray();
 					var kingdoms = ko.observableArray();
 					var providers = ko.observableArray();
@@ -1699,7 +1699,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		startDataDownload: function() {
 			var self = this;
 			self.validateDownloadForm(false);
-			if(!self.downloadFormValidationError() && self.downloadEmail() !== "" && self.downloadEmailVerification() !== "") {
+			/*if(!self.downloadFormValidationError() && self.downloadEmail() !== "" && self.downloadEmailVerification() !== "") {
 				if($('#recaptcha_response_field').val() !== "") {
 					// Form is valid a we have a filled captcha
 					var request = {
@@ -1749,7 +1749,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			} else {
 				self.downloadFormValidationError(true);
 				self.downloadFormValidationErrorMessage("Por favor complete los campos obligatorios para iniciar la descarga.");
-			}
+			}*/
 		}
 	});
 
