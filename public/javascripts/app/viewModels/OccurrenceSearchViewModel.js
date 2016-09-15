@@ -1,9 +1,9 @@
 define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map-initialize", "app/models/occurrence", "app/models/resumeInfo", "app/models/resumeCount", "app/models/resumeScientificName", "app/models/resumeCommonName", "app/models/resumeKingdomName", "app/models/resumePhylumName", "app/models/resumeClassName", "app/models/resumeOrderName", "app/models/resumeFamilyName", "app/models/resumeGenusName", "app/models/resumeSpecieName", "app/models/resumeDataProvider", "app/models/resumeDataResource", "app/models/resumeInstitutionCode", "app/models/resumeCollectionCode", "app/models/resumeCountry", "app/models/resumeDepartment", "app/models/resumeCounty", "app/models/resumeParamo", "app/models/resumeMarineZone", "app/models/county", "app/models/paramo", "app/models/marineZone", "app/models/coordinate", "app/models/radialCoordinate", "app/models/filterSelected", "app/config/urlDataMapping", "select2", "knockoutKendoUI", "Leaflet", "jqueryUI", "bootstrap", "kendoSpanishCulture", "range-slider", "LeafletMarkerCluster", "LeafletMapboxVectorTile"], function($, ko, _, BaseViewModel, map, Occurrence, ResumeInfo, ResumeCount, ResumeScientificName, ResumeCommonName, ResumeKingdomName, ResumePhylumName, ResumeClassName, ResumeOrderName, ResumeFamilyName, ResumeGenusName, ResumeSpecieName, ResumeDataProvider, ResumeDataResource, ResumeInstitutionCode, ResumeCollectionCode, ResumeCountry, ResumeDepartment, ResumeCounty, ResumeParamo, ResumeMarineZone, County, Paramo, MarineZone, Coordinate, RadialCoordinate, FilterSelected, UrlDataMapping, select2) {
 	var OccurrenceSearchViewModel = function() {
 		var self = this;
-		self.densityCellsPointOneDegree = new L.FeatureGroup();
 
-		self.densityCellsPointOneDegreeCache = new L.FeatureGroup();
+		self.densityCells = new L.FeatureGroup();
+		self.densityCellsCache = new L.FeatureGroup();
 
 		// Grid table data
 		self.gridItems = [];
@@ -127,7 +127,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			map.on('zoomend', function(e) {
 				if(e.target._zoom >= 13) {
 					$("#densityInstructionsCellSelection").removeClass("occult-element");
-					map.removeLayer(self.densityCellsPointOneDegree());
+					map.removeLayer(self.densityCells());
 				} else {
 					if(map.hasLayer(markers)) {
 						map.removeLayer(markers);
@@ -136,7 +136,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					$("#occurrenceRecord").prop('checked', true);
 					$("#densityInstructionsCellSelection").addClass("occult-element");
 
-					map.addLayer(self.densityCellsPointOneDegree());
+					map.addLayer(self.densityCells());
 				}
 		  });
 
@@ -248,7 +248,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			var timeout;
 
 			var searchParamsResume = function() {
-				self.predicateOptions([{value: 'eq', name: 'es'}]);
 				self.hideResumeContainer();
 				self.getSearchResumeData();
 			};
@@ -371,16 +370,23 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				self.countyDropdown.push.apply(self.countyDropdown, newCounties);
 			});
 		},
+		formatNumber: function(n) {
+    	return n.toFixed(0).replace(/./g, function(c, i, a) {
+    		return i > 0 && c !== "," && (a.length - i) % 3 === 0 ? "." + c : c;
+    	});
+    },
 		loadCellDensity: function() {
 			var debug = {};
 			var self = this;
 
 			$.getJSON("http://api.biodiversidad.co/api/v1.5/occurrence/count?isGeoreferenced=true", function(data) {
-				self.totalGeoOccurrences(data.count);
+				self.totalGeoOccurrences(self.formatNumber(data.count));
+				self.totalGeoOccurrencesCache(self.formatNumber(data.count));
 			});
 
 			$.getJSON("http://api.biodiversidad.co/api/v1.5/occurrence/count", function(data) {
-				self.totalOccurrences(data.count);
+				self.totalOccurrences(self.formatNumber(data.count));
+				self.totalOccurrencesCache(self.formatNumber(data.count));
 			});
 
 			$.ajax({
@@ -394,8 +400,8 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					//self.showMapAreaWithSpinner();
 				},
 				success: function(returnedData) {
-					map.removeLayer(self.densityCellsPointOneDegree());
-					self.densityCellsPointOneDegree(new L.geoJson(returnedData, {
+					//map.removeLayer(self.densityCells());
+					self.densityCells(new L.geoJson(returnedData, {
 						style: function(feature) {
 							return {
 								color: feature.properties.fill,
@@ -411,7 +417,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 							}
 						}
 					}));
-					self.densityCellsPointOneDegree().on('click', function (a) {
+					self.densityCells().on('click', function (a) {
 						if (a.layer.feature.properties) {
 							$.ajax({
 								contentType: 'application/json',
@@ -458,8 +464,9 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 							});
 						}
 					});
-					map.addLayer(self.densityCellsPointOneDegree());
+					map.addLayer(self.densityCells());
 					self.showMapAreaWithSpinner();
+					jQuery.extend(self.densityCellsCache(),self.densityCells());
 				}
 			});
 		},
@@ -522,9 +529,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				});
 			} else if(self.selectedSubject() == 39) {
 				// Get countries resume data
-				//self.getSearchResumeData();
-				self.isObjectNameHelpSelected = ko.observable(true);
-				//$("#filtersContainerHelp").animate({width: 'toggle'}, 500, "swing");
 				$("#dropDownCounty").select2({
 					placeholder: "Seleccione un municipio"
 				});
@@ -629,7 +633,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		enableFilterHelp: function() {
 			var self = this;
 			self.disableResumeDetail();
-			if((self.isObjectNameHelpSelected() === false || $("#filtersContainerHelp").is(':hidden')) && self.selectedSubject() != 1 && self.selectedSubject() != 2 && self.selectedSubject() != 34 && self.selectedSubject() != 35 && self.selectedSubject() != 21 && self.selectedSubject() != 14) {
+			if((self.isObjectNameHelpSelected() === false || $("#filtersContainerHelp").is(':hidden')) && self.selectedSubject() != 1 && self.selectedSubject() != 2 && self.selectedSubject() != 34 && self.selectedSubject() != 35 && self.selectedSubject() != 39 && self.selectedSubject() != 21 && self.selectedSubject() != 14) {
 				self.isObjectNameHelpSelected = ko.observable(true);
 				$("#filtersContainerHelp").animate({width: 'toggle'}, 500, "swing");
 			}
@@ -758,9 +762,11 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			}
 			if(self.selectedAltitudes().length !== 0) {
 				response['altitudes'] = self.selectedAltitudes();
+				console.log(self.selectedAltitudes());
 			}
 			if(self.selectedDeeps().length !== 0) {
 				response['deeps'] = self.selectedDeeps();
+				console.log(self.selectedDeeps());
 			}
 			if(self.selectedCoordinate().length !== 0) {
 				response['coordinates'] = self.selectedCoordinate();
@@ -774,7 +780,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			if(self.selectedResources().length !== 0) {
 				response['resources'] = self.selectedResources();
 				self.selectedResources().forEach(function(element, index, array) {
-					console.log(element);
 					urlParams = urlParams + ((urlParams.length == 0)?"":"&") + "resourceName=" + element.textObject;
 				});
 			}
@@ -807,8 +812,8 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					self.showMapAreaWithSpinner();
 				},
 				success: function(returnedData) {
-					map.removeLayer(self.densityCellsPointOneDegree());
-					self.densityCellsPointOneDegree(new L.geoJson(returnedData, {
+					map.removeLayer(self.densityCells());
+					self.densityCells(new L.geoJson(returnedData, {
 						style: function(feature) {
 							return {
 								color: feature.properties.fill,
@@ -825,7 +830,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 							}
 						}
 					}));
-					self.densityCellsPointOneDegree().on('click', function (a) {
+					self.densityCells().on('click', function (a) {
 						if (a.layer.feature.properties) {
 							$.ajax({
 								contentType: 'application/json',
@@ -872,12 +877,14 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 							});
 						}
 					});
-					map.addLayer(self.densityCellsPointOneDegree());
-					self.totalGeoOccurrences(totalOccurrences);
+					map.addLayer(self.densityCells());
+					self.totalGeoOccurrences(self.formatNumber(totalOccurrences));
 
 					$.getJSON('http://api.biodiversidad.co/api/v1.5/occurrence/search?' +urlParams+ '&size=1&facetLimit=10', function(allData) {
-						self.totalOccurrences(allData.count);
+						self.totalOccurrences(self.formatNumber(allData.count));
 					});
+
+					self.isFiltered(true);
 
 					// Enable download links
 					self.generateURLSpreadsheet();
@@ -1551,13 +1558,13 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		},
 		removeFilter: function() {
 			var self = this;
-			map.removeLayer(self.densityCellsPointOneDegree());
+			map.removeLayer(self.densityCells());
 
-			jQuery.extend(self.densityCellsPointOneDegree(),self.densityCellsPointOneDegreeCache());
+			jQuery.extend(self.densityCells(),self.densityCellsCache());
 
-			map.addLayer(self.densityCellsPointOneDegree());
+			map.addLayer(self.densityCells());
 			self.totalGeoOccurrences(self.totalGeoOccurrencesCache());
-			self.currentActiveDistribution("pointOneDegree");
+			self.totalOccurrences(self.totalOccurrencesCache());
 
 			self.isFiltered(false);
 			self.isRectangle(false);

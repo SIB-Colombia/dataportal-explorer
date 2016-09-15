@@ -514,11 +514,11 @@ block filterWindow
 										option(value='5') País
 										option(value='38') Departamento
 										option(value='39') Municipio
-										option(value='1') Latitud
-										option(value='2') Longitud
+										///option(value='1') Latitud
+										///option(value='2') Longitud
 										option(value='34') Altitud
 										option(value='35') Profundidad
-										option(value='28') Estado de las coordenadas
+										///option(value='28') Estado de las coordenadas
 									optgroup(label='Recursos de datos')
 										option(value='25') Publicador de datos
 										option(value='24') Recurso de datos
@@ -1021,7 +1021,7 @@ block filterWindow
 						// Include Latitude filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedLatitudes, visible: selectedLatitudes().length > 0')
 							li(class='alteredFilter')
-								span(data-bind='visible: $index() == 0') Latitud
+								span(data-bind='visible: $index() == 0') Latitud&nbsp;
 									span(data-bind='visible: predicate == "eq"') es&nbsp;
 									span(data-bind='visible: predicate == "gt"') mayor que&nbsp;
 									span(data-bind='visible: predicate == "lt"') menor que&nbsp;
@@ -1035,7 +1035,7 @@ block filterWindow
 						// Include longitude filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedLongitudes, visible: selectedLongitudes().length > 0')
 							li(class='alteredFilter')
-								span(data-bind='visible: $index() == 0') Longitud
+								span(data-bind='visible: $index() == 0') Longitud&nbsp;
 									span(data-bind='visible: predicate == "eq"') es&nbsp;
 									span(data-bind='visible: predicate == "gt"') mayor que&nbsp;
 									span(data-bind='visible: predicate == "lt"') menor que&nbsp;
@@ -1049,11 +1049,11 @@ block filterWindow
 						// Include altitude filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedAltitudes, visible: selectedAltitudes().length > 0')
 							li(class='alteredFilter')
-								span(data-bind='visible: $index() == 0') Altitud
+								span(data-bind='visible: $index() == 0') Altitud&nbsp;
 									span(data-bind='visible: predicate == "eq"') es&nbsp;
 									span(data-bind='visible: predicate == "gt"') mayor que&nbsp;
 									span(data-bind='visible: predicate == "lt"') menor que&nbsp;
-								span(data-bind='visible: $index() != 0') y
+								span(data-bind='visible: $index() != 0') o&nbsp;
 									span(data-bind='visible: predicate == "eq"') es&nbsp;
 									span(data-bind='visible: predicate == "gt"') mayor que&nbsp;
 									span(data-bind='visible: predicate == "lt"') menor que&nbsp;
@@ -1063,11 +1063,11 @@ block filterWindow
 						// Include deep filters
 						ul(style="display: none", class='filterItem', data-bind='foreach: selectedDeeps, visible: selectedDeeps().length > 0')
 							li(class='alteredFilter')
-								span(data-bind='visible: $index() == 0') Profundidad
+								span(data-bind='visible: $index() == 0') Profundidad&nbsp;
 									span(data-bind='visible: predicate == "eq"') es&nbsp;
 									span(data-bind='visible: predicate == "gt"') mayor que&nbsp;
 									span(data-bind='visible: predicate == "lt"') menor que&nbsp;
-								span(data-bind='visible: $index() != 0') y
+								span(data-bind='visible: $index() != 0') o&nbsp;
 									span(data-bind='visible: predicate == "eq"') es
 									span(data-bind='visible: predicate == "gt"') mayor que&nbsp;
 									span(data-bind='visible: predicate == "lt"') menor que&nbsp;

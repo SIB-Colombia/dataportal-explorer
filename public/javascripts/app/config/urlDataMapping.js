@@ -79,11 +79,6 @@ define(function() {
 				"resumeApiURL": "/rest/occurrences/resume/departments/name/",
 				"resumeApi15Condition": "departmentName"
 			},
-			"39": {
-				"name": "counties",
-				"resumeApiURL": "/rest/occurrences/resume/counties/name/",
-				"resumeApi15Condition": "countyName"
-			},
 			"40": {
 				"name": "paramos",
 				"resumeApiURL": "/rest/occurrences/resume/paramos/name/"
