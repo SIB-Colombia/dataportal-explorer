@@ -304,14 +304,14 @@ block filterWindow
 				.contentFiltersContainerHelpContainer(data-bind="foreach: resumeInstitutionCodes, visible: resumeInstitutionCodes().length > 0 && selectedSubject() == 12")
 					.item
 						span(data-bind="html: institutionCodeWithBold")
-						a(href='#', title='Adicionar este filtro', data-bind='')
+						a(href='#', title='Adicionar este filtro', data-bind='click: function () { $parent.addDataInstitutionCodeFromHelp($parent, this); }')
 							img(alt='Adicionar este filtro', src='/images/icons/redplus.png')
 						em(data-bind="text: occurrences")
 				// Collection codes resume data
 				.contentFiltersContainerHelpContainer(data-bind="foreach: resumeCollectionCodes, visible: resumeCollectionCodes().length > 0 && selectedSubject() == 13")
 					.item
 						span(data-bind="html: collectionCodeWithBold")
-						a(href='#', title='Adicionar este filtro', data-bind='')
+						a(href='#', title='Adicionar este filtro', data-bind='click: function () { $parent.addDataCollectionNameFromHelp($parent, this); }')
 							img(alt='Adicionar este filtro', src='/images/icons/redplus.png')
 						em(data-bind="text: occurrences")
 				// Countries resume data
@@ -514,22 +514,22 @@ block filterWindow
 										option(value='5') País
 										option(value='38') Departamento
 										option(value='39') Municipio
-										///option(value='1') Latitud
-										///option(value='2') Longitud
+										//-option(value='1') Latitud
+										//-option(value='2') Longitud
 										option(value='34') Altitud
 										option(value='35') Profundidad
-										///option(value='28') Estado de las coordenadas
+										//-option(value='28') Estado de las coordenadas
 									optgroup(label='Recursos de datos')
 										option(value='25') Publicador de datos
 										option(value='24') Recurso de datos
 									optgroup(label='Otros Detalles')
-										option(value='4') Fecha de la cita
-										option(value='33') Rango de años
-										option(value='21') Año
-										option(value='22') Mes
-										option(value='12') Código de la institución
-										option(value='13') Código de la colección
-										option(value='14') Número de catálogo
+										//-option(value='4') Fecha de la cita
+										//-option(value='33') Rango de años
+										//-option(value='21') Año
+										//-option(value='22') Mes
+										option(value='12') Nombre de la institución
+										option(value='13') Nombre de la colección
+										//-option(value='14') Número de catálogo
 							span(id='predicate', class='predicate')
 								select.form-control(name='c[0].p', id='newFilterPredicate', data-bind="value: selectedPredicate, options: predicateOptions, optionsText: 'name', optionsValue: 'value'")
 							span(id='newFilterValue', class='value')
@@ -1096,6 +1096,22 @@ block filterWindow
 								span(data-bind='visible: $index() != 0') o es&nbsp;
 								span(data-bind='text: textObject')
 								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeDataResourceName($parent, this); }')
+									img(alt='Quitar este filtro', src='/images/grey_minus.png')
+						// Include data institution names
+						ul(style="display: none", class='filterItem', data-bind='foreach: selectedInstitutionCodes, visible: selectedInstitutionCodes().length > 0')
+							li(class='alteredFilter')
+								span(data-bind='visible: $index() == 0') Nombre de la instituticón es&nbsp;
+								span(data-bind='visible: $index() != 0') o es&nbsp;
+								span(data-bind='text: textObject')
+								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeDataInstitutionCode($parent, this); }')
+									img(alt='Quitar este filtro', src='/images/grey_minus.png')
+						// Include data collection names
+						ul(style="display: none", class='filterItem', data-bind='foreach: selectedCollectionNames, visible: selectedCollectionNames().length > 0')
+							li(class='alteredFilter')
+								span(data-bind='visible: $index() == 0') Nombre de la colección es&nbsp;
+								span(data-bind='visible: $index() != 0') o es&nbsp;
+								span(data-bind='text: textObject')
+								a(href='#', title='Quitar este filtro', data-bind='click: function () { $parent.removeDataCollectionName($parent, this); }')
 									img(alt='Quitar este filtro', src='/images/grey_minus.png')
 						// Include poligonal coordinates data
 						ul(style="display: none", class='filterItem', data-bind='visible: selectedOnMapPoligonCoordinates().length > 0')

@@ -78,7 +78,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		self.selectedYears = [];
 		self.selectedMonths = [];
 		self.selectedInstitutionCodes = [];
-		self.selectedCollectionCodes = [];
+		self.selectedCollectionNames = [];
 		self.selectedCatalogNumbers = [];
 		self.selectedOnMapPoligonCoordinates = [];
 		self.selectedOnMapRadialCoordinates = [];
@@ -691,6 +691,12 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				} else if(self.selectedSubject() == 24) {
 					// Adding data resource filter
 					self.addDataResourceName();
+				} else if(self.selectedSubject() == 12) {
+					// Adding data institution name filter
+					self.addDataInstitutionCode();
+				} else if(self.selectedSubject() == 13) {
+					// Adding data collection name filter
+					self.addDataCollectionName();
 				}
 			}
 		},
@@ -761,12 +767,60 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				response['longitudes'] = self.selectedLongitudes();
 			}
 			if(self.selectedAltitudes().length !== 0) {
+				var altitudeEq = "";
+				var altitudeGTE = "";
+				var altitudeLTE = "";
 				response['altitudes'] = self.selectedAltitudes();
-				console.log(self.selectedAltitudes());
+				self.selectedAltitudes().forEach(function(element, index, array) {
+					switch (element.predicate) {
+						case 'eq':
+							altitudeEq = altitudeEq + ((altitudeEq.length == 0)?"":",") + element.textObject;
+							break;
+						case 'gt':
+							altitudeGTE = altitudeGTE + ((altitudeGTE.length == 0)?"":",") + element.textObject;
+							break;
+						case 'lt':
+							altitudeLTE = altitudeLTE + ((altitudeLTE.length == 0)?"":",") + element.textObject;
+							break;
+					}
+				});
+				if(altitudeEq) {
+					urlParams = urlParams + ((urlParams.length == 0)?"":"&") + "elevationEqual=" + "[" + altitudeEq + "]";
+				}
+				if(altitudeGTE) {
+					urlParams = urlParams + ((urlParams.length == 0)?"":"&") + "elevationGreaterOrEqualTo=" + "[" + altitudeGTE + "]";
+				}
+				if(altitudeLTE) {
+					urlParams = urlParams + ((urlParams.length == 0)?"":"&") + "elevationLessOrEqualTo=" + "[" + altitudeLTE + "]";
+				}
 			}
 			if(self.selectedDeeps().length !== 0) {
+				var depthEq = "";
+				var depthGTE = "";
+				var depthLTE = "";
 				response['deeps'] = self.selectedDeeps();
-				console.log(self.selectedDeeps());
+				self.selectedDeeps().forEach(function(element, index, array) {
+					switch (element.predicate) {
+						case 'eq':
+							depthEq = depthEq + ((depthEq.length == 0)?"":",") + element.textObject;
+							break;
+						case 'gt':
+							depthGTE = depthGTE + ((depthGTE.length == 0)?"":",") + element.textObject;
+							break;
+						case 'lt':
+							depthLTE = depthLTE + ((depthLTE.length == 0)?"":",") + element.textObject;
+							break;
+					}
+				});
+				if(depthEq) {
+					urlParams = urlParams + ((urlParams.length == 0)?"":"&") + "depthEqual=" + "[" + depthEq + "]";
+				}
+				if(depthGTE) {
+					urlParams = urlParams + ((urlParams.length == 0)?"":"&") + "depthGreaterOrEqualTo=" + "[" + depthGTE + "]";
+				}
+				if(depthLTE) {
+					urlParams = urlParams + ((urlParams.length == 0)?"":"&") + "depthLessOrEqualTo=" + "[" + depthLTE + "]";
+				}
 			}
 			if(self.selectedCoordinate().length !== 0) {
 				response['coordinates'] = self.selectedCoordinate();
@@ -781,6 +835,18 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 				response['resources'] = self.selectedResources();
 				self.selectedResources().forEach(function(element, index, array) {
 					urlParams = urlParams + ((urlParams.length == 0)?"":"&") + "resourceName=" + element.textObject;
+				});
+			}
+			if(self.selectedInstitutionCodes().length !== 0) {
+				response['institutions'] = self.selectedInstitutionCodes();
+				self.selectedInstitutionCodes().forEach(function(element, index, array) {
+					urlParams = urlParams + ((urlParams.length == 0)?"":"&") + "institutionCode=" + element.textObject;
+				});
+			}
+			if(self.selectedCollectionNames().length !== 0) {
+				response['collections'] = self.selectedCollectionNames();
+				self.selectedCollectionNames().forEach(function(element, index, array) {
+					urlParams = urlParams + ((urlParams.length == 0)?"":"&") + "collectionName=" + element.textObject;
 				});
 			}
 			if(self.selectedOnMapPoligonCoordinates().length !== 0) {
@@ -890,80 +956,6 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					self.generateURLSpreadsheet();
 				}
 			});
-
-			/*$.ajax({
-				contentType: 'application/json',
-				type: 'POST',
-				url: '/distribution/search',
-				data: data,
-				beforeSend: function() {
-					self.hideMapAreaWithSpinner();
-				},
-				complete: function() {
-					self.showMapAreaWithSpinner();
-				},
-				success: function(returnedData) {
-					map.removeLayer(self.densityCellsPointOneDegree());
-
-					self.densityCellsPointOneDegree(new L.FeatureGroup());
-
-					$.each(returnedData.aggregations.centigroup.buckets, function(i, cell) {
-						var idAndLocation = cell.key.split("~~~");
-						var bounds = [[parseFloat(idAndLocation[2]), parseFloat(idAndLocation[3])], [parseFloat(idAndLocation[2])+0.1, parseFloat(idAndLocation[3])+0.1]];
-						var color = "#ff7800";
-						if (cell.doc_count > 0 && cell.doc_count < 10) {
-							color = "#FFFF00";
-						} else if(cell.doc_count > 9 && cell.doc_count < 100) {
-							color = "#FFCC00";
-						} else if(cell.doc_count > 99 && cell.doc_count < 1000) {
-							color = "#FF9900";
-						} else if(cell.doc_count > 999 && cell.doc_count < 10000) {
-							color = "#FF6600";
-						} else if(cell.doc_count > 9999 && cell.doc_count < 100000) {
-							color = "#FF3300";
-						} else if(cell.doc_count > 99999) {
-							color = "#CC0000";
-						}
-						var densityCell = new L.rectangle(bounds, {color: color, weight: 1, fill: true, fillOpacity: 0.5, cellID: idAndLocation[0], pointonecellID: idAndLocation[1]});
-						densityCell.on('click', function (a) {
-							a.target.bindPopup("<strong>No. registros: </strong>" + cell.doc_count + "</br></br><strong>Ubicación:</strong></br>[" + idAndLocation[2] + ", " + idAndLocation[3] + "] [" + (((parseFloat(idAndLocation[2])*10)+1)/10) + ", " + (((parseFloat(idAndLocation[3])*10)+1)/10) + "]").openPopup();
-						});
-						self.densityCellsPointOneDegree().addLayer(densityCell);
-					});
-					self.densityCellsPointOneDegree().on('click', function (a) {
-						data = self.fillSearchConditions();
-						data["cellid"] = a.layer.options.cellID;
-						data["pointonecellid"] = a.layer.options.pointonecellID;
-						data = ko.toJSON(data);
-						$.ajax({
-							contentType: 'application/json',
-							type: 'POST',
-							url: '/distribution/pointonedegree/stats',
-							data: data,
-							beforeSend: function() {
-								self.hideMapAreaWithSpinner();
-							},
-							complete: function() {
-								self.showMapAreaWithSpinner();
-							},
-							success: function(allData) {
-								self.fillCellDensityData(allData, a);
-							},
-							dataType: 'jsonp'
-						});
-					});
-
-					self.totalGeoOccurrences(returnedData.hits.total);
-					self.isFiltered(true);
-
-					// Enable download links
-					self.generateURLSpreadsheet();
-
-					map.addLayer(self.densityCellsPointOneDegree());
-
-				},
-				dataType: 'jsonp'
-			});*/
 		},
 		disableResumeDetail: function() {
 			if(!$("#resumeDetail").is(':hidden')) {
@@ -1423,6 +1415,40 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		removeDataResourceName: function(parent, selectedFilter) {
 			var self = parent;
 			self.selectedResources.remove(selectedFilter);
+			self.totalFilters(self.totalFilters()-1);
+		},
+		// Add data of institution name
+		addDataInstitutionCode: function() {
+			var self = this;
+			self.selectedInstitutionCodes.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: self.objectNameValue(), textName: "Institution code"}));
+			self.totalFilters(self.totalFilters()+1);
+		},
+		addDataInstitutionCodeFromHelp: function(parent, selectedFilter) {
+			var self = parent;
+			self.selectedInstitutionCodes.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.name, textName: "Institution code", id: selectedFilter.institutionCode}));
+			self.totalFilters(self.totalFilters()+1);
+		},
+		// Remove data of institution name
+		removeDataInstitutionCode: function(parent, selectedFilter) {
+			var self = parent;
+			self.selectedInstitutionCodes.remove(selectedFilter);
+			self.totalFilters(self.totalFilters()-1);
+		},
+		// Add data of collection name
+		addDataCollectionName: function() {
+			var self = this;
+			self.selectedCollectionNames.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: self.objectNameValue(), textName: "Collection name"}));
+			self.totalFilters(self.totalFilters()+1);
+		},
+		addDataCollectionNameFromHelp: function(parent, selectedFilter) {
+			var self = parent;
+			self.selectedCollectionNames.push(new FilterSelected({subject: self.selectedSubject(), predicate: self.selectedPredicate(), textObject: selectedFilter.name, textName: "Collection name", id: selectedFilter.collectionCode}));
+			self.totalFilters(self.totalFilters()+1);
+		},
+		// Remove data of collection name
+		removeDataCollectionName: function(parent, selectedFilter) {
+			var self = parent;
+			self.selectedCollectionNames.remove(selectedFilter);
 			self.totalFilters(self.totalFilters()-1);
 		},
 		// Latitude filter parsed text
