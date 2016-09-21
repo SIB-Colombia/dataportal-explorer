@@ -4,7 +4,7 @@ var request = require("request"),
 var PUBLIC_KEY  = '6LdwrAUTAAAAAL7SMgkNMSjvdiMxS0YwaZ8AcSYE',
     PRIVATE_KEY = process.env.CAPTCHASECRET;
 
-exports.startDownload = function(req, res) {
+/*exports.startDownload = function(req, res) {
 	var data = {
 		remoteip:  req.ip || req.ips,
 		challenge: req.body.challenge,
@@ -49,4 +49,4 @@ exports.startDownload = function(req, res) {
 			res.sendStatus(401);
 		}
 	});
-};
+};*/
