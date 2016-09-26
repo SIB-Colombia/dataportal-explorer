@@ -34,7 +34,7 @@
     "jade": "1.11.0",
     "kafka-node": "^0.5.8",
     "method-override": "2.3.6",
-    "moment": "2.15.0",
+    "moment": "2.15.1",
     "morgan": "1.7.0",
     "q": "1.4.1",
     "recaptcha": "^1.2.1",

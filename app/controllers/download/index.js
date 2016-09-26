@@ -4,7 +4,7 @@ var request = require("request"),
 var PUBLIC_KEY  = '6LdwrAUTAAAAAL7SMgkNMSjvdiMxS0YwaZ8AcSYE',
     PRIVATE_KEY = process.env.CAPTCHASECRET;
 
-/*exports.startDownload = function(req, res) {
+exports.startDownload = function(req, res) {
 	var data = {
 		remoteip:  req.ip || req.ips,
 		challenge: req.body.challenge,
@@ -16,7 +16,7 @@ var PUBLIC_KEY  = '6LdwrAUTAAAAAL7SMgkNMSjvdiMxS0YwaZ8AcSYE',
 		if (success) {
 			var kafka = require('kafka-node'),
 					Producer = kafka.Producer,
-					client = new kafka.Client(),
+					client = new kafka.Client('localhost:2181'),
 					producer = new Producer(client);
 
 			// Print out the response body
@@ -30,6 +30,7 @@ var PUBLIC_KEY  = '6LdwrAUTAAAAAL7SMgkNMSjvdiMxS0YwaZ8AcSYE',
 				"reason": req.body.reason,
 				"type": req.body.type,
 				"query": req.body.query,
+				"queryUrlParameters": req.body.queryUrlParameters,
 				"date": req.body.date,
 				"remoteip": remoteip
 			}
@@ -38,7 +39,11 @@ var PUBLIC_KEY  = '6LdwrAUTAAAAAL7SMgkNMSjvdiMxS0YwaZ8AcSYE',
 			];
 			producer.on('ready', function () {
 				producer.send(payloads, function (err, data) {
-					res.jsonp({"success": "true"});
+					if(err) {
+						console.log(err);
+					} else {
+						res.jsonp({"success": "true"});
+					}
 				});
 			});
 
@@ -49,4 +54,4 @@ var PUBLIC_KEY  = '6LdwrAUTAAAAAL7SMgkNMSjvdiMxS0YwaZ8AcSYE',
 			res.sendStatus(401);
 		}
 	});
-};*/
+};

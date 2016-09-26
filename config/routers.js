@@ -37,6 +37,10 @@ module.exports = function(parent, options) {
 					method = 'get';
 					path = '/';
 					break;
+				case 'startDownload':
+					method = 'post';
+					path = '/occurrences/' + name;
+					break;
 				default:
 					throw new Error('unrecognized route: ' + name + '.' + key);
 			}

@@ -1686,8 +1686,8 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			}
 			self.urlDownloadSpreadsheet(url);
 			self.urlDownloadSpreadsheetWithURL(url+"&c["+counter+"].s=28&c["+counter+"].p=0&c["+counter+"].o=0");
-			if( counter !== 0 )
-				self.showAdditionalInfoPane();
+			//if( counter !== 0 )
+			self.showAdditionalInfoPane();
 		},
 		dataPortalConditionCodes: function(condition) {
 			if(condition=="eq") {
@@ -1731,15 +1731,19 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		},
 		startDataDownload: function() {
 			var self = this;
+			var query = self.fillSearchConditions();
+			var urlParams = query.url;
+
 			self.validateDownloadForm(false);
-			/*if(!self.downloadFormValidationError() && self.downloadEmail() !== "" && self.downloadEmailVerification() !== "") {
+			if(!self.downloadFormValidationError() && self.downloadEmail() !== "" && self.downloadEmailVerification() !== "") {
 				if($('#recaptcha_response_field').val() !== "") {
 					// Form is valid a we have a filled captcha
 					var request = {
 						"email": self.downloadEmail(),
 						"reason": self.downloadReason(),
 						"type": self.downloadType(),
-						"query": self.fillSearchConditions(),
+						"query": query,
+						"queryUrlParameters": urlParams,
 						"challenge": $('#recaptcha_challenge_field').val(),
 						"response": $('#recaptcha_response_field').val(),
 						"date": Date.now()/1000
@@ -1748,7 +1752,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 					$.ajax({
 						contentType: 'application/json',
 						type: 'POST',
-						url: '/api/download/occurrences',
+						url: '/occurrences/download',
 						data: data,
 						beforeSend: function() {
 							$(".modal-body").addClass("hide-element");
@@ -1782,7 +1786,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 			} else {
 				self.downloadFormValidationError(true);
 				self.downloadFormValidationErrorMessage("Por favor complete los campos obligatorios para iniciar la descarga.");
-			}*/
+			}
 		}
 	});
 
