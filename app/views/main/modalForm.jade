@@ -28,24 +28,18 @@
 									select#downloadReason.form-control(name="downloadReason" data-bind="value: downloadReason")
 										option(disabled selected)
 											| -- elija un motivo de descarga --
+										option(value="Conservation")
+											| Conservación
 										option(value="Education")
 											| Educación
-										option(value="Biosecurity management, planning")
-											| Gestión de bioseguridad, planeación
-										option(value="Collection management")
-											| Gestión de colecciones
-										option(value="Conservation management/planning")
-											| Gestión de conservación/Planeación
+										option(value="Enviromental impact, site assessment")
+											| Evaluación de impacto ambiental
 										option(value="Scientific research")
 											| Investigación científica
-										option(value="Ecological research")
-											| Investigación ecológica
-										option(value="Systematic research")
-											| Investigación sistemática
-										option(value="Enviromental impact, site assessment")
-											| Impacto medioambiental, evaluación de sitio
+										option(value="Collection management")
+											| Gestión de colecciones
 										option(value="Other")
-											| Otro
+											| Otros
 										option(value="Testing")
 											| Pruebas
 							.form-group
