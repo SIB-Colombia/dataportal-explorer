@@ -25,14 +25,14 @@
     "sib-map-explorer"
   ],
   "dependencies": {
-    "async": "2.0.1",
+    "async": "2.1.1",
     "body-parser": "1.15.2",
     "compression": "1.6.2",
     "elasticsearchclient": "0.5.3",
     "errorhandler": "1.4.3",
     "express": "latest",
     "jade": "1.11.0",
-    "kafka-node": "^0.5.8",
+    "kafka-node": "^1.0.0",
     "method-override": "2.3.6",
     "moment": "2.15.1",
     "morgan": "1.7.0",
