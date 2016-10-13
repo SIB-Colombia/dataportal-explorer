@@ -378,21 +378,17 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		loadCellDensity: function() {
 			var debug = {};
 			var self = this;
+			var totalOccurrences = 0;
 
-			$.getJSON("http://api.biodiversidad.co/api/v1.5/occurrence/count?isGeoreferenced=true", function(data) {
-				self.totalGeoOccurrences(self.formatNumber(data.count));
-				self.totalGeoOccurrencesCache(self.formatNumber(data.count));
-			});
-
-			$.getJSON("http://api.biodiversidad.co/api/v1.5/occurrence/count", function(data) {
-				self.totalOccurrences(self.formatNumber(data.count));
-				self.totalOccurrencesCache(self.formatNumber(data.count));
+			$.getJSON('http://api.biodiversidad.co/api/v1.5/occurrence/search?departmentName=Vichada&departmentName=VICHADA&size=1&facetLimit=10', function(allData) {
+				self.totalOccurrences(self.formatNumber(allData.count));
+				self.totalOccurrencesCache(self.formatNumber(allData.count));
 			});
 
 			$.ajax({
 				contentType: 'application/json',
 				type: 'GET',
-				url: 'http://api.biodiversidad.co/api/v1.5/occurrence/grid?precision=5&responseType=geojson&scale=logarithmic&color=%23ff2600&colorMethod=gradient',
+				url: 'http://api.biodiversidad.co/api/v1.5/occurrence/grid?departmentName=Vichada&departmentName=VICHADA&precision=5&responseType=geojson&scale=logarithmic&color=%23ff2600&colorMethod=gradient',
 				beforeSend: function() {
 					self.hideMapAreaWithSpinner();
 				},
@@ -414,6 +410,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 							// does this feature have a properties
 							if (feature.properties) {
 								layer.bindPopup("<strong>No. registros: </strong>" + feature.properties.count + "</br></br>");
+								totalOccurrences = totalOccurrences + feature.properties.count;
 							}
 						}
 					}));
@@ -422,7 +419,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 							$.ajax({
 								contentType: 'application/json',
 								type: 'GET',
-								url: 'http://api.biodiversidad.co/api/v1.5/occurrence/search?latitudeTopLeft='+a.layer._latlngs[1].lat+'&longitudeTopLeft='+a.layer._latlngs[1].lng+'&latitudeBottomRight='+a.layer._latlngs[3].lat+'&longitudeBottomRight='+a.layer._latlngs[3].lng+'&size=10&facet%5B%5D=provider_name&facet%5B%5D=resource_name&facet%5B%5D=basis_of_record&facet%5B%5D=collection_name&facetLimit=1000',
+								url: 'http://api.biodiversidad.co/api/v1.5/occurrence/search?departmentName=Vichada&departmentName=VICHADA&latitudeTopLeft='+a.layer._latlngs[1].lat+'&longitudeTopLeft='+a.layer._latlngs[1].lng+'&latitudeBottomRight='+a.layer._latlngs[3].lat+'&longitudeBottomRight='+a.layer._latlngs[3].lng+'&size=10&facet%5B%5D=provider_name&facet%5B%5D=resource_name&facet%5B%5D=basis_of_record&facet%5B%5D=collection_name&facetLimit=1000',
 								success: function(results) {
 									var resources = "";
 									var providers = "";
@@ -465,6 +462,8 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 						}
 					});
 					map.addLayer(self.densityCells());
+					self.totalGeoOccurrences(self.formatNumber(totalOccurrences));
+					self.totalGeoOccurrencesCache(self.formatNumber(totalOccurrences));
 					self.showMapAreaWithSpinner();
 					jQuery.extend(self.densityCellsCache(),self.densityCells());
 				}
@@ -702,7 +701,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		},
 		fillSearchConditions: function() {
 			var response = {};
-			var urlParams = "";
+			var urlParams = "departmentName=Vichada&departmentName=VICHADA";
 			var self = this;
 			if(self.selectedScientificNames().length !== 0) {
 				response['scientificNames'] = self.selectedScientificNames();
