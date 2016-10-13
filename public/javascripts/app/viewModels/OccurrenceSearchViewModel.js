@@ -965,7 +965,7 @@ define(["jquery", "knockout", "underscore", "app/models/baseViewModel", "app/map
 		getSearchResumeData: function() {
 			var self = this;
 			if(typeof UrlDataMapping.filterSubject[self.selectedSubject()] !== "undefined") {
-				$.getJSON('http://api.biodiversidad.co/api/v1.5/occurrence/search?size=2&facet%5B%5D=scientificName&facet%5B%5D=kingdom&facet%5B%5D=phylum&facet%5B%5D=class&facet%5B%5D=order&facet%5B%5D=family&facet%5B%5D=genus&facet%5B%5D=specie&facet%5B%5D=country&facet%5B%5D=department&facet%5B%5D=county&facet%5B%5D=provider_name&facet%5B%5D=resource_name&facet%5B%5D=institution_code&facet%5B%5D=collection_name&facetLimit=10'+((self.objectNameValue())?"&"+UrlDataMapping.filterSubject[self.selectedSubject()].resumeApi15Condition+"="+self.objectNameValue():""), function(allData) {
+				$.getJSON('http://api.biodiversidad.co/api/v1.5/occurrence/search?departmentName=Vichada&departmentName=VICHADA&size=2&facet%5B%5D=scientificName&facet%5B%5D=kingdom&facet%5B%5D=phylum&facet%5B%5D=class&facet%5B%5D=order&facet%5B%5D=family&facet%5B%5D=genus&facet%5B%5D=specie&facet%5B%5D=country&facet%5B%5D=department&facet%5B%5D=county&facet%5B%5D=provider_name&facet%5B%5D=resource_name&facet%5B%5D=institution_code&facet%5B%5D=collection_name&facetLimit=10'+((self.objectNameValue())?"&"+UrlDataMapping.filterSubject[self.selectedSubject()].resumeApi15Condition+"="+self.objectNameValue():""), function(allData) {
 					var canonicals = ko.observableArray();
 					var kingdoms = ko.observableArray();
 					var providers = ko.observableArray();
