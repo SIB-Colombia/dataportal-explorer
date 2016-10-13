@@ -261,8 +261,8 @@ define(["jquery", "Leaflet", "jqueryUI", "LeafletGoogleTiles", "LeafletBingTiles
 	};
 	
 	var map = L.map('mapa', {
-		center: [4.781505, -79.804687],
-		zoom: 6,
+		center: [4.70783, -70.29053],
+		zoom: 8,
 		zoomControl: false,
 		//crs: L.CRS.EPSG4326,
 		layers: [mapBoxDark]
