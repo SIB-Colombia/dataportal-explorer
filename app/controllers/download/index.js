@@ -44,11 +44,15 @@ exports.startDownload = function(req, res) {
 					} else {
 						res.jsonp({"success": "true"});
 					}
+					producer.close();
+					client.close();
 				});
 			});
 
 			producer.on('error', function (err) {
 				res.sendStatus(400);
+				producer.close();
+				client.close();
 			});
 		} else {
 			res.sendStatus(401);

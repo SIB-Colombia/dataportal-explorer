@@ -25,25 +25,25 @@
     "sib-map-explorer"
   ],
   "dependencies": {
-    "async": "2.1.1",
+    "async": "2.1.2",
     "body-parser": "1.15.2",
     "compression": "1.6.2",
     "elasticsearchclient": "0.5.3",
     "errorhandler": "1.4.3",
     "express": "latest",
     "jade": "1.11.0",
-    "kafka-node": "^1.0.0",
+    "kafka-node": "^1.0.5",
     "method-override": "2.3.6",
-    "moment": "2.15.1",
+    "moment": "2.15.2",
     "morgan": "1.7.0",
     "q": "1.4.1",
     "recaptcha": "^1.2.1",
-    "request": "2.75.0",
+    "request": "2.78.0",
     "serve-favicon": "2.3.0",
     "serve-static": "1.11.1",
     "stylus": "0.54.5",
     "underscore": "1.8.3",
-    "winston": "2.2.0"
+    "winston": "2.3.0"
   },
   "devDependencies": {
     "mocha": "latest",
